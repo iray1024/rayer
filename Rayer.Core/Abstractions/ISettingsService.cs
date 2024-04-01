@@ -1,0 +1,10 @@
+﻿namespace Rayer.Core.Abstractions;
+
+public interface ISettingsService
+{
+    ISettings Settings { get; }
+
+    void Save();
+
+    void Load();
+}

@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.22000.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>assets\logo.ico</ApplicationIcon>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Content Include="assets\logo.ico" />
+  </ItemGroup>
+ 
+  <ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />		
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />		
+  </ItemGroup>
+ 
+  <ItemGroup>
+    <ProjectReference Include="..\Rayer.Core\Rayer.Core.csproj" />
+  </ItemGroup>
+ 
+  <ItemGroup>    
+    <Resource Include="assets\fallback.png" />
+    <Resource Include="assets\light\next.png" />
+    <Resource Include="assets\light\pause.png" />
+    <Resource Include="assets\light\play.png" />
+    <Resource Include="assets\light\previous.png" />
+    <Resource Include="assets\logo.png" />
+    <Resource Include="assets\dark\next.png" />
+		<Resource Include="assets\dark\pause.png" />
+    <Resource Include="assets\dark\play.png" />
+    <Resource Include="assets\dark\previous.png" />
+  </ItemGroup>  
+
+</Project>

@@ -1,0 +1,17 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+
+    <BitmapImage x:Key="AlbumFallback" UriSource="pack://application:,,,/assets/fallback.png" />
+
+    <BitmapImage x:Key="PreviousLight" UriSource="pack://application:,,,/assets/light/previous.png" />
+    <BitmapImage x:Key="NextLight" UriSource="pack://application:,,,/assets/light/next.png" />
+    <BitmapImage x:Key="PlayLight" UriSource="pack://application:,,,/assets/light/play.png" />
+    <BitmapImage x:Key="PauseLight" UriSource="pack://application:,,,/assets/light/pause.png" />
+
+    <BitmapImage x:Key="PreviousDark" UriSource="pack://application:,,,/assets/dark/previous.png" />
+    <BitmapImage x:Key="NextDark" UriSource="pack://application:,,,/assets/dark/next.png" />
+    <BitmapImage x:Key="PlayDark" UriSource="pack://application:,,,/assets/dark/play.png" />
+    <BitmapImage x:Key="PauseDark" UriSource="pack://application:,,,/assets/dark/pause.png" />
+</ResourceDictionary>
