@@ -1,7 +1,7 @@
 ﻿using Rayer.Core.Abstractions;
-using Rayer.Core.Utils;
 using Rayer.ViewModels;
 using Rayer.Views.Pages;
+using System.ComponentModel;
 using System.Windows;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
@@ -29,8 +29,7 @@ public partial class MainWindow : IWindow
         InitializeComponent();
 
         var settings = App.GetRequiredService<ISettingsService>();
-
-        ApplicationThemeManager.Apply(settings.Settings.Theme, WindowBackdropType.Acrylic, true, true);
+        ApplicationThemeManager.Apply(settings.Settings.Theme, WindowBackdropType.Mica, true, true);
 
         navigationService.SetNavigationControl(NavigationView);
         snackbarService.SetSnackbarPresenter(SnackbarPresenter);
@@ -54,7 +53,7 @@ public partial class MainWindow : IWindow
                 : Visibility.Visible;
     }
 
-    private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
         if (_isUserClosedPane)
         {
@@ -86,8 +85,8 @@ public partial class MainWindow : IWindow
         _isUserClosedPane = true;
     }
 
-    private void OnLoaded(object sender, RoutedEventArgs e)
+    private void OnClosing(object sender, CancelEventArgs e)
     {
-        ElementHelper.TraverseControlsAndSetNoneFocusable(this);
+        Application.Current.Shutdown();
     }
 }

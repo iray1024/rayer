@@ -19,6 +19,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <converters:ArtistsConverter x:Key="ArtistsConverter" />
+            <converters:TimeSpanConverter x:Key="TimeSpanConverter" />
             <converters:ThemeConverter x:Key="ThemeConverter" />
             <converters:PlaySingleAudioStrategyConverter x:Key="PlaySingleAudioStrategyConverter" />
         </ResourceDictionary>

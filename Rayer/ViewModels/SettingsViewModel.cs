@@ -3,7 +3,6 @@ using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using System.Collections.ObjectModel;
 using System.Reflection;
-using System.Runtime.Versioning;
 using System.Windows.Forms;
 using System.Windows.Media;
 using Wpf.Ui;
@@ -29,7 +28,6 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
 
     private ApplicationTheme _currentApplicationTheme;
 
-    [SupportedOSPlatform("Windows")]
     public ApplicationTheme CurrentApplicationTheme
     {
         get => _currentApplicationTheme;
@@ -45,7 +43,6 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
 
     private PlaySingleAudioStrategy _playSingleAudioStrategy;
 
-    [SupportedOSPlatform("Windows")]
     public PlaySingleAudioStrategy PlaySingleAudioStrategy
     {
         get => _playSingleAudioStrategy;
@@ -58,7 +55,6 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         }
     }
 
-    [SupportedOSPlatform("Windows")]
     public SettingsViewModel(
         INavigationService navigationService,
         ISettingsService settings)
@@ -73,13 +69,11 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         AudioLibrary.CollectionChanged += AudioLibrary_CollectionChanged;
     }
 
-    [SupportedOSPlatform("Windows")]
     public void UpdateConfigFile()
     {
         _settings.Save();
     }
 
-    [SupportedOSPlatform("Windows")]
     public void OnNavigatedTo()
     {
         if (!_isInitialized)
@@ -93,13 +87,11 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
 
     }
 
-    [SupportedOSPlatform("Windows")]
     private static void OnCurrentApplicationThemeChanged(ApplicationTheme newValue)
     {
-        ApplicationThemeManager.Apply(newValue, WindowBackdropType.Acrylic, true, true);
+        ApplicationThemeManager.Apply(newValue, WindowBackdropType.Mica, true, true);
     }
 
-    [SupportedOSPlatform("Windows")]
     private void InitializeViewModel()
     {
         CurrentApplicationTheme = ApplicationThemeManager.GetAppTheme();
@@ -110,7 +102,6 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         _isInitialized = true;
     }
 
-    [SupportedOSPlatform("Windows")]
     private void OnThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)
     {
         if (CurrentApplicationTheme != currentApplicationTheme)

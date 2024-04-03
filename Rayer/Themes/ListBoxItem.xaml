@@ -28,7 +28,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource ListBoxItemSelectedBackgroundThemeBrush}" />
+
                             <Setter Property="Foreground" Value="{DynamicResource ListBoxItemSelectedForegroundThemeBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>

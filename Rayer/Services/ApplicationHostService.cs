@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Views.Pages;
 using System.Windows;
@@ -29,6 +30,8 @@ internal class ApplicationHostService(IServiceProvider _serviceProvider) : IHost
 
         mainWindow.Loaded += OnMainWindowLoaded;
         mainWindow?.Show();
+
+        _serviceProvider.GetRequiredService<ProcessMessageWindow>().Show();
 
         return Task.CompletedTask;
     }

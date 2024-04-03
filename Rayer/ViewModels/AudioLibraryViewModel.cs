@@ -1,22 +1,18 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Rayer.Core.Abstractions;
 using Rayer.Core.Models;
-using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows.Data;
 
 namespace Rayer.ViewModels;
 
 public partial class AudioLibraryViewModel : ObservableObject
 {
     [ObservableProperty]
-    private ObservableCollection<Audio> _items = [];
+    private CollectionViewSource _items = default!;
 
-    public AudioLibraryViewModel(IAudioManager audioManager)
+    public AudioLibraryViewModel()
     {
-
-    }
-
-    partial void OnItemsChanged(ObservableCollection<Audio>? oldValue, ObservableCollection<Audio> newValue)
-    {
-
+        Items = new CollectionViewSource();
+        Items.SortDescriptions.Add(new SortDescription(nameof(Audio.Title), ListSortDirection.Ascending));
     }
 }

@@ -16,13 +16,12 @@
                                      IsDesignTimeCreatable=False}"
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Closing="OnClosing"
     ExtendsContentIntoTitleBar="True"
-    Loaded="OnLoaded"
-    SizeChanged="MainWindow_OnSizeChanged"
+    SizeChanged="OnSizeChanged"
     WindowCornerPreference="Default"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />

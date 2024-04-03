@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:common="clr-namespace:Rayer.Core.Common;assembly=Rayer.Core"
+    xmlns:controls="clr-namespace:Rayer.Controls"
     xmlns:core="clr-namespace:Rayer.Core.Abstractions;assembly=Rayer.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Rayer.Views.Pages"
@@ -138,6 +139,7 @@
                 </Style>
             </ui:CardExpander.Style>
         </ui:CardExpander>
+
         <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon NoteAdd24}">
             <ui:CardControl.Header>
                 <Grid>
@@ -163,5 +165,7 @@
                 <ComboBoxItem Content="将该歌曲所在歌单替换进播放队列" />
             </ComboBox>
         </ui:CardControl>
+
+        <controls:KeybindingPanel />
     </StackPanel>
 </core:NoneFocusablePage>

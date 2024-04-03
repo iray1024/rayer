@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using NAudio.Wave;
+using Rayer.Controls;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
 using Rayer.Core.Models;
@@ -9,6 +9,10 @@ namespace Rayer.ViewModels;
 public partial class PlaybarViewModel : ObservableObject
 {
     private readonly IAudioManager _audioManager;
+    private readonly IPlaybarService _playbarService;
+    private readonly ISettingsService _settingsService;
+
+    private readonly Playbar playbar = default!;
 
     [ObservableProperty]
     private Audio? _current;
@@ -25,16 +29,26 @@ public partial class PlaybarViewModel : ObservableObject
     [ObservableProperty]
     private double _progressWidth = (1200 - 400) / 2.0;
 
-    public PlaybarViewModel(IAudioManager audioManager)
+    [ObservableProperty]
+    private bool _extraElementVisiable = false;
+
+    public PlaybarViewModel(
+        IAudioManager audioManager,
+        IPlaybarService playbarService,
+        ISettingsService settingsService)
     {
         _audioManager = audioManager;
+        _playbarService = playbarService;
+        _settingsService = settingsService;
 
         _audioManager.Playback.DispatcherTimer.Tick += UpdateProgress;
-        _audioManager.AudioChanged += Switch;
+        _audioManager.AudioChanged += OnSwitch;
         _audioManager.AudioStopped += OnStopped;
     }
 
     public IAudioManager AudioManager => _audioManager;
+    public IPlaybarService PlaybarService => _playbarService;
+    public ISettingsService SettingsService => _settingsService;
 
     public bool IgnoreUpdateProgressValue { get; set; } = false;
 
@@ -54,7 +68,7 @@ public partial class PlaybarViewModel : ObservableObject
         }
     }
 
-    public void Switch(object? sender, AudioChangedArgs e)
+    public void OnSwitch(object? sender, AudioChangedArgs e)
     {
         Current = e.New;
         Playing?.Invoke(null, EventArgs.Empty);
@@ -74,20 +88,4 @@ public partial class PlaybarViewModel : ObservableObject
 
     public event EventHandler? Playing;
     public event EventHandler? Stopped;
-
-    public PlaybackState PlayOrPause()
-    {
-        var currentPlaybackState = _audioManager.Playback.PlaybackState;
-
-        if (currentPlaybackState is PlaybackState.Playing)
-        {
-            _audioManager.Playback.Pause();
-        }
-        else if (currentPlaybackState is PlaybackState.Paused)
-        {
-            _audioManager.Playback.Resume(false);
-        }
-
-        return _audioManager.Playback.PlaybackState;
-    }
 }

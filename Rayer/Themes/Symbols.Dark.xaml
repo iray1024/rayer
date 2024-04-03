@@ -1,0 +1,22 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/Themes/Symbols.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <BitmapImage x:Key="Previous" UriSource="pack://application:,,,/assets/dark/previous.png" />
+    <BitmapImage x:Key="Next" UriSource="pack://application:,,,/assets/dark/next.png" />
+    <BitmapImage x:Key="Play" UriSource="pack://application:,,,/assets/dark/play.png" />
+    <BitmapImage x:Key="Pause" UriSource="pack://application:,,,/assets/dark/pause.png" />
+    <BitmapImage x:Key="Pitch" UriSource="pack://application:,,,/assets/dark/pitch.png" />
+    <BitmapImage x:Key="Repeat" UriSource="pack://application:,,,/assets/dark/repeat.png" />
+    <BitmapImage x:Key="Single" UriSource="pack://application:,,,/assets/dark/single.png" />
+    <BitmapImage x:Key="Shuffle" UriSource="pack://application:,,,/assets/dark/shuffle.png" />
+    <BitmapImage x:Key="Speaker" UriSource="pack://application:,,,/assets/dark/speaker.png" />
+    <BitmapImage x:Key="Mute" UriSource="pack://application:,,,/assets/dark/mute.png" />
+    <BitmapImage x:Key="VolumeFull" UriSource="pack://application:,,,/assets/dark/volume-full.png" />
+    <BitmapImage x:Key="VolumeHalf" UriSource="pack://application:,,,/assets/dark/volume-half.png" />
+    <BitmapImage x:Key="Playlist" UriSource="pack://application:,,,/assets/dark/playlist.png" />
+    <BitmapImage x:Key="Recycle" UriSource="pack://application:,,,/assets/dark/recycle.png" />
+
+</ResourceDictionary>

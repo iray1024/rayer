@@ -16,16 +16,16 @@
     Focusable="False"
     mc:Ignorable="d">
 
-    <Grid Margin="0,0,0,24" Focusable="False">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+    <Grid Margin="0,0,0,24" Grid.IsSharedSizeScope="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <ui:ListView
             Name="LibListView"
-            Grid.Column="0"
+            Grid.Row="1"
             d:ItemsSource="{d:SampleData ItemCount=2}"
-            ItemsSource="{Binding ViewModel.Items, Mode=TwoWay}">
+            ItemsSource="{Binding ViewModel.Items.View, Mode=OneWay}">
             <ui:ListView.ItemTemplate>
                 <DataTemplate DataType="{x:Type models:Audio}">
                     <Grid>
@@ -36,17 +36,20 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <ui:Image
                             x:Name="Image"
                             Grid.RowSpan="2"
+                            Grid.Column="0"
                             Width="40"
                             Height="40"
                             Margin="6"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             CornerRadius="6"
-                            RenderOptions.BitmapScalingMode="HighQuality"
+                            RenderOptions.BitmapScalingMode="Fant"
                             Source="{Binding Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}" />
                         <TextBlock
                             Grid.Row="0"
@@ -61,6 +64,22 @@
                             Margin="6,0,0,6"
                             Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
                             Text="{Binding Artists, Mode=OneWay, Converter={StaticResource ArtistsConverter}}" />
+                        <TextBlock
+                            Grid.RowSpan="2"
+                            Grid.Column="2"
+                            Margin="80,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                            Text="{Binding Album, Mode=OneWay}" />
+                        <TextBlock
+                            Grid.RowSpan="2"
+                            Grid.Column="3"
+                            Margin="0,0,6,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                            Text="{Binding Duration, Mode=OneWay, Converter={StaticResource TimeSpanConverter}}" />
                     </Grid>
                 </DataTemplate>
             </ui:ListView.ItemTemplate>

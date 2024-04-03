@@ -7,8 +7,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>assets\logo.ico</ApplicationIcon>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)\rayer.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <Content Include="assets\logo.ico" />
   </ItemGroup>
@@ -24,11 +26,29 @@
   </ItemGroup>
  
   <ItemGroup>    
-    <Resource Include="assets\fallback.png" />
+    <Resource Include="assets\dark\mute.png" />    
+    <Resource Include="assets\dark\pitch.png" />    
+    <Resource Include="assets\dark\playlist.png" />    
+    <Resource Include="assets\dark\recycle.png" />    
+    <Resource Include="assets\dark\repeat.png" />    
+    <Resource Include="assets\dark\shuffle.png" />    
+    <Resource Include="assets\dark\single.png" />    
+    <Resource Include="assets\dark\volume-full.png" />    
+    <Resource Include="assets\dark\volume-half.png" />    
+    <Resource Include="assets\fallback.png" />    
+    <Resource Include="assets\light\mute.png" />
     <Resource Include="assets\light\next.png" />
     <Resource Include="assets\light\pause.png" />
+    <Resource Include="assets\light\pitch.png" />
     <Resource Include="assets\light\play.png" />
+    <Resource Include="assets\light\playlist.png" />
     <Resource Include="assets\light\previous.png" />
+    <Resource Include="assets\light\recycle.png" />
+    <Resource Include="assets\light\repeat.png" />
+    <Resource Include="assets\light\shuffle.png" />
+    <Resource Include="assets\light\single.png" />
+    <Resource Include="assets\light\volume-full.png" />
+    <Resource Include="assets\light\volume-half.png" />
     <Resource Include="assets\logo.png" />
     <Resource Include="assets\dark\next.png" />
 		<Resource Include="assets\dark\pause.png" />

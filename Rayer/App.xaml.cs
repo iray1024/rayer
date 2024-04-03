@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Playing;
 using Rayer.Services;
@@ -26,11 +27,13 @@ public partial class App : Application
             services.AddSingleton<IWindow, MainWindow>();
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<PlaybarViewModel>();
+            services.AddSingleton<ProcessMessageWindow>();
 
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<ISnackbarService, SnackbarService>();
             services.AddSingleton<IContentDialogService, ContentDialogService>();
 
+            services.AddSingleton<IPlaybarService, PlaybarService>();
             services.AddSingleton<IThemeResourceProvider, ThemeResourceProvider>();
 
             services.AddSingleton<WindowsProviderService>();

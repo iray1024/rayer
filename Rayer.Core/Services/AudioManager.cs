@@ -16,6 +16,9 @@ internal class AudioManager : IAudioManager, IDisposable
         _playback = new Playback(this);
 
         var watcher = serviceProvider.GetRequiredService<IAudioFileWatcher>();
+        var settings = serviceProvider.GetRequiredService<ISettingsService>().Settings;
+
+        _playback.Initialize(settings.Volume, settings.Pitch, settings.PlayloopMode);
 
         Audios = watcher.Audios;
 

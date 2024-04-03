@@ -5,6 +5,7 @@
     xmlns:b="clr-namespace:Rayer.Core.Behaviors;assembly=Rayer.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Rayer.Controls"
+    xmlns:markup="clr-namespace:Rayer.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Height="78"
@@ -13,125 +14,131 @@
     d:DesignHeight="78"
     d:DesignWidth="800"
     Loaded="OnLoaded"
+    MouseEnter="OnMouseEnter"
+    MouseLeave="OnMouseLeave"
     mc:Ignorable="d">
     <Grid>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="75" />
-                <ColumnDefinition Width="125" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <ui:Image
-                Grid.Column="0"
-                Width="50"
-                Height="50"
-                HorizontalAlignment="Right"
-                CornerRadius="6"
-                RenderOptions.BitmapScalingMode="HighQuality"
-                Source="{Binding ViewModel.Current.Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}" />
-            <Grid
-                Grid.Column="1"
-                Margin="6,14,10,14"
-                HorizontalAlignment="Left">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Margin="6,8,0,0"
-                    FontSize="14"
-                    FontWeight="Normal"
-                    Text="{Binding ViewModel.Current.Title, Mode=OneWay}" />
-                <TextBlock
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Margin="6,0,0,6"
-                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                    Text="{Binding ViewModel.Current.Artists, Mode=OneWay, Converter={StaticResource ArtistsConverter}}" />
-            </Grid>
+        <Border
+            x:Name="Container"
+            Panel.ZIndex="-99"
+            Background="Transparent"
+            MouseEnter="OnMouseEnter"
+            MouseLeave="OnMouseLeave">
+            <Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75" />
+                        <ColumnDefinition Width="125" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ui:Image
+                        Grid.Column="0"
+                        Width="50"
+                        Height="50"
+                        HorizontalAlignment="Right"
+                        CornerRadius="6"
+                        RenderOptions.BitmapScalingMode="Fant"
+                        Source="{Binding ViewModel.Current.Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}" />
+                    <Grid
+                        Grid.Column="1"
+                        Margin="6,14,10,14"
+                        HorizontalAlignment="Left">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="6,8,0,0"
+                            FontSize="14"
+                            FontWeight="Normal"
+                            Text="{Binding ViewModel.Current.Title, Mode=OneWay}" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="6,0,0,6"
+                            Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                            Text="{Binding ViewModel.Current.Artists, Mode=OneWay, Converter={StaticResource ArtistsConverter}}" />
+                    </Grid>
+                    <local:RightPlaybarPanel
+                        Grid.Column="2"
+                        Margin="0,0,12,0"
+                        HorizontalAlignment="Right" />
+                </Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="40" />
+                    </Grid.RowDefinitions>
+                    <Grid
+                        x:Name="Controller"
+                        Grid.Row="0"
+                        Margin="0,12,0,0"
+                        HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <ui:Image
+                            x:Name="Previous"
+                            Grid.Column="0"
+                            Width="25"
+                            Height="25"
+                            CornerRadius="14"
+                            Cursor="Hand"
+                            MouseUp="PreviousClick"
+                            RenderOptions.BitmapScalingMode="Fant"
+                            Source="{markup:ThemeSymbol Previous}" />
+                        <ui:Image
+                            x:Name="PlayOrPause"
+                            Grid.Column="1"
+                            Width="42"
+                            Height="32"
+                            Margin="12,0"
+                            CornerRadius="14"
+                            Cursor="Hand"
+                            MouseUp="PlayOrPauseClick"
+                            RenderOptions.BitmapScalingMode="Fant"
+                            Source="{markup:ThemeSymbol Play}" />
+                        <ui:Image
+                            x:Name="Next"
+                            Grid.Column="2"
+                            Width="25"
+                            Height="25"
+                            CornerRadius="14"
+                            Cursor="Hand"
+                            MouseUp="NextClick"
+                            RenderOptions.BitmapScalingMode="Fant"
+                            Source="{markup:ThemeSymbol Next}" />
+                    </Grid>
 
-            <StackPanel
-                Grid.Column="2"
-                Margin="2"
-                HorizontalAlignment="Right"
-                Orientation="Horizontal">
-                <ui:Button Background="Green" Content="Test" />
-            </StackPanel>
-        </Grid>
-        <Grid
-            Margin="0"
-            HorizontalAlignment="Stretch"
-            Panel.ZIndex="9999">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="40" />
-            </Grid.RowDefinitions>
-            <Grid
-                Grid.Row="0"
-                Margin="0,12,0,0"
-                HorizontalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <ui:Image
-                    x:Name="Previous"
-                    Grid.Column="0"
-                    Width="25"
-                    Height="25"
-                    CornerRadius="14"
-                    Cursor="Hand"
-                    MouseUp="PreviousClick"
-                    RenderOptions.BitmapScalingMode="HighQuality"
-                    Source="{StaticResource PreviousLight}" />
-                <ui:Image
-                    x:Name="PlayOrPause"
-                    Grid.Column="1"
-                    Width="42"
-                    Height="32"
-                    Margin="12,0"
-                    CornerRadius="14"
-                    Cursor="Hand"
-                    MouseUp="PlayOrPauseClick"
-                    RenderOptions.BitmapScalingMode="HighQuality"
-                    Source="{StaticResource PlayLight}" />
-                <ui:Image
-                    x:Name="Next"
-                    Grid.Column="2"
-                    Width="25"
-                    Height="25"
-                    CornerRadius="14"
-                    Cursor="Hand"
-                    MouseUp="NextClick"
-                    RenderOptions.BitmapScalingMode="HighQuality"
-                    Source="{StaticResource NextLight}" />
+                    <Grid Grid.Row="1" Margin="0,2,0,0">
+                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                            <ui:TextBlock
+                                Margin="0,6,6,0"
+                                FontSize="10"
+                                Text="{Binding ViewModel.CurrentTime, Mode=OneWay}" />
+                            <Slider
+                                x:Name="PlaybarSlider"
+                                Width="{Binding ViewModel.ProgressWidth}"
+                                HorizontalAlignment="Center"
+                                Maximum="100"
+                                Minimum="0"
+                                PreviewMouseDown="Slider_PreviewMouseDown"
+                                Thumb.DragCompleted="Slider_DragCompleted"
+                                Thumb.DragDelta="Slider_DragDelta"
+                                Thumb.DragStarted="Slider_DragStarted"
+                                Value="{Binding ViewModel.ProgressValue, Mode=TwoWay}" />
+                            <ui:TextBlock
+                                Margin="6,6,0,0"
+                                FontSize="10"
+                                Text="{Binding ViewModel.TotalTime, Mode=OneWay}" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
             </Grid>
-            <Grid Grid.Row="1" Margin="0,2,0,0">
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <ui:TextBlock
-                        Margin="0,6,6,0"
-                        FontSize="10"
-                        Text="{Binding ViewModel.CurrentTime, Mode=OneWay}" />
-                    <Slider
-                        x:Name="PlaybarSlider"
-                        Width="{Binding ViewModel.ProgressWidth}"
-                        HorizontalAlignment="Center"
-                        Maximum="100"
-                        Minimum="0"
-                        PreviewMouseDown="Slider_PreviewMouseDown"
-                        Thumb.DragCompleted="Slider_DragCompleted"
-                        Thumb.DragDelta="Slider_DragDelta"
-                        Thumb.DragStarted="Slider_DragStarted"
-                        Value="{Binding ViewModel.ProgressValue, Mode=TwoWay}" />
-                    <ui:TextBlock
-                        Margin="6,6,0,0"
-                        FontSize="10"
-                        Text="{Binding ViewModel.TotalTime, Mode=OneWay}" />
-                </StackPanel>
-            </Grid>
-        </Grid>
+        </Border>
     </Grid>
 </UserControl>

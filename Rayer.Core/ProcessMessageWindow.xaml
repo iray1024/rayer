@@ -1,0 +1,13 @@
+﻿<Window
+    x:Class="Rayer.Core.ProcessMessageWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Rayer.Core"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="ProcessMessageWindow"
+    Width="800"
+    Height="450"
+    ShowInTaskbar="False"
+    Visibility="Hidden"
+    mc:Ignorable="d" SourceInitialized="OnSourceInitialized" Closing="OnClosing" />

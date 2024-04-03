@@ -1,7 +1,10 @@
 ﻿using Rayer.Core.Abstractions;
+using Rayer.Core.Common;
 using Rayer.Core.Events;
+using Rayer.Core.Extensions;
 using Rayer.Core.Models;
 using Rayer.ViewModels;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
@@ -12,17 +15,21 @@ namespace Rayer.Views.Pages;
 public partial class AudioLibraryPage : INavigableView<AudioLibraryViewModel>
 {
     private readonly IAudioManager _audioManager;
+    private readonly ISettingsService _settingsService;
 
     public AudioLibraryPage(
         AudioLibraryViewModel viewModel,
-        IAudioManager audioManager)
+        IAudioManager audioManager,
+        ISettingsService settingsService)
     {
         _audioManager = audioManager;
+        _settingsService = settingsService;
 
-        _audioManager.AudioChanged += AudioChanged;
+        _audioManager.AudioChanged += OnAudioChanged;
+        _audioManager.AudioStopped += OnAudioStopped;
         _audioManager.Audios.CollectionChanged += AudioCollectionChanged;
 
-        viewModel.Items = [.. _audioManager.Audios];
+        viewModel.Items.Source = new ObservableCollection<Audio>(_audioManager.Audios);
 
         ViewModel = viewModel;
         DataContext = this;
@@ -30,30 +37,43 @@ public partial class AudioLibraryPage : INavigableView<AudioLibraryViewModel>
         InitializeComponent();
     }
 
-    private void AudioChanged(object? sender, AudioChangedArgs e)
+    private void OnAudioChanged(object? sender, AudioChangedArgs e)
     {
-        LibListView.SelectedIndex = ViewModel.Items.IndexOf(e.New);
+        if (ViewModel.Items.Source is Collection<Audio>)
+        {
+            var index = ViewModel.Items.View.IndexOf(e.New);
+            LibListView.SelectedIndex = index;
+            LibListView.ScrollIntoView(LibListView.Items[index]);
+        }
+    }
+
+    private void OnAudioStopped(object? sender, EventArgs e)
+    {
+        LibListView.SelectedIndex = -1;
     }
 
     private void AudioCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
-            if (e.Action is NotifyCollectionChangedAction.Add)
+            if (ViewModel.Items.Source is Collection<Audio> audios)
             {
-                var startIndex = e.NewStartingIndex;
-                if (e.NewItems is not null)
+                if (e.Action is NotifyCollectionChangedAction.Add)
                 {
-                    foreach (var item in e.NewItems)
+                    var startIndex = e.NewStartingIndex;
+                    if (e.NewItems is not null)
                     {
-                        ViewModel.Items.Insert(startIndex++, (Audio)item);
+                        foreach (var item in e.NewItems)
+                        {
+                            audios.Insert(startIndex++, (Audio)item);
+                        }
                     }
                 }
-            }
 
-            if (e.Action is NotifyCollectionChangedAction.Remove)
-            {
-                ViewModel.Items.RemoveAt(e.OldStartingIndex);
+                if (e.Action is NotifyCollectionChangedAction.Remove)
+                {
+                    audios.RemoveAt(e.OldStartingIndex);
+                }
             }
         });
     }
@@ -65,11 +85,24 @@ public partial class AudioLibraryPage : INavigableView<AudioLibraryViewModel>
         if (e.Source is ListViewItem listViewItem &&
             listViewItem.DataContext is Audio item)
         {
-            var index = _audioManager.Playback.Queue.IndexOf(item);
-
-            if (index == -1)
+            if (_settingsService.Settings.PlaySingleAudioStrategy is PlaySingleAudioStrategy.AddToQueue)
             {
-                _audioManager.Playback.Queue.Add(item);
+                var index = _audioManager.Playback.Queue.IndexOf(item);
+
+                if (index == -1)
+                {
+                    _audioManager.Playback.Queue.Add(item);
+                }
+            }
+            else
+            {
+                foreach (var audio in _audioManager.Audios)
+                {
+                    if (_audioManager.Playback.Queue.IndexOf(audio) == -1)
+                    {
+                        _audioManager.Playback.Queue.Add(audio);
+                    }
+                }
             }
 
             await _audioManager.Playback.Play(item);

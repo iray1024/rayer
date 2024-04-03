@@ -1,10 +1,10 @@
 ﻿namespace Rayer.Core.Common;
 
-public enum PlayLoopMode
+public enum PlayloopMode
 {
     List = 0,
 
     Single = 1,
 
-    Random = 2
+    Shuffle = 2
 }
