@@ -13,7 +13,9 @@
     <BitmapImage x:Key="Mute" UriSource="pack://application:,,,/assets/light/mute.png" />
     <BitmapImage x:Key="VolumeFull" UriSource="pack://application:,,,/assets/light/volume-full.png" />
     <BitmapImage x:Key="VolumeHalf" UriSource="pack://application:,,,/assets/light/volume-half.png" />
-    <BitmapImage x:Key="Playlist" UriSource="pack://application:,,,/assets/light/playlist.png" />
+    <BitmapImage x:Key="PlayQueue" UriSource="pack://application:,,,/assets/light/play-queue.png" />
     <BitmapImage x:Key="Recycle" UriSource="pack://application:,,,/assets/light/recycle.png" />
+    <BitmapImage x:Key="AddTo" UriSource="pack://application:,,,/assets/light/add-to.png" />
+    <BitmapImage x:Key="FullScreen" UriSource="pack://application:,,,/assets/light/fullscreen.png" />
 
 </ResourceDictionary>

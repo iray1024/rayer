@@ -1,8 +1,12 @@
-﻿using Rayer.Core.Abstractions;
+﻿using Rayer.Command.Parameter;
+using Rayer.Core.Abstractions;
+using Rayer.Core.Common;
 using Rayer.Core.Events;
 using Rayer.Core.Extensions;
 using Rayer.Core.Models;
+using Rayer.Core.Utils;
 using Rayer.ViewModels;
+using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
@@ -30,7 +34,7 @@ public partial class RightPlaybarPanel : UserControl
         _audioManager.Audios.CollectionChanged += OnAudiosCollectionChanged;
         _audioManager.Playback.Queue.CollectionChanged += OnPlayQueueCollectionChanged;
 
-        ViewModel.Items.Source = new Collection<Audio>(_audioManager.Playback.Queue);
+        ViewModel.Items.Source = new Collection<Audio>([.. _audioManager.Playback.Queue]);
 
         ViewModel.QueueCount = $"共{(ViewModel.Items.Source as ICollection<Audio>)?.Count}首歌曲";
 
@@ -42,8 +46,13 @@ public partial class RightPlaybarPanel : UserControl
     public RightPlaybarPanelViewModel ViewModel { get; set; }
 
     private void OnMouseUp(object sender, MouseButtonEventArgs e)
-    {
+    {        
         ViewModel.OnButtonClick();
+
+        if (ViewModel.Items.Source is Collection<Audio>)
+        {            
+            LibListView.ScrollIntoView(_audioManager.Playback.Audio);
+        }
     }
 
     private void OnRecycleMouseUp(object sender, MouseButtonEventArgs e)
@@ -53,7 +62,7 @@ public partial class RightPlaybarPanel : UserControl
 
         if (_audioManager.Playback.Playing)
         {
-            _audioManager.Playback.Stop();
+            _audioManager.Playback.StopPlay();
         }
 
         _audioManager.Playback.Queue.Clear();
@@ -65,7 +74,7 @@ public partial class RightPlaybarPanel : UserControl
         {
             var index = ViewModel.Items.View.IndexOf(e.New);
             LibListView.SelectedIndex = index;
-            LibListView.ScrollIntoView(LibListView.Items[index]);
+            LibListView.ScrollIntoView(e.New);
         }
     }
 
@@ -88,9 +97,12 @@ public partial class RightPlaybarPanel : UserControl
                 }
                 if (e.Action is NotifyCollectionChangedAction.Remove)
                 {
-                    audios.RemoveAt(e.OldStartingIndex);
+                    if (audios.Count > e.OldStartingIndex)
+                    {
+                        audios.RemoveAt(e.OldStartingIndex);
+                    }
                 }
-                
+
                 ViewModel.QueueCount = $"共{audios.Count}首歌曲";
             }
         });
@@ -135,7 +147,41 @@ public partial class RightPlaybarPanel : UserControl
 
     private void ThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)
     {
-        Playlist.Source = (ImageSource)Application.Current.Resources["Playlist"];
+        PlayQueue.Source = (ImageSource)Application.Current.Resources["PlayQueue"];
         Recycle.Source = (ImageSource)Application.Current.Resources["Recycle"];
+    }
+
+    private void OnListViewItemRightButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        foreach (var item in ViewModel.ContextMenu.Items.SourceCollection)
+        {
+            if (item is MenuItem menuItem)
+            {
+                if (sender is FrameworkElement { DataContext: Audio audio })
+                {
+                    menuItem.CommandParameter = new AudioCommandParameter()
+                    {
+                        Audio = audio,
+                        Scope = ContextMenuScope.PlayQueue
+                    };
+                }
+
+                if (menuItem.Header is string header)
+                {
+                    if (header == "播放")
+                    {
+                        menuItem.Icon = ImageIconFactory.Create("Play", 18);
+                    }
+                    else if (header == "添加到")
+                    {
+                        menuItem.Icon = ImageIconFactory.Create("AddTo", 18);
+                    }
+                    else if (header == "删除")
+                    {
+                        menuItem.Icon = ImageIconFactory.Create("Recycle", 18);
+                    }
+                }
+            }
+        }
     }
 }

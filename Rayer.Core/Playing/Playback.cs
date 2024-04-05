@@ -24,6 +24,8 @@ public class Playback : IDisposable
 
     private readonly SemaphoreSlim _semaphore = new(2, 2);
 
+    private static readonly Audio _fallbackAudio = new();
+
     private static readonly TimeSpan _jumpThreshold = TimeSpan.FromSeconds(5);
     private static readonly TimeSpan _fadeOutThreshold = TimeSpan.FromMilliseconds(1000);
 
@@ -230,6 +232,8 @@ public class Playback : IDisposable
         {
             DispatcherTimer.Start();
 
+            var oldState = _device.PlaybackState;
+
             _device.Play();
             if (fadeIn)
             {
@@ -237,6 +241,8 @@ public class Playback : IDisposable
             }
 
             Playing = true;
+
+            _audioManager.OnPlaying(oldState);
         }
     }
 
@@ -245,6 +251,8 @@ public class Playback : IDisposable
         DispatcherTimer.Stop();
 
         _device?.Pause();
+
+        _audioManager.OnPaused();
     }
 
     public void Stop()
@@ -262,8 +270,27 @@ public class Playback : IDisposable
 
         _device?.Dispose();
         _device = null;
+    }
 
-        _audioManager.Stop();
+    public void StopPlay()
+    {
+        DispatcherTimer.Stop();
+
+        Playing = false;
+
+        _device?.Stop();
+
+        if (_reader is not null)
+        {
+            CloseFile();
+        }
+
+        _device?.Dispose();
+        _device = null;
+
+        Audio = _fallbackAudio;
+
+        _audioManager.OnStopped();
     }
 
     public async Task Next()
@@ -322,7 +349,7 @@ public class Playback : IDisposable
 
             _device?.Init(fadeInOut);
 
-            _audioManager.Switch(Audio);
+            _audioManager.OnSwitch(Audio);
         }
         catch
         {
@@ -433,7 +460,7 @@ public class Playback : IDisposable
 
     public void Dispose()
     {
-        Stop();
+        StopPlay();
 
         GC.SuppressFinalize(this);
     }

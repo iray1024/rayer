@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Rayer.Abstractions;
 using Rayer.Core.Abstractions;
+using Rayer.Services;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -11,6 +13,7 @@ public partial class VolumePanelViewModel : ObservableObject
 {
     private readonly IAudioManager _audioManager;
     private readonly ISettingsService _settingsService;
+    private readonly IImmersivePlayerService _immersivePlayerService;
 
     private DependencyObject _dependency = default!;
 
@@ -22,10 +25,12 @@ public partial class VolumePanelViewModel : ObservableObject
 
     public VolumePanelViewModel(
         IAudioManager audioManager,
-        ISettingsService settingsService)
+        ISettingsService settingsService,
+        IImmersivePlayerService immersivePlayerService)
     {
         _audioManager = audioManager;
         _settingsService = settingsService;
+        _immersivePlayerService = immersivePlayerService;
 
         Volume = _settingsService.Settings.Volume * 100;
     }
@@ -45,14 +50,7 @@ public partial class VolumePanelViewModel : ObservableObject
 
     public void SetVolume()
     {
-        if (_dependency is ImageIcon image)
-        {
-            image.Source = Volume == 0f
-                ? (ImageSource)Application.Current.Resources["Mute"]
-                : Volume > 50f
-                ? (ImageSource)Application.Current.Resources["VolumeFull"]
-                : (ImageSource)Application.Current.Resources["VolumeHalf"];
-        }
+        SetImageIconTheme(_immersivePlayerService.IsNowImmersive);
 
         _audioManager.Playback.Volume = Volume / 100.0f;
 
@@ -71,5 +69,23 @@ public partial class VolumePanelViewModel : ObservableObject
         _settingsService.Settings.Volume = MathF.Round(Volume / 100.0f, 2);
 
         _settingsService.Save();
+    }
+
+    private void SetImageIconTheme(bool isNowImmersive = false)
+    {
+        if (_dependency is ImageIcon image)
+        {
+            image.Source = isNowImmersive
+                ? Volume == 0f
+                    ? StaticThemeResources.Dark.Mute
+                    : Volume > 50f
+                        ? StaticThemeResources.Dark.VolumeFull
+                        : StaticThemeResources.Dark.VolumeHalf
+                : Volume == 0f
+                    ? (ImageSource)Application.Current.Resources["Mute"]
+                    : Volume > 50f
+                        ? (ImageSource)Application.Current.Resources["VolumeFull"]
+                        : (ImageSource)Application.Current.Resources["VolumeHalf"];
+        }
     }
 }

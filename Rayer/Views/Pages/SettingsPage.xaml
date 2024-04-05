@@ -166,6 +166,32 @@
             </ComboBox>
         </ui:CardControl>
 
+        <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon PlayCircle24}">
+            <ui:CardControl.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ui:TextBlock
+                        Grid.Row="0"
+                        FontTypography="Body"
+                        Text="沉浸式播放器" />
+                    <ui:TextBlock
+                        Grid.Row="1"
+                        Foreground="Gray"
+                        Text="设置使用哪种沉浸式播放器" />
+                </Grid>
+            </ui:CardControl.Header>
+            <ComboBox
+                Grid.Column="1"
+                MinWidth="200"
+                SelectedIndex="{Binding ViewModel.ImmersiveMode, Converter={StaticResource ImmersiveModeConverter}, Mode=TwoWay}">
+                <ComboBoxItem Content="唱片模式" />
+                <ComboBoxItem Content="频谱模式" />
+            </ComboBox>
+        </ui:CardControl>
+
         <controls:KeybindingPanel />
     </StackPanel>
 </core:NoneFocusablePage>

@@ -1,0 +1,50 @@
+﻿<UserControl
+    x:Class="Rayer.Controls.Immersive.ImmersiveTitleBar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Rayer.Controls.Immersive"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Loaded="OnLoaded"
+    mc:Ignorable="d">
+    <Grid HorizontalAlignment="Right" VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+        <ui:ImageIcon
+            x:Name="Minimum"
+            Grid.Column="0"
+            Width="24"
+            Height="24"
+            Margin="0,32,10,0"
+            Cursor="Hand"
+            PreviewMouseLeftButtonDown="OnMinimumMouseLeftButtonUp"
+            RenderOptions.BitmapScalingMode="Fant"
+            Source="pack://application:,,,/assets/minimum.png" />
+        <ui:ImageIcon
+            x:Name="Maximum"
+            Grid.Column="1"
+            Width="24"
+            Height="24"
+            Margin="0,32,10,0"
+            Cursor="Hand"
+            PreviewMouseLeftButtonDown="OnMaximumMouseLeftButtonUp"
+            RenderOptions.BitmapScalingMode="Fant"
+            Source="pack://application:,,,/assets/maximum.png" />
+        <ui:ImageIcon
+            x:Name="Close"
+            Grid.Column="2"
+            Width="24"
+            Height="24"
+            Margin="0,32,30,0"
+            Cursor="Hand"
+            PreviewMouseLeftButtonDown="OnCloseMouseLeftButtonUp"
+            RenderOptions.BitmapScalingMode="Fant"
+            Source="pack://application:,,,/assets/power.png" />
+    </Grid>
+</UserControl>

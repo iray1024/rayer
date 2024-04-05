@@ -18,6 +18,7 @@ public class Settings : ISettings
 
     public PlaySingleAudioStrategy PlaySingleAudioStrategy { get; set; } = PlaySingleAudioStrategy.AddToQueue;
     public PlayloopMode PlayloopMode { get; set; } = PlayloopMode.List;
+    public ImmersiveMode ImmersiveMode { get; set; } = ImmersiveMode.Vinyl;
     public float Volume { get; set; } = 1.0f;
     public float Pitch { get; set; } = 1.0f;
 

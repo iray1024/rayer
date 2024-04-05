@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using NAudio.Wave;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
 using Rayer.Core.Models;
@@ -41,15 +42,27 @@ internal class AudioManager : IAudioManager, IDisposable
 
     public ICollection<Playlist> Playlists { get; } = [];
 
+    public event AudioPlayingEventHandler? Playing;
+    public event EventHandler? Paused;
     public event AudioChangedEventHandler? AudioChanged;
     public event EventHandler? AudioStopped;
 
-    public void Switch(Audio newAudio)
+    public void OnPlaying(PlaybackState oldState)
+    {
+        Playing?.Invoke(this, new AudioPlayingArgs { PlaybackState = oldState });
+    }
+
+    public void OnPaused()
+    {
+        Paused?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void OnSwitch(Audio newAudio)
     {
         AudioChanged?.Invoke(this, new AudioChangedArgs { New = newAudio });
     }
 
-    public void Stop()
+    public void OnStopped()
     {
         AudioStopped?.Invoke(this, EventArgs.Empty);
     }

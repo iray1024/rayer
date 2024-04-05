@@ -1,8 +1,10 @@
-﻿using Rayer.Core.Abstractions;
+﻿using Rayer.Command.Parameter;
+using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Events;
 using Rayer.Core.Extensions;
 using Rayer.Core.Models;
+using Rayer.Core.Utils;
 using Rayer.ViewModels;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -106,6 +108,36 @@ public partial class AudioLibraryPage : INavigableView<AudioLibraryViewModel>
             }
 
             await _audioManager.Playback.Play(item);
+        }
+    }
+
+    private void OnListViewItemRightButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        foreach (var item in ViewModel.ContextMenu.Items.SourceCollection)
+        {
+            if (item is System.Windows.Controls.MenuItem menuItem)
+            {
+                if (sender is FrameworkElement { DataContext: Audio audio })
+                {
+                    menuItem.CommandParameter = new AudioCommandParameter()
+                    {
+                        Audio = audio,
+                        Scope = ContextMenuScope.Library
+                    };
+                }
+
+                if (menuItem.Header is string header)
+                {
+                    if (header == "播放")
+                    {
+                        menuItem.Icon = ImageIconFactory.Create("Play", 18);
+                    }
+                    else if (header == "添加到")
+                    {
+                        menuItem.Icon = ImageIconFactory.Create("AddTo", 18);
+                    }
+                }
+            }
         }
     }
 }

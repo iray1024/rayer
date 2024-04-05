@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Rayer.Controls;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
 using Rayer.Core.Models;
@@ -11,8 +10,6 @@ public partial class PlaybarViewModel : ObservableObject
     private readonly IAudioManager _audioManager;
     private readonly IPlaybarService _playbarService;
     private readonly ISettingsService _settingsService;
-
-    private readonly Playbar playbar = default!;
 
     [ObservableProperty]
     private Audio? _current;

@@ -5,6 +5,7 @@
     xmlns:controls="clr-namespace:Rayer.Controls"
     xmlns:core="clr-namespace:Rayer.Core.Abstractions;assembly=Rayer.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:immersive="clr-namespace:Rayer.Controls.Immersive"
     xmlns:local="clr-namespace:Rayer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -12,13 +13,18 @@
     Width="1200"
     Height="802"
     MinWidth="900"
+    MinHeight="700"
     d:DataContext="{d:DesignInstance local:MainWindow,
                                      IsDesignTimeCreatable=False}"
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     Closing="OnClosing"
     ExtendsContentIntoTitleBar="True"
+    Loaded="OnLoaded"
+    RenderOptions.BitmapScalingMode="Fant"
     SizeChanged="OnSizeChanged"
+    SnapsToDevicePixels="True"
+    UseLayoutRounding="True"
     WindowCornerPreference="Default"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -27,11 +33,14 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="78" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
         <ui:TitleBar
             x:Name="TitleBar"
             Title="{Binding ViewModel.ApplicationTitle}"
             Grid.Row="0"
-            CloseWindowByDoubleClickOnIcon="True">
+            CloseWindowByDoubleClickOnIcon="False">
             <ui:TitleBar.Icon>
                 <ui:ImageIcon Source="pack://application:,,,/assets/logo.png" />
             </ui:TitleBar.Icon>
@@ -69,6 +78,12 @@
             </ui:NavigationView.ContentOverlay>
 
         </ui:NavigationView>
+
+        <immersive:ImmersivePlayer
+            x:Name="ImmersivePlayer"
+            Grid.RowSpan="3"
+            Grid.ColumnSpan="2"
+            Visibility="Collapsed" />
 
         <controls:Playbar
             x:Name="Playbar"

@@ -1,8 +1,12 @@
 ﻿using NAudio.Wave;
+using Rayer.Abstractions;
 using Rayer.Controls.Adorners;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Models;
+using Rayer.Markup;
+using Rayer.Services;
 using Rayer.ViewModels;
+using System.Threading.RateLimiting;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -18,6 +22,7 @@ public partial class Playbar : UserControl
 
     private readonly IThemeResourceProvider _themeResourceProvider;
     private readonly IPlaybarService _playbarService;
+    private readonly IImmersivePlayerService _immersivePlayerService;
 
     private static Rect _bounds;
 
@@ -32,12 +37,16 @@ public partial class Playbar : UserControl
 
         _playbarService = App.GetRequiredService<IPlaybarService>();
         _themeResourceProvider = App.GetRequiredService<IThemeResourceProvider>();
+        _immersivePlayerService = App.GetRequiredService<IImmersivePlayerService>();
         var audioManager = App.GetRequiredService<IAudioManager>();
 
         ApplicationThemeManager.Changed += ThemeChanged;
 
         _playbarService.PlayOrPauseTriggered += OnPlayOrPauseTriggered;
         audioManager.AudioStopped += OnAudioStopped;
+
+        _immersivePlayerService.Show += OnImmersivePlayerShow;
+        _immersivePlayerService.Hidden += OnImmersivePlayerHidden;
 
         InitializeResource();
 
@@ -113,15 +122,6 @@ public partial class Playbar : UserControl
         await _playbarService.Next();
     }
     #endregion
-
-    private void GlobalStop()
-    {
-        ViewModel.AudioManager.Playback.Stop();
-
-        ToggleControlsState(false);
-
-        PlayOrPause.Source = _resource.Play;
-    }
 
     #region Slider Events
     private void Slider_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
@@ -225,5 +225,61 @@ public partial class Playbar : UserControl
         }
 
         _isAdornerVisible = false;
+    }
+
+    private readonly SlidingWindowRateLimiter _limiter = new(new SlidingWindowRateLimiterOptions
+    {
+        PermitLimit = 1,
+        QueueLimit = 0,
+        SegmentsPerWindow = 1,
+        Window = TimeSpan.FromSeconds(1)
+    });
+
+    private async void OnAlbumMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        using var lease = await _limiter.AcquireAsync();
+
+        if (lease.IsAcquired)
+        {
+            await App.GetRequiredService<IImmersivePlayerService>().ToggleShow();
+        }
+    }
+
+    private void OnAlbumMouseEnter(object sender, MouseEventArgs e)
+    {
+        FullScreen.Source = (ImageSource)Application.Current.Resources[nameof(ThemeSymbol.FullScreen)];
+
+        AlbumMask.Visibility = Visibility.Visible;
+    }
+
+    private void OnAlbumMouseLeave(object sender, MouseEventArgs e)
+    {
+        AlbumMask.Visibility ^= Visibility.Collapsed;
+    }
+
+    private void OnImmersivePlayerShow(object? sender, EventArgs e)
+    {
+        Previous.Source = StaticThemeResources.Dark.Previous;
+
+        PlayOrPause.Source = _playbarService.PlaybackState is PlaybackState.Playing
+            ? StaticThemeResources.Dark.Pause
+            : StaticThemeResources.Dark.Play;
+
+        Next.Source = StaticThemeResources.Dark.Next;
+
+        PlayQueue.PlayQueue.Source = StaticThemeResources.Dark.PlayQueue;
+    }
+
+    private void OnImmersivePlayerHidden(object? sender, EventArgs e)
+    {
+        Previous.Source = (ImageSource)Application.Current.Resources[nameof(ThemeSymbol.Previous)];
+
+        PlayOrPause.Source = _playbarService.PlaybackState is PlaybackState.Playing
+            ? (ImageSource)Application.Current.Resources[nameof(ThemeSymbol.Pause)]
+            : (ImageSource)Application.Current.Resources[nameof(ThemeSymbol.Play)];
+
+        Next.Source = (ImageSource)Application.Current.Resources[nameof(ThemeSymbol.Next)];
+
+        PlayQueue.PlayQueue.Source = (ImageSource)Application.Current.Resources[nameof(ThemeSymbol.PlayQueue)];
     }
 }

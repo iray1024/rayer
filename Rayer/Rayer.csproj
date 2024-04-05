@@ -9,6 +9,8 @@
     <ApplicationIcon>assets\logo.ico</ApplicationIcon>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>$(SolutionDir)\rayer.snk</AssemblyOriginatorKeyFile>
+    <Authors>喵蛙王子丶</Authors>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,9 +28,11 @@
   </ItemGroup>
  
   <ItemGroup>    
+    <Resource Include="assets\dark\add-to.png" />    
+    <Resource Include="assets\dark\fullscreen.png" />    
     <Resource Include="assets\dark\mute.png" />    
     <Resource Include="assets\dark\pitch.png" />    
-    <Resource Include="assets\dark\playlist.png" />    
+    <Resource Include="assets\dark\play-queue.png" />    
     <Resource Include="assets\dark\recycle.png" />    
     <Resource Include="assets\dark\repeat.png" />    
     <Resource Include="assets\dark\shuffle.png" />    
@@ -36,12 +40,14 @@
     <Resource Include="assets\dark\volume-full.png" />    
     <Resource Include="assets\dark\volume-half.png" />    
     <Resource Include="assets\fallback.png" />    
+    <Resource Include="assets\light\add-to.png" />    
+    <Resource Include="assets\light\fullscreen.png" />    
     <Resource Include="assets\light\mute.png" />
     <Resource Include="assets\light\next.png" />
     <Resource Include="assets\light\pause.png" />
     <Resource Include="assets\light\pitch.png" />
     <Resource Include="assets\light\play.png" />
-    <Resource Include="assets\light\playlist.png" />
+    <Resource Include="assets\light\play-queue.png" />
     <Resource Include="assets\light\previous.png" />
     <Resource Include="assets\light\recycle.png" />
     <Resource Include="assets\light\repeat.png" />
@@ -54,6 +60,10 @@
 		<Resource Include="assets\dark\pause.png" />
     <Resource Include="assets\dark\play.png" />
     <Resource Include="assets\dark\previous.png" />
+    <Resource Include="assets\maximum.png" />
+    <Resource Include="assets\minimum.png" />
+    <Resource Include="assets\power.png" />
+    <Resource Include="assets\vinyl.png" />
   </ItemGroup>  
 
 </Project>

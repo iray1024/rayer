@@ -1,0 +1,250 @@
+﻿<UserControl
+    x:Class="Rayer.Controls.Immersive.ImmersiveVisualizerPresenter"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Rayer.Controls.Immersive"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="clr-namespace:Rayer.Core.Models;assembly=Rayer.Core"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DataContext="{d:DesignInstance local:ImmersiveVisualizerPresenter,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Background>
+        <LinearGradientBrush>
+            <GradientStop Offset="0" Color="#000000" />
+            <GradientStop Offset="0.9" Color="#90000000" />
+            <GradientStop Offset="1" Color="#90434343" />
+        </LinearGradientBrush>
+    </UserControl.Background>
+
+    <UserControl.Resources>
+        <Storyboard x:Key="AudioVisualizerStoryboard" RepeatBehavior="Forever">
+            <DoubleAnimation
+                BeginTime="00:00:00"
+                RepeatBehavior="Forever"
+                Storyboard.TargetName="AlbumRotate"
+                Storyboard.TargetProperty="Angle"
+                From="0"
+                To="360"
+                Duration="00:00:18" />
+
+            <DoubleAnimationUsingKeyFrames
+                RepeatBehavior="Forever"
+                Storyboard.TargetName="SampleWaveUpRotate"
+                Storyboard.TargetProperty="Angle"
+                Duration="0:0:8">
+                <LinearDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+                <LinearDoubleKeyFrame KeyTime="0:0:2" Value="60" />
+                <LinearDoubleKeyFrame KeyTime="0:0:4" Value="0" />
+                <LinearDoubleKeyFrame KeyTime="0:0:6" Value="-60" />
+                <LinearDoubleKeyFrame KeyTime="0:0:8" Value="0" />
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames
+                RepeatBehavior="Forever"
+                Storyboard.TargetName="SampleWaveDownRotate"
+                Storyboard.TargetProperty="Angle"
+                Duration="0:0:8">
+                <LinearDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+                <LinearDoubleKeyFrame KeyTime="0:0:2" Value="60" />
+                <LinearDoubleKeyFrame KeyTime="0:0:4" Value="0" />
+                <LinearDoubleKeyFrame KeyTime="0:0:6" Value="-60" />
+                <LinearDoubleKeyFrame KeyTime="0:0:8" Value="0" />
+            </DoubleAnimationUsingKeyFrames>
+
+            <ThicknessAnimationUsingKeyFrames
+                RepeatBehavior="Forever"
+                Storyboard.TargetName="SampleWaveUp"
+                Storyboard.TargetProperty="Margin"
+                Duration="0:0:11">
+                <SplineThicknessKeyFrame KeyTime="0:0:8" Value="0,-300,0,0" />
+                <SplineThicknessKeyFrame KeyTime="0:0:9" Value="0,-210,0,0" />
+                <SplineThicknessKeyFrame KeyTime="0:0:10" Value="0,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="0:0:11" Value="0,300,0,0" />
+            </ThicknessAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames
+                RepeatBehavior="Forever"
+                Storyboard.TargetName="SampleWaveDown"
+                Storyboard.TargetProperty="Margin"
+                Duration="0:0:11">
+                <SplineThicknessKeyFrame KeyTime="0:0:8" Value="0,300,0,0" />
+                <SplineThicknessKeyFrame KeyTime="0:0:9" Value="0,210,0,0" />
+                <SplineThicknessKeyFrame KeyTime="0:0:10" Value="0,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="0:0:11" Value="0,-300,0,0" />
+            </ThicknessAnimationUsingKeyFrames>
+
+            <DoubleAnimationUsingKeyFrames
+                RepeatBehavior="Forever"
+                Storyboard.TargetName="SampleWaveUp"
+                Storyboard.TargetProperty="Opacity"
+                Duration="0:0:11">
+                <SplineDoubleKeyFrame KeyTime="0:0:9" Value="1" />
+                <SplineDoubleKeyFrame KeyTime="0:0:10" Value="0" />
+                <SplineDoubleKeyFrame KeyTime="0:0:11" Value="1" />
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames
+                RepeatBehavior="Forever"
+                Storyboard.TargetName="SampleWaveDown"
+                Storyboard.TargetProperty="Opacity"
+                Duration="0:0:11">
+                <SplineDoubleKeyFrame KeyTime="0:0:9" Value="1" />
+                <SplineDoubleKeyFrame KeyTime="0:0:10" Value="0" />
+                <SplineDoubleKeyFrame KeyTime="0:0:11" Value="1" />
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="SampleWaveShowStoryboard">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="SampleWaveUp" Storyboard.TargetProperty="Opacity">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.65" Value="1" />
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="SampleWaveDown" Storyboard.TargetProperty="Opacity">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.65" Value="1" />
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="SampleWaveHiddenStoryboard">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="SampleWaveUp" Storyboard.TargetProperty="Opacity">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.45" Value="0" />
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="SampleWaveDown" Storyboard.TargetProperty="Opacity">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.45" Value="0" />
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </UserControl.Resources>
+
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid
+            x:Name="Album"
+            Width="{Binding Width, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ImmersiveVisualizerPresenter}}"
+            Height="{Binding Height, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ImmersiveVisualizerPresenter}}">
+            <Border
+                Width="200"
+                Height="200"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                CornerRadius="130"
+                RenderTransformOrigin="0.5,0.5">
+                <Border.Background>
+                    <ImageBrush ImageSource="{Binding ViewModel.Current.Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}" Stretch="UniformToFill" />
+                </Border.Background>
+                <Border.RenderTransform>
+                    <RotateTransform x:Name="AlbumRotate" />
+                </Border.RenderTransform>
+            </Border>
+        </Grid>
+
+        <Grid
+            Name="SampleDrawingPanel"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            RenderTransformOrigin="0.5,0.5">
+            <Path Name="SampleCircleFirst">
+                <Path.Data>
+                    <GeometryGroup>
+                        <PathGeometry>
+                            <PathFigure IsClosed="False" StartPoint="10,10">
+                                <PolyLineSegment>
+                                    <PolyLineSegment.Points>
+                                        <Point X="10" Y="10" />
+                                        <Point X="20" Y="10" />
+                                        <Point X="20" Y="20" />
+                                        <Point X="10" Y="20" />
+                                    </PolyLineSegment.Points>
+                                </PolyLineSegment>
+                            </PathFigure>
+                        </PathGeometry>
+                        <PathGeometry>
+                            <PathFigure IsClosed="True" StartPoint="30,10">
+                                <PolyLineSegment>
+                                    <PolyLineSegment.Points>
+                                        <Point X="30" Y="10" />
+                                        <Point X="40" Y="10" />
+                                        <Point X="40" Y="20" />
+                                        <Point X="30" Y="20" />
+                                    </PolyLineSegment.Points>
+                                </PolyLineSegment>
+                            </PathFigure>
+                        </PathGeometry>
+                    </GeometryGroup>
+                </Path.Data>
+            </Path>
+            <Path Name="SampleCircleSecond">
+                <Path.Data>
+                    <GeometryGroup>
+                        <PathGeometry>
+                            <PathFigure IsClosed="False" StartPoint="10,10">
+                                <PolyLineSegment>
+                                    <PolyLineSegment.Points>
+                                        <Point X="10" Y="10" />
+                                        <Point X="20" Y="10" />
+                                        <Point X="20" Y="20" />
+                                        <Point X="10" Y="20" />
+                                    </PolyLineSegment.Points>
+                                </PolyLineSegment>
+                            </PathFigure>
+                        </PathGeometry>
+                        <PathGeometry>
+                            <PathFigure IsClosed="True" StartPoint="30,10">
+                                <PolyLineSegment>
+                                    <PolyLineSegment.Points>
+                                        <Point X="30" Y="10" />
+                                        <Point X="40" Y="10" />
+                                        <Point X="40" Y="20" />
+                                        <Point X="30" Y="20" />
+                                    </PolyLineSegment.Points>
+                                </PolyLineSegment>
+                            </PathFigure>
+                        </PathGeometry>
+                    </GeometryGroup>
+                </Path.Data>
+            </Path>
+            <Path Name="SampleCircleThird">
+                <Path.Data>
+                    <GeometryGroup>
+                        <PathGeometry>
+                            <PathFigure IsClosed="False" StartPoint="10,10">
+                                <PolyLineSegment>
+                                    <PolyLineSegment.Points>
+                                        <Point X="10" Y="10" />
+                                        <Point X="20" Y="10" />
+                                        <Point X="20" Y="20" />
+                                        <Point X="10" Y="20" />
+                                    </PolyLineSegment.Points>
+                                </PolyLineSegment>
+                            </PathFigure>
+                        </PathGeometry>
+                        <PathGeometry>
+                            <PathFigure IsClosed="True" StartPoint="30,10">
+                                <PolyLineSegment>
+                                    <PolyLineSegment.Points>
+                                        <Point X="30" Y="10" />
+                                        <Point X="40" Y="10" />
+                                        <Point X="40" Y="20" />
+                                        <Point X="30" Y="20" />
+                                    </PolyLineSegment.Points>
+                                </PolyLineSegment>
+                            </PathFigure>
+                        </PathGeometry>
+                    </GeometryGroup>
+                </Path.Data>
+            </Path>
+
+            <Path
+                Name="SampleWaveUp"
+                Margin="0,-300,0,0"
+                RenderTransformOrigin="0.5,0.5">
+                <Path.RenderTransform>
+                    <RotateTransform x:Name="SampleWaveUpRotate" />
+                </Path.RenderTransform>
+            </Path>
+            <Path
+                Name="SampleWaveDown"
+                Margin="0,300,0,0"
+                RenderTransformOrigin="0.5,0.5">
+                <Path.RenderTransform>
+                    <RotateTransform x:Name="SampleWaveDownRotate" />
+                </Path.RenderTransform>
+            </Path>
+        </Grid>
+    </Grid>
+</UserControl>

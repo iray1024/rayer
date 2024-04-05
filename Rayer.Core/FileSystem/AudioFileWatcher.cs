@@ -10,8 +10,12 @@ namespace Rayer.Core.FileSystem;
 internal class AudioFileWatcher : IAudioFileWatcher
 {
     private static readonly string[] _filters = IAudioFileWatcher.MediaFilter.Split('|');
+
     private readonly ObservableCollection<FileSystemWatcher> _watchers = [];
 
+    /// <summary>
+    /// 这个变量表示整个系统监控的所有Audio
+    /// </summary>
     public ObservableCollection<Audio> Audios { get; } = [];
 
     public AudioFileWatcher(ISettingsService settingsService)
@@ -95,22 +99,7 @@ internal class AudioFileWatcher : IAudioFileWatcher
     {
         foreach (var watcher in _watchers)
         {
-            watcher.Changed += Watcher_Changed;
-            watcher.Created += Watcher_Created;
-            watcher.Deleted += Watcher_Deleted;
-            watcher.Renamed += Watcher_Renamed;
-
-            var files = Directory
-                .GetFiles(watcher.Path, "*", SearchOption.AllDirectories)
-                .Where(ValidFileType);
-
-            foreach (var item in files.Select(MediaRecognizer.Recognize))
-            {
-                Audios.Add(item);
-            }
-
-            watcher.IncludeSubdirectories = true;
-            watcher.EnableRaisingEvents = true;
+            Attatch(watcher);
         }
     }
 

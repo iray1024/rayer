@@ -17,6 +17,8 @@ public interface ISettings
 
     public PlayloopMode PlayloopMode { get; set; }
 
+    public ImmersiveMode ImmersiveMode { get; set; }
+
     public float Volume { get; set; }
 
     public float Pitch { get; set; }

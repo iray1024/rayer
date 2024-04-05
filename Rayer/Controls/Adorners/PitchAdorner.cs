@@ -1,4 +1,6 @@
-﻿using Rayer.Core.Abstractions;
+﻿using Rayer.Abstractions;
+using Rayer.Core.Abstractions;
+using Rayer.Services;
 using Rayer.ViewModels;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -15,6 +17,7 @@ namespace Rayer.Controls.Adorners;
 public class PitchAdorner : Adorner
 {
     private static readonly PlaybarViewModel _vm;
+    private readonly IImmersivePlayerService _immersivePlayerService;
 
     private static PitchPanel _panel = default!;
     private static ImageIcon _internalImage = default!;
@@ -47,6 +50,21 @@ public class PitchAdorner : Adorner
         AddVisualChild(_panel);
 
         ApplicationThemeManager.Changed += OnThemeChanged;
+
+        _immersivePlayerService = App.GetRequiredService<IImmersivePlayerService>();
+
+        _immersivePlayerService.Show += OnImmersivePlayerShow;
+        _immersivePlayerService.Hidden += OnImmersivePlayerHidden;
+    }
+
+    private void OnImmersivePlayerShow(object? sender, EventArgs e)
+    {
+        SetInternalImageIconTheme(true);
+    }
+
+    private void OnImmersivePlayerHidden(object? sender, EventArgs e)
+    {
+        SetInternalImageIconTheme();
     }
 
     private void OnThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)
@@ -103,6 +121,23 @@ public class PitchAdorner : Adorner
                     slider.AddHandler(Thumb.DragCompletedEvent, new DragCompletedEventHandler(OnDragCompleted), true);
 
                     _internalSlider = slider;
+                }
+            }
+        }
+    }
+
+    private void SetInternalImageIconTheme(bool isNowImmersive = false)
+    {
+        if (_panel.Content is Grid grid)
+        {
+            foreach (var item in grid.Children)
+            {
+                if (item is ImageIcon image && image.Name == "Pitch")
+                {
+                    RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.Fant);
+                    image.Source = isNowImmersive
+                        ? StaticThemeResources.Dark.Pitch
+                        : (ImageSource)Application.Current.Resources["Pitch"];
                 }
             }
         }

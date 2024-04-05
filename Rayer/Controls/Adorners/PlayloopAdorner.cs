@@ -1,4 +1,6 @@
-﻿using Rayer.Core.Common;
+﻿using Rayer.Abstractions;
+using Rayer.Core.Common;
+using Rayer.Services;
 using Rayer.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,6 +15,7 @@ namespace Rayer.Controls.Adorners;
 public class PlayloopAdorner : Adorner
 {
     private readonly PlaybarViewModel _vm;
+    private readonly IImmersivePlayerService _immersivePlayerService;
 
     private readonly ImageIcon _playLoop = default!;
     private static readonly int _playLoopMaxValue = (int)Enum.GetValues<PlayloopMode>().Max();
@@ -39,6 +42,21 @@ public class PlayloopAdorner : Adorner
         AddVisualChild(_playLoop);
 
         ApplicationThemeManager.Changed += OnThemeChanged;
+
+        _immersivePlayerService = App.GetRequiredService<IImmersivePlayerService>();
+
+        _immersivePlayerService.Show += OnImmersivePlayerShow;
+        _immersivePlayerService.Hidden += OnImmersivePlayerHidden;
+    }
+
+    private void OnImmersivePlayerShow(object? sender, EventArgs e)
+    {
+        _playLoop.Source = GetPlayloopDarkSource();
+    }
+
+    private void OnImmersivePlayerHidden(object? sender, EventArgs e)
+    {
+        _playLoop.Source = GetPlayloopSource();
     }
 
     private void OnThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)
@@ -88,7 +106,10 @@ public class PlayloopAdorner : Adorner
             _vm.AudioManager.Playback.Shuffle = true;
         }
 
-        _playLoop.Source = GetPlayloopSource();
+        _playLoop.Source = _immersivePlayerService.IsNowImmersive
+            ? GetPlayloopDarkSource()
+            : GetPlayloopSource();
+
         ToolTipService.SetToolTip(_playLoop, GetPlayloopToolTip());
     }
 
@@ -103,6 +124,19 @@ public class PlayloopAdorner : Adorner
         };
 
         return (ImageSource)resource;
+    }
+
+    private ImageSource GetPlayloopDarkSource()
+    {
+        var resource = _vm.SettingsService.Settings.PlayloopMode switch
+        {
+            PlayloopMode.Shuffle => StaticThemeResources.Dark.Shuffle,
+            PlayloopMode.List => StaticThemeResources.Dark.Repeat,
+            PlayloopMode.Single => StaticThemeResources.Dark.Single,
+            _ => StaticThemeResources.Dark.Repeat,
+        };
+
+        return resource;
     }
 
     private string GetPlayloopToolTip()

@@ -1,4 +1,5 @@
-﻿using Rayer.Core.Abstractions;
+﻿using Rayer.Abstractions;
+using Rayer.Core.Abstractions;
 using Rayer.ViewModels;
 using Rayer.Views.Pages;
 using System.ComponentModel;
@@ -83,6 +84,13 @@ public partial class MainWindow : IWindow
         }
 
         _isUserClosedPane = true;
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        var immersivePlayerService = App.GetRequiredService<IImmersivePlayerService>();
+
+        immersivePlayerService.SetPlayer(ImmersivePlayer);
     }
 
     private void OnClosing(object sender, CancelEventArgs e)

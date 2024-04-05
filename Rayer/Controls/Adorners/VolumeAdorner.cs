@@ -1,4 +1,6 @@
-﻿using Rayer.ViewModels;
+﻿using Rayer.Abstractions;
+using Rayer.Services;
+using Rayer.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -11,6 +13,7 @@ namespace Rayer.Controls;
 public class VolumeAdorner : Adorner
 {
     private readonly PlaybarViewModel _vm;
+    private readonly IImmersivePlayerService _immersivePlayerService;
 
     private readonly VolumePanel _panel = default!;
 
@@ -27,6 +30,21 @@ public class VolumeAdorner : Adorner
         AddVisualChild(_panel);
 
         ApplicationThemeManager.Changed += OnThemeChanged;
+
+        _immersivePlayerService = App.GetRequiredService<IImmersivePlayerService>();
+
+        _immersivePlayerService.Show += OnImmersivePlayerShow;
+        _immersivePlayerService.Hidden += OnImmersivePlayerHidden;
+    }
+
+    private void OnImmersivePlayerShow(object? sender, EventArgs e)
+    {
+        SetInternalImageIcon(true);
+    }
+
+    private void OnImmersivePlayerHidden(object? sender, EventArgs e)
+    {
+        SetInternalImageIcon();
     }
 
     private void OnThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)
@@ -51,7 +69,7 @@ public class VolumeAdorner : Adorner
     }
 
     #region Volume    
-    private void SetInternalImageIcon()
+    private void SetInternalImageIcon(bool isNowImmersive = false)
     {
         if (_panel.Content is Grid grid)
         {
@@ -60,19 +78,25 @@ public class VolumeAdorner : Adorner
                 if (item is ImageIcon image && image.Name == "Volume")
                 {
                     RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.Fant);
-                    SetVolumeElement(image);
+                    SetVolumeElement(image, isNowImmersive);
                 }
             }
         }
     }
 
-    private void SetVolumeElement(ImageIcon image)
+    private void SetVolumeElement(ImageIcon image, bool isNowImmersive = false)
     {
-        image.Source = _vm.SettingsService.Settings.Volume == 0f
-            ? (ImageSource)Application.Current.Resources["Mute"]
-            : _vm.SettingsService.Settings.Volume > 0.5f
-                ? (ImageSource)Application.Current.Resources["VolumeFull"]
-                : (ImageSource)Application.Current.Resources["VolumeHalf"];
+        image.Source = isNowImmersive
+            ? _vm.SettingsService.Settings.Volume == 0f
+                ? StaticThemeResources.Dark.Mute
+                : _vm.SettingsService.Settings.Volume > 0.5f
+                    ? StaticThemeResources.Dark.VolumeFull
+                    : StaticThemeResources.Dark.VolumeHalf
+            : _vm.SettingsService.Settings.Volume == 0f
+                ? (ImageSource)Application.Current.Resources["Mute"]
+                : _vm.SettingsService.Settings.Volume > 0.5f
+                    ? (ImageSource)Application.Current.Resources["VolumeFull"]
+                    : (ImageSource)Application.Current.Resources["VolumeHalf"];
     }
 
     private string GetToolTip()

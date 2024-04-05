@@ -63,6 +63,9 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
                     case nameof(settings.PlayloopMode):
                         settings.PlayloopMode = (PlayloopMode)reader.GetInt32();
                         break;
+                    case nameof(settings.ImmersiveMode):
+                        settings.ImmersiveMode = (ImmersiveMode)reader.GetInt32();
+                        break;
                     case nameof(settings.Volume):
                         settings.Volume = (float)reader.GetDouble();
                         break;
@@ -111,6 +114,7 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
         writer.WriteNumber(nameof(value.Theme), Convert.ToDecimal(value.Theme));
         writer.WriteNumber(nameof(value.PlaySingleAudioStrategy), Convert.ToDecimal(value.PlaySingleAudioStrategy));
         writer.WriteNumber(nameof(value.PlayloopMode), Convert.ToDecimal(value.PlayloopMode));
+        writer.WriteNumber(nameof(value.ImmersiveMode), Convert.ToDecimal(value.ImmersiveMode));
         writer.WriteNumber(nameof(value.Volume), Convert.ToDecimal(value.Volume));
         writer.WriteNumber(nameof(value.Pitch), Convert.ToDecimal(value.Pitch));
 

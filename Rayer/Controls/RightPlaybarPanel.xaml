@@ -74,7 +74,7 @@
                         ItemsSource="{Binding ViewModel.Items.View, Mode=OneWay}">
                         <ui:ListView.ItemTemplate>
                             <DataTemplate DataType="{x:Type models:Audio}">
-                                <Grid>
+                                <Grid ContextMenu="{Binding ViewModel.ContextMenu, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RightPlaybarPanel}}" PreviewMouseRightButtonUp="OnListViewItemRightButtonUp">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="*" />
@@ -121,13 +121,13 @@
             </Grid>
         </ui:Flyout>
         <ui:ImageIcon
-            x:Name="Playlist"
+            x:Name="PlayQueue"
             Width="28"
             Height="28"
             Cursor="Hand"
             MouseUp="OnMouseUp"
             RenderOptions.BitmapScalingMode="Fant"
-            Source="{StaticResource Playlist}" />
+            Source="{StaticResource PlayQueue}" />
     </Grid>
 
 </UserControl>

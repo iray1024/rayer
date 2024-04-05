@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Win32;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using System.Collections.ObjectModel;
@@ -27,7 +28,6 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
     public bool IsEmpty => AudioLibrary.Count == 0;
 
     private ApplicationTheme _currentApplicationTheme;
-
     public ApplicationTheme CurrentApplicationTheme
     {
         get => _currentApplicationTheme;
@@ -42,7 +42,6 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
     }
 
     private PlaySingleAudioStrategy _playSingleAudioStrategy;
-
     public PlaySingleAudioStrategy PlaySingleAudioStrategy
     {
         get => _playSingleAudioStrategy;
@@ -50,6 +49,19 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         {
             SetProperty(ref _playSingleAudioStrategy, value);
             _settings.Settings.PlaySingleAudioStrategy = _playSingleAudioStrategy;
+            OnPropertyChanged();
+            UpdateConfigFile();
+        }
+    }
+
+    private ImmersiveMode _immersiveMode;
+    public ImmersiveMode ImmersiveMode
+    {
+        get => _immersiveMode;
+        set
+        {
+            SetProperty(ref _immersiveMode, value);
+            _settings.Settings.ImmersiveMode = _immersiveMode;
             OnPropertyChanged();
             UpdateConfigFile();
         }
@@ -65,6 +77,7 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         _audioLibrary = _settings.Settings.AudioLibrary;
         _currentApplicationTheme = _settings.Settings.Theme;
         _playSingleAudioStrategy = _settings.Settings.PlaySingleAudioStrategy;
+        _immersiveMode = _settings.Settings.ImmersiveMode;
 
         AudioLibrary.CollectionChanged += AudioLibrary_CollectionChanged;
     }
@@ -138,8 +151,14 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
     }
 
     private void AddLibrary()
-    {
-        var folderBrowserDialog = new FolderBrowserDialog();
+    {        
+        var folderBrowserDialog = new FolderBrowserDialog()
+        {
+            RootFolder = Environment.SpecialFolder.MyMusic,
+            AutoUpgradeEnabled = true,            
+            Description = "选择文件夹导入...",
+            UseDescriptionForTitle = true,
+        };
 
         if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
         {

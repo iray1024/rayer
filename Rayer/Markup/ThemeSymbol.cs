@@ -16,6 +16,8 @@ public enum ThemeSymbol
     Mute,
     VolumeFull,
     VolumeHalf,
-    Playlist,
-    Recycle
+    PlayQueue,
+    Recycle,
+    AddTo,
+    FullScreen
 }

@@ -16,6 +16,7 @@
     Loaded="OnLoaded"
     MouseEnter="OnMouseEnter"
     MouseLeave="OnMouseLeave"
+    RenderOptions.BitmapScalingMode="Fant"
     mc:Ignorable="d">
     <Grid>
         <Border
@@ -31,14 +32,45 @@
                         <ColumnDefinition Width="125" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <ui:Image
+                    <Border
                         Grid.Column="0"
                         Width="50"
                         Height="50"
                         HorizontalAlignment="Right"
-                        CornerRadius="6"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        MouseEnter="OnAlbumMouseEnter"
+                        MouseLeave="OnAlbumMouseLeave"
+                        MouseLeftButtonUp="OnAlbumMouseLeftButtonUp"
                         RenderOptions.BitmapScalingMode="Fant"
-                        Source="{Binding ViewModel.Current.Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}" />
+                        SnapsToDevicePixels="True"
+                        UseLayoutRounding="True">
+                        <Grid>
+                            <Border
+                                x:Name="AlbumMask"
+                                Panel.ZIndex="999"
+                                CornerRadius="6"
+                                Visibility="Collapsed">
+                                <Border.Background>
+                                    <SolidColorBrush Opacity="0.3" Color="Black" />
+                                </Border.Background>
+                                <ui:ImageIcon
+                                    x:Name="FullScreen"
+                                    Width="28"
+                                    Height="28"
+                                    Opacity="1"
+                                    RenderOptions.BitmapScalingMode="Fant"
+                                    Source="{StaticResource FullScreen}" />
+                            </Border>
+                            <ui:Image
+                                Width="50"
+                                Height="50"
+                                HorizontalAlignment="Right"
+                                CornerRadius="6"
+                                RenderOptions.BitmapScalingMode="Fant"
+                                Source="{Binding ViewModel.Current.Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}" />
+                        </Grid>
+                    </Border>
                     <Grid
                         Grid.Column="1"
                         Margin="6,14,10,14"
@@ -62,6 +94,7 @@
                             Text="{Binding ViewModel.Current.Artists, Mode=OneWay, Converter={StaticResource ArtistsConverter}}" />
                     </Grid>
                     <local:RightPlaybarPanel
+                        x:Name="PlayQueue"
                         Grid.Column="2"
                         Margin="0,0,12,0"
                         HorizontalAlignment="Right" />

@@ -22,6 +22,7 @@
             <converters:TimeSpanConverter x:Key="TimeSpanConverter" />
             <converters:ThemeConverter x:Key="ThemeConverter" />
             <converters:PlaySingleAudioStrategyConverter x:Key="PlaySingleAudioStrategyConverter" />
+            <converters:ImmersiveModeConverter x:Key="ImmersiveModeConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

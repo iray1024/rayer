@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Rayer.Core.Abstractions;
+using Rayer.Core.Common;
 using Rayer.Core.Models;
 using System.ComponentModel;
+using System.Windows.Controls;
 using System.Windows.Data;
 
 namespace Rayer.ViewModels;
@@ -19,13 +21,17 @@ public partial class RightPlaybarPanelViewModel : ObservableObject
     [ObservableProperty]
     private string _queueCount = string.Empty;
 
-    public RightPlaybarPanelViewModel(IAudioManager audioManager)
+    public RightPlaybarPanelViewModel(IAudioManager audioManager, IContextMenuFactory contextMenuFactory)
     {
         _audioManager = audioManager;
 
         Items = new CollectionViewSource();
         Items.SortDescriptions.Add(new SortDescription(nameof(Audio.Title), ListSortDirection.Ascending));
+
+        ContextMenu = contextMenuFactory.CreateContextMenu(ContextMenuScope.PlayQueue);
     }
+
+    public ContextMenu ContextMenu { get; }
 
     public void OnButtonClick()
     {

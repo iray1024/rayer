@@ -16,7 +16,8 @@ public static class ServiceCollectionExtensions
         {
             var types = assembly.GetTypes()
                 .Where(x =>
-                    x.IsClass &&
+                    x.IsClass && 
+                    !x.IsAbstract &&
                     x.Namespace?.StartsWith(namespaceName, StringComparison.InvariantCultureIgnoreCase) == true);
 
             foreach (var type in types)
