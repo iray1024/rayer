@@ -1,5 +1,6 @@
 ﻿using Rayer.Core.Abstractions;
 using Rayer.Core.FileSystem;
+using Rayer.Core.Playing;
 using Rayer.Core.Services;
 using System.Reflection;
 
@@ -16,7 +17,7 @@ public static class ServiceCollectionExtensions
         {
             var types = assembly.GetTypes()
                 .Where(x =>
-                    x.IsClass && 
+                    x.IsClass &&
                     !x.IsAbstract &&
                     x.Namespace?.StartsWith(namespaceName, StringComparison.InvariantCultureIgnoreCase) == true);
 
@@ -37,6 +38,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IAudioManager, AudioManager>();
         services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton<IAudioFileWatcher, AudioFileWatcher>();
+        services.AddSingleton<IPlayQueueProvider, PlayQueueProvider>();
+        services.AddSingleton<IWaveMetadataFactory, WaveMetadataFactory>();
+        services.AddSingleton<IEqualizerProvider, EqualizerProvider>();
 
         return services;
     }

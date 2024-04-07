@@ -19,5 +19,6 @@ public enum ThemeSymbol
     PlayQueue,
     Recycle,
     AddTo,
-    FullScreen
+    FullScreen,
+    Equalizer
 }

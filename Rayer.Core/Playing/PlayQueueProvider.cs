@@ -4,12 +4,12 @@ using Rayer.Core.Models;
 
 namespace Rayer.Core.Playing;
 
-public class PlayQueueProvider : IPlayQueueProvider
+internal class PlayQueueProvider : IPlayQueueProvider
 {
     public SortableObservableCollection<Audio> Queue { get; }
 
     public PlayQueueProvider()
     {
-        
+        Queue = new SortableObservableCollection<Audio>([], AudioSortComparer.Ascending);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using NAudio.Wave;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
 using Rayer.Core.Models;
@@ -11,58 +10,51 @@ namespace Rayer.Core.Services;
 internal class AudioManager : IAudioManager, IDisposable
 {
     private readonly Playback _playback;
+    private readonly IAudioFileWatcher _audioFileWatcher;
 
     public AudioManager(IServiceProvider serviceProvider)
     {
-        _playback = new Playback(this);
+        _audioFileWatcher = serviceProvider.GetRequiredService<IAudioFileWatcher>();
 
-        var watcher = serviceProvider.GetRequiredService<IAudioFileWatcher>();
         var settings = serviceProvider.GetRequiredService<ISettingsService>().Settings;
+
+        _playback = new Playback(this, serviceProvider);
 
         _playback.Initialize(settings.Volume, settings.Pitch, settings.PlayloopMode);
 
-        Audios = watcher.Audios;
-
-        var firstAudio = Audios.FirstOrDefault();
-
-        if (firstAudio is not null)
-        {
-            Playback.Audio = firstAudio;
-        }
-
-        foreach (var item in Audios)
-        {
-            Playback.Queue.Add(item);
-        }
+        _playback.AudioPlaying += OnAudioPlaying;
+        _playback.AudioPaused += OnAudioPaused;
+        _playback.AudioChanged += OnAudioChanged;
+        _playback.AudioStopped += OnAudioStopped;
     }
 
-    public ObservableCollection<Audio> Audios { get; }
+    public ObservableCollection<Audio> Audios => _audioFileWatcher.Audios;
 
     public Playback Playback => _playback;
 
     public ICollection<Playlist> Playlists { get; } = [];
 
-    public event AudioPlayingEventHandler? Playing;
-    public event EventHandler? Paused;
+    public event AudioPlayingEventHandler? AudioPlaying;
+    public event EventHandler? AudioPaused;
     public event AudioChangedEventHandler? AudioChanged;
     public event EventHandler? AudioStopped;
 
-    public void OnPlaying(PlaybackState oldState)
+    public void OnAudioPlaying(object? sender, AudioPlayingArgs e)
     {
-        Playing?.Invoke(this, new AudioPlayingArgs { PlaybackState = oldState });
+        AudioPlaying?.Invoke(this, new AudioPlayingArgs { PlaybackState = e.PlaybackState });
     }
 
-    public void OnPaused()
+    public void OnAudioPaused(object? sender, EventArgs e)
     {
-        Paused?.Invoke(this, EventArgs.Empty);
+        AudioPaused?.Invoke(this, EventArgs.Empty);
     }
 
-    public void OnSwitch(Audio newAudio)
+    public void OnAudioChanged(object? sender, AudioChangedArgs e)
     {
-        AudioChanged?.Invoke(this, new AudioChangedArgs { New = newAudio });
+        AudioChanged?.Invoke(this, new AudioChangedArgs { New = e.New });
     }
 
-    public void OnStopped()
+    public void OnAudioStopped(object? sender, EventArgs e)
     {
         AudioStopped?.Invoke(this, EventArgs.Empty);
     }

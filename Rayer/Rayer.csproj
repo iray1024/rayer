@@ -14,6 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="assets\check.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="assets\logo.ico" />
   </ItemGroup>
  
@@ -28,7 +32,9 @@
   </ItemGroup>
  
   <ItemGroup>    
+    <Resource Include="assets\check.png" />    
     <Resource Include="assets\dark\add-to.png" />    
+    <Resource Include="assets\dark\equalizer.png" />    
     <Resource Include="assets\dark\fullscreen.png" />    
     <Resource Include="assets\dark\mute.png" />    
     <Resource Include="assets\dark\pitch.png" />    
@@ -40,7 +46,9 @@
     <Resource Include="assets\dark\volume-full.png" />    
     <Resource Include="assets\dark\volume-half.png" />    
     <Resource Include="assets\fallback.png" />    
+    <Resource Include="assets\fire.png" />    
     <Resource Include="assets\light\add-to.png" />    
+    <Resource Include="assets\light\equalizer.png" />    
     <Resource Include="assets\light\fullscreen.png" />    
     <Resource Include="assets\light\mute.png" />
     <Resource Include="assets\light\next.png" />

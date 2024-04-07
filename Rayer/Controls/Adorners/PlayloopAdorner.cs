@@ -25,43 +25,38 @@ public class PlayloopAdorner : Adorner
     {
         _vm = App.GetRequiredService<PlaybarViewModel>();
 
+        _immersivePlayerService = App.GetRequiredService<IImmersivePlayerService>();
+
+        _immersivePlayerService.Show += OnSwitchImmersivePlayerDisplay;
+        _immersivePlayerService.Hidden += OnSwitchImmersivePlayerDisplay;
+
         _playLoop = new ImageIcon
         {
             Width = 24,
             Height = 24,
             HorizontalAlignment = HorizontalAlignment.Right,
             Cursor = Cursors.Hand,
-            Source = GetPlayloopSource(),
+            Source = GetSource(),
         };
 
         _playLoop.MouseUp += OnPlayloopMouseUp;
 
         RenderOptions.SetBitmapScalingMode(_playLoop, BitmapScalingMode.Fant);
-        ToolTipService.SetToolTip(_playLoop, GetPlayloopToolTip());
+        ToolTipService.SetToolTip(_playLoop, GetToolTip());
 
         AddVisualChild(_playLoop);
 
         ApplicationThemeManager.Changed += OnThemeChanged;
-
-        _immersivePlayerService = App.GetRequiredService<IImmersivePlayerService>();
-
-        _immersivePlayerService.Show += OnImmersivePlayerShow;
-        _immersivePlayerService.Hidden += OnImmersivePlayerHidden;
     }
 
-    private void OnImmersivePlayerShow(object? sender, EventArgs e)
+    private void OnSwitchImmersivePlayerDisplay(object? sender, EventArgs e)
     {
-        _playLoop.Source = GetPlayloopDarkSource();
-    }
-
-    private void OnImmersivePlayerHidden(object? sender, EventArgs e)
-    {
-        _playLoop.Source = GetPlayloopSource();
+        _playLoop.Source = GetSource();
     }
 
     private void OnThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)
     {
-        _playLoop.Source = GetPlayloopSource();
+        _playLoop.Source = GetSource();
     }
 
     protected override int VisualChildrenCount => 1;
@@ -106,40 +101,31 @@ public class PlayloopAdorner : Adorner
             _vm.AudioManager.Playback.Shuffle = true;
         }
 
-        _playLoop.Source = _immersivePlayerService.IsNowImmersive
-            ? GetPlayloopDarkSource()
-            : GetPlayloopSource();
+        _playLoop.Source = GetSource();
 
-        ToolTipService.SetToolTip(_playLoop, GetPlayloopToolTip());
+        ToolTipService.SetToolTip(_playLoop, GetToolTip());
     }
 
-    private ImageSource GetPlayloopSource()
+    private ImageSource GetSource()
     {
-        var resource = _vm.SettingsService.Settings.PlayloopMode switch
-        {
-            PlayloopMode.Shuffle => Application.Current.Resources["Shuffle"],
-            PlayloopMode.List => Application.Current.Resources["Repeat"],
-            PlayloopMode.Single => Application.Current.Resources["Single"],
-            _ => Application.Current.Resources["Repeat"],
-        };
-
-        return (ImageSource)resource;
+        return _immersivePlayerService.IsNowImmersive
+            ? _vm.SettingsService.Settings.PlayloopMode switch
+            {
+                PlayloopMode.Shuffle => StaticThemeResources.Dark.Shuffle,
+                PlayloopMode.List => StaticThemeResources.Dark.Repeat,
+                PlayloopMode.Single => StaticThemeResources.Dark.Single,
+                _ => StaticThemeResources.Dark.Repeat,
+            }
+            : (ImageSource)(_vm.SettingsService.Settings.PlayloopMode switch
+            {
+                PlayloopMode.Shuffle => Application.Current.Resources["Shuffle"],
+                PlayloopMode.List => Application.Current.Resources["Repeat"],
+                PlayloopMode.Single => Application.Current.Resources["Single"],
+                _ => Application.Current.Resources["Repeat"],
+            });
     }
 
-    private ImageSource GetPlayloopDarkSource()
-    {
-        var resource = _vm.SettingsService.Settings.PlayloopMode switch
-        {
-            PlayloopMode.Shuffle => StaticThemeResources.Dark.Shuffle,
-            PlayloopMode.List => StaticThemeResources.Dark.Repeat,
-            PlayloopMode.Single => StaticThemeResources.Dark.Single,
-            _ => StaticThemeResources.Dark.Repeat,
-        };
-
-        return resource;
-    }
-
-    private string GetPlayloopToolTip()
+    private string GetToolTip()
     {
         return _vm.SettingsService.Settings.PlayloopMode switch
         {

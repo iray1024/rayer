@@ -1,5 +1,4 @@
-﻿using NAudio.Wave;
-using Rayer.Core.Events;
+﻿using Rayer.Core.Events;
 using Rayer.Core.Models;
 using Rayer.Core.Playing;
 using System.Collections.ObjectModel;
@@ -14,13 +13,8 @@ public interface IAudioManager
 
     ObservableCollection<Audio> Audios { get; }
 
-    void OnPlaying(PlaybackState oldState);
-    void OnPaused();
-    void OnSwitch(Audio newAudio);
-    void OnStopped();
-
-    event AudioPlayingEventHandler? Playing;
-    event EventHandler? Paused;
+    event AudioPlayingEventHandler? AudioPlaying;
+    event EventHandler? AudioPaused;
     event AudioChangedEventHandler? AudioChanged;
     event EventHandler? AudioStopped;
 }

@@ -191,6 +191,25 @@ public partial class Playbar : UserControl
 
         _isAdornerVisible = true;
 
+        AddControllerAdorner();
+        AddPlayQueueAdorner();
+    }
+
+    private void OnMouseLeave(object sender, MouseEventArgs e)
+    {
+        if (_bounds.Contains(e.GetPosition(this)))
+        {
+            return;
+        }
+
+        RemoveControllerAdnoner();
+        RemovePlayQueueAdnoner();
+
+        _isAdornerVisible = false;
+    }
+
+    private void AddControllerAdorner()
+    {
         var element = (UIElement)Controller;
 
         var adornerLayer = AdornerLayer.GetAdornerLayer(element);
@@ -204,13 +223,8 @@ public partial class Playbar : UserControl
         }
     }
 
-    private void OnMouseLeave(object sender, MouseEventArgs e)
+    private void RemoveControllerAdnoner()
     {
-        if (_bounds.Contains(e.GetPosition(this)))
-        {
-            return;
-        }
-
         var element = (UIElement)Controller;
 
         var adornerLayer = AdornerLayer.GetAdornerLayer(element);
@@ -223,8 +237,35 @@ public partial class Playbar : UserControl
                 adornerLayer.Remove(adorner);
             }
         }
+    }
 
-        _isAdornerVisible = false;
+    private void AddPlayQueueAdorner()
+    {
+        var element = (UIElement)PlayQueue;
+
+        var adornerLayer = AdornerLayer.GetAdornerLayer(element);
+        var adnoners = adornerLayer.GetAdorners(element);
+
+        if (adornerLayer is not null && (adnoners is null || adnoners.Length == 0))
+        {
+            adornerLayer.Add(new EqualizerAdorner(element));
+        }
+    }
+
+    private void RemovePlayQueueAdnoner()
+    {
+        var element = (UIElement)PlayQueue;
+
+        var adornerLayer = AdornerLayer.GetAdornerLayer(element);
+        var adorners = adornerLayer.GetAdorners(element);
+
+        if (adorners is not null && adorners.Length > 0)
+        {
+            foreach (var adorner in adorners)
+            {
+                adornerLayer.Remove(adorner);
+            }
+        }
     }
 
     private readonly SlidingWindowRateLimiter _limiter = new(new SlidingWindowRateLimiterOptions
@@ -268,6 +309,13 @@ public partial class Playbar : UserControl
         Next.Source = StaticThemeResources.Dark.Next;
 
         PlayQueue.PlayQueue.Source = StaticThemeResources.Dark.PlayQueue;
+
+        CurrentTime.Foreground = StaticThemeResources.Dark.TextFillColorPrimaryBrush;
+        TotalTime.Foreground = StaticThemeResources.Dark.TextFillColorPrimaryBrush;
+
+        var trackBorder = (Border)PlaybarSlider.Template.FindName("TrackBackground", PlaybarSlider);
+
+        trackBorder.Background = StaticThemeResources.Dark.SliderTrackFill;
     }
 
     private void OnImmersivePlayerHidden(object? sender, EventArgs e)
@@ -280,6 +328,12 @@ public partial class Playbar : UserControl
 
         Next.Source = (ImageSource)Application.Current.Resources[nameof(ThemeSymbol.Next)];
 
-        PlayQueue.PlayQueue.Source = (ImageSource)Application.Current.Resources[nameof(ThemeSymbol.PlayQueue)];
+        PlayQueue.PlayQueue.Source = (ImageSource)StaticThemeResources.GetDynamicResource(nameof(ThemeSymbol.PlayQueue));
+
+        CurrentTime.SetResourceReference(ForegroundProperty, "TextFillColorPrimaryBrush");
+        TotalTime.SetResourceReference(ForegroundProperty, "TextFillColorPrimaryBrush");
+
+        var trackBorder = (Border)PlaybarSlider.Template.FindName("TrackBackground", PlaybarSlider);
+        trackBorder.SetResourceReference(BackgroundProperty, "SliderTrackFill");
     }
 }

@@ -1,5 +1,7 @@
-﻿using Rayer.Core.Abstractions;
+﻿using NAudio.Extras;
+using Rayer.Core.Abstractions;
 using Rayer.Core.Models;
+using System.Collections.ObjectModel;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows.Input;
@@ -66,12 +68,15 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
                     case nameof(settings.ImmersiveMode):
                         settings.ImmersiveMode = (ImmersiveMode)reader.GetInt32();
                         break;
+                    case nameof(settings.EqualizerMode):
+                        settings.EqualizerMode = (EqualizerMode)reader.GetInt32();
+                        break;
                     case nameof(settings.Volume):
                         settings.Volume = (float)reader.GetDouble();
                         break;
                     case nameof(settings.Pitch):
                         settings.Pitch = (float)reader.GetDouble();
-                        break;
+                        break;                    
                     case nameof(settings.KeyPlayOrPause):
                         settings.KeyPlayOrPause = ReadKeyBinding(ref reader);
                         break;
@@ -115,9 +120,10 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
         writer.WriteNumber(nameof(value.PlaySingleAudioStrategy), Convert.ToDecimal(value.PlaySingleAudioStrategy));
         writer.WriteNumber(nameof(value.PlayloopMode), Convert.ToDecimal(value.PlayloopMode));
         writer.WriteNumber(nameof(value.ImmersiveMode), Convert.ToDecimal(value.ImmersiveMode));
+        writer.WriteNumber(nameof(value.EqualizerMode), Convert.ToDecimal(value.EqualizerMode));
         writer.WriteNumber(nameof(value.Volume), Convert.ToDecimal(value.Volume));
         writer.WriteNumber(nameof(value.Pitch), Convert.ToDecimal(value.Pitch));
-
+        
         writer.WriteStartObject(nameof(value.KeyPlayOrPause));
         writer.WriteNumber(nameof(value.KeyPlayOrPause.Modifiers), Convert.ToDecimal(value.KeyPlayOrPause.Modifiers));
         writer.WriteNumber(nameof(value.KeyPlayOrPause.Key), Convert.ToDecimal(value.KeyPlayOrPause.Key));

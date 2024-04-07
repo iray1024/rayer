@@ -16,6 +16,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Themes/ListBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Themes/ListBoxItem.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Themes/NoFocusableButtonStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Themes/EqualizerButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <converters:ArtistsConverter x:Key="ArtistsConverter" />

@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Win32;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using System.Collections.ObjectModel;
@@ -151,11 +150,11 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
     }
 
     private void AddLibrary()
-    {        
+    {
         var folderBrowserDialog = new FolderBrowserDialog()
         {
             RootFolder = Environment.SpecialFolder.MyMusic,
-            AutoUpgradeEnabled = true,            
+            AutoUpgradeEnabled = true,
             Description = "选择文件夹导入...",
             UseDescriptionForTitle = true,
         };

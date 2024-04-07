@@ -20,5 +20,6 @@
     <BitmapImage x:Key="Recycle" UriSource="pack://application:,,,/assets/dark/recycle.png" />
     <BitmapImage x:Key="AddTo" UriSource="pack://application:,,,/assets/dark/add-to.png" />
     <BitmapImage x:Key="FullScreen" UriSource="pack://application:,,,/assets/dark/fullscreen.png" />
+    <BitmapImage x:Key="Equalizer" UriSource="pack://application:,,,/assets/dark/equalizer.png" />
 
 </ResourceDictionary>

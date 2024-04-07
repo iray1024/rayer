@@ -2,16 +2,15 @@
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Events;
-using Rayer.Core.Extensions;
 using Rayer.Core.Models;
 using Rayer.Core.Utils;
 using Rayer.ViewModels;
-using System;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using Wpf.Ui.Appearance;
 
@@ -34,9 +33,9 @@ public partial class RightPlaybarPanel : UserControl
         _audioManager.Audios.CollectionChanged += OnAudiosCollectionChanged;
         _audioManager.Playback.Queue.CollectionChanged += OnPlayQueueCollectionChanged;
 
-        ViewModel.Items.Source = new Collection<Audio>([.. _audioManager.Playback.Queue]);
+        ViewModel.Items.AddRange(_audioManager.Playback.Queue);
 
-        ViewModel.QueueCount = $"共{(ViewModel.Items.Source as ICollection<Audio>)?.Count}首歌曲";
+        ViewModel.QueueCount = $"共{ViewModel.Items.Count}首歌曲";
 
         ApplicationThemeManager.Changed += ThemeChanged;
 
@@ -46,18 +45,15 @@ public partial class RightPlaybarPanel : UserControl
     public RightPlaybarPanelViewModel ViewModel { get; set; }
 
     private void OnMouseUp(object sender, MouseButtonEventArgs e)
-    {        
+    {
         ViewModel.OnButtonClick();
 
-        if (ViewModel.Items.Source is Collection<Audio>)
-        {            
-            LibListView.ScrollIntoView(_audioManager.Playback.Audio);
-        }
+        LibListView.ScrollIntoView(_audioManager.Playback.Audio);
     }
 
     private void OnRecycleMouseUp(object sender, MouseButtonEventArgs e)
     {
-        ViewModel.Items.Source = new Collection<Audio>();
+        ViewModel.Items.Clear();
         ViewModel.QueueCount = $"共0首歌曲";
 
         if (_audioManager.Playback.Playing)
@@ -70,41 +66,35 @@ public partial class RightPlaybarPanel : UserControl
 
     private void AudioChanged(object? sender, AudioChangedArgs e)
     {
-        if (ViewModel.Items.Source is Collection<Audio>)
-        {
-            var index = ViewModel.Items.View.IndexOf(e.New);
-            LibListView.SelectedIndex = index;
-            LibListView.ScrollIntoView(e.New);
-        }
+        var index = ViewModel.Items.IndexOf(e.New);
+        LibListView.SelectedIndex = index;
+        LibListView.ScrollIntoView(e.New);
     }
 
     private void OnAudiosCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
-            if (ViewModel.Items.Source is Collection<Audio> audios)
+            if (e.Action is NotifyCollectionChangedAction.Add)
             {
-                if (e.Action is NotifyCollectionChangedAction.Add)
+                var startIndex = e.NewStartingIndex;
+                if (e.NewItems is not null)
                 {
-                    var startIndex = e.NewStartingIndex;
-                    if (e.NewItems is not null)
+                    foreach (var item in e.NewItems)
                     {
-                        foreach (var item in e.NewItems)
-                        {
-                            audios.Insert(startIndex++, (Audio)item);
-                        }
+                        ViewModel.Items.Insert(startIndex++, (Audio)item);
                     }
                 }
-                if (e.Action is NotifyCollectionChangedAction.Remove)
-                {
-                    if (audios.Count > e.OldStartingIndex)
-                    {
-                        audios.RemoveAt(e.OldStartingIndex);
-                    }
-                }
-
-                ViewModel.QueueCount = $"共{audios.Count}首歌曲";
             }
+            if (e.Action is NotifyCollectionChangedAction.Remove)
+            {
+                if (ViewModel.Items.Count > e.OldStartingIndex)
+                {
+                    ViewModel.Items.RemoveAt(e.OldStartingIndex);
+                }
+            }
+
+            ViewModel.QueueCount = $"共{ViewModel.Items.Count}首歌曲";
         });
     }
 
@@ -112,27 +102,23 @@ public partial class RightPlaybarPanel : UserControl
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
-            if (ViewModel.Items.Source is Collection<Audio> audios)
+            if (e.Action is NotifyCollectionChangedAction.Add)
             {
-                if (e.Action is NotifyCollectionChangedAction.Add)
+                var startIndex = e.NewStartingIndex;
+                if (e.NewItems is not null)
                 {
-                    var startIndex = e.NewStartingIndex;
-                    if (e.NewItems is not null)
+                    foreach (var item in e.NewItems)
                     {
-                        foreach (var item in e.NewItems)
-                        {
-                            audios.Insert(startIndex++, (Audio)item);
-                        }
+                        ViewModel.Items.Insert(startIndex++, (Audio)item);
                     }
                 }
-                if (e.Action is NotifyCollectionChangedAction.Remove)
-                {
-                    audios.RemoveAt(e.OldStartingIndex);
-                }
-
-                ViewModel.Items.View.Refresh();
-                ViewModel.QueueCount = $"共{audios.Count}首歌曲";
             }
+            if (e.Action is NotifyCollectionChangedAction.Remove)
+            {
+                ViewModel.Items.RemoveAt(e.OldStartingIndex);
+            }
+
+            ViewModel.QueueCount = $"共{ViewModel.Items.Count}首歌曲";
         });
     }
 
@@ -183,5 +169,37 @@ public partial class RightPlaybarPanel : UserControl
                 }
             }
         }
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        var popup = (Popup)Flyout.Template.FindName("PART_Popup", Flyout);
+
+        popup.CustomPopupPlacementCallback = new CustomPopupPlacementCallback((popupSize, targetSize, offset) =>
+        {
+            var wnd = App.MainWindow;
+
+            var screen = System.Windows.Forms.Screen.FromHandle(new WindowInteropHelper(wnd).Handle);
+
+            var distanceToRight = 0d;
+
+            if (screen is not null)
+            {
+                distanceToRight = screen.WorkingArea.Right - (wnd.Left + wnd.ActualWidth);
+            }
+
+            return distanceToRight > popupSize.Width - targetSize.Width - 42
+                ? [new(
+                    new Point(
+                        -targetSize.Width + 10,
+                        (popupSize.Height * -1) - targetSize.Height),
+                    PopupPrimaryAxis.Vertical)]
+                : [new(
+                    new Point(
+                        -popupSize.Width + 38,
+                        (popupSize.Height * -1) - targetSize.Height),
+                    PopupPrimaryAxis.Vertical)];
+
+        });
     }
 }

@@ -22,6 +22,11 @@ public class VolumeAdorner : Adorner
     {
         _vm = App.GetRequiredService<PlaybarViewModel>();
 
+        _immersivePlayerService = App.GetRequiredService<IImmersivePlayerService>();
+
+        _immersivePlayerService.Show += OnSwicthImmersivePlayerDisplay;
+        _immersivePlayerService.Hidden += OnSwicthImmersivePlayerDisplay;
+
         _panel = new VolumePanel();
 
         SetInternalImageIcon();
@@ -31,18 +36,10 @@ public class VolumeAdorner : Adorner
 
         ApplicationThemeManager.Changed += OnThemeChanged;
 
-        _immersivePlayerService = App.GetRequiredService<IImmersivePlayerService>();
 
-        _immersivePlayerService.Show += OnImmersivePlayerShow;
-        _immersivePlayerService.Hidden += OnImmersivePlayerHidden;
     }
 
-    private void OnImmersivePlayerShow(object? sender, EventArgs e)
-    {
-        SetInternalImageIcon(true);
-    }
-
-    private void OnImmersivePlayerHidden(object? sender, EventArgs e)
+    private void OnSwicthImmersivePlayerDisplay(object? sender, EventArgs e)
     {
         SetInternalImageIcon();
     }
@@ -69,7 +66,7 @@ public class VolumeAdorner : Adorner
     }
 
     #region Volume    
-    private void SetInternalImageIcon(bool isNowImmersive = false)
+    private void SetInternalImageIcon()
     {
         if (_panel.Content is Grid grid)
         {
@@ -78,15 +75,15 @@ public class VolumeAdorner : Adorner
                 if (item is ImageIcon image && image.Name == "Volume")
                 {
                     RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.Fant);
-                    SetVolumeElement(image, isNowImmersive);
+                    SetVolumeElement(image);
                 }
             }
         }
     }
 
-    private void SetVolumeElement(ImageIcon image, bool isNowImmersive = false)
+    private void SetVolumeElement(ImageIcon image)
     {
-        image.Source = isNowImmersive
+        image.Source = _immersivePlayerService.IsNowImmersive
             ? _vm.SettingsService.Settings.Volume == 0f
                 ? StaticThemeResources.Dark.Mute
                 : _vm.SettingsService.Settings.Volume > 0.5f

@@ -47,8 +47,8 @@ public partial class ImmersiveVisualizerPresenter : UserControl
 
         var audioManager = App.GetRequiredService<IAudioManager>();
 
-        audioManager.Playing += OnPlaying;
-        audioManager.Paused += OnPaused;
+        audioManager.AudioPlaying += OnPlaying;
+        audioManager.AudioPaused += OnPaused;
         audioManager.AudioStopped += OnStopped;
 
         InitializeComponent();

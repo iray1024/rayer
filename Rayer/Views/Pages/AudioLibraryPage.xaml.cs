@@ -2,11 +2,9 @@
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Events;
-using Rayer.Core.Extensions;
 using Rayer.Core.Models;
 using Rayer.Core.Utils;
 using Rayer.ViewModels;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
@@ -31,22 +29,19 @@ public partial class AudioLibraryPage : INavigableView<AudioLibraryViewModel>
         _audioManager.AudioStopped += OnAudioStopped;
         _audioManager.Audios.CollectionChanged += AudioCollectionChanged;
 
-        viewModel.Items.Source = new ObservableCollection<Audio>(_audioManager.Audios);
-
         ViewModel = viewModel;
         DataContext = this;
 
+        ViewModel.Items.AddRange(_audioManager.Audios);
+               
         InitializeComponent();
     }
 
     private void OnAudioChanged(object? sender, AudioChangedArgs e)
     {
-        if (ViewModel.Items.Source is Collection<Audio>)
-        {
-            var index = ViewModel.Items.View.IndexOf(e.New);
-            LibListView.SelectedIndex = index;
-            LibListView.ScrollIntoView(LibListView.Items[index]);
-        }
+        var index = ViewModel.Items.IndexOf(e.New);
+        LibListView.SelectedIndex = index;
+        LibListView.ScrollIntoView(e.New);
     }
 
     private void OnAudioStopped(object? sender, EventArgs e)
@@ -58,24 +53,21 @@ public partial class AudioLibraryPage : INavigableView<AudioLibraryViewModel>
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
-            if (ViewModel.Items.Source is Collection<Audio> audios)
+            if (e.Action is NotifyCollectionChangedAction.Add)
             {
-                if (e.Action is NotifyCollectionChangedAction.Add)
+                var startIndex = e.NewStartingIndex;
+                if (e.NewItems is not null)
                 {
-                    var startIndex = e.NewStartingIndex;
-                    if (e.NewItems is not null)
+                    foreach (var item in e.NewItems)
                     {
-                        foreach (var item in e.NewItems)
-                        {
-                            audios.Insert(startIndex++, (Audio)item);
-                        }
+                        ViewModel.Items.Insert(startIndex++, (Audio)item);
                     }
                 }
+            }
 
-                if (e.Action is NotifyCollectionChangedAction.Remove)
-                {
-                    audios.RemoveAt(e.OldStartingIndex);
-                }
+            if (e.Action is NotifyCollectionChangedAction.Remove)
+            {
+                ViewModel.Items.RemoveAt(e.OldStartingIndex);
             }
         });
     }
@@ -98,12 +90,11 @@ public partial class AudioLibraryPage : INavigableView<AudioLibraryViewModel>
             }
             else
             {
+                _audioManager.Playback.Queue.Clear();
+                // 后续实现歌单后要修改逻辑
                 foreach (var audio in _audioManager.Audios)
                 {
-                    if (_audioManager.Playback.Queue.IndexOf(audio) == -1)
-                    {
-                        _audioManager.Playback.Queue.Add(audio);
-                    }
+                    _audioManager.Playback.Queue.Add(audio);
                 }
             }
 

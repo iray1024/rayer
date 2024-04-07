@@ -1,4 +1,5 @@
-﻿using Rayer.Core.Common;
+﻿using NAudio.Extras;
+using Rayer.Core.Common;
 using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
 using System.Windows.Input;
@@ -18,6 +19,8 @@ public interface ISettings
     public PlayloopMode PlayloopMode { get; set; }
 
     public ImmersiveMode ImmersiveMode { get; set; }
+
+    public EqualizerMode EqualizerMode { get; set; }
 
     public float Volume { get; set; }
 

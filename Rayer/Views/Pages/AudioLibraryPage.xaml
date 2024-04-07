@@ -18,17 +18,18 @@
 
     <Grid
         Margin="0,0,0,24"
-        Grid.IsSharedSizeScope="True"
-        SnapsToDevicePixels="True">
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <ui:ListView
             Name="LibListView"
-            Grid.Row="1"
+            Grid.RowSpan="2"
+            VerticalContentAlignment="Top"
             d:ItemsSource="{d:SampleData ItemCount=2}"
-            ItemsSource="{Binding ViewModel.Items.View, Mode=OneWay}">
+            ItemsSource="{Binding ViewModel.Items, Mode=OneWay}">
             <ui:ListView.ItemTemplate>
                 <DataTemplate DataType="{x:Type models:Audio}">
                     <Grid ContextMenu="{Binding ViewModel.ContextMenu, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:AudioLibraryPage}}" PreviewMouseRightButtonUp="OnListViewItemRightButtonUp">

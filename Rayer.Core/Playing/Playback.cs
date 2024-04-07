@@ -1,10 +1,10 @@
-﻿using NAudio.Wave;
-using NAudio.Wave.SampleProviders;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NAudio.Extras;
+using NAudio.Wave;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
+using Rayer.Core.Events;
 using Rayer.Core.Models;
-using System.Collections.ObjectModel;
-using System.IO;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -13,12 +13,10 @@ namespace Rayer.Core.Playing;
 public class Playback : IDisposable
 {
     private WaveOutEvent? _device;
-    private WaveStream? _reader;
-    private Stream? _baseStream;
-    private FadeInOutSampleProvider? _fadeInOut;
-    private SmbPitchShiftingSampleProvider? _pitchProvider;
+    private WaveMetadata _metadata = new();
 
-    private readonly MediaFoundationReader.MediaFoundationReaderSettings _meidaSettings = new() { RequestFloatOutput = true };
+    private readonly IPlayQueueProvider _playQueueProvider;
+    private readonly IWaveMetadataFactory _metadataFactory;
 
     private readonly IAudioManager _audioManager = null!;
 
@@ -34,17 +32,6 @@ public class Playback : IDisposable
     private static readonly float _downOneTone = 1.0f / _upOneTone;
 
     private bool _hasFadeOut = false;
-
-    private bool _mute = false;
-    public bool Mute
-    {
-        get => _mute;
-        set
-        {
-            _mute = value;
-            SetMute();
-        }
-    }
 
     private float _volume = 1f;
     public float Volume
@@ -74,31 +61,31 @@ public class Playback : IDisposable
 
     public TimeSpan CurrentTime
     {
-        get => _reader != null ? _reader.CurrentTime : TimeSpan.Zero;
+        get => _metadata.Reader is not null ? _metadata.Reader.CurrentTime : TimeSpan.Zero;
         set
         {
-            if (_reader != null)
+            if (_metadata.Reader is not null)
             {
-                _reader.CurrentTime = value;
+                _metadata.Reader.CurrentTime = value;
             }
         }
     }
 
-    public TimeSpan TotalTime => _reader != null ? _reader.TotalTime : TimeSpan.Zero;
+    public TimeSpan TotalTime => _metadata.Reader is not null ? _metadata.Reader.TotalTime : TimeSpan.Zero;
 
     public long Position
     {
-        get => _reader is not null ? _reader.Position : 0;
+        get => _metadata.Reader is not null ? _metadata.Reader.Position : 0;
         set
         {
-            if (_reader is not null)
+            if (_metadata.Reader is not null)
             {
-                _reader.Position = value;
+                _metadata.Reader.Position = value;
             }
         }
     }
 
-    public long Length => _reader is not null ? _reader.Length : 0;
+    public long Length => _metadata.Reader is not null ? _metadata.Reader.Length : 0;
 
     public PlaybackState PlaybackState => _device is not null
         ? _device.PlaybackState
@@ -109,26 +96,28 @@ public class Playback : IDisposable
     public DispatcherTimer DispatcherTimer { get; } =
         new DispatcherTimer(DispatcherPriority.Render) { Interval = TimeSpan.FromMilliseconds(100) };
 
-    public Playback(Playlist playlist)
-    {
-        Queue = [.. playlist.Audios];
-    }
-
-    public Playback(Audio audio)
-    {
-        Audio = audio;
-    }
-
-    public Playback(IAudioManager audioManager)
+    public Playback(
+        IAudioManager audioManager,
+        IServiceProvider serviceProvider)
     {
         _audioManager = audioManager;
+
+        _playQueueProvider = serviceProvider.GetRequiredService<IPlayQueueProvider>();
+        _metadataFactory = serviceProvider.GetRequiredService<IWaveMetadataFactory>();
+
+        Queue.AddRange(_audioManager.Audios);
 
         DispatcherTimer.Tick += OnTick;
     }
 
-    public ObservableCollection<Audio> Queue { get; } = [];
+    public SortableObservableCollection<Audio> Queue => _playQueueProvider.Queue;
 
     public bool Playing { get; set; } = false;
+
+    public event AudioPlayingEventHandler? AudioPlaying;
+    public event EventHandler? AudioPaused;
+    public event AudioChangedEventHandler? AudioChanged;
+    public event EventHandler? AudioStopped;
 
     public void Initialize(float volume, float pitch, PlayloopMode playloopMode)
     {
@@ -154,36 +143,36 @@ public class Playback : IDisposable
 
     public void Seek(double value)
     {
-        if (_reader is not null)
+        if (_metadata.Reader is not null)
         {
-            _reader.Position = (long)(_reader.Length * value * 0.01);
+            _metadata.Reader.Position = (long)(_metadata.Reader.Length * value * 0.01);
 
             if (_hasFadeOut)
             {
                 _hasFadeOut = false;
-                _fadeInOut?.BeginFadeIn(100);
+                _metadata.FadeInOutSampleProvider?.BeginFadeIn(100);
             }
         }
     }
 
     public void Jump(bool negative = false)
     {
-        if (_reader is not null)
+        if (_metadata.Reader is not null)
         {
-            var threshold = (long)(_reader.Length * (_jumpThreshold / _reader.TotalTime));
+            var threshold = (long)(_metadata.Reader.Length * (_jumpThreshold / _metadata.Reader.TotalTime));
 
-            var targetPosition = _reader.Position + (threshold * (negative ? -1 : 1));
+            var targetPosition = _metadata.Reader.Position + (threshold * (negative ? -1 : 1));
 
-            _reader.Position = targetPosition < 0
+            _metadata.Reader.Position = targetPosition < 0
                 ? 0
-                : targetPosition > _reader.Length
-                    ? _reader.Length - 10000
+                : targetPosition > _metadata.Reader.Length
+                    ? _metadata.Reader.Length - 10000
                     : targetPosition;
 
             if (_hasFadeOut)
             {
                 _hasFadeOut = false;
-                _fadeInOut?.BeginFadeIn(100);
+                _metadata.FadeInOutSampleProvider?.BeginFadeIn(100);
             }
         }
     }
@@ -228,7 +217,7 @@ public class Playback : IDisposable
     public void Resume(bool fadeIn = true)
     {
         _hasFadeOut = false;
-        if (_device is not null && _reader is not null && _device.PlaybackState is not PlaybackState.Playing)
+        if (_device is not null && _metadata.Reader is not null && _device.PlaybackState is not PlaybackState.Playing)
         {
             DispatcherTimer.Start();
 
@@ -237,12 +226,12 @@ public class Playback : IDisposable
             _device.Play();
             if (fadeIn)
             {
-                _fadeInOut?.BeginFadeIn(1000);
+                _metadata.FadeInOutSampleProvider?.BeginFadeIn(1000);
             }
 
             Playing = true;
 
-            _audioManager.OnPlaying(oldState);
+            AudioPlaying?.Invoke(this, new AudioPlayingArgs() { PlaybackState = oldState });
         }
     }
 
@@ -252,7 +241,7 @@ public class Playback : IDisposable
 
         _device?.Pause();
 
-        _audioManager.OnPaused();
+        AudioPaused?.Invoke(this, EventArgs.Empty);
     }
 
     public void Stop()
@@ -263,7 +252,7 @@ public class Playback : IDisposable
 
         _device?.Stop();
 
-        if (_reader is not null)
+        if (_metadata.Reader is not null)
         {
             CloseFile();
         }
@@ -280,7 +269,7 @@ public class Playback : IDisposable
 
         _device?.Stop();
 
-        if (_reader is not null)
+        if (_metadata.Reader is not null)
         {
             CloseFile();
         }
@@ -290,7 +279,7 @@ public class Playback : IDisposable
 
         Audio = _fallbackAudio;
 
-        _audioManager.OnStopped();
+        AudioStopped?.Invoke(this, EventArgs.Empty);
     }
 
     public async Task Next()
@@ -320,6 +309,11 @@ public class Playback : IDisposable
         Resume();
     }
 
+    public void UpdateEqualizer()
+    {
+        _metadata.Equalizer?.Update();
+    }
+
     private async Task EnsureDeviceCreated()
     {
         if (_device is null)
@@ -334,22 +328,16 @@ public class Playback : IDisposable
     {
         try
         {
-            _baseStream = new FileStream(Audio.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            _metadata = _metadataFactory.CreateWaveMetadata(Audio.Path);
 
-            _reader = new StreamMediaFoundationReader(_baseStream, _meidaSettings);
-
-            _pitchProvider = new SmbPitchShiftingSampleProvider(_reader.ToSampleProvider())
+            if (_metadata.PitchShiftingSampleProvider is not null)
             {
-                PitchFactor = Pitch
-            };
+                _metadata.PitchShiftingSampleProvider.PitchFactor = Pitch;
+            }
 
-            var fadeInOut = new FadeInOutSampleProvider(_pitchProvider);
+            _device?.Init(_metadata);
 
-            _fadeInOut = fadeInOut;
-
-            _device?.Init(fadeInOut);
-
-            _audioManager.OnSwitch(Audio);
+            AudioChanged?.Invoke(this, new AudioChangedArgs() { New = Audio });
         }
         catch
         {
@@ -359,21 +347,12 @@ public class Playback : IDisposable
 
     private void CloseFile()
     {
-        _fadeInOut = null;
-
-        _reader?.Close();
-        _reader?.Dispose();
-        _reader = null;
-
-        _baseStream?.Close();
-        _baseStream?.Dispose();
-
-        _baseStream = null;
+        _metadata.Dispose();
     }
 
     private void CreateDevice()
     {
-        _device = new WaveOutEvent() { Volume = _mute ? 0 : _volume, DesiredLatency = 200 };
+        _device = new WaveOutEvent() { Volume = _volume, DesiredLatency = 200 };
 
         _device.PlaybackStopped += async (s, a) =>
         {
@@ -381,11 +360,11 @@ public class Playback : IDisposable
             {
                 await Application.Current.Dispatcher.InvokeAsync(async () =>
                 {
-                    if (_reader is not null)
+                    if (_metadata.Reader is not null)
                     {
                         _semaphore.Release(2 - _semaphore.CurrentCount);
 
-                        _reader.Position = 0;
+                        _metadata.Reader.Position = 0;
 
                         if (Repeat && Playing)
                         {
@@ -405,14 +384,6 @@ public class Playback : IDisposable
         };
     }
 
-    private void SetMute()
-    {
-        if (_device is not null)
-        {
-            _device.Volume = _mute ? 0 : _volume;
-        }
-    }
-
     private void SetVolume()
     {
         if (_device is not null)
@@ -423,9 +394,9 @@ public class Playback : IDisposable
 
     private void SetPitch()
     {
-        if (_pitchProvider is not null)
+        if (_metadata.PitchShiftingSampleProvider is not null)
         {
-            _pitchProvider.PitchFactor = MathF.Round(Pitch, 2, MidpointRounding.ToZero);
+            _metadata.PitchShiftingSampleProvider.PitchFactor = MathF.Round(Pitch, 2, MidpointRounding.ToZero);
         }
     }
 
@@ -454,7 +425,7 @@ public class Playback : IDisposable
         {
             _hasFadeOut = true;
 
-            _fadeInOut?.BeginFadeOut(500);
+            _metadata.FadeInOutSampleProvider?.BeginFadeOut(500);
         }
     }
 

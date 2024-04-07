@@ -17,6 +17,7 @@
     MouseEnter="OnMouseEnter"
     MouseLeave="OnMouseLeave"
     RenderOptions.BitmapScalingMode="Fant"
+    SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <Grid>
         <Border
@@ -150,6 +151,7 @@
                     <Grid Grid.Row="1" Margin="0,2,0,0">
                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                             <ui:TextBlock
+                                x:Name="CurrentTime"
                                 Margin="0,6,6,0"
                                 FontSize="10"
                                 Text="{Binding ViewModel.CurrentTime, Mode=OneWay}" />
@@ -165,6 +167,7 @@
                                 Thumb.DragStarted="Slider_DragStarted"
                                 Value="{Binding ViewModel.ProgressValue, Mode=TwoWay}" />
                             <ui:TextBlock
+                                x:Name="TotalTime"
                                 Margin="6,6,0,0"
                                 FontSize="10"
                                 Text="{Binding ViewModel.TotalTime, Mode=OneWay}" />

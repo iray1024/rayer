@@ -15,10 +15,23 @@
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
         <ui:ImageIcon
-            x:Name="Minimum"
+            x:Name="Switch"
             Grid.Column="0"
+            Width="24"
+            Height="24"
+            Margin="0,32,10,0"
+            Cursor="Hand"
+            IsEnabled="False"
+            PreviewMouseLeftButtonDown="OnSwitchMouseLeftButtonUp"
+            RenderOptions.BitmapScalingMode="Fant"
+            Source="pack://application:,,,/assets/fire.png"
+            ToolTip="切换沉浸模式" />
+        <ui:ImageIcon
+            x:Name="Minimum"
+            Grid.Column="1"
             Width="24"
             Height="24"
             Margin="0,32,10,0"
@@ -28,7 +41,7 @@
             Source="pack://application:,,,/assets/minimum.png" />
         <ui:ImageIcon
             x:Name="Maximum"
-            Grid.Column="1"
+            Grid.Column="2"
             Width="24"
             Height="24"
             Margin="0,32,10,0"
@@ -38,7 +51,7 @@
             Source="pack://application:,,,/assets/maximum.png" />
         <ui:ImageIcon
             x:Name="Close"
-            Grid.Column="2"
+            Grid.Column="3"
             Width="24"
             Height="24"
             Margin="0,32,30,0"

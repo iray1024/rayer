@@ -31,8 +31,8 @@ public partial class ImmersiveVinylPresenter : UserControl
 
         _audioManager = App.GetRequiredService<IAudioManager>();
 
-        _audioManager.Playing += OnPlaying;
-        _audioManager.Paused += OnPaused;
+        _audioManager.AudioPlaying += OnPlaying;
+        _audioManager.AudioPaused += OnPaused;
         _audioManager.AudioStopped += OnStopped;
     }
 

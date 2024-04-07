@@ -42,27 +42,22 @@ public class PitchAdorner : Adorner
     {
         _panel = new PitchPanel();
 
+        _immersivePlayerService = App.GetRequiredService<IImmersivePlayerService>();
+
+        _immersivePlayerService.Show += OnSwitchImmersivePlayerDisplay;
+        _immersivePlayerService.Hidden += OnSwitchImmersivePlayerDisplay;
+
+        AddVisualChild(_panel);
+
         SetInternalControls();
 
         ToolTipService.SetToolTip(_internalImage, "重置音频");
         ToolTipService.SetToolTip(_internalSlider, GetToolTip());
 
-        AddVisualChild(_panel);
-
         ApplicationThemeManager.Changed += OnThemeChanged;
-
-        _immersivePlayerService = App.GetRequiredService<IImmersivePlayerService>();
-
-        _immersivePlayerService.Show += OnImmersivePlayerShow;
-        _immersivePlayerService.Hidden += OnImmersivePlayerHidden;
     }
 
-    private void OnImmersivePlayerShow(object? sender, EventArgs e)
-    {
-        SetInternalImageIconTheme(true);
-    }
-
-    private void OnImmersivePlayerHidden(object? sender, EventArgs e)
+    private void OnSwitchImmersivePlayerDisplay(object? sender, EventArgs e)
     {
         SetInternalImageIconTheme();
     }
@@ -108,7 +103,9 @@ public class PitchAdorner : Adorner
                 if (item is ImageIcon image && image.Name == "Pitch")
                 {
                     RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.Fant);
-                    image.Source = (ImageSource)Application.Current.Resources["Pitch"];
+                    image.Source = _immersivePlayerService.IsNowImmersive
+                        ? StaticThemeResources.Dark.Pitch
+                        : (ImageSource)Application.Current.Resources["Pitch"];
 
                     _internalImage = image;
                 }
@@ -121,12 +118,26 @@ public class PitchAdorner : Adorner
                     slider.AddHandler(Thumb.DragCompletedEvent, new DragCompletedEventHandler(OnDragCompleted), true);
 
                     _internalSlider = slider;
+
+                    if (_immersivePlayerService.IsNowImmersive)
+                    {
+                        _internalSlider.Loaded += OnInternalSliderLoaded;
+
+                    }
                 }
             }
         }
     }
 
-    private void SetInternalImageIconTheme(bool isNowImmersive = false)
+    private void OnInternalSliderLoaded(object sender, RoutedEventArgs e)
+    {
+        var trackBorder = (Border)_internalSlider.Template.FindName("TrackBackground", _internalSlider);
+        trackBorder.Background = StaticThemeResources.Dark.SliderTrackFill;
+
+        _internalSlider.Loaded -= OnInternalSliderLoaded;
+    }
+
+    private void SetInternalImageIconTheme()
     {
         if (_panel.Content is Grid grid)
         {
@@ -135,9 +146,21 @@ public class PitchAdorner : Adorner
                 if (item is ImageIcon image && image.Name == "Pitch")
                 {
                     RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.Fant);
-                    image.Source = isNowImmersive
-                        ? StaticThemeResources.Dark.Pitch
-                        : (ImageSource)Application.Current.Resources["Pitch"];
+
+                    if (_immersivePlayerService.IsNowImmersive)
+                    {
+                        image.Source = StaticThemeResources.Dark.Pitch;
+
+                        var trackBorder = (Border)_internalSlider.Template.FindName("TrackBackground", _internalSlider);
+                        trackBorder.Background = StaticThemeResources.Dark.SliderTrackFill;
+                    }
+                    else
+                    {
+                        image.Source = (ImageSource)StaticThemeResources.GetDynamicResource("Pitch");
+
+                        var trackBorder = (Border)_internalSlider.Template.FindName("TrackBackground", _internalSlider);
+                        trackBorder.SetResourceReference(Control.BackgroundProperty, "SliderTrackFill");
+                    }
                 }
             }
         }
