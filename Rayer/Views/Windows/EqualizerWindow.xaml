@@ -9,7 +9,7 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="均衡器"
     Width="600"
-    Height="480"
+    Height="435"
     d:DataContext="{d:DesignInstance local:EqualizerWindow,
                                      IsDesignTimeCreatable=False}"
     ExtendsContentIntoTitleBar="True"
@@ -40,7 +40,6 @@
         <Grid
             x:Name="EqualizerModeGroup"
             Grid.Row="1"
-            Margin="20,0,0,0"
             HorizontalAlignment="Center"
             VerticalAlignment="Top">
             <Grid.RowDefinitions>
@@ -162,13 +161,16 @@
                 <TextBlock
                     Margin="0,0,0,5"
                     HorizontalAlignment="Center"
-                    Text="{Binding ViewModel.Band1}" />
+                    Text="{Binding ViewModel.Band1, Converter={StaticResource EqualizerGainDbConverter}}"
+                    Visibility="Hidden" />
                 <Slider
                     Height="188"
-                    Margin="15,0,15,4"
+                    Margin="16,0,16,4"
                     IsSnapToTickEnabled="True"
                     Maximum="{Binding ViewModel.MaximumGain}"
                     Minimum="{Binding ViewModel.MinimumGain}"
+                    MouseEnter="OnMouseEnter"
+                    MouseLeave="OnMouseLeave"
                     MouseWheel="OnMouseWheel"
                     Orientation="Vertical"
                     PreviewMouseDown="OnPreviewMouseDown"
@@ -182,13 +184,16 @@
                 <TextBlock
                     Margin="0,0,0,5"
                     HorizontalAlignment="Center"
-                    Text="{Binding ViewModel.Band2}" />
+                    Text="{Binding ViewModel.Band2, Converter={StaticResource EqualizerGainDbConverter}}"
+                    Visibility="Hidden" />
                 <Slider
                     Height="188"
-                    Margin="15,0,15,4"
+                    Margin="16,0,16,4"
                     IsSnapToTickEnabled="True"
                     Maximum="{Binding ViewModel.MaximumGain}"
                     Minimum="{Binding ViewModel.MinimumGain}"
+                    MouseEnter="OnMouseEnter"
+                    MouseLeave="OnMouseLeave"
                     MouseWheel="OnMouseWheel"
                     Orientation="Vertical"
                     PreviewMouseDown="OnPreviewMouseDown"
@@ -202,13 +207,16 @@
                 <TextBlock
                     Margin="0,0,0,5"
                     HorizontalAlignment="Center"
-                    Text="{Binding ViewModel.Band3}" />
+                    Text="{Binding ViewModel.Band3, Converter={StaticResource EqualizerGainDbConverter}}"
+                    Visibility="Hidden" />
                 <Slider
                     Height="188"
-                    Margin="15,0,15,4"
+                    Margin="16,0,16,4"
                     IsSnapToTickEnabled="True"
                     Maximum="{Binding ViewModel.MaximumGain}"
                     Minimum="{Binding ViewModel.MinimumGain}"
+                    MouseEnter="OnMouseEnter"
+                    MouseLeave="OnMouseLeave"
                     MouseWheel="OnMouseWheel"
                     Orientation="Vertical"
                     PreviewMouseDown="OnPreviewMouseDown"
@@ -222,13 +230,16 @@
                 <TextBlock
                     Margin="0,0,0,5"
                     HorizontalAlignment="Center"
-                    Text="{Binding ViewModel.Band4}" />
+                    Text="{Binding ViewModel.Band4, Converter={StaticResource EqualizerGainDbConverter}}"
+                    Visibility="Hidden" />
                 <Slider
                     Height="188"
-                    Margin="15,0,15,4"
+                    Margin="16,0,16,4"
                     IsSnapToTickEnabled="True"
                     Maximum="{Binding ViewModel.MaximumGain}"
                     Minimum="{Binding ViewModel.MinimumGain}"
+                    MouseEnter="OnMouseEnter"
+                    MouseLeave="OnMouseLeave"
                     MouseWheel="OnMouseWheel"
                     Orientation="Vertical"
                     PreviewMouseDown="OnPreviewMouseDown"
@@ -242,13 +253,16 @@
                 <TextBlock
                     Margin="0,0,0,5"
                     HorizontalAlignment="Center"
-                    Text="{Binding ViewModel.Band5}" />
+                    Text="{Binding ViewModel.Band5, Converter={StaticResource EqualizerGainDbConverter}}"
+                    Visibility="Hidden" />
                 <Slider
                     Height="188"
-                    Margin="15,0,15,4"
+                    Margin="16,0,16,4"
                     IsSnapToTickEnabled="True"
                     Maximum="{Binding ViewModel.MaximumGain}"
                     Minimum="{Binding ViewModel.MinimumGain}"
+                    MouseEnter="OnMouseEnter"
+                    MouseLeave="OnMouseLeave"
                     MouseWheel="OnMouseWheel"
                     Orientation="Vertical"
                     PreviewMouseDown="OnPreviewMouseDown"
@@ -262,13 +276,16 @@
                 <TextBlock
                     Margin="0,0,0,5"
                     HorizontalAlignment="Center"
-                    Text="{Binding ViewModel.Band6}" />
+                    Text="{Binding ViewModel.Band6, Converter={StaticResource EqualizerGainDbConverter}}"
+                    Visibility="Hidden" />
                 <Slider
                     Height="188"
-                    Margin="15,0,15,4"
+                    Margin="16,0,16,4"
                     IsSnapToTickEnabled="True"
                     Maximum="{Binding ViewModel.MaximumGain}"
                     Minimum="{Binding ViewModel.MinimumGain}"
+                    MouseEnter="OnMouseEnter"
+                    MouseLeave="OnMouseLeave"
                     MouseWheel="OnMouseWheel"
                     Orientation="Vertical"
                     PreviewMouseDown="OnPreviewMouseDown"
@@ -282,13 +299,16 @@
                 <TextBlock
                     Margin="0,0,0,5"
                     HorizontalAlignment="Center"
-                    Text="{Binding ViewModel.Band7}" />
+                    Text="{Binding ViewModel.Band7, Converter={StaticResource EqualizerGainDbConverter}}"
+                    Visibility="Hidden" />
                 <Slider
                     Height="188"
-                    Margin="15,0,15,4"
+                    Margin="16,0,16,4"
                     IsSnapToTickEnabled="True"
                     Maximum="{Binding ViewModel.MaximumGain}"
                     Minimum="{Binding ViewModel.MinimumGain}"
+                    MouseEnter="OnMouseEnter"
+                    MouseLeave="OnMouseLeave"
                     MouseWheel="OnMouseWheel"
                     Orientation="Vertical"
                     PreviewMouseDown="OnPreviewMouseDown"
@@ -302,13 +322,16 @@
                 <TextBlock
                     Margin="0,0,0,5"
                     HorizontalAlignment="Center"
-                    Text="{Binding ViewModel.Band8}" />
+                    Text="{Binding ViewModel.Band8, Converter={StaticResource EqualizerGainDbConverter}}"
+                    Visibility="Hidden" />
                 <Slider
                     Height="188"
-                    Margin="15,0,15,4"
+                    Margin="16,0,16,4"
                     IsSnapToTickEnabled="True"
                     Maximum="{Binding ViewModel.MaximumGain}"
                     Minimum="{Binding ViewModel.MinimumGain}"
+                    MouseEnter="OnMouseEnter"
+                    MouseLeave="OnMouseLeave"
                     MouseWheel="OnMouseWheel"
                     Orientation="Vertical"
                     PreviewMouseDown="OnPreviewMouseDown"
@@ -322,13 +345,16 @@
                 <TextBlock
                     Margin="0,0,0,5"
                     HorizontalAlignment="Center"
-                    Text="{Binding ViewModel.Band9}" />
+                    Text="{Binding ViewModel.Band9, Converter={StaticResource EqualizerGainDbConverter}}"
+                    Visibility="Hidden" />
                 <Slider
                     Height="188"
-                    Margin="15,0,15,4"
+                    Margin="16,0,16,4"
                     IsSnapToTickEnabled="True"
                     Maximum="{Binding ViewModel.MaximumGain}"
                     Minimum="{Binding ViewModel.MinimumGain}"
+                    MouseEnter="OnMouseEnter"
+                    MouseLeave="OnMouseLeave"
                     MouseWheel="OnMouseWheel"
                     Orientation="Vertical"
                     PreviewMouseDown="OnPreviewMouseDown"
@@ -342,13 +368,16 @@
                 <TextBlock
                     Margin="0,0,0,5"
                     HorizontalAlignment="Center"
-                    Text="{Binding ViewModel.Band10}" />
+                    Text="{Binding ViewModel.Band10, Converter={StaticResource EqualizerGainDbConverter}}"
+                    Visibility="Hidden" />
                 <Slider
                     Height="188"
-                    Margin="15,0,15,4"
+                    Margin="16,0,16,4"
                     IsSnapToTickEnabled="True"
                     Maximum="{Binding ViewModel.MaximumGain}"
                     Minimum="{Binding ViewModel.MinimumGain}"
+                    MouseEnter="OnMouseEnter"
+                    MouseLeave="OnMouseLeave"
                     MouseWheel="OnMouseWheel"
                     Orientation="Vertical"
                     PreviewMouseDown="OnPreviewMouseDown"

@@ -24,6 +24,7 @@
             <converters:ThemeConverter x:Key="ThemeConverter" />
             <converters:PlaySingleAudioStrategyConverter x:Key="PlaySingleAudioStrategyConverter" />
             <converters:ImmersiveModeConverter x:Key="ImmersiveModeConverter" />
+            <converters:EqualizerGainDbConverter x:Key="EqualizerGainDbConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

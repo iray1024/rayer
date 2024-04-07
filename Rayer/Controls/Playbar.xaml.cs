@@ -300,6 +300,9 @@ public partial class Playbar : UserControl
 
     private void OnImmersivePlayerShow(object? sender, EventArgs e)
     {
+        Title.Foreground = StaticThemeResources.Dark.TextFillColorPrimaryBrush;
+        Artists.Foreground = StaticThemeResources.Dark.TextFillColorPrimaryBrush;
+
         Previous.Source = StaticThemeResources.Dark.Previous;
 
         PlayOrPause.Source = _playbarService.PlaybackState is PlaybackState.Playing
@@ -320,6 +323,9 @@ public partial class Playbar : UserControl
 
     private void OnImmersivePlayerHidden(object? sender, EventArgs e)
     {
+        Title.SetResourceReference(ForegroundProperty, "TextFillColorPrimaryBrush");
+        Artists.SetResourceReference(ForegroundProperty, "TextFillColorPrimaryBrush");
+
         Previous.Source = (ImageSource)Application.Current.Resources[nameof(ThemeSymbol.Previous)];
 
         PlayOrPause.Source = _playbarService.PlaybackState is PlaybackState.Playing

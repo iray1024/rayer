@@ -81,6 +81,7 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <TextBlock
+                            x:Name="Title"
                             Grid.Row="0"
                             Grid.Column="1"
                             Margin="6,8,0,0"
@@ -88,6 +89,7 @@
                             FontWeight="Normal"
                             Text="{Binding ViewModel.Current.Title, Mode=OneWay}" />
                         <TextBlock
+                            x:Name="Artists"
                             Grid.Row="1"
                             Grid.Column="1"
                             Margin="6,0,0,6"

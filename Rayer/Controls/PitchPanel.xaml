@@ -29,8 +29,12 @@
             x:Name="PitchSlider"
             Grid.Column="1"
             Width="100"
-            Maximum="100"
-            Minimum="0"
+            IsSnapToTickEnabled="True"
+            LargeChange="0.05"
+            Maximum="2"
+            Minimum="0.5"
+            SmallChange="0.05"
+            TickFrequency="0.05"
             Value="{Binding ViewModel.Value, Mode=TwoWay}" />
     </Grid>
 </UserControl>

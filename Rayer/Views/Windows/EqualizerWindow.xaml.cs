@@ -1,6 +1,7 @@
 ﻿using Rayer.Core.Abstractions;
 using Rayer.Core.Utils;
 using Rayer.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -67,7 +68,43 @@ public partial class EqualizerWindow
         CustomRadio.IsChecked = true;
 
         ViewModel.SwitchToCustom();
+
+        if (sender is Slider slider)
+        {
+            var value = slider.Value + 0.5 * (e.Delta > 0 ? 1 : -1);
+
+            value = Math.Min(Math.Max(value, -12f), 12f);
+
+            slider.Value = value;
+        }
+
         ViewModel.SaveCustom();
     }
-    #endregion    
+    #endregion
+
+    private void OnMouseEnter(object sender, MouseEventArgs e)
+    {
+        if (sender is Slider slider && slider.Parent is StackPanel panel)
+        {
+            var textBlock = panel.Children[0];
+
+            if (textBlock is TextBlock block)
+            {
+                block.Visibility = Visibility.Visible;
+            }
+        }
+    }
+
+    private void OnMouseLeave(object sender, MouseEventArgs e)
+    {
+        if (sender is Slider slider && slider.Parent is StackPanel panel)
+        {
+            var textBlock = panel.Children[0];
+
+            if (textBlock is TextBlock block)
+            {
+                block.Visibility = Visibility.Hidden;
+            }
+        }
+    }
 }

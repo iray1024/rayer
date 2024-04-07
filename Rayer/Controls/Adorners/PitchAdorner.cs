@@ -2,7 +2,6 @@
 using Rayer.Core.Abstractions;
 using Rayer.Services;
 using Rayer.ViewModels;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -112,8 +111,7 @@ public class PitchAdorner : Adorner
                 if (item is Slider slider && slider.Name == "PitchSlider")
                 {
                     slider.MouseWheel += OnPitchMouseWheel;
-                    slider.PreviewMouseDown += OnPreviewMouseDown;
-
+                    slider.ValueChanged += OnValueChanged;
                     slider.AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(OnDragDelta), true);
                     slider.AddHandler(Thumb.DragCompletedEvent, new DragCompletedEventHandler(OnDragCompleted), true);
 
@@ -128,6 +126,8 @@ public class PitchAdorner : Adorner
             }
         }
     }
+
+
 
     private void OnInternalSliderLoaded(object sender, RoutedEventArgs e)
     {
@@ -166,39 +166,36 @@ public class PitchAdorner : Adorner
         }
     }
 
-    private void OnPitchMouseWheel(object sender, MouseWheelEventArgs e)
+    private void OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        var factor = _vm.AudioManager.Playback.Pitch + (e.Delta / 1000.0f);
+        var factor = MathF.Round((float)_internalSlider.Value, 2);
 
-        var percentage = Math.Min(Math.Max(TransformFromPercentage(factor), 0), 1);
-
-        _internalSlider.Value = percentage * 100;
         _vm.AudioManager.Playback.Pitch = factor;
+
         Save(factor);
     }
 
-    private void OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
+    private void OnPitchMouseWheel(object sender, MouseWheelEventArgs e)
     {
-        var percentage = (float)(e.GetPosition(_internalSlider).X / _internalSlider.ActualWidth * (_internalSlider.Maximum - _internalSlider.Minimum));
+        var factor = _vm.AudioManager.Playback.Pitch + (0.05f * (e.Delta > 0 ? 1 : -1));
 
-        _internalSlider.Value = percentage;
+        factor = Math.Min(Math.Max(factor, 0.5f), 2f);
 
-        var factor = TransformFromPercentage(percentage);
-
+        _internalSlider.Value = factor;
         _vm.AudioManager.Playback.Pitch = factor;
         Save(factor);
     }
 
     private void OnDragDelta(object sender, DragDeltaEventArgs e)
     {
-        var factor = TransformFromPercentage((float)_internalSlider.Value);
+        var factor = (float)_internalSlider.Value;
 
         _vm.AudioManager.Playback.Pitch = factor;
     }
 
     private void OnDragCompleted(object sender, DragCompletedEventArgs e)
     {
-        var factor = TransformFromPercentage((float)_internalSlider.Value);
+        var factor = (float)_internalSlider.Value;
 
         _vm.AudioManager.Playback.Pitch = factor;
 
@@ -212,25 +209,11 @@ public class PitchAdorner : Adorner
         _vm.SettingsService.Settings.Pitch = MathF.Round(factor, 2);
         _vm.SettingsService.Save();
     }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static float TransformFromFactor(float factor)
-    {
-        return (factor - 0.5f) * (100 / 1.5f);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static float TransformFromPercentage(float percentage)
-    {
-        return 0.5f + (percentage / 100 * 1.5f);
-    }
     #endregion
 
     private static void OnPitchUpTriggered(object? sender, EventArgs e)
     {
-        var percentage = TransformFromFactor(0.55f);
-
-        _internalSlider.Value += percentage;
+        _internalSlider.Value += 0.05f;
 
         _vm.AudioManager.Playback.Pitch += 0.05f;
 
@@ -239,9 +222,7 @@ public class PitchAdorner : Adorner
 
     private static void OnPitchDownTriggered(object? sender, EventArgs e)
     {
-        var percentage = TransformFromFactor(0.55f);
-
-        _internalSlider.Value -= percentage;
+        _internalSlider.Value -= 0.05f;
 
         _vm.AudioManager.Playback.Pitch -= 0.05f;
 
