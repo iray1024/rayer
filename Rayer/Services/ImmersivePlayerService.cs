@@ -144,6 +144,11 @@ internal partial class ImmersivePlayerService : IImmersivePlayerService
             {
                 ResetAudioVisualiazer(_visualizerPresenter);
             }
+
+            if (presenter is ImmersiveVinylPresenter vinylPresenter)
+            {
+                vinylPresenter.AlbumRotateStoryboard.Begin();
+            }
         }
     }
 

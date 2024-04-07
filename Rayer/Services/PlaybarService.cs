@@ -60,14 +60,14 @@ internal class PlaybarService(IAudioManager audioManager) : IPlaybarService
         PitchDownTriggered?.Invoke(null, EventArgs.Empty);
     }
 
-    public void Forward()
+    public async Task Forward()
     {
-        audioManager.Playback.Jump();
+        await audioManager.Playback.Jump();
     }
 
-    public void Rewind()
+    public async Task Rewind()
     {
-        audioManager.Playback.Jump(true);
+        await audioManager.Playback.Jump(true);
     }
 
     public event EventHandler? PlayOrPauseTriggered;

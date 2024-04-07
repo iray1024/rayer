@@ -4,7 +4,6 @@ using Rayer.Services;
 using Rayer.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -112,8 +111,8 @@ public class PitchAdorner : Adorner
                 {
                     slider.MouseWheel += OnPitchMouseWheel;
                     slider.ValueChanged += OnValueChanged;
-                    slider.AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(OnDragDelta), true);
-                    slider.AddHandler(Thumb.DragCompletedEvent, new DragCompletedEventHandler(OnDragCompleted), true);
+                    //slider.AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(OnDragDelta), true);
+                    //slider.AddHandler(Thumb.DragCompletedEvent, new DragCompletedEventHandler(OnDragCompleted), true);
 
                     _internalSlider = slider;
 
@@ -126,8 +125,6 @@ public class PitchAdorner : Adorner
             }
         }
     }
-
-
 
     private void OnInternalSliderLoaded(object sender, RoutedEventArgs e)
     {
@@ -172,6 +169,8 @@ public class PitchAdorner : Adorner
 
         _vm.AudioManager.Playback.Pitch = factor;
 
+        ToolTipService.SetToolTip(_internalSlider, GetToolTip());
+
         Save(factor);
     }
 
@@ -182,24 +181,8 @@ public class PitchAdorner : Adorner
         factor = Math.Min(Math.Max(factor, 0.5f), 2f);
 
         _internalSlider.Value = factor;
-        _vm.AudioManager.Playback.Pitch = factor;
-        Save(factor);
-    }
 
-    private void OnDragDelta(object sender, DragDeltaEventArgs e)
-    {
-        var factor = (float)_internalSlider.Value;
-
-        _vm.AudioManager.Playback.Pitch = factor;
-    }
-
-    private void OnDragCompleted(object sender, DragCompletedEventArgs e)
-    {
-        var factor = (float)_internalSlider.Value;
-
-        _vm.AudioManager.Playback.Pitch = factor;
-
-        Save(factor);
+        ToolTipService.SetToolTip(_internalSlider, GetToolTip());
     }
 
     private static void Save(float factor)

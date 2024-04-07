@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using NAudio.Extras;
 using NAudio.Wave;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
@@ -66,7 +65,7 @@ public class Playback : IDisposable
         {
             if (_metadata.Reader is not null)
             {
-                _metadata.Reader.CurrentTime = value;
+                _metadata.Reader.CurrentTime = new TimeSpan(Math.Min(value.Ticks, _metadata.Reader.TotalTime.Ticks));
             }
         }
     }
@@ -80,7 +79,7 @@ public class Playback : IDisposable
         {
             if (_metadata.Reader is not null)
             {
-                _metadata.Reader.Position = value;
+                _metadata.Reader.Position = Math.Min(value, _metadata.Reader.Length - 10000);
             }
         }
     }
@@ -155,7 +154,7 @@ public class Playback : IDisposable
         }
     }
 
-    public void Jump(bool negative = false)
+    public async Task Jump(bool negative = false)
     {
         if (_metadata.Reader is not null)
         {
@@ -163,11 +162,18 @@ public class Playback : IDisposable
 
             var targetPosition = _metadata.Reader.Position + (threshold * (negative ? -1 : 1));
 
-            _metadata.Reader.Position = targetPosition < 0
-                ? 0
-                : targetPosition > _metadata.Reader.Length
-                    ? _metadata.Reader.Length - 10000
-                    : targetPosition;
+            if (targetPosition < 0)
+            {
+                _metadata.Reader.Position = 0;
+            }
+            else if (targetPosition >= _metadata.Reader.Length)
+            {
+                await Next();
+            }
+            else
+            {
+                _metadata.Reader.Position = targetPosition;
+            }
 
             if (_hasFadeOut)
             {
@@ -419,13 +425,17 @@ public class Playback : IDisposable
         audio ??= Queue[0];
     }
 
-    private void OnTick(object? sender, EventArgs e)
+    private async void OnTick(object? sender, EventArgs e)
     {
         if (TotalTime - CurrentTime <= _fadeOutThreshold && !_hasFadeOut)
         {
             _hasFadeOut = true;
 
-            _metadata.FadeInOutSampleProvider?.BeginFadeOut(500);
+            _metadata.FadeInOutSampleProvider?.BeginFadeOut(800);
+        }
+        else if (CurrentTime >= TotalTime)
+        {
+            await Next();
         }
     }
 
