@@ -41,6 +41,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IAudioFileWatcher, AudioFileWatcher>();
         services.AddSingleton<IPlayQueueProvider, PlayQueueProvider>();
         services.AddSingleton<IWaveMetadataFactory, WaveMetadataFactory>();
+        services.AddSingleton<IDeviceManager, DeviceManager>();
         services.AddSingleton<IEqualizerProvider, EqualizerProvider>();
         services.AddSingleton<IPitchShiftingProviderFactory, PitchShiftingProviderFactory>();
 

@@ -58,7 +58,7 @@ public partial class RightPlaybarPanel : UserControl
 
         if (_audioManager.Playback.Playing)
         {
-            _audioManager.Playback.StopPlay();
+            _audioManager.Playback.EndPlay();
         }
 
         _audioManager.Playback.Queue.Clear();

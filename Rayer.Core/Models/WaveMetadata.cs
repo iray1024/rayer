@@ -24,7 +24,7 @@ public class WaveMetadata : ISampleProvider, IDisposable
     public int Read(float[] buffer, int offset, int count)
     {
         return FadeInOutSampleProvider is null
-            ? throw new ObjectDisposedException("FadeInOutSampleProvider已被释放")
+            ? 0//throw new ObjectDisposedException("FadeInOutSampleProvider已被释放")
             : FadeInOutSampleProvider.Read(buffer, offset, count);
     }
 

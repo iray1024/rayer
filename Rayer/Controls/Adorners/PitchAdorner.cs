@@ -167,7 +167,7 @@ public class PitchAdorner : Adorner
     {
         var factor = MathF.Round((float)_internalSlider.Value, 2);
 
-        _vm.AudioManager.Playback.Pitch = factor;
+        _vm.AudioManager.Playback.Device.Pitch = factor;
 
         ToolTipService.SetToolTip(_internalSlider, GetToolTip());
 
@@ -176,7 +176,7 @@ public class PitchAdorner : Adorner
 
     private void OnPitchMouseWheel(object sender, MouseWheelEventArgs e)
     {
-        var factor = _vm.AudioManager.Playback.Pitch + (0.05f * (e.Delta > 0 ? 1 : -1));
+        var factor = _vm.AudioManager.Playback.Device.Pitch + (0.05f * (e.Delta > 0 ? 1 : -1));
 
         factor = Math.Min(Math.Max(factor, 0.5f), 2f);
 
@@ -198,18 +198,18 @@ public class PitchAdorner : Adorner
     {
         _internalSlider.Value += 0.05f;
 
-        _vm.AudioManager.Playback.Pitch += 0.05f;
+        _vm.AudioManager.Playback.Device.Pitch += 0.05f;
 
-        Save(_vm.AudioManager.Playback.Pitch);
+        Save(_vm.AudioManager.Playback.Device.Pitch);
     }
 
     private static void OnPitchDownTriggered(object? sender, EventArgs e)
     {
         _internalSlider.Value -= 0.05f;
 
-        _vm.AudioManager.Playback.Pitch -= 0.05f;
+        _vm.AudioManager.Playback.Device.Pitch -= 0.05f;
 
-        Save(_vm.AudioManager.Playback.Pitch);
+        Save(_vm.AudioManager.Playback.Device.Pitch);
     }
 
     private static string GetToolTip()

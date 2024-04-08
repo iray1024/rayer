@@ -5,11 +5,11 @@ namespace Rayer.Services;
 
 internal class PlaybarService(IAudioManager audioManager) : IPlaybarService
 {
-    public PlaybackState PlaybackState => audioManager.Playback.PlaybackState;
+    public PlaybackState PlaybackState => audioManager.Playback.Device.PlaybackState;
 
     public void PlayOrPause(bool SuppressEvent = false)
     {
-        var currentPlaybackState = audioManager.Playback.PlaybackState;
+        var currentPlaybackState = audioManager.Playback.Device.PlaybackState;
 
         if (currentPlaybackState is PlaybackState.Playing)
         {
@@ -32,7 +32,7 @@ internal class PlaybarService(IAudioManager audioManager) : IPlaybarService
 
     public async Task Previous()
     {
-        if (audioManager.Playback.PlaybackState is not PlaybackState.Stopped)
+        if (audioManager.Playback.Device.PlaybackState is not PlaybackState.Stopped)
         {
             await audioManager.Playback.Previous();
         }
@@ -42,7 +42,7 @@ internal class PlaybarService(IAudioManager audioManager) : IPlaybarService
 
     public async Task Next()
     {
-        if (audioManager.Playback.PlaybackState is not PlaybackState.Stopped)
+        if (audioManager.Playback.Device.PlaybackState is not PlaybackState.Stopped)
         {
             await audioManager.Playback.Next();
         }
@@ -60,14 +60,14 @@ internal class PlaybarService(IAudioManager audioManager) : IPlaybarService
         PitchDownTriggered?.Invoke(null, EventArgs.Empty);
     }
 
-    public async Task Forward()
+    public void Forward()
     {
-        await audioManager.Playback.Jump();
+        audioManager.Playback.Jump();
     }
 
-    public async Task Rewind()
+    public void Rewind()
     {
-        await audioManager.Playback.Jump(true);
+        audioManager.Playback.Jump(true);
     }
 
     public event EventHandler? PlayOrPauseTriggered;

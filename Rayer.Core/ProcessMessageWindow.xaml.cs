@@ -105,12 +105,12 @@ public partial class ProcessMessageWindow : Window
 
         if (key == _settingsService.Settings.KeyForward.Key)
         {
-            await _playbarService.Forward();
+            _playbarService.Forward();
         }
 
         if (key == _settingsService.Settings.KeyRewind.Key)
         {
-            await _playbarService.Rewind();
+            _playbarService.Rewind();
         }
     }
 }

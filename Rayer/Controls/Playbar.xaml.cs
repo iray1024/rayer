@@ -143,7 +143,7 @@ public partial class Playbar : UserControl
 
     private void Slider_PreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
-        if (ViewModel.AudioManager.Playback.PlaybackState is PlaybackState.Paused)
+        if (ViewModel.AudioManager.Playback.Device.PlaybackState is PlaybackState.Paused)
         {
             PlayOrPause.Source = _resource.Pause;
             ViewModel.AudioManager.Playback.Resume();

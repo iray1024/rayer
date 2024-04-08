@@ -27,7 +27,7 @@ public partial class PitchPanelViewModel : ObservableObject
     {
         Value = 1f;
 
-        _audioManager.Playback.Pitch = 1f;
+        _audioManager.Playback.Device.Pitch = 1f;
         _settingsService.Settings.Pitch = 1f;
         _settingsService.Save();
     }

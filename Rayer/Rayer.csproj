@@ -14,10 +14,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="assets\check.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="assets\logo.ico" />
   </ItemGroup>
  

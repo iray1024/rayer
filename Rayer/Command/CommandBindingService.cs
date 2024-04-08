@@ -87,7 +87,7 @@ internal class CommandBindingService : ICommandBinding
             {
                 if (_audioManager.Playback.Audio.Equals(parameter.Audio))
                 {
-                    _audioManager.Playback.StopPlay();
+                    _audioManager.Playback.EndPlay();
                 }
 
                 _audioManager.Playback.Queue.Remove(parameter.Audio);

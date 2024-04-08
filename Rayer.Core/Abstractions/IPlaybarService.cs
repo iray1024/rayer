@@ -16,9 +16,9 @@ public interface IPlaybarService
 
     void PitchDown();
 
-    Task Forward();
+    void Forward();
 
-    Task Rewind();
+    void Rewind();
 
     event EventHandler? PlayOrPauseTriggered;
     event EventHandler? PreviousTriggered;
