@@ -20,6 +20,7 @@ public class PitchAdorner : Adorner
     private static PitchPanel _panel = default!;
     private static ImageIcon _internalImage = default!;
     private static Slider _internalSlider = default!;
+    private static System.Windows.Controls.TextBlock _internalTextBlock = default!;
 
     private static readonly float _semitone = MathF.Pow(2, 1.0f / 12);
     private static readonly float _upOneTone = _semitone * _semitone;
@@ -50,7 +51,6 @@ public class PitchAdorner : Adorner
         SetInternalControls();
 
         ToolTipService.SetToolTip(_internalImage, "重置音频");
-        ToolTipService.SetToolTip(_internalSlider, GetToolTip());
 
         ApplicationThemeManager.Changed += OnThemeChanged;
     }
@@ -85,8 +85,8 @@ public class PitchAdorner : Adorner
     protected override Size ArrangeOverride(Size finalSize)
     {
         _panel.Arrange(new Rect(
-            new Point(AdornedElement.DesiredSize.Width + _panel.ActualWidth - 82, 5),
-            new Size(150, 24)));
+            new Point(AdornedElement.DesiredSize.Width + _panel.ActualWidth - 120, 5),
+            new Size(178, 24)));
 
         return finalSize;
     }
@@ -122,6 +122,19 @@ public class PitchAdorner : Adorner
 
                     }
                 }
+                if (item is System.Windows.Controls.TextBlock textBlock)
+                {
+                    _internalTextBlock = textBlock;
+
+                    if (_immersivePlayerService.IsNowImmersive)
+                    {
+                        textBlock.Foreground = StaticThemeResources.Dark.TextFillColorPrimaryBrush;
+                    }
+                    else
+                    {
+                        textBlock.SetResourceReference(Control.ForegroundProperty, "TextFillColorPrimaryBrush");
+                    }
+                }
             }
         }
     }
@@ -150,6 +163,8 @@ public class PitchAdorner : Adorner
 
                         var trackBorder = (Border)_internalSlider.Template.FindName("TrackBackground", _internalSlider);
                         trackBorder.Background = StaticThemeResources.Dark.SliderTrackFill;
+
+                        _internalTextBlock.Foreground = StaticThemeResources.Dark.TextFillColorPrimaryBrush;
                     }
                     else
                     {
@@ -157,6 +172,8 @@ public class PitchAdorner : Adorner
 
                         var trackBorder = (Border)_internalSlider.Template.FindName("TrackBackground", _internalSlider);
                         trackBorder.SetResourceReference(Control.BackgroundProperty, "SliderTrackFill");
+
+                        _internalTextBlock.SetResourceReference(Control.ForegroundProperty, "TextFillColorPrimaryBrush");
                     }
                 }
             }
@@ -169,8 +186,6 @@ public class PitchAdorner : Adorner
 
         _vm.AudioManager.Playback.Device.Pitch = factor;
 
-        ToolTipService.SetToolTip(_internalSlider, GetToolTip());
-
         Save(factor);
     }
 
@@ -181,14 +196,10 @@ public class PitchAdorner : Adorner
         factor = Math.Min(Math.Max(factor, 0.5f), 2f);
 
         _internalSlider.Value = factor;
-
-        ToolTipService.SetToolTip(_internalSlider, GetToolTip());
     }
 
     private static void Save(float factor)
     {
-        ToolTipService.SetToolTip(_internalSlider, GetToolTip());
-
         _vm.SettingsService.Settings.Pitch = MathF.Round(factor, 2);
         _vm.SettingsService.Save();
     }
@@ -197,23 +208,10 @@ public class PitchAdorner : Adorner
     private static void OnPitchUpTriggered(object? sender, EventArgs e)
     {
         _internalSlider.Value += 0.05f;
-
-        _vm.AudioManager.Playback.Device.Pitch += 0.05f;
-
-        Save(_vm.AudioManager.Playback.Device.Pitch);
     }
 
     private static void OnPitchDownTriggered(object? sender, EventArgs e)
     {
         _internalSlider.Value -= 0.05f;
-
-        _vm.AudioManager.Playback.Device.Pitch -= 0.05f;
-
-        Save(_vm.AudioManager.Playback.Device.Pitch);
-    }
-
-    private static string GetToolTip()
-    {
-        return $"{_vm.SettingsService.Settings.Pitch}";
     }
 }

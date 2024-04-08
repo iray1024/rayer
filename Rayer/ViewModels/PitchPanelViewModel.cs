@@ -11,6 +11,8 @@ public partial class PitchPanelViewModel : ObservableObject
     [ObservableProperty]
     private float _value;
 
+    public float CurrentVaule => MathF.Round(Value, 2);
+
     public PitchPanelViewModel(
         IAudioManager audioManager,
         ISettingsService settingsService)
@@ -30,5 +32,10 @@ public partial class PitchPanelViewModel : ObservableObject
         _audioManager.Playback.Device.Pitch = 1f;
         _settingsService.Settings.Pitch = 1f;
         _settingsService.Save();
+    }
+
+    partial void OnValueChanged(float value)
+    {
+        OnPropertyChanged(nameof(CurrentVaule));
     }
 }

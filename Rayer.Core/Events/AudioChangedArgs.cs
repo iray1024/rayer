@@ -6,5 +6,3 @@ public class AudioChangedArgs : EventArgs
 {
     public Audio New { get; set; } = null!;
 }
-
-public delegate void AudioChangedEventHandler(object? sender, AudioChangedArgs e);

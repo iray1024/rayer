@@ -23,7 +23,7 @@ internal class WaveMetadataFactory : IWaveMetadataFactory
         _pitchShiftingProviderFactory = pitchShiftingProviderFactory;
     }
 
-    WaveMetadata IWaveMetadataFactory.CreateWaveMetadata(string filepath)
+    WaveMetadata IWaveMetadataFactory.Create(string filepath)
     {
         var baseStream = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.Read);
         

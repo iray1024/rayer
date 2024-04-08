@@ -76,6 +76,14 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
             _settings.Settings.PitchProvider = _pitchProvider;
             OnPropertyChanged();
             UpdateConfigFile();
+            Task.Run(async () =>
+            {
+                await System.Windows.Application.Current.Dispatcher.InvokeAsync(async () =>
+                {
+                    var deviceManager = App.GetRequiredService<IDeviceManager>();
+                    await deviceManager.SwitchPitchProvider();
+                });
+            });
         }
     }
 

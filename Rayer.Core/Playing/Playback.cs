@@ -36,6 +36,7 @@ public class Playback : IDisposable
         _deviceManager = serviceProvider.GetRequiredService<IDeviceManager>();
 
         _deviceManager.PlaybackStopped += OnPlaybackStopped;
+        _deviceManager.MetadataChanged += OnMetadataChanged;
 
         Queue.AddRange(_audioManager.Audios);
 
@@ -94,9 +95,9 @@ public class Playback : IDisposable
     public DispatcherTimer DispatcherTimer { get; } =
         new DispatcherTimer(DispatcherPriority.Render) { Interval = TimeSpan.FromMilliseconds(100) };
 
-    public event AudioPlayingEventHandler? AudioPlaying;
+    public event EventHandler<AudioPlayingArgs>? AudioPlaying;
     public event EventHandler? AudioPaused;
-    public event AudioChangedEventHandler? AudioChanged;
+    public event EventHandler<AudioChangedArgs>? AudioChanged;
     public event EventHandler? AudioStopped;
 
     public void Initialize(float volume, float pitch, PlayloopMode playloopMode)
@@ -166,7 +167,7 @@ public class Playback : IDisposable
         {
             await Load();
             Resume();
-        }        
+        }
     }
 
     public async Task Play(Audio audio, bool isEventTriggered = false)
@@ -211,7 +212,7 @@ public class Playback : IDisposable
     {
         ForceStopCurrentDevice();
 
-        _metadata = _metadataFactory.CreateWaveMetadata(Audio.Path);
+        _metadata = _metadataFactory.Create(Audio.Path);
 
         await _deviceManager.LoadAsync(_metadata);
 
@@ -342,6 +343,20 @@ public class Playback : IDisposable
         {
             await Next(true);
         }
+    }
+
+    private void OnMetadataChanged(object? sender, MetadataChangedArgs e)
+    {
+        _metadata = e.New;
+
+        if (_metadata.PitchShiftingSampleProvider is not null)
+        {
+            _metadata.PitchShiftingSampleProvider.Pitch = _deviceManager.Pitch;
+        }
+
+        _deviceManager.Device?.Play();
+
+        _metadata.FadeInOutSampleProvider?.BeginFadeIn(100);
     }
 
     private int GetNextAudioIndex()

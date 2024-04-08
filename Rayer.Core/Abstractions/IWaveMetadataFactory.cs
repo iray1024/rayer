@@ -4,5 +4,5 @@ namespace Rayer.Core.Abstractions;
 
 public interface IWaveMetadataFactory
 {
-    WaveMetadata CreateWaveMetadata(string filepath);
+    WaveMetadata Create(string filepath);
 }

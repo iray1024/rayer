@@ -1,4 +1,5 @@
 ﻿using NAudio.Wave;
+using Rayer.Core.Events;
 using Rayer.Core.Models;
 
 namespace Rayer.Core.Abstractions;
@@ -19,5 +20,8 @@ public interface IDeviceManager
 
     void Stop();
 
+    Task SwitchPitchProvider();
+
     event EventHandler<StoppedEventArgs> PlaybackStopped;
+    event EventHandler<MetadataChangedArgs> MetadataChanged;
 }

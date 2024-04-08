@@ -13,8 +13,8 @@ public interface IAudioManager
 
     ObservableCollection<Audio> Audios { get; }
 
-    event AudioPlayingEventHandler? AudioPlaying;
+    event EventHandler<AudioPlayingArgs>? AudioPlaying;
     event EventHandler? AudioPaused;
-    event AudioChangedEventHandler? AudioChanged;
+    event EventHandler<AudioChangedArgs>? AudioChanged;
     event EventHandler? AudioStopped;
 }

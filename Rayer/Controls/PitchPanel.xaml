@@ -15,6 +15,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="40" />
         </Grid.ColumnDefinitions>
         <ui:ImageIcon
             x:Name="Pitch"
@@ -31,10 +32,16 @@
             Width="100"
             IsSnapToTickEnabled="True"
             LargeChange="0.05"
-            Maximum="2"
+            Maximum="2" MouseEnter="OnMouseEnter" MouseLeave="OnMouseLeave"
             Minimum="0.5"
             SmallChange="0.05"
             TickFrequency="0.05"
             Value="{Binding ViewModel.Value, Mode=TwoWay}" />
+        <TextBlock
+            x:Name="PitchValue"
+            Grid.Column="2"
+            Margin="0,3,0,0"
+            Text="{Binding ViewModel.CurrentVaule, Mode=OneWay}"
+            Visibility="Hidden" />
     </Grid>
 </UserControl>

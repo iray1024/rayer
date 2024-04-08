@@ -1,12 +1,17 @@
-﻿using NAudio.Wave;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NAudio.Wave;
 using Rayer.Core.Abstractions;
+using Rayer.Core.Events;
 using Rayer.Core.Models;
+using System.IO;
 using System.Windows;
 
 namespace Rayer.Core.Services;
 
 internal class DeviceManager : IDeviceManager
 {
+    private readonly IServiceProvider _serviceProvider;
+
     private WaveOutEvent? _device;
     private readonly SemaphoreSlim _semaphore = new(2, 2);
 
@@ -15,9 +20,11 @@ internal class DeviceManager : IDeviceManager
     private float _volume = 1f;
     private float _pitch = 1f;
 
-    public DeviceManager()
-    {
+    private int _isReOpen = 0;
 
+    public DeviceManager(IServiceProvider serviceProvider)
+    {
+        _serviceProvider = serviceProvider;
     }
 
     public WaveOutEvent? Device => _device;
@@ -46,7 +53,17 @@ internal class DeviceManager : IDeviceManager
         ? _device.PlaybackState
         : PlaybackState.Stopped;
 
+    public bool IsReOpen
+    {
+        get => _isReOpen != 0;
+        set
+        {
+            _ = Interlocked.Exchange(ref _isReOpen, value ? 1 : 0);
+        }
+    }
+
     public event EventHandler<StoppedEventArgs>? PlaybackStopped;
+    public event EventHandler<MetadataChangedArgs>? MetadataChanged;
 
     public async Task LoadAsync(WaveMetadata metadata)
     {
@@ -74,14 +91,49 @@ internal class DeviceManager : IDeviceManager
         _device = null;
     }
 
+    public async Task SwitchPitchProvider()
+    {
+        if (_metadata?.Reader is not null)
+        {
+            _device?.Pause();
+
+            var position = _metadata.Reader.Position;
+
+            var filePath = (_metadata.BaseStream as FileStream)?.Name!;
+
+            var factory = _serviceProvider.GetRequiredService<IWaveMetadataFactory>();
+
+            var metadata = factory.Create(filePath);
+
+            _metadata = metadata;
+
+            if (_metadata?.Reader is not null)
+            {
+                IsReOpen = true;
+
+                await LoadAsync(metadata);
+                Init();
+
+                _metadata.Reader.Position = position;
+
+                MetadataChanged?.Invoke(this, new(_metadata));
+            }
+        }
+    }
+
     private async Task EnsureDeviceCreatedAsync(WaveMetadata metadata, CancellationToken cancellationToken = default)
     {
         if (_device is null)
         {
             _metadata = metadata;
+#if DEBUG
             await Console.Out.WriteLineAsync($"等待设备创建，正在等待同步锁，线程ID: {Environment.CurrentManagedThreadId}");
+#endif
+
             await _semaphore.WaitAsync(cancellationToken);
+#if DEBUG
             await Console.Out.WriteLineAsync($"等待设备创建，已获取同步锁，线程ID: {Environment.CurrentManagedThreadId}");
+#endif
             CreateDevice();
             _semaphore.Release();
         }
@@ -104,7 +156,14 @@ internal class DeviceManager : IDeviceManager
                 {
                     _semaphore.Release();
 
-                    PlaybackStopped?.Invoke(s, a);
+                    if (!IsReOpen)
+                    {
+                        PlaybackStopped?.Invoke(s, a);
+                    }
+                    else
+                    {
+                        IsReOpen = false;
+                    }
                 });
             });
         };

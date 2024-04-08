@@ -34,27 +34,27 @@ internal class AudioManager : IAudioManager, IDisposable
 
     public ICollection<Playlist> Playlists { get; } = [];
 
-    public event AudioPlayingEventHandler? AudioPlaying;
+    public event EventHandler<AudioPlayingArgs>? AudioPlaying;
     public event EventHandler? AudioPaused;
-    public event AudioChangedEventHandler? AudioChanged;
+    public event EventHandler<AudioChangedArgs>? AudioChanged;
     public event EventHandler? AudioStopped;
 
-    public void OnAudioPlaying(object? sender, AudioPlayingArgs e)
+    protected virtual void OnAudioPlaying(object? sender, AudioPlayingArgs e)
     {
         AudioPlaying?.Invoke(this, new AudioPlayingArgs { PlaybackState = e.PlaybackState });
     }
 
-    public void OnAudioPaused(object? sender, EventArgs e)
+    protected virtual void OnAudioPaused(object? sender, EventArgs e)
     {
         AudioPaused?.Invoke(this, EventArgs.Empty);
     }
 
-    public void OnAudioChanged(object? sender, AudioChangedArgs e)
+    protected virtual void OnAudioChanged(object? sender, AudioChangedArgs e)
     {
         AudioChanged?.Invoke(this, new AudioChangedArgs { New = e.New });
     }
 
-    public void OnAudioStopped(object? sender, EventArgs e)
+    protected virtual void OnAudioStopped(object? sender, EventArgs e)
     {
         AudioStopped?.Invoke(this, EventArgs.Empty);
     }

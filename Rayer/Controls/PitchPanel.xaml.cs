@@ -22,4 +22,14 @@ public partial class PitchPanel : UserControl
     {
         ViewModel.Reset();
     }
+
+    private void OnMouseEnter(object sender, MouseEventArgs e)
+    {
+        PitchValue.Visibility = System.Windows.Visibility.Visible;
+    }
+
+    private void OnMouseLeave(object sender, MouseEventArgs e)
+    {
+        PitchValue.Visibility = System.Windows.Visibility.Hidden;
+    }
 }
