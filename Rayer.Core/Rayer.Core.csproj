@@ -5,7 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
+		<Authors>喵蛙王子丶</Authors>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<Copyright>喵蛙王子丶</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

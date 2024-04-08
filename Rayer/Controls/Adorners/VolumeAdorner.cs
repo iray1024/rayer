@@ -59,7 +59,7 @@ public class VolumeAdorner : Adorner
     protected override Size ArrangeOverride(Size finalSize)
     {
         _panel.Arrange(new Rect(
-            new Point(AdornedElement.DesiredSize.Width + 28, 1),
+            new Point(AdornedElement.DesiredSize.Width + 27, 1),
             _panel.DesiredSize));
 
         return finalSize;

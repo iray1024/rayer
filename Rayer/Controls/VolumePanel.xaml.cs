@@ -1,7 +1,9 @@
 ﻿using Rayer.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using Wpf.Ui.Controls;
 
 namespace Rayer.Controls;
 
@@ -58,4 +60,19 @@ public partial class VolumePanel : UserControl
         ViewModel.Save();
     }
     #endregion
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        var popup = (Popup)Flyout.Template.FindName("PART_Popup", Flyout);
+
+        popup.CustomPopupPlacementCallback = new CustomPopupPlacementCallback((popupSize, targetSize, offset) =>
+        {
+            return [new(
+                        new Point(
+                            -targetSize.Width + 8,
+                            (popupSize.Height * -1) + 6),
+                        PopupPrimaryAxis.Vertical)];
+
+        });
+    }
 }

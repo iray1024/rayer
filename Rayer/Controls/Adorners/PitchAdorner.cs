@@ -85,7 +85,7 @@ public class PitchAdorner : Adorner
     protected override Size ArrangeOverride(Size finalSize)
     {
         _panel.Arrange(new Rect(
-            new Point(AdornedElement.DesiredSize.Width + _panel.ActualWidth - 120, 5),
+            new Point(AdornedElement.DesiredSize.Width + _panel.ActualWidth - 118, 5),
             new Size(178, 24)));
 
         return finalSize;
