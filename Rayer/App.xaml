@@ -25,6 +25,7 @@
             <converters:PlaySingleAudioStrategyConverter x:Key="PlaySingleAudioStrategyConverter" />
             <converters:ImmersiveModeConverter x:Key="ImmersiveModeConverter" />
             <converters:EqualizerGainDbConverter x:Key="EqualizerGainDbConverter" />
+            <converters:PitchProviderConverter x:Key="PitchProviderConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

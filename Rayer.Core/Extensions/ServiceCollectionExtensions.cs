@@ -1,6 +1,7 @@
 ﻿using Rayer.Core.Abstractions;
 using Rayer.Core.FileSystem;
 using Rayer.Core.Playing;
+using Rayer.Core.Providers;
 using Rayer.Core.Services;
 using System.Reflection;
 
@@ -41,6 +42,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IPlayQueueProvider, PlayQueueProvider>();
         services.AddSingleton<IWaveMetadataFactory, WaveMetadataFactory>();
         services.AddSingleton<IEqualizerProvider, EqualizerProvider>();
+        services.AddSingleton<IPitchShiftingProviderFactory, PitchShiftingProviderFactory>();
 
         return services;
     }

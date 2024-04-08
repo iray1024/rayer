@@ -66,6 +66,19 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         }
     }
 
+    private PitchProvider _pitchProvider;
+    public PitchProvider PitchProvider
+    {
+        get => _pitchProvider;
+        set
+        {
+            SetProperty(ref _pitchProvider, value);
+            _settings.Settings.PitchProvider = _pitchProvider;
+            OnPropertyChanged();
+            UpdateConfigFile();
+        }
+    }
+
     public SettingsViewModel(
         INavigationService navigationService,
         ISettingsService settings)
@@ -77,6 +90,7 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         _currentApplicationTheme = _settings.Settings.Theme;
         _playSingleAudioStrategy = _settings.Settings.PlaySingleAudioStrategy;
         _immersiveMode = _settings.Settings.ImmersiveMode;
+        _pitchProvider = _settings.Settings.PitchProvider;
 
         AudioLibrary.CollectionChanged += AudioLibrary_CollectionChanged;
     }

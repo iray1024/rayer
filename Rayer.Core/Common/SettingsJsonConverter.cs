@@ -71,6 +71,9 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
                     case nameof(settings.EqualizerMode):
                         settings.EqualizerMode = (EqualizerMode)reader.GetInt32();
                         break;
+                    case nameof(settings.PitchProvider):
+                        settings.PitchProvider = (PitchProvider)reader.GetInt32();
+                        break;
                     case nameof(settings.Volume):
                         settings.Volume = (float)reader.GetDouble();
                         break;
@@ -121,6 +124,7 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
         writer.WriteNumber(nameof(value.PlayloopMode), Convert.ToDecimal(value.PlayloopMode));
         writer.WriteNumber(nameof(value.ImmersiveMode), Convert.ToDecimal(value.ImmersiveMode));
         writer.WriteNumber(nameof(value.EqualizerMode), Convert.ToDecimal(value.EqualizerMode));
+        writer.WriteNumber(nameof(value.PitchProvider), Convert.ToDecimal(value.PitchProvider));
         writer.WriteNumber(nameof(value.Volume), Convert.ToDecimal(value.Volume));
         writer.WriteNumber(nameof(value.Pitch), Convert.ToDecimal(value.Pitch));
         

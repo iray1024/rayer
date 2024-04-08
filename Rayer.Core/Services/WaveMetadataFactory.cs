@@ -13,10 +13,14 @@ internal class WaveMetadataFactory : IWaveMetadataFactory
     private readonly MediaFoundationReader.MediaFoundationReaderSettings _meidaSettings = new() { RequestFloatOutput = true };
 
     private readonly IEqualizerProvider _equalizerProvider;
+    private readonly IPitchShiftingProviderFactory _pitchShiftingProviderFactory;
 
-    public WaveMetadataFactory(IEqualizerProvider equalizerProvider)
+    public WaveMetadataFactory(
+        IEqualizerProvider equalizerProvider,
+        IPitchShiftingProviderFactory pitchShiftingProviderFactory)
     {
         _equalizerProvider = equalizerProvider;
+        _pitchShiftingProviderFactory = pitchShiftingProviderFactory;
     }
 
     WaveMetadata IWaveMetadataFactory.CreateWaveMetadata(string filepath)
@@ -33,12 +37,12 @@ internal class WaveMetadataFactory : IWaveMetadataFactory
             waveStream = new StreamMediaFoundationReader(baseStream, _meidaSettings);
         }
 
-        var pitchProvider = new SmbPitchShiftingSampleProvider(waveStream.ToSampleProvider());
+        var pitchProvider = _pitchShiftingProviderFactory.Create(waveStream);
 
-        var equalizer = new Equalizer(pitchProvider, _equalizerProvider.Equalizer);
+        var equalizer = new Equalizer(pitchProvider.ToSampleProvider(), _equalizerProvider.Equalizer);
 
         var fadeInOutProvider = new FadeInOutSampleProvider(equalizer);
-
+        
         return new WaveMetadata
         {
             BaseStream = baseStream,

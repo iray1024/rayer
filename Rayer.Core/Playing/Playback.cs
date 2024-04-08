@@ -338,7 +338,7 @@ public class Playback : IDisposable
 
             if (_metadata.PitchShiftingSampleProvider is not null)
             {
-                _metadata.PitchShiftingSampleProvider.PitchFactor = Pitch;
+                _metadata.PitchShiftingSampleProvider.Pitch = Pitch;
             }
 
             _device?.Init(_metadata);
@@ -368,7 +368,10 @@ public class Playback : IDisposable
                 {
                     if (_metadata.Reader is not null)
                     {
-                        _semaphore.Release(2 - _semaphore.CurrentCount);
+                        if (_semaphore.CurrentCount < 2)
+                        {
+                            _semaphore.Release(2 - _semaphore.CurrentCount);
+                        }
 
                         _metadata.Reader.Position = 0;
 
@@ -402,7 +405,7 @@ public class Playback : IDisposable
     {
         if (_metadata.PitchShiftingSampleProvider is not null)
         {
-            _metadata.PitchShiftingSampleProvider.PitchFactor = MathF.Round(Pitch, 2, MidpointRounding.ToZero);
+            _metadata.PitchShiftingSampleProvider.Pitch = MathF.Round(Pitch, 2, MidpointRounding.ToZero);
         }
     }
 
@@ -425,7 +428,7 @@ public class Playback : IDisposable
         audio ??= Queue[0];
     }
 
-    private async void OnTick(object? sender, EventArgs e)
+    private void OnTick(object? sender, EventArgs e)
     {
         if (TotalTime - CurrentTime <= _fadeOutThreshold && !_hasFadeOut)
         {
@@ -435,7 +438,9 @@ public class Playback : IDisposable
         }
         else if (CurrentTime >= TotalTime)
         {
-            await Next();
+            DispatcherTimer.Stop();
+
+            _device?.Stop();
         }
     }
 

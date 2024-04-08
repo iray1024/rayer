@@ -1,6 +1,7 @@
 ﻿using NAudio.Extras;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using Rayer.Core.Abstractions;
 using System.IO;
 
 namespace Rayer.Core.Models;
@@ -11,7 +12,7 @@ public class WaveMetadata : ISampleProvider, IDisposable
 
     public WaveStream? Reader { get; set; }
 
-    public SmbPitchShiftingSampleProvider? PitchShiftingSampleProvider { get; set; }
+    public IPitchShiftingProvider? PitchShiftingSampleProvider { get; set; }
 
     public FadeInOutSampleProvider? FadeInOutSampleProvider { get; set; }
 

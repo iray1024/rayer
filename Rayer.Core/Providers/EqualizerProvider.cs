@@ -5,7 +5,7 @@ using Rayer.Core.Utils;
 using System.Collections.Immutable;
 using System.IO;
 
-namespace Rayer.Core.Services;
+namespace Rayer.Core.Providers;
 
 internal class EqualizerProvider : IEqualizerProvider
 {

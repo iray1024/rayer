@@ -1,5 +1,4 @@
-﻿using NAudio.Extras;
-using Rayer.Core.Abstractions;
+﻿using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
@@ -19,6 +18,7 @@ public class Settings : ISettings
     public PlayloopMode PlayloopMode { get; set; } = PlayloopMode.List;
     public ImmersiveMode ImmersiveMode { get; set; } = ImmersiveMode.Vinyl;
     public EqualizerMode EqualizerMode { get; set; } = EqualizerMode.Close;
+    public PitchProvider PitchProvider { get; set; } = PitchProvider.NAudio;
     public float Volume { get; set; } = 1.0f;
     public float Pitch { get; set; } = 1.0f;
 
