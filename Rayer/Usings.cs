@@ -1,0 +1,1 @@
+﻿global using Rayer.Core.Models;

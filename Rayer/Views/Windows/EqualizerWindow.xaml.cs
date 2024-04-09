@@ -71,7 +71,7 @@ public partial class EqualizerWindow
 
         if (sender is Slider slider)
         {
-            var value = slider.Value + 0.5 * (e.Delta > 0 ? 1 : -1);
+            var value = slider.Value + (0.5 * (e.Delta > 0 ? 1 : -1));
 
             value = Math.Min(Math.Max(value, -12f), 12f);
 

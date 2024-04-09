@@ -46,7 +46,10 @@
             </ui:TitleBar.Icon>
         </ui:TitleBar>
 
-        <ContentPresenter x:Name="RootContentDialog" Grid.Row="0" />
+        <ContentPresenter
+            x:Name="RootContentDialog"
+            Grid.Row="0"
+            Panel.ZIndex="9999" />
 
         <ui:NavigationView
             x:Name="NavigationView"

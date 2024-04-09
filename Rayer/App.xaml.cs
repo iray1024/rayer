@@ -109,6 +109,8 @@ public partial class App : Application
 
     private async void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
+        e.Handled = true;
+
         await ShowException(e.Exception);
     }
 
@@ -123,12 +125,15 @@ public partial class App : Application
 
         if (dialogService is not null)
         {
-            await dialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions
+            await Current.Dispatcher.InvokeAsync(async () =>
             {
-                Title = "异常",
-                Content = $"{ex?.Message}\n{ex?.StackTrace}",
-                CloseButtonText = "关闭"
-            }, StoppingToken);
+                await dialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions
+                {
+                    Title = "异常",
+                    Content = $"{ex?.Message}\n{ex?.StackTrace}",
+                    CloseButtonText = "关闭"
+                }, StoppingToken);
+            });
         }
     }
 }
