@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Rayer.SearchEngine.Views.Pages;
 using Rayer.Views.Pages;
 using System.Collections.ObjectModel;
 using Wpf.Ui.Controls;
@@ -14,6 +15,7 @@ public partial class MainWindowViewModel : ObservableObject
     private ICollection<object> _menuItems =
     [
          new NavigationViewItem("乐库", SymbolRegular.Home24, typeof(AudioLibraryPage)),
+        new NavigationViewItem("探索", SymbolRegular.Home24, typeof(ExplorePage)),
     ];
 
     [ObservableProperty]

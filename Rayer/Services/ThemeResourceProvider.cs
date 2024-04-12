@@ -1,5 +1,4 @@
 ﻿using Rayer.Core.Abstractions;
-using Rayer.Core.Models;
 using System.Windows;
 using System.Windows.Media;
 using Wpf.Ui.Appearance;

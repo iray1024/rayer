@@ -17,6 +17,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Themes/ListBoxItem.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Themes/NoFocusableButtonStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Themes/EqualizerButton.xaml" />
+                <ResourceDictionary Source="/Rayer.SearchEngine;component\internal\themes\application.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <converters:ArtistsConverter x:Key="ArtistsConverter" />

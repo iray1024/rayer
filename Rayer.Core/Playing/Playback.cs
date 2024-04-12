@@ -21,7 +21,6 @@ public class Playback : IDisposable
     private static readonly Audio _fallbackAudio = new();
 
     private static readonly TimeSpan _jumpThreshold = TimeSpan.FromSeconds(5);
-    private static readonly TimeSpan _fadeOutThreshold = TimeSpan.FromMilliseconds(1000);
 
     private int _isClickToPlay = 0;
 
@@ -69,7 +68,7 @@ public class Playback : IDisposable
         {
             if (_metadata.Reader is not null)
             {
-                _metadata.Reader.CurrentTime = new TimeSpan(Math.Min(value.Ticks, _metadata.Reader.TotalTime.Ticks));
+                _metadata.Reader.CurrentTime = value;
             }
         }
     }
@@ -100,6 +99,8 @@ public class Playback : IDisposable
     public event EventHandler<AudioChangedArgs>? AudioChanged;
     public event EventHandler? AudioStopped;
 
+    public event EventHandler? Seeked;
+
     public void Initialize(float volume, float pitch, PlayloopMode playloopMode)
     {
         _deviceManager.Volume = volume;
@@ -126,9 +127,11 @@ public class Playback : IDisposable
     {
         if (_metadata.Reader is not null)
         {
-            _metadata.Reader.Position = (long)(_metadata.Reader.Length * value * 0.01);
+            CurrentTime = _metadata.Reader.TotalTime * value * 0.01;
 
-            _metadata.FadeInOutSampleProvider?.BeginFadeIn(100);
+            _metadata.FadeInOutSampleProvider?.BeginFadeIn(1000);
+
+            Seeked?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -136,24 +139,24 @@ public class Playback : IDisposable
     {
         if (_metadata.Reader is not null)
         {
-            var threshold = (long)(_metadata.Reader.Length * (_jumpThreshold / _metadata.Reader.TotalTime));
+            var targetTime = CurrentTime + (_jumpThreshold * (negative ? -1 : 1));
 
-            var targetPosition = _metadata.Reader.Position + (threshold * (negative ? -1 : 1));
-
-            if (targetPosition < 0)
+            if (targetTime <= TimeSpan.Zero)
             {
-                _metadata.Reader.Position = 0;
+                CurrentTime = TimeSpan.Zero;
             }
-            else if (targetPosition >= _metadata.Reader.Length)
+            else if (targetTime >= TotalTime)
             {
                 ForceStopCurrentDevice();
             }
             else
             {
-                _metadata.Reader.Position = targetPosition;
+                CurrentTime = targetTime;
             }
 
-            _metadata.FadeInOutSampleProvider?.BeginFadeIn(100);
+            _metadata.FadeInOutSampleProvider?.BeginFadeIn(1000);
+
+            Seeked?.Invoke(this, EventArgs.Empty);
         }
     }
 

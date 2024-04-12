@@ -1,31 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.22000.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <OutputType>WinExe</OutputType>    
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>assets\logo.ico</ApplicationIcon>
-    <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(SolutionDir)\rayer.snk</AssemblyOriginatorKeyFile>
-    <Authors>喵蛙王子丶</Authors>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Copyright>喵蛙王子丶</Copyright>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon>assets\logo.ico</ApplicationIcon>        
   </PropertyGroup>
 
   <ItemGroup>
     <Content Include="assets\logo.ico" />
   </ItemGroup>
  
-  <ItemGroup>
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />		
+  <ItemGroup>		
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />		
   </ItemGroup>
  
   <ItemGroup>
     <ProjectReference Include="..\Rayer.Core\Rayer.Core.csproj" />
+    <ProjectReference Include="..\Rayer.SearchEngine\Rayer.SearchEngine.csproj" />
   </ItemGroup>
  
   <ItemGroup>    

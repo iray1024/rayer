@@ -15,26 +15,42 @@ internal class WaveMetadataFactory : IWaveMetadataFactory
     private readonly IEqualizerProvider _equalizerProvider;
     private readonly IPitchShiftingProviderFactory _pitchShiftingProviderFactory;
 
+    private readonly IHttpClientProvider _httpClientProvider;
+
     public WaveMetadataFactory(
         IEqualizerProvider equalizerProvider,
-        IPitchShiftingProviderFactory pitchShiftingProviderFactory)
+        IPitchShiftingProviderFactory pitchShiftingProviderFactory,
+        IHttpClientProvider httpClientProvider)
     {
         _equalizerProvider = equalizerProvider;
         _pitchShiftingProviderFactory = pitchShiftingProviderFactory;
+        _httpClientProvider = httpClientProvider;
     }
 
     WaveMetadata IWaveMetadataFactory.Create(string filepath)
     {
-        var baseStream = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.Read);
-        
+        Stream baseStream;
         WaveStream waveStream;
-        if (Path.GetExtension(filepath) is ".ogg")
+
+        if (filepath.StartsWith("http"))
         {
-            waveStream = new VorbisWaveReader(baseStream, false);
+            var stream = _httpClientProvider.HttpClient.GetStreamAsync(filepath).Result;
+
+            var buffer = new MemoryStream();
+
+            stream.CopyTo(buffer);
+            buffer.Position = 0;
+
+            baseStream = buffer;
+            waveStream = new StreamMediaFoundationReader(buffer, _meidaSettings);
         }
         else
         {
-            waveStream = new StreamMediaFoundationReader(baseStream, _meidaSettings);
+            baseStream = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+            waveStream = Path.GetExtension(filepath) is ".ogg"
+                ? new VorbisWaveReader(baseStream, false)
+                : new StreamMediaFoundationReader(baseStream, _meidaSettings);
         }
 
         var pitchProvider = _pitchShiftingProviderFactory.Create(waveStream);
@@ -42,7 +58,7 @@ internal class WaveMetadataFactory : IWaveMetadataFactory
         var equalizer = new Equalizer(pitchProvider.ToSampleProvider(), _equalizerProvider.Equalizer);
 
         var fadeInOutProvider = new FadeInOutSampleProvider(equalizer);
-        
+
         return new WaveMetadata
         {
             BaseStream = baseStream,

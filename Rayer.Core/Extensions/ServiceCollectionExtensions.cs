@@ -45,6 +45,8 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IEqualizerProvider, EqualizerProvider>();
         services.AddSingleton<IPitchShiftingProviderFactory, PitchShiftingProviderFactory>();
 
+        services.AddSingleton<IHttpClientProvider, HttpClientProvider>();
+
         return services;
     }
 }

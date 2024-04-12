@@ -1,0 +1,35 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Rayer.SearchEngine.Internal.Converters">
+
+    <ResourceDictionary x:Key="DefaultWindowStyleResource" Source="/Wpf.Ui;component\Controls\Window\Window.xaml" />
+
+    <converters:DynamicIslandWidthConverter x:Key="DynamicIslandWidthConverter" />
+    <converters:DynamicIslandHeightConverter x:Key="DynamicIslandHeightConverter" />
+
+    <Style x:Key="DefaultWindowStyle" TargetType="{x:Type Window}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Height" Value="58" />
+        <Setter Property="MinWidth" Value="200" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="AllowsTransparency" Value="True" />
+        <Setter Property="ResizeMode" Value="NoResize" />
+        <Setter Property="RenderOptions.BitmapScalingMode" Value="Fant" />
+        <Setter Property="Topmost" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Window}">
+                    <AdornerDecorator>
+                        <ContentPresenter Name="ContentPresenter" />
+                    </AdornerDecorator>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultWindowStyle}" TargetType="{x:Type Window}" />
+
+</ResourceDictionary>

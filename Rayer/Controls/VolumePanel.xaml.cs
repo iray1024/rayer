@@ -65,14 +65,17 @@ public partial class VolumePanel : UserControl
     {
         var popup = (Popup)Flyout.Template.FindName("PART_Popup", Flyout);
 
-        popup.CustomPopupPlacementCallback = new CustomPopupPlacementCallback((popupSize, targetSize, offset) =>
+        if (popup is not null)
         {
-            return [new(
+            popup.CustomPopupPlacementCallback = new CustomPopupPlacementCallback((popupSize, targetSize, offset) =>
+            {
+                return [new(
                         new Point(
                             -targetSize.Width + 8,
                             (popupSize.Height * -1) + 6),
                         PopupPrimaryAxis.Vertical)];
 
-        });
+            });
+        }
     }
 }

@@ -1,0 +1,13 @@
+<Project>
+
+  <PropertyGroup>
+		<TargetFramework>net8.0-windows10.0.22000.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <SignAssembly>True</SignAssembly>
+		<Authors>喵蛙王子丶</Authors>		
+		<Copyright>喵蛙王子丶</Copyright>
+	  <AssemblyOriginatorKeyFile>$(SolutionDir)rayer.snk</AssemblyOriginatorKeyFile> 
+  </PropertyGroup>
+
+</Project>

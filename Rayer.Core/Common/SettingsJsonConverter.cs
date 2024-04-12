@@ -1,9 +1,5 @@
-﻿using NAudio.Extras;
-using Rayer.Core.Abstractions;
+﻿using Rayer.Core.Abstractions;
 using Rayer.Core.Models;
-using System.Collections.ObjectModel;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Windows.Input;
 using Wpf.Ui.Appearance;
 
@@ -79,7 +75,7 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
                         break;
                     case nameof(settings.Pitch):
                         settings.Pitch = (float)reader.GetDouble();
-                        break;                    
+                        break;
                     case nameof(settings.KeyPlayOrPause):
                         settings.KeyPlayOrPause = ReadKeyBinding(ref reader);
                         break;
@@ -127,7 +123,7 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
         writer.WriteNumber(nameof(value.PitchProvider), Convert.ToDecimal(value.PitchProvider));
         writer.WriteNumber(nameof(value.Volume), Convert.ToDecimal(value.Volume));
         writer.WriteNumber(nameof(value.Pitch), Convert.ToDecimal(value.Pitch));
-        
+
         writer.WriteStartObject(nameof(value.KeyPlayOrPause));
         writer.WriteNumber(nameof(value.KeyPlayOrPause.Modifiers), Convert.ToDecimal(value.KeyPlayOrPause.Modifiers));
         writer.WriteNumber(nameof(value.KeyPlayOrPause.Key), Convert.ToDecimal(value.KeyPlayOrPause.Key));

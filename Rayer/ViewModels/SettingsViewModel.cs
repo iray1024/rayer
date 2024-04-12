@@ -123,7 +123,7 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
 
     private static void OnCurrentApplicationThemeChanged(ApplicationTheme newValue)
     {
-        ApplicationThemeManager.Apply(newValue, WindowBackdropType.Mica, true, true);
+        ApplicationThemeManager.Apply(newValue, WindowBackdropType.Auto, false, false);
     }
 
     private void InitializeViewModel()

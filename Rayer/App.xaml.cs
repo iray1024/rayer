@@ -6,6 +6,7 @@ using Rayer.Command;
 using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Playing;
+using Rayer.SearchEngine.Extensions;
 using Rayer.Services;
 using Rayer.ViewModels;
 using Rayer.Views.Pages;
@@ -53,6 +54,10 @@ public partial class App : Application
             services.AddSingleton<WindowsProviderService>();
 
             services.AddRayerCore();
+            services.AddSearchEngine(builder =>
+            {
+                builder.SetHttpEndpoint("https://netease-cloud-music-api-rayer.vercel.app");
+            });
 
             services.AddTransientFromNamespace("Rayer.Views", RayerAssembly.Assembly);
             services.AddTransientFromNamespace("Rayer.ViewModels", RayerAssembly.Assembly);
@@ -87,6 +92,8 @@ public partial class App : Application
         watcher.Watch();
 
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+
+        AppCore.UseServiceProvider(_host.Services);
 
         _host.Start();
     }

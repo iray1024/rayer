@@ -1,22 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-		<TargetFramework>net8.0-windows10.0.22000.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-		<UseWPF>true</UseWPF>
-		<Authors>喵蛙王子丶</Authors>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<Copyright>喵蛙王子丶</Copyright>
+  <PropertyGroup>    
+		<UseWPF>true</UseWPF>		
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>		
   </PropertyGroup>
 
   <ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="FftSharp" Version="2.1.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
     <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="NAudio.Extras" Version="2.2.1" />
 		<PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
+		<PackageReference Include="SharpZipLib" Version="1.4.2" />
 		<PackageReference Include="SoundTouch.Net.NAudioSupport.Core" Version="2.3.2" />
     <PackageReference Include="System.Threading.RateLimiting" Version="8.0.0" />
     <PackageReference Include="TagLibSharp" Version="2.3.0" />

@@ -1,5 +1,7 @@
 ﻿using Rayer.Abstractions;
 using Rayer.Core.Abstractions;
+using Rayer.SearchEngine.Views.Windows;
+using Rayer.Services;
 using Rayer.ViewModels;
 using Rayer.Views.Pages;
 using System.ComponentModel;
@@ -91,6 +93,13 @@ public partial class MainWindow : IWindow
         var immersivePlayerService = App.GetRequiredService<IImmersivePlayerService>();
 
         immersivePlayerService.SetPlayer(ImmersivePlayer);
+
+        var provider = App.GetRequiredService<WindowsProviderService>();
+
+        //provider.Show<LoginWindow>();
+        //provider.Show<DynamicIsland>();
+        var dynamicIsland = App.GetRequiredService<DynamicIsland>();
+        dynamicIsland.Show();
     }
 
     private void OnClosing(object sender, CancelEventArgs e)
