@@ -2,7 +2,6 @@
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Events;
-using Rayer.Core.Models;
 using Rayer.Core.Utils;
 using Rayer.ViewModels;
 using System.Collections.Specialized;

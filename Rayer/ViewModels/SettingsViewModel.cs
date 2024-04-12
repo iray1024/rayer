@@ -1,6 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
+using Rayer.Core.FileSystem.Abstractions;
+using Rayer.Core.Framework.Settings.Abstractions;
+using Rayer.SearchEngine.Abstractions;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows.Forms;
@@ -87,6 +90,27 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         }
     }
 
+    private LyricSearcher _lyricSearcher;
+    public LyricSearcher LyricSearcher
+    {
+        get => _lyricSearcher;
+        set
+        {
+            SetProperty(ref _lyricSearcher, value);
+            _settings.Settings.LyricSearcher = _lyricSearcher;
+            OnPropertyChanged();
+            UpdateConfigFile();
+            Task.Run(async () =>
+            {
+                await System.Windows.Application.Current.Dispatcher.InvokeAsync(async () =>
+                {
+                    var provider = App.GetRequiredService<ILyricProvider>();
+                    await provider.SwitchSearcherAsync();
+                });
+            });
+        }
+    }
+
     public SettingsViewModel(
         INavigationService navigationService,
         ISettingsService settings)
@@ -99,6 +123,7 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         _playSingleAudioStrategy = _settings.Settings.PlaySingleAudioStrategy;
         _immersiveMode = _settings.Settings.ImmersiveMode;
         _pitchProvider = _settings.Settings.PitchProvider;
+        _lyricSearcher = _settings.Settings.LyricSearcher;
 
         AudioLibrary.CollectionChanged += AudioLibrary_CollectionChanged;
     }

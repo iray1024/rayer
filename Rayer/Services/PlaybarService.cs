@@ -1,5 +1,6 @@
 ﻿using NAudio.Wave;
 using Rayer.Core.Abstractions;
+using Rayer.Core.PlayControl.Abstractions;
 
 namespace Rayer.Services;
 

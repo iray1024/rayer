@@ -1,6 +1,7 @@
 ﻿using Rayer.SearchEngine.Lyric.Abstractions;
-using Rayer.SearchEngine.Lyric.Impl;
 using Rayer.SearchEngine.Lyric.Providers.Web.Netease;
+using Rayer.SearchEngine.Lyric.Searchers.Abstractions;
+using Rayer.SearchEngine.Lyric.Searchers.Impl;
 
 namespace Rayer.SearchEngine.Lyric.Models;
 

@@ -7,22 +7,22 @@ public static class DESHelper
 
     private static uint BITNUM(byte[] a, int b, int c)
     {
-        return (uint)(a[b / 32 * 4 + 3 - b % 32 / 8] >> 7 - b % 8 & 0x01) << c;
+        return (uint)((a[(b / 32 * 4) + 3 - (b % 32 / 8)] >> (7 - (b % 8))) & 0x01) << c;
     }
 
     private static byte BITNUMINTR(uint a, int b, int c)
     {
-        return (byte)((a >> 31 - b & 0x00000001) << c);
+        return (byte)(((a >> (31 - b)) & 0x00000001) << c);
     }
 
     private static uint BITNUMINTL(uint a, int b, int c)
     {
-        return (a << b & 0x80000000) >> c;
+        return ((a << b) & 0x80000000) >> c;
     }
 
     private static uint SBOXBIT(byte a)
     {
-        return (uint)(a & 0x20 | (a & 0x1f) >> 1 | (a & 0x01) << 4);
+        return (uint)((a & 0x20) | ((a & 0x1f) >> 1) | ((a & 0x01) << 4));
     }
 
     private static readonly byte[] sbox1 = {
@@ -106,8 +106,8 @@ public static class DESHelper
 
         for (i = 0; i < 16; ++i)
         {
-            C = (C << (int)key_rnd_shift[i] | C >> 28 - (int)key_rnd_shift[i]) & 0xfffffff0;
-            D = (D << (int)key_rnd_shift[i] | D >> 28 - (int)key_rnd_shift[i]) & 0xfffffff0;
+            C = ((C << (int)key_rnd_shift[i]) | (C >> (28 - (int)key_rnd_shift[i]))) & 0xfffffff0;
+            D = ((D << (int)key_rnd_shift[i]) | (D >> (28 - (int)key_rnd_shift[i]))) & 0xfffffff0;
 
             toGen = mode == DECRYPT ? 15 - i : i;
 
@@ -118,12 +118,12 @@ public static class DESHelper
 
             for (j = 0; j < 24; ++j)
             {
-                schedule[toGen][j / 8] |= BITNUMINTR(C, (int)key_compression[j], (int)(7 - j % 8));
+                schedule[toGen][j / 8] |= BITNUMINTR(C, (int)key_compression[j], (int)(7 - (j % 8)));
             }
 
             for (; j < 48; ++j)
             {
-                schedule[toGen][j / 8] |= BITNUMINTR(D, (int)key_compression[j] - 27, (int)(7 - j % 8));
+                schedule[toGen][j / 8] |= BITNUMINTR(D, (int)key_compression[j] - 27, (int)(7 - (j % 8)));
             }
         }
     }
@@ -189,22 +189,22 @@ public static class DESHelper
         var lrgstate = new byte[6];
         uint t1, t2;
 
-        t1 = BITNUMINTL(state, 31, 0) | (state & 0xf0000000) >> 1 | BITNUMINTL(state, 4, 5) |
-            BITNUMINTL(state, 3, 6) | (state & 0x0f000000) >> 3 | BITNUMINTL(state, 8, 11) |
-            BITNUMINTL(state, 7, 12) | (state & 0x00f00000) >> 5 | BITNUMINTL(state, 12, 17) |
-            BITNUMINTL(state, 11, 18) | (state & 0x000f0000) >> 7 | BITNUMINTL(state, 16, 23);
+        t1 = BITNUMINTL(state, 31, 0) | ((state & 0xf0000000) >> 1) | BITNUMINTL(state, 4, 5) |
+            BITNUMINTL(state, 3, 6) | ((state & 0x0f000000) >> 3) | BITNUMINTL(state, 8, 11) |
+            BITNUMINTL(state, 7, 12) | ((state & 0x00f00000) >> 5) | BITNUMINTL(state, 12, 17) |
+            BITNUMINTL(state, 11, 18) | ((state & 0x000f0000) >> 7) | BITNUMINTL(state, 16, 23);
 
-        t2 = BITNUMINTL(state, 15, 0) | (state & 0x0000f000) << 15 | BITNUMINTL(state, 20, 5) |
-            BITNUMINTL(state, 19, 6) | (state & 0x00000f00) << 13 | BITNUMINTL(state, 24, 11) |
-            BITNUMINTL(state, 23, 12) | (state & 0x000000f0) << 11 | BITNUMINTL(state, 28, 17) |
-            BITNUMINTL(state, 27, 18) | (state & 0x0000000f) << 9 | BITNUMINTL(state, 0, 23);
+        t2 = BITNUMINTL(state, 15, 0) | ((state & 0x0000f000) << 15) | BITNUMINTL(state, 20, 5) |
+            BITNUMINTL(state, 19, 6) | ((state & 0x00000f00) << 13) | BITNUMINTL(state, 24, 11) |
+            BITNUMINTL(state, 23, 12) | ((state & 0x000000f0) << 11) | BITNUMINTL(state, 28, 17) |
+            BITNUMINTL(state, 27, 18) | ((state & 0x0000000f) << 9) | BITNUMINTL(state, 0, 23);
 
-        lrgstate[0] = (byte)(t1 >> 24 & 0x000000ff);
-        lrgstate[1] = (byte)(t1 >> 16 & 0x000000ff);
-        lrgstate[2] = (byte)(t1 >> 8 & 0x000000ff);
-        lrgstate[3] = (byte)(t2 >> 24 & 0x000000ff);
-        lrgstate[4] = (byte)(t2 >> 16 & 0x000000ff);
-        lrgstate[5] = (byte)(t2 >> 8 & 0x000000ff);
+        lrgstate[0] = (byte)((t1 >> 24) & 0x000000ff);
+        lrgstate[1] = (byte)((t1 >> 16) & 0x000000ff);
+        lrgstate[2] = (byte)((t1 >> 8) & 0x000000ff);
+        lrgstate[3] = (byte)((t2 >> 24) & 0x000000ff);
+        lrgstate[4] = (byte)((t2 >> 16) & 0x000000ff);
+        lrgstate[5] = (byte)((t2 >> 8) & 0x000000ff);
 
         lrgstate[0] ^= key[0];
         lrgstate[1] ^= key[1];
@@ -213,13 +213,13 @@ public static class DESHelper
         lrgstate[4] ^= key[4];
         lrgstate[5] ^= key[5];
 
-        state = (uint)(sbox1[SBOXBIT((byte)(lrgstate[0] >> 2))] << 28 |
-            sbox2[SBOXBIT((byte)((lrgstate[0] & 0x03) << 4 | lrgstate[1] >> 4))] << 24 |
-            sbox3[SBOXBIT((byte)((lrgstate[1] & 0x0f) << 2 | lrgstate[2] >> 6))] << 20 |
-            sbox4[SBOXBIT((byte)(lrgstate[2] & 0x3f))] << 16 |
-            sbox5[SBOXBIT((byte)(lrgstate[3] >> 2))] << 12 |
-            sbox6[SBOXBIT((byte)((lrgstate[3] & 0x03) << 4 | lrgstate[4] >> 4))] << 8 |
-            sbox7[SBOXBIT((byte)((lrgstate[4] & 0x0f) << 2 | lrgstate[5] >> 6))] << 4 |
+        state = (uint)((sbox1[SBOXBIT((byte)(lrgstate[0] >> 2))] << 28) |
+            (sbox2[SBOXBIT((byte)(((lrgstate[0] & 0x03) << 4) | (lrgstate[1] >> 4)))] << 24) |
+            (sbox3[SBOXBIT((byte)(((lrgstate[1] & 0x0f) << 2) | (lrgstate[2] >> 6)))] << 20) |
+            (sbox4[SBOXBIT((byte)(lrgstate[2] & 0x3f))] << 16) |
+            (sbox5[SBOXBIT((byte)(lrgstate[3] >> 2))] << 12) |
+            (sbox6[SBOXBIT((byte)(((lrgstate[3] & 0x03) << 4) | (lrgstate[4] >> 4)))] << 8) |
+            (sbox7[SBOXBIT((byte)(((lrgstate[4] & 0x0f) << 2) | (lrgstate[5] >> 6)))] << 4) |
             sbox8[SBOXBIT((byte)(lrgstate[5] & 0x3f))]);
 
         state = BITNUMINTL(state, 15, 0) | BITNUMINTL(state, 6, 1) | BITNUMINTL(state, 19, 2) |

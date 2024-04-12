@@ -5,6 +5,11 @@ using Rayer.Abstractions;
 using Rayer.Command;
 using Rayer.Core;
 using Rayer.Core.Abstractions;
+using Rayer.Core.FileSystem.Abstractions;
+using Rayer.Core.Framework;
+using Rayer.Core.Framework.Settings.Abstractions;
+using Rayer.Core.Menu;
+using Rayer.Core.PlayControl.Abstractions;
 using Rayer.Core.Playing;
 using Rayer.SearchEngine.Extensions;
 using Rayer.Services;
@@ -19,8 +24,6 @@ namespace Rayer;
 
 public partial class App : Application
 {
-    private static readonly CancellationTokenSource _cancellationTokenSource = new();
-
     private static readonly IHost _host = Host.CreateDefaultBuilder()
         .ConfigureAppConfiguration(c =>
         {
@@ -64,8 +67,6 @@ public partial class App : Application
         })
         .Build();
 
-    public static CancellationToken StoppingToken => _cancellationTokenSource.Token;
-
     public static ISnackbarService Snackbar { get; } = new Lazy<ISnackbarService>(GetRequiredService<ISnackbarService>).Value;
 
     public static new MainWindow MainWindow => (MainWindow)GetRequiredService<IWindow>();
@@ -106,8 +107,7 @@ public partial class App : Application
         playback?.Dispose();
         watcher?.Dispose();
 
-        _cancellationTokenSource.Cancel();
-        _cancellationTokenSource.Dispose();
+        AppCore.Exit();
 
         _host.StopAsync().Wait();
 
@@ -139,7 +139,7 @@ public partial class App : Application
                     Title = "异常",
                     Content = $"{ex?.Message}\n{ex?.StackTrace}",
                     CloseButtonText = "关闭"
-                }, StoppingToken);
+                }, AppCore.StoppingToken);
             });
         }
     }

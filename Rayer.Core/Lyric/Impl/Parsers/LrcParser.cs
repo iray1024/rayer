@@ -1,8 +1,8 @@
 ﻿using Rayer.Core.Lyric.Abstractions;
-using Rayer.Core.Lyric.Data;
 using Rayer.Core.Lyric.Enums;
-using Rayer.Core.Lyrics.Impl;
+using Rayer.Core.Lyric.Models;
 using System.Buffers;
+
 namespace Rayer.Core.Lyric.Impl.Parsers;
 
 internal static class LrcParser
@@ -188,7 +188,7 @@ internal static class LrcParser
                     };
                     if (attributeName == "offset")
                     {
-                        timeCalculationCache = timeCalculationCache * 10 + curChar - '0';
+                        timeCalculationCache = (timeCalculationCache * 10) + curChar - '0';
                         continue;
                     }
                     break;
@@ -197,7 +197,7 @@ internal static class LrcParser
                     {
                         if (curChar != ']')
                         {
-                            timeCalculationCache = timeCalculationCache * 10 + curChar - '0';
+                            timeCalculationCache = (timeCalculationCache * 10) + curChar - '0';
                             continue;
                         }
                         else
@@ -252,7 +252,7 @@ internal static class LrcParser
                             timeStampType = TimeStampType.None;
                             continue;
                         default:
-                            timeCalculationCache = timeCalculationCache * 10 + curChar - '0';
+                            timeCalculationCache = (timeCalculationCache * 10) + curChar - '0';
                             break;
                     }
 
@@ -423,7 +423,7 @@ internal static class LrcParser
                     {
                         if (curChar != ']')
                         {
-                            timeCalculationCache = timeCalculationCache * 10 + curChar - '0';
+                            timeCalculationCache = (timeCalculationCache * 10) + curChar - '0';
                             continue;
                         }
                         else
@@ -477,7 +477,7 @@ internal static class LrcParser
                             state = CurrentState.PossiblyLyric;
                             continue;
                         default:
-                            timeCalculationCache = timeCalculationCache * 10 + curChar - '0';
+                            timeCalculationCache = (timeCalculationCache * 10) + curChar - '0';
                             break;
                     }
 

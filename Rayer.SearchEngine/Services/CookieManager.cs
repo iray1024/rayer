@@ -1,4 +1,4 @@
-﻿using Rayer.Core.Abstractions;
+﻿using Rayer.Core.Http.Abstractions;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;

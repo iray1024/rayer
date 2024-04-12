@@ -2,6 +2,8 @@
 using Rayer.Abstractions;
 using Rayer.Controls.Adorners;
 using Rayer.Core.Abstractions;
+using Rayer.Core.Framework;
+using Rayer.Core.PlayControl.Abstractions;
 using Rayer.Markup;
 using Rayer.Services;
 using Rayer.ViewModels;
@@ -126,6 +128,7 @@ public partial class Playbar : UserControl
     private void Slider_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
     {
         ViewModel.IgnoreUpdateProgressValue = true;
+        ViewModel.AudioManager.Playback.IsSeeking = true;
     }
 
     private void Slider_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
@@ -135,6 +138,8 @@ public partial class Playbar : UserControl
 
     private void Slider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
     {
+        ViewModel.AudioManager.Playback.IsSeeking = false;
+
         ViewModel.AudioManager.Playback.Seek(ViewModel.ProgressValue);
 
         ViewModel.IgnoreUpdateProgressValue = false;

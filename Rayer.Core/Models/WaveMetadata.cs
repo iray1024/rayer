@@ -1,7 +1,7 @@
 ﻿using NAudio.Extras;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
-using Rayer.Core.Abstractions;
+using Rayer.Core.AudioEffect.Abstractions;
 using System.IO;
 
 namespace Rayer.Core.Models;
@@ -24,7 +24,7 @@ public class WaveMetadata : ISampleProvider, IDisposable
     public int Read(float[] buffer, int offset, int count)
     {
         return FadeInOutSampleProvider is null
-            ? 0//throw new ObjectDisposedException("FadeInOutSampleProvider已被释放")
+            ? 0
             : FadeInOutSampleProvider.Read(buffer, offset, count);
     }
 

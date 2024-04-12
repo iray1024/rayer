@@ -10,6 +10,7 @@ namespace Rayer.SearchEngine.Views.Windows;
 public partial class DynamicIsland : Window
 {
     private readonly Storyboard? _dynamicIslandStoryboard = new();
+    private string _currentScrrenDeviceName = string.Empty;
 
     public DynamicIsland()
     {
@@ -21,7 +22,7 @@ public partial class DynamicIsland : Window
         InitializeComponent();
 
         TextBlurStroyboard = Resources["TextBlurStroyboard"] as Storyboard
-            ?? throw new ArgumentNullException("未找到 AlbumRotateStoryboard 资源");        
+            ?? throw new ArgumentNullException("未找到 AlbumRotateStoryboard 资源");
     }
 
     public DynamicIslandViewModel ViewModel { get; set; }
@@ -103,6 +104,8 @@ public partial class DynamicIsland : Window
 
         var mainScreen = System.Windows.Forms.Screen.FromHandle(new WindowInteropHelper(wnd).Handle);
 
+        _currentScrrenDeviceName = mainScreen.DeviceName;
+
         if (mainScreen is not null)
         {
             var currenScreenTop = mainScreen.Bounds.Top + 50;
@@ -118,5 +121,20 @@ public partial class DynamicIsland : Window
         SystemThemeWatcher.UnWatch(this);
 
         ViewModel.DynamicIsland = this;
+
+        Application.Current.MainWindow.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, EventArgs e)
+    {
+        var currentScreen = System.Windows.Forms.Screen.FromHandle(new WindowInteropHelper(Application.Current.MainWindow).Handle);
+
+        if (currentScreen.DeviceName != _currentScrrenDeviceName)
+        {
+            _currentScrrenDeviceName = currentScreen.DeviceName;
+
+            Left = ((currentScreen.Bounds.Width - ActualWidth) / 2) + currentScreen.Bounds.Left;
+            Top = currentScreen.Bounds.Top + 50;
+        }
     }
 }

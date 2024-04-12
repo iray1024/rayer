@@ -1,4 +1,5 @@
-﻿using Rayer.Core.Abstractions;
+﻿using Rayer.Core.Framework.Settings.Abstractions;
+using Rayer.Core.PlayControl.Abstractions;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -76,6 +77,11 @@ public partial class ProcessMessageWindow : Window
 
     private async Task CheckKeyBindings(int vkCode)
     {
+        if (Keyboard.Modifiers is not ModifierKeys.None)
+        {
+            return;
+        }
+
         var key = KeyInterop.KeyFromVirtualKey(vkCode);
 
         if (key == _settingsService.Settings.KeyPlayOrPause.Key)

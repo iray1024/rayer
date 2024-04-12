@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
-using Rayer.Core.Models;
 
 namespace Rayer.ViewModels;
 

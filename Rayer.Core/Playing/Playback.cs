@@ -4,7 +4,12 @@ using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Events;
 using Rayer.Core.Models;
+using Rayer.Core.PlayControl.Abstractions;
+using System.Diagnostics;
+using System.Windows;
 using System.Windows.Threading;
+using Wpf.Ui;
+using Wpf.Ui.Extensions;
 
 namespace Rayer.Core.Playing;
 
@@ -94,6 +99,8 @@ public class Playback : IDisposable
     public DispatcherTimer DispatcherTimer { get; } =
         new DispatcherTimer(DispatcherPriority.Render) { Interval = TimeSpan.FromMilliseconds(100) };
 
+    public bool IsSeeking { get; set; } = false;
+
     public event EventHandler<AudioPlayingArgs>? AudioPlaying;
     public event EventHandler? AudioPaused;
     public event EventHandler<AudioChangedArgs>? AudioChanged;
@@ -127,7 +134,7 @@ public class Playback : IDisposable
     {
         if (_metadata.Reader is not null)
         {
-            CurrentTime = _metadata.Reader.TotalTime * value * 0.01;
+            CurrentTime = TimeSpan.FromSeconds(_metadata.Reader.TotalTime.TotalSeconds * value * 0.01);
 
             _metadata.FadeInOutSampleProvider?.BeginFadeIn(1000);
 
@@ -215,11 +222,33 @@ public class Playback : IDisposable
     {
         ForceStopCurrentDevice();
 
-        _metadata = _metadataFactory.Create(Audio.Path);
+        var metadata = _metadataFactory.Create(Audio.Path);
 
-        await _deviceManager.LoadAsync(_metadata);
+        if (metadata is not null)
+        {
+            _metadata = metadata;
 
-        OpenFile();
+            await _deviceManager.LoadAsync(_metadata);
+
+            OpenFile();
+        }
+        else
+        {
+            var dialogService = AppCore.GetRequiredService<IContentDialogService>();
+
+            if (dialogService is not null)
+            {
+                await Application.Current.Dispatcher.InvokeAsync(async () =>
+                {
+                    await dialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions
+                    {
+                        Title = "出现错误",
+                        Content = $"无法播放当前歌曲",
+                        CloseButtonText = "关闭"
+                    }, AppCore.StoppingToken);
+                });
+            }
+        }
     }
 
     public void Resume(bool fadeIn = true)
@@ -334,7 +363,7 @@ public class Playback : IDisposable
     private async void OnPlaybackStopped(object? sender, StoppedEventArgs e)
     {
 #if DEBUG
-        await Console.Out.WriteLineAsync("播放结束事件响应");
+        Debug.WriteLine("播放结束事件响应");
 #endif
         _deviceManager.Stop();
 
@@ -359,7 +388,7 @@ public class Playback : IDisposable
 
         _deviceManager.Device?.Play();
 
-        _metadata.FadeInOutSampleProvider?.BeginFadeIn(100);
+        _metadata.FadeInOutSampleProvider?.BeginFadeIn(1000);
     }
 
     private int GetNextAudioIndex()

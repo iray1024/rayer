@@ -13,9 +13,9 @@ public interface ILineInfo : IComparable
 
     public int? Duration => EndTime - StartTime;
 
-    public int? StartTimeWithSubLine => MathEx.Min(StartTime, SubLine?.StartTime);
+    public int? StartTimeWithSubLine => MathUtils.Min(StartTime, SubLine?.StartTime);
 
-    public int? EndTimeWithSubLine => MathEx.Max(EndTime, SubLine?.EndTime);
+    public int? EndTimeWithSubLine => MathUtils.Max(EndTime, SubLine?.EndTime);
 
     public int? DurationWithSubLine => EndTimeWithSubLine - StartTimeWithSubLine;
 

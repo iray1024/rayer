@@ -3,8 +3,10 @@ using Rayer.Core.Abstractions;
 using Rayer.Core.Lyric.Abstractions;
 using Rayer.Core.Lyric.Impl;
 using Rayer.SearchEngine.Abstractions;
+using Rayer.SearchEngine.Events;
 using Rayer.SearchEngine.Views.Windows;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace Rayer.SearchEngine.ViewModels;
@@ -15,8 +17,13 @@ public partial class DynamicIslandViewModel : ObservableObject
     private readonly IAudioManager _audioManager;
     private readonly DispatcherTimer _timer;
 
+    private static readonly ILineInfo _noneLyricInfo = new LineInfo("暂无匹配歌词");
     private static readonly ILineInfo _pauseInfo = new LineInfo("暂停播放");
     private static readonly ILineInfo _stopInfo = new LineInfo("喵蛙王子丶");
+    private static readonly ILineInfo _seekingInfo = new LineInfo("正在拖动");
+
+    [ObservableProperty]
+    private ImageSource? _cover;
 
     [ObservableProperty]
     private ILineInfo? _currentLine;
@@ -33,6 +40,7 @@ public partial class DynamicIslandViewModel : ObservableObject
         _lyricProvider.AudioChanged += OnAudioChanged;
         _lyricProvider.AudioPaused += OnAudioPaused;
         _lyricProvider.AudioStopped += OnAudioStopped;
+        _lyricProvider.LyricChanged += OnLyricChanged;
 
         _audioManager.Playback.Seeked += OnSeeked;
 
@@ -56,15 +64,17 @@ public partial class DynamicIslandViewModel : ObservableObject
         }
     }
 
-    private async void OnAudioChanged(object? sender, EventArgs e)
+    private async void OnAudioChanged(object? sender, Core.Events.AudioChangedArgs e)
     {
         _timer.Stop();
+
+        Cover = e.New.Cover;
 
         var lyricData = _lyricProvider.LyricData;
 
         await Application.Current.Dispatcher.InvokeAsync(() =>
         {
-            if (lyricData is not null && lyricData.Lines is not null)
+            if (lyricData is not null && lyricData.Lines is { Count: > 0 })
             {
                 _totalLines = lyricData.Lines;
                 _currentLineIndex = 0;
@@ -74,7 +84,7 @@ public partial class DynamicIslandViewModel : ObservableObject
             }
             else
             {
-                CurrentLine = null;
+                CurrentLine = _noneLyricInfo;
             }
         }, DispatcherPriority.Background);
     }
@@ -89,8 +99,29 @@ public partial class DynamicIslandViewModel : ObservableObject
     private void OnAudioStopped(object? sender, EventArgs e)
     {
         CurrentLine = _stopInfo;
+        Cover = null;
 
         _timer.Stop();
+    }
+
+    private void OnLyricChanged(object? sender, SwitchLyricSearcherArgs e)
+    {
+        var lyricData = _lyricProvider.LyricData;
+
+        if (lyricData is not null && lyricData.Lines is { Count: > 0 })
+        {
+            _totalLines = lyricData.Lines;
+            _currentLineIndex = 0;
+            CurrentLine = _totalLines[0];
+
+            OnSeeked(sender, e);
+        }
+        else
+        {
+            _totalLines = [];
+            _currentLineIndex = 0;
+            CurrentLine = _noneLyricInfo;
+        }
     }
 
     private void OnTick(object? sender, EventArgs e)
@@ -102,7 +133,9 @@ public partial class DynamicIslandViewModel : ObservableObject
 
             if (nextLine is not null && _audioManager.Playback.CurrentTime.TotalMilliseconds >= nextLine.StartTime)
             {
-                if (_currentLineIndex + 2 < _totalLines.Count && _totalLines[_currentLineIndex + 2].StartTime - nextLine.StartTime > 1000)
+                if (_currentLineIndex + 2 < _totalLines.Count &&
+                    _totalLines[_currentLineIndex + 2].StartTime - nextLine.StartTime > 1000 &&
+                    !string.IsNullOrEmpty(CurrentLine.Text))
                 {
                     DynamicIsland.TextBlurStroyboard.Begin();
                 }
@@ -116,8 +149,17 @@ public partial class DynamicIslandViewModel : ObservableObject
     private void OnSeeked(object? sender, EventArgs e)
     {
         _timer.Stop();
+
+        if (_audioManager.Playback.IsSeeking)
+        {
+            CurrentLine = _seekingInfo;
+
+            return;
+        }
+
         var currentTime = _audioManager.Playback.CurrentTime.TotalMilliseconds;
 
+        var matched = false;
         for (var i = 0; i < _totalLines.Count; i++)
         {
             if (currentTime < _totalLines[i].StartTime)
@@ -133,9 +175,16 @@ public partial class DynamicIslandViewModel : ObservableObject
                     _currentLineIndex = 0;
                 }
 
+                matched = true;
                 break;
             }
         }
+
+        if (!matched)
+        {
+            CurrentLine = _totalLines.LastOrDefault();
+        }
+
         _timer.Start();
     }
 }

@@ -1,5 +1,5 @@
-﻿using Rayer.Core.Abstractions;
-using Rayer.Core.Common;
+﻿using Rayer.Core.Common;
+using Rayer.Core.Menu;
 using System.Windows.Controls;
 
 namespace Rayer.Services;
@@ -38,7 +38,7 @@ internal class ContextMenuFactory : IContextMenuFactory
         menu.Items.Add(new MenuItem()
         {
             Header = "添加到",
-            Command= _commandBinding.AddToCommand
+            Command = _commandBinding.AddToCommand
         });
 
         return menu;

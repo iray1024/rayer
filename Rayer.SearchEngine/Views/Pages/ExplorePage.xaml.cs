@@ -1,8 +1,6 @@
-﻿using Rayer.Core;
-using Rayer.Core.Abstractions;
+﻿using Rayer.Core.Abstractions;
 using Rayer.Core.Models;
 using Rayer.SearchEngine.ViewModels;
-using Rayer.SearchEngine.Views.Windows;
 using System.Windows;
 using Wpf.Ui.Controls;
 
@@ -32,7 +30,7 @@ public partial class ExplorePage : INavigableView<ExploreViewModel>
         {
             Title = "一笑江湖",
             Artists = ["姜姜"],
-            Path = "http://m7.music.126.net/20240412080810/215f0381d472ceefc019488969208dd6/ymusic/obj/w5zDlMODwrDDiGjCn8Ky/2696902133/cb84/fa1d/89d4/4a19746870f59373124d76576b7d2d90.mp3"
+            Path = "http://m8.music.126.net/20240413040827/88de232d9d81c0e89f20107afda06b70/ymusic/obj/w5zDlMODwrDDiGjCn8Ky/2696902133/cb84/fa1d/89d4/4a19746870f59373124d76576b7d2d90.mp3"
         };
 
         await _audioManager.Playback.Play(audio);

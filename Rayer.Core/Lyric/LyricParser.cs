@@ -1,7 +1,6 @@
-﻿using Rayer.Core.Lyric.Data;
-using Rayer.Core.Lyric.Enums;
+﻿using Rayer.Core.Lyric.Enums;
 using Rayer.Core.Lyric.Impl.Parsers;
-using Rayer.Core.Lyrics.Impl.Parsers;
+using Rayer.Core.Lyric.Models;
 
 namespace Rayer.Core.Lyric;
 

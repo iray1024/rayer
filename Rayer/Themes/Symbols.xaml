@@ -19,5 +19,6 @@
     <BitmapImage x:Key="AddTo" UriSource="pack://application:,,,/assets/light/add-to.png" />
     <BitmapImage x:Key="FullScreen" UriSource="pack://application:,,,/assets/light/fullscreen.png" />
     <BitmapImage x:Key="Equalizer" UriSource="pack://application:,,,/assets/light/equalizer.png" />
+    <BitmapImage x:Key="Lyric" UriSource="pack://application:,,,/assets/light/lyric.png" />
 
 </ResourceDictionary>

@@ -2,7 +2,9 @@
 using CommunityToolkit.Mvvm.Input;
 using NAudio.Extras;
 using Rayer.Core.Abstractions;
+using Rayer.Core.AudioEffect.Abstractions;
 using Rayer.Core.Common;
+using Rayer.Core.Framework.Settings.Abstractions;
 using System.ComponentModel;
 using System.Windows.Controls;
 

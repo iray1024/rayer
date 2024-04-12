@@ -12,11 +12,12 @@
                                      IsDesignTimeCreatable=False}"
     Loaded="OnLoaded"
     MouseLeftButtonDown="OnMouseLeftButtonDown"
+    ShowInTaskbar="False"
     Style="{StaticResource DefaultWindowStyle}"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Window.Resources>
-        <internal:TimeSpanIncreaser x:Key="TimeSpanIncreaser" Step="0:0:1.4" />
+        <internal:TimeSpanIncreaser x:Key="TimeSpanIncreaser" Step="0:0:0.4" />
         <internal:TimeSpanWrapper x:Key="TimeSpanWrapper" Value="{Binding Next, Source={StaticResource TimeSpanIncreaser}}" />
         <Storyboard
             x:Key="TextBlurStroyboard"
@@ -43,54 +44,53 @@
         </Storyboard>
     </Window.Resources>
 
-    <Grid>
-        <Border
-            x:Name="Panel"
-            Width="{Binding ElementName=InnerGrid, Path=ActualWidth, Converter={StaticResource DynamicIslandWidthConverter}}"
-            Height="{Binding ElementName=InnerGrid, Path=ActualHeight, Converter={StaticResource DynamicIslandHeightConverter}}"
-            MinWidth="120"
-            Background="#202020"
-            BorderBrush="Transparent"
-            BorderThickness="0"
-            CornerRadius="30"
-            Cursor="Hand"
-            RenderOptions.BitmapScalingMode="Fant">
-            <Grid
-                x:Name="InnerGrid"
-                Height="32"
-                HorizontalAlignment="Left">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="auto" />
-                </Grid.ColumnDefinitions>
-                <ui:ImageIcon
-                    Grid.Column="0"
-                    Width="40"
-                    Height="40"
-                    Margin="8,0,4,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    RenderOptions.BitmapScalingMode="Fant"
-                    Source="{StaticResource Logo}" />
-                <TextBlock
-                    x:Name="Lyric"
-                    Grid.Column="1"
-                    MinWidth="100"
-                    Margin="0,-1,0,0"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    d:DataContext="{x:Null}"
-                    DataContext="{Binding ViewModel.CurrentLine}"
-                    FontSize="24"
-                    RenderOptions.ClearTypeHint="Enabled"
-                    SizeChanged="OnSizeChanged"
-                    Text="{Binding Text, FallbackValue='喵蛙王子丶'}"
-                    TextOptions.TextRenderingMode="ClearType">
-                    <TextBlock.Effect>
-                        <BlurEffect x:Name="BlurEffect" Radius="0" />
-                    </TextBlock.Effect>
-                </TextBlock>
-            </Grid>
-        </Border>
-    </Grid>
+    <Border
+        x:Name="Panel"
+        Width="{Binding ElementName=InnerGrid, Path=ActualWidth, Converter={StaticResource DynamicIslandWidthConverter}}"
+        Height="{Binding ElementName=InnerGrid, Path=ActualHeight, Converter={StaticResource DynamicIslandHeightConverter}}"
+        MinWidth="120"
+        Background="#202020"
+        BorderBrush="Transparent"
+        BorderThickness="0"
+        CornerRadius="30"
+        Cursor="Hand"
+        RenderOptions.BitmapScalingMode="Fant">
+        <Grid
+            x:Name="InnerGrid"
+            Height="32"
+            HorizontalAlignment="Left">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <ui:ImageIcon
+                Grid.Column="0"
+                Width="40"
+                Height="40"
+                Margin="8,0,4,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                RenderOptions.BitmapScalingMode="Fant"
+                Source="{StaticResource Logo}" />
+            <TextBlock
+                x:Name="Lyric"
+                Grid.Column="1"
+                MinWidth="100"
+                Margin="0,-1,0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                d:DataContext="{x:Null}"
+                DataContext="{Binding ViewModel.CurrentLine}"
+                FontSize="24"
+                RenderOptions.ClearTypeHint="Enabled"
+                SizeChanged="OnSizeChanged"
+                Text="{Binding Text, FallbackValue='喵蛙王子丶'}"
+                TextOptions.TextRenderingMode="ClearType">
+                <TextBlock.Effect>
+                    <BlurEffect x:Name="BlurEffect" Radius="0" />
+                </TextBlock.Effect>
+            </TextBlock>
+        </Grid>
+    </Border>
 </Window>

@@ -1,13 +1,11 @@
 ﻿using Rayer.Core.Lyric.Abstractions;
-using Rayer.Core.Lyric.Data;
 using Rayer.Core.Lyric.Enums;
-using Rayer.Core.Lyric.Impl;
 using Rayer.Core.Lyric.Impl.AdditionalFileInfo;
-using Rayer.Core.Lyric.Impl.Parsers;
+using Rayer.Core.Lyric.Models;
 using Rayer.Core.Lyric.Utils;
 using System.Text.RegularExpressions;
 
-namespace Rayer.Core.Lyrics.Impl.Parsers;
+namespace Rayer.Core.Lyric.Impl.Parsers;
 
 internal static partial class KryParser
 {

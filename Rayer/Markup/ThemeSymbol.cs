@@ -20,5 +20,6 @@ public enum ThemeSymbol
     Recycle,
     AddTo,
     FullScreen,
-    Equalizer
+    Equalizer,
+    Lyric
 }

@@ -1,4 +1,6 @@
-﻿namespace Rayer.SearchEngine.Lyric.Abstractions;
+﻿using Rayer.SearchEngine.Lyric.Searchers.Abstractions;
+
+namespace Rayer.SearchEngine.Lyric.Abstractions;
 
 public interface ISearchResult
 {

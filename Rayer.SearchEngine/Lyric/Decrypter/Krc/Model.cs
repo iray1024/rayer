@@ -5,7 +5,7 @@ public class KugouLyricsResponse
     [JsonPropertyName("content")]
     public string? Content { get; set; }
 
-    [JsonPropertyName("info")]
+    [JsonPropertyName("Info")]
     public string? Info { get; set; }
 
     [JsonPropertyName("_source")]

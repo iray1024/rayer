@@ -5,11 +5,12 @@
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:common="clr-namespace:Rayer.Core.Common;assembly=Rayer.Core"
     xmlns:controls="clr-namespace:Rayer.Controls"
-    xmlns:core="clr-namespace:Rayer.Core.Abstractions;assembly=Rayer.Core"
+    xmlns:core="clr-namespace:Rayer.Core.Framework;assembly=Rayer.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Rayer.Views.Pages"
+    xmlns:markup="clr-namespace:Rayer.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" xmlns:markup="clr-namespace:Rayer.Markup"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="设置"
     d:DataContext="{d:DesignInstance local:SettingsPage,
                                      IsDesignTimeCreatable=False}"
@@ -23,7 +24,10 @@
             Margin="0,0,0,8"
             FontTypography="BodyStrong"
             Text="外观和行为" />
-        <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon Color24}">
+        <ui:CardControl
+            Margin="0,0,0,12"
+            Icon="{ui:SymbolIcon Color24}"
+            RenderOptions.BitmapScalingMode="Fant">
             <ui:CardControl.Header>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -56,7 +60,8 @@
         <ui:CardExpander
             Margin="0,0,0,6"
             ContentPadding="0"
-            Icon="{ui:SymbolIcon Library24}">
+            Icon="{ui:SymbolIcon Library24}"
+            RenderOptions.BitmapScalingMode="Fant">
             <ui:CardExpander.Header>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -140,7 +145,10 @@
             </ui:CardExpander.Style>
         </ui:CardExpander>
 
-        <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon NoteAdd24}">
+        <ui:CardControl
+            Margin="0,0,0,12"
+            Icon="{ui:SymbolIcon NoteAdd24}"
+            RenderOptions.BitmapScalingMode="Fant">
             <ui:CardControl.Header>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -166,7 +174,10 @@
             </ComboBox>
         </ui:CardControl>
 
-        <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon PlayCircle24}">
+        <ui:CardControl
+            Margin="0,0,0,12"
+            Icon="{ui:SymbolIcon PlayCircle24}"
+            RenderOptions.BitmapScalingMode="Fant">
             <ui:CardControl.Header>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -192,7 +203,13 @@
             </ComboBox>
         </ui:CardControl>
 
-        <ui:CardControl Margin="0,0,0,12" Icon="{ui:ImageIcon {markup:ThemeSymbol Pitch}}">
+        <ui:CardControl
+            x:Name="PitchProviderSetting"
+            Margin="0,0,0,12"
+            Icon="{ui:ImageIcon {markup:ThemeSymbol Pitch},
+                                Width=24,
+                                Height=24}"
+            RenderOptions.BitmapScalingMode="Fant">
             <ui:CardControl.Header>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -215,6 +232,39 @@
                 SelectedIndex="{Binding ViewModel.PitchProvider, Converter={StaticResource PitchProviderConverter}, Mode=TwoWay}">
                 <ComboBoxItem Content="NAudio" />
                 <ComboBoxItem Content="SoundTouch" />
+            </ComboBox>
+        </ui:CardControl>
+
+        <ui:CardControl
+            x:Name="LyricSearcherSetting"
+            Margin="0,0,0,12"
+            Icon="{ui:ImageIcon {markup:ThemeSymbol Lyric},
+                                Width=24,
+                                Height=24}"
+            RenderOptions.BitmapScalingMode="Fant">
+            <ui:CardControl.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ui:TextBlock
+                        Grid.Row="0"
+                        FontTypography="Body"
+                        Text="歌词搜索器" />
+                    <ui:TextBlock
+                        Grid.Row="1"
+                        Foreground="Gray"
+                        Text="设置使用哪种歌词搜索器" />
+                </Grid>
+            </ui:CardControl.Header>
+            <ComboBox
+                Grid.Column="1"
+                MinWidth="200"
+                SelectedIndex="{Binding ViewModel.LyricSearcher, Converter={StaticResource LyricSearcherConverter}, Mode=TwoWay}">
+                <ComboBoxItem Content="网易云音乐" />
+                <ComboBoxItem Content="QQ音乐" />
+                <ComboBoxItem Content="酷狗音乐" />
             </ComboBox>
         </ui:CardControl>
 

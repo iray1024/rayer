@@ -36,7 +36,6 @@ public class VolumeAdorner : Adorner
 
         ApplicationThemeManager.Changed += OnThemeChanged;
 
-
     }
 
     private void OnSwicthImmersivePlayerDisplay(object? sender, EventArgs e)

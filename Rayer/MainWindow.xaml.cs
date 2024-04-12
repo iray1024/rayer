@@ -1,5 +1,6 @@
 ﻿using Rayer.Abstractions;
-using Rayer.Core.Abstractions;
+using Rayer.Core.Framework;
+using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.SearchEngine.Views.Windows;
 using Rayer.Services;
 using Rayer.ViewModels;

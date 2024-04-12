@@ -14,7 +14,6 @@ public interface IImmersivePlayerService
 
     Task Switch();
 
-
     event EventHandler? Show;
     event EventHandler? Hidden;
 }

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Rayer.Abstractions;
 using Rayer.Core.Abstractions;
+using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Services;
 using System.Windows;
 using System.Windows.Controls;

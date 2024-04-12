@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
-using Rayer.Core.Models;
+using Rayer.Core.Menu;
 using System.Windows.Controls;
 
 namespace Rayer.ViewModels;

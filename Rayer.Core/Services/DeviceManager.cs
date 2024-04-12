@@ -3,15 +3,14 @@ using NAudio.Wave;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
 using Rayer.Core.Models;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 
 namespace Rayer.Core.Services;
 
-internal class DeviceManager : IDeviceManager
+internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
 {
-    private readonly IServiceProvider _serviceProvider;
-
     private WaveOutEvent? _device;
     private readonly SemaphoreSlim _semaphore = new(2, 2);
 
@@ -21,11 +20,6 @@ internal class DeviceManager : IDeviceManager
     private float _pitch = 1f;
 
     private int _isReOpen = 0;
-
-    public DeviceManager(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
 
     public WaveOutEvent? Device => _device;
 
@@ -97,26 +91,29 @@ internal class DeviceManager : IDeviceManager
         {
             _device?.Pause();
 
-            var position = _metadata.Reader.Position;
+            var currentTime = _metadata.Reader.CurrentTime;
 
             var filePath = (_metadata.BaseStream as FileStream)?.Name!;
 
-            var factory = _serviceProvider.GetRequiredService<IWaveMetadataFactory>();
+            var factory = serviceProvider.GetRequiredService<IWaveMetadataFactory>();
 
             var metadata = factory.Create(filePath);
 
-            _metadata = metadata;
-
-            if (_metadata?.Reader is not null)
+            if (metadata is not null)
             {
-                IsReOpen = true;
+                _metadata = metadata;
 
-                await LoadAsync(metadata);
-                Init();
+                if (_metadata?.Reader is not null)
+                {
+                    IsReOpen = true;
 
-                _metadata.Reader.Position = position;
+                    await LoadAsync(metadata);
+                    Init();
 
-                MetadataChanged?.Invoke(this, new(_metadata));
+                    _metadata.Reader.CurrentTime = currentTime;
+
+                    MetadataChanged?.Invoke(this, new(_metadata));
+                }
             }
         }
     }
@@ -127,12 +124,12 @@ internal class DeviceManager : IDeviceManager
         {
             _metadata = metadata;
 #if DEBUG
-            await Console.Out.WriteLineAsync($"等待设备创建，正在等待同步锁，线程ID: {Environment.CurrentManagedThreadId}");
+            Debug.WriteLine($"等待设备创建，正在等待同步锁，线程ID: {Environment.CurrentManagedThreadId}");
 #endif
 
             await _semaphore.WaitAsync(cancellationToken);
 #if DEBUG
-            await Console.Out.WriteLineAsync($"等待设备创建，已获取同步锁，线程ID: {Environment.CurrentManagedThreadId}");
+            Debug.WriteLine($"等待设备创建，已获取同步锁，线程ID: {Environment.CurrentManagedThreadId}");
 #endif
             CreateDevice();
             _semaphore.Release();

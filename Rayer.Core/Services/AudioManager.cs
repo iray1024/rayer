@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
+using Rayer.Core.FileSystem.Abstractions;
+using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Models;
 using Rayer.Core.Playing;
 using System.Collections.ObjectModel;

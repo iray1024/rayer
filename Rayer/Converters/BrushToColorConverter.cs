@@ -8,12 +8,9 @@ internal class BrushToColorConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is SolidColorBrush brush)
-        {
-            return brush.Color;
-        }
-
-        return value is Color
+        return value is SolidColorBrush brush
+            ? brush.Color
+            : value is Color
             ? value
             : new Color
             {

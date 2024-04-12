@@ -1,4 +1,4 @@
-﻿using Rayer.Core.Abstractions;
+﻿using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Utils;
 using Rayer.ViewModels;
 using System.Windows;

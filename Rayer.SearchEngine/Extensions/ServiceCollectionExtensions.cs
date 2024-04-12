@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Rayer.Core.Abstractions;
+using Rayer.Core.Http.Abstractions;
 using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Internal;
 using Rayer.SearchEngine.Internal.Abstractions;
 using Rayer.SearchEngine.Internal.ApiSelector;
 using Rayer.SearchEngine.Login.Abstractions;
-using Rayer.SearchEngine.Login.Services;
+using Rayer.SearchEngine.Login.Impl;
 using Rayer.SearchEngine.Lyric.Extensions;
 using Rayer.SearchEngine.Services;
 using System.Reflection;

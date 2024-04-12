@@ -1,4 +1,7 @@
 ﻿#nullable disable
+using Rayer.SearchEngine.Lyric.Abstractions;
+using Rayer.SearchEngine.Lyric.Models;
+
 namespace Lyricify.Lyrics.Providers.Web.Kugou;
 
 public class SearchSongResponse
@@ -130,5 +133,34 @@ public class SearchLyricsResponse
 
         [JsonPropertyName("trans_id")]
         public string TransId { get; set; }
+    }
+}
+
+public class LyricResult : ILyricResult
+{
+    public int Status { get; set; }
+
+    public string Id { get; set; }
+
+    public string Info { get; set; }
+
+    [JsonPropertyName("error_code")]
+    public int ErrorCode { get; set; }
+
+    public int ContentType { get; set; }
+
+    [JsonPropertyName("_source")]
+    public string Source { get; set; }
+
+    public string Charset { get; set; }
+
+    public string Content { get; set; }
+
+    public LyricWrapper GetLyric()
+    {
+        return new LyricWrapper
+        {
+            Lyric = !string.IsNullOrEmpty(Content) ? Encoding.UTF8.GetString(Convert.FromBase64String(Content)) : string.Empty
+        };
     }
 }

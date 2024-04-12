@@ -1,4 +1,4 @@
-using Rayer.SearchEngine.Models.Response.User;
+using Rayer.SearchEngine.Models.Response.Login.User;
 
 namespace Rayer.SearchEngine.Login.Abstractions;
 

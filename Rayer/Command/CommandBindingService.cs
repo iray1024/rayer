@@ -1,6 +1,8 @@
 ﻿using Rayer.Command.Parameter;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
+using Rayer.Core.Menu;
+using Rayer.Core.PlayControl.Abstractions;
 using System.Windows.Input;
 
 namespace Rayer.Command;

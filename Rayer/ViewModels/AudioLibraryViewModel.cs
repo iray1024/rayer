@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
-using Rayer.Core.Models;
+using Rayer.Core.Menu;
 using System.Windows.Controls;
 
 namespace Rayer.ViewModels;
@@ -15,7 +14,7 @@ public partial class AudioLibraryViewModel : ObservableObject
     {
         Items = new SortableObservableCollection<Audio>([], AudioSortComparer.Ascending);
 
-        ContextMenu = contextMenuFactory.CreateContextMenu(ContextMenuScope.Library);        
+        ContextMenu = contextMenuFactory.CreateContextMenu(ContextMenuScope.Library);
     }
 
     public ContextMenu ContextMenu { get; }

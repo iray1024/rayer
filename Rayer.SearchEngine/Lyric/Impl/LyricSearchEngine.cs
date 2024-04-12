@@ -1,6 +1,8 @@
-﻿using Rayer.Core.Lyric.Abstractions;
+﻿using Rayer.Core.Common;
+using Rayer.Core.Lyric.Abstractions;
 using Rayer.SearchEngine.Lyric.Abstractions;
 using Rayer.SearchEngine.Lyric.Models;
+using Rayer.SearchEngine.Lyric.Searchers.Impl;
 
 namespace Rayer.SearchEngine.Lyric.Impl;
 
@@ -10,24 +12,24 @@ internal class LyricSearchEngine : ILyricSearchEngine
     private static readonly NeteaseSearcher _neteaseSearcher = new();
     private static readonly KugouSearcher _kugouSearcher = new();
 
-    public async Task<ISearchResult?> SearchAsync(ITrackMetadata track, SearcherType searcherType)
+    public async Task<ISearchResult?> SearchAsync(ITrackMetadata track, LyricSearcher searcherType)
     {
         return searcherType switch
         {
-            SearcherType.QQMusic => await _qqMusicSearcher.SearchForResult(track),
-            SearcherType.Netease => await _neteaseSearcher.SearchForResult(track),
-            SearcherType.Kugou => await _kugouSearcher.SearchForResult(track),
+            LyricSearcher.QQMusic => await _qqMusicSearcher.SearchForResult(track),
+            LyricSearcher.Netease => await _neteaseSearcher.SearchForResult(track),
+            LyricSearcher.Kugou => await _kugouSearcher.SearchForResult(track),
             _ => null,
         };
     }
 
-    public async Task<ISearchResult?> SearchAsync(ITrackMetadata track, SearcherType searcherType, MatchType matchType)
+    public async Task<ISearchResult?> SearchAsync(ITrackMetadata track, LyricSearcher searcherType, MatchType matchType)
     {
         return searcherType switch
         {
-            SearcherType.QQMusic => await _qqMusicSearcher.SearchForResult(track, matchType),
-            SearcherType.Netease => await _neteaseSearcher.SearchForResult(track, matchType),
-            SearcherType.Kugou => await _kugouSearcher.SearchForResult(track, matchType),
+            LyricSearcher.QQMusic => await _qqMusicSearcher.SearchForResult(track, matchType),
+            LyricSearcher.Netease => await _neteaseSearcher.SearchForResult(track, matchType),
+            LyricSearcher.Kugou => await _kugouSearcher.SearchForResult(track, matchType),
             _ => null,
         };
     }
@@ -45,6 +47,19 @@ internal class LyricSearchEngine : ILyricSearchEngine
             var neteaseResult = await Providers.Web.Providers.NeteaseApi.GetLyricNew(netease.Id.ToString());
 
             return neteaseResult;
+        }
+        else if (tag is KugouSearchResult kugou)
+        {
+            var kugouSearchResult = await Providers.Web.Providers.KugouApi.GetSearchLyrics(null, kugou.DurationMs, kugou.Hash);
+
+            if (kugouSearchResult is not null && kugouSearchResult.Candidates is { Count: > 0 })
+            {
+                var candidate = kugouSearchResult.Candidates[0];
+
+                var kugouResult = await Providers.Web.Providers.KugouApi.GetLyricAsync(candidate.Id, candidate.AccessKey);
+
+                return kugouResult;
+            }
         }
 
         return null;

@@ -2,7 +2,7 @@
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Events;
-using Rayer.Core.Models;
+using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Utils;
 using Rayer.ViewModels;
 using System.Collections.Specialized;
@@ -33,7 +33,7 @@ public partial class AudioLibraryPage : INavigableView<AudioLibraryViewModel>
         DataContext = this;
 
         ViewModel.Items.AddRange(_audioManager.Audios);
-               
+
         InitializeComponent();
     }
 

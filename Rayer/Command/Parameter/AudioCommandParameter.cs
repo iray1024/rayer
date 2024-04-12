@@ -1,5 +1,4 @@
 ﻿using Rayer.Core.Common;
-using Rayer.Core.Models;
 
 namespace Rayer.Command.Parameter;
 

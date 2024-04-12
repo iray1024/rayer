@@ -1,9 +1,9 @@
-﻿<abstractions:NoneFocusableWindow
+﻿<framework:NoneFocusableWindow
     x:Class="Rayer.SearchEngine.Views.Windows.LoginWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:abstractions="clr-namespace:Rayer.Core.Abstractions;assembly=Rayer.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:framework="clr-namespace:Rayer.Core.Framework;assembly=Rayer.Core"
     xmlns:local="clr-namespace:Rayer.SearchEngine.Views.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -54,4 +54,4 @@
                 Text="{Binding ViewModel.State}" />
         </Grid>
     </Grid>
-</abstractions:NoneFocusableWindow>
+</framework:NoneFocusableWindow>

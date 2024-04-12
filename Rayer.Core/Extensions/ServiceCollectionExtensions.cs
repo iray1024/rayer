@@ -1,7 +1,15 @@
 ﻿using Rayer.Core.Abstractions;
+using Rayer.Core.AudioEffect.Abstractions;
+using Rayer.Core.AudioEffect.Factory;
+using Rayer.Core.AudioEffect.Providers;
 using Rayer.Core.FileSystem;
-using Rayer.Core.Playing;
-using Rayer.Core.Providers;
+using Rayer.Core.FileSystem.Abstractions;
+using Rayer.Core.Framework.Settings.Abstractions;
+using Rayer.Core.Framework.Settings.Impl;
+using Rayer.Core.Http;
+using Rayer.Core.Http.Abstractions;
+using Rayer.Core.PlayControl;
+using Rayer.Core.PlayControl.Abstractions;
 using Rayer.Core.Services;
 using System.Reflection;
 

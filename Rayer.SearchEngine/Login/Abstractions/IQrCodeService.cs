@@ -1,4 +1,4 @@
-﻿using Rayer.SearchEngine.Models.Response.QrCode;
+﻿using Rayer.SearchEngine.Models.Response.Login.QrCode;
 
 namespace Rayer.SearchEngine.Login.Abstractions;
 

@@ -3,6 +3,9 @@ using NAudio.Vorbis;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using Rayer.Core.Abstractions;
+using Rayer.Core.AudioEffect.Abstractions;
+using Rayer.Core.AudioReader.Flac;
+using Rayer.Core.Http.Abstractions;
 using Rayer.Core.Models;
 using System.IO;
 
@@ -27,45 +30,64 @@ internal class WaveMetadataFactory : IWaveMetadataFactory
         _httpClientProvider = httpClientProvider;
     }
 
-    WaveMetadata IWaveMetadataFactory.Create(string filepath)
+    WaveMetadata? IWaveMetadataFactory.Create(string filepath)
     {
         Stream baseStream;
         WaveStream waveStream;
 
-        if (filepath.StartsWith("http"))
+        try
         {
-            var stream = _httpClientProvider.HttpClient.GetStreamAsync(filepath).Result;
+            if (filepath.StartsWith("http"))
+            {
+                var stream = _httpClientProvider.HttpClient.GetStreamAsync(filepath).Result;
 
-            var buffer = new MemoryStream();
+                var buffer = new MemoryStream();
 
-            stream.CopyTo(buffer);
-            buffer.Position = 0;
+                stream.CopyTo(buffer);
+                buffer.Position = 0;
 
-            baseStream = buffer;
-            waveStream = new StreamMediaFoundationReader(buffer, _meidaSettings);
+                baseStream = buffer;
+                waveStream = new StreamMediaFoundationReader(buffer, _meidaSettings);
+            }
+            else
+            {
+                baseStream = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+                var extension = Path.GetExtension(filepath);
+#pragma warning disable IDE0045
+                if (extension is ".flac")
+                {
+                    waveStream = new FlacAudioReader(filepath);
+                }
+                else if (extension is ".ogg")
+                {
+                    waveStream = new VorbisWaveReader(baseStream, false);
+                }
+                else
+                {
+                    waveStream = new StreamMediaFoundationReader(baseStream, _meidaSettings);
+                }
+#pragma warning restore IDE0045
+            }
+
+            var pitchProvider = _pitchShiftingProviderFactory.Create(waveStream);
+
+            var equalizer = new Equalizer(pitchProvider.ToSampleProvider(), _equalizerProvider.Equalizer);
+
+            var fadeInOutProvider = new FadeInOutSampleProvider(equalizer);
+
+            return new WaveMetadata
+            {
+                BaseStream = baseStream,
+                Reader = waveStream,
+                PitchShiftingSampleProvider = pitchProvider,
+                Equalizer = equalizer,
+                FadeInOutSampleProvider = fadeInOutProvider
+            };
         }
-        else
+        catch
         {
-            baseStream = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.Read);
-
-            waveStream = Path.GetExtension(filepath) is ".ogg"
-                ? new VorbisWaveReader(baseStream, false)
-                : new StreamMediaFoundationReader(baseStream, _meidaSettings);
+            return null;
         }
-
-        var pitchProvider = _pitchShiftingProviderFactory.Create(waveStream);
-
-        var equalizer = new Equalizer(pitchProvider.ToSampleProvider(), _equalizerProvider.Equalizer);
-
-        var fadeInOutProvider = new FadeInOutSampleProvider(equalizer);
-
-        return new WaveMetadata
-        {
-            BaseStream = baseStream,
-            Reader = waveStream,
-            PitchShiftingSampleProvider = pitchProvider,
-            Equalizer = equalizer,
-            FadeInOutSampleProvider = fadeInOutProvider
-        };
     }
 }

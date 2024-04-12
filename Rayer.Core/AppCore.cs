@@ -5,7 +5,10 @@ namespace Rayer.Core;
 
 public static class AppCore
 {
+    private static readonly CancellationTokenSource _cancellationTokenSource = new();
     private static IServiceProvider _serviceProvider = default!;
+
+    public static CancellationToken StoppingToken => _cancellationTokenSource.Token;
 
     public static T GetRequiredService<T>()
         where T : class
@@ -23,5 +26,11 @@ public static class AppCore
     public static void UseServiceProvider(in IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
+    }
+
+    public static void Exit()
+    {
+        _cancellationTokenSource.Cancel();
+        _cancellationTokenSource.Dispose();
     }
 }

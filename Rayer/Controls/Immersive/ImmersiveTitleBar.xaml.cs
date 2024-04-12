@@ -1,6 +1,7 @@
 ﻿using Rayer.Abstractions;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
+using Rayer.Core.Framework;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -17,7 +18,7 @@ public partial class ImmersiveTitleBar : UserControl
         _audioManager = App.GetRequiredService<IAudioManager>();
 
         InitializeComponent();
-        
+
         _audioManager.AudioPlaying += OnPlaying;
         _audioManager.AudioPaused += OnPaused;
         _audioManager.AudioStopped += OnStopped;

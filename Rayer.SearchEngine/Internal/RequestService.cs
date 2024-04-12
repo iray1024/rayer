@@ -1,4 +1,4 @@
-﻿using Rayer.Core.Abstractions;
+﻿using Rayer.Core.Http.Abstractions;
 using Rayer.SearchEngine.Internal.Abstractions;
 
 namespace Rayer.SearchEngine.Internal;
