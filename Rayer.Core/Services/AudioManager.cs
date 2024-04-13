@@ -2,6 +2,7 @@
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
 using Rayer.Core.FileSystem.Abstractions;
+using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Models;
 using Rayer.Core.Playing;
@@ -9,6 +10,7 @@ using System.Collections.ObjectModel;
 
 namespace Rayer.Core.Services;
 
+[Inject<IAudioManager>]
 internal class AudioManager : IAudioManager, IDisposable
 {
     private readonly Playback _playback;

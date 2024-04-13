@@ -1,0 +1,9 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/Rayer.SearchEngine;component/Themes/Symbols.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <BitmapImage x:Key="CloudMusic" UriSource="pack://application:,,,/Rayer.SearchEngine;component/assets/dark/cloud-music.png" />
+    <BitmapImage x:Key="Spot" UriSource="pack://application:,,,/Rayer.SearchEngine;component/assets/dark/spot.png" />
+    <BitmapImage x:Key="User" UriSource="pack://application:,,,/Rayer.SearchEngine;component/assets/dark/user.png" />
+</ResourceDictionary>

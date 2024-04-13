@@ -1,0 +1,5 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <BitmapImage x:Key="CloudMusic" UriSource="pack://application:,,,/Rayer.SearchEngine;component/assets/light/cloud-music.png" />
+    <BitmapImage x:Key="Spot" UriSource="pack://application:,,,/Rayer.SearchEngine;component/assets/light/spot.png" />
+    <BitmapImage x:Key="User" UriSource="pack://application:,,,/Rayer.SearchEngine;component/assets/light/user.png" />
+</ResourceDictionary>

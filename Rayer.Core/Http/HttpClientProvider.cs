@@ -1,8 +1,10 @@
-﻿using Rayer.Core.Http.Abstractions;
+﻿using Rayer.Core.Framework.Injection;
+using Rayer.Core.Http.Abstractions;
 using System.Net.Http;
 
 namespace Rayer.Core.Http;
 
+[Inject<IHttpClientProvider>]
 internal class HttpClientProvider : IHttpClientProvider
 {
     public HttpClientProvider()

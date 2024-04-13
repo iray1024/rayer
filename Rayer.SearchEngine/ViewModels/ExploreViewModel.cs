@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Rayer.Core.Http.Abstractions;
-using Rayer.SearchEngine.Login.Abstractions;
+using Rayer.SearchEngine.Business.Login.Abstractions;
 
 namespace Rayer.SearchEngine.ViewModels;
 

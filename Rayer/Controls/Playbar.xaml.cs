@@ -41,7 +41,7 @@ public partial class Playbar : UserControl
         _immersivePlayerService = App.GetRequiredService<IImmersivePlayerService>();
         var audioManager = App.GetRequiredService<IAudioManager>();
 
-        ApplicationThemeManager.Changed += ThemeChanged;
+        ApplicationThemeManager.Changed += OnThemeChanged;
 
         _playbarService.PlayOrPauseTriggered += OnPlayOrPauseTriggered;
         audioManager.AudioStopped += OnAudioStopped;
@@ -167,7 +167,7 @@ public partial class Playbar : UserControl
         PlaybarSlider.IsEnabled = enable;
     }
 
-    private void ThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)
+    private void OnThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)
     {
         _resource = _themeResourceProvider.GetPlaybarResource();
 

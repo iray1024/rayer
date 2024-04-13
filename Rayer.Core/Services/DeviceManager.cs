@@ -2,6 +2,7 @@
 using NAudio.Wave;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
+using Rayer.Core.Framework.Injection;
 using Rayer.Core.Models;
 using System.Diagnostics;
 using System.IO;
@@ -9,6 +10,7 @@ using System.Windows;
 
 namespace Rayer.Core.Services;
 
+[Inject<IDeviceManager>]
 internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
 {
     private WaveOutEvent? _device;

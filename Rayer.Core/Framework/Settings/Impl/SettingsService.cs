@@ -1,8 +1,10 @@
-﻿using Rayer.Core.Framework.Settings.Abstractions;
+﻿using Rayer.Core.Framework.Injection;
+using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Utils;
 
 namespace Rayer.Core.Framework.Settings.Impl;
 
+[Inject<ISettingsService>]
 internal class SettingsService : ISettingsService
 {
     private readonly string _settingsPath = Constants.Paths.SettingsPath;

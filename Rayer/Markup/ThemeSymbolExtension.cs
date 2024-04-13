@@ -1,8 +1,10 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using System.Windows.Markup;
 
 namespace Rayer.Markup;
 
+[TypeConverter(typeof(DynamicResourceExtensionConverter))]
 [ContentProperty(nameof(ResourceKey))]
 [MarkupExtensionReturnType(typeof(object))]
 public class ThemeSymbolExtension : DynamicResourceExtension

@@ -1,11 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Rayer.Core.Framework.Injection;
+using Rayer.SearchEngine.Business.Login.Abstractions;
 using Rayer.SearchEngine.Extensions;
 using Rayer.SearchEngine.Internal.Abstractions;
-using Rayer.SearchEngine.Login.Abstractions;
 using Rayer.SearchEngine.Models.Response.Login.User;
 
-namespace Rayer.SearchEngine.Login.Impl;
+namespace Rayer.SearchEngine.Business.Login.Impl;
 
+[Inject<ILoginManager>]
 internal class LoginManager : SearchEngineBase, ILoginManager
 {
     private readonly IServiceProvider _serviceProvider;
@@ -48,7 +50,7 @@ internal class LoginManager : SearchEngineBase, ILoginManager
 
     public async Task<AccountInfoResponse> GetAccountInfoAsync(CancellationToken cancellationToken = default)
     {
-        var result = await Search.GetAsync(Account.AccountInfo().Build());
+        var result = await Searcher.GetAsync(Account.AccountInfo().Build());
 
         var response = result.ToEntity<AccountInfoResponse>();
 

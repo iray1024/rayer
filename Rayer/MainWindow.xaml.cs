@@ -1,18 +1,21 @@
 ﻿using Rayer.Abstractions;
+using Rayer.Core;
 using Rayer.Core.Framework;
+using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.SearchEngine.Views.Windows;
-using Rayer.Services;
 using Rayer.ViewModels;
 using Rayer.Views.Pages;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Media;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
 namespace Rayer;
 
+[Inject<IWindow>]
 public partial class MainWindow : IWindow
 {
     private bool _isUserClosedPane;
@@ -40,6 +43,8 @@ public partial class MainWindow : IWindow
         contentDialogService.SetContentPresenter(RootContentDialog);
 
         NavigationView.SetServiceProvider(serviceProvider);
+
+        ApplicationThemeManager.Changed += OnThemeChanged;
     }
 
     public MainWindowViewModel ViewModel { get; set; } = null!;
@@ -51,10 +56,18 @@ public partial class MainWindow : IWindow
             return;
         }
 
+        PageTitle.Text = navigationView.SelectedItem?.Content.ToString();
+
         NavigationView.HeaderVisibility =
-            navigationView.SelectedItem?.TargetPageType != typeof(AudioLibraryPage)
+            navigationView.SelectedItem?.TargetPageType == typeof(AudioLibraryPage) ||
+            navigationView.SelectedItem?.TargetPageType == typeof(SettingsPage)
                 ? Visibility.Visible
-                : Visibility.Visible;
+                : Visibility.Collapsed;
+    }
+
+    private void OnThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)
+    {
+        ApplyNavigationMenuIcons();
     }
 
     private void OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -91,20 +104,67 @@ public partial class MainWindow : IWindow
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
+        ApplyNavigationMenuIcons();
+
         var immersivePlayerService = App.GetRequiredService<IImmersivePlayerService>();
 
         immersivePlayerService.SetPlayer(ImmersivePlayer);
 
-        var provider = App.GetRequiredService<WindowsProviderService>();
-
-        //provider.Show<LoginWindow>();
-        //provider.Show<DynamicIsland>();
         var dynamicIsland = App.GetRequiredService<DynamicIsland>();
         dynamicIsland.Show();
+
+        AutoSuggest.TextChanged += OnAutoSuggestTextChanged;
+        AutoSuggest.SuggestionChosen += OnSuggestionChosen;
+        AutoSuggest.QuerySubmitted += OnAutoSuggestQuerySubmitted;
+    }
+
+    private async void OnAutoSuggestTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    {
+        await ViewModel.OnAutoSuggestTextChanged(args);
+    }
+
+    private async void OnAutoSuggestQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    {
+        await ViewModel.OnAutoSuggestQuerySubmitted(args);
+    }
+
+    private async void OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+    {
+        await ViewModel.OnAutoSuggestChosen(args);
     }
 
     private void OnClosing(object sender, CancelEventArgs e)
     {
         Application.Current.Shutdown();
+    }
+
+    private void ApplyNavigationMenuIcons()
+    {
+        foreach (var item in NavigationView.MenuItems.Cast<NavigationViewItem>())
+        {
+            var iconSource = (ImageSource)Application.Current.Resources[item.TargetPageTag];
+
+            if (iconSource is not null)
+            {
+                item.Icon = new ImageIcon()
+                {
+                    Source = iconSource,
+                    Width = 24,
+                    Height = 24,
+                };
+            }
+        }
+    }
+
+    private static readonly Action _toggleProcess = () => App.GetRequiredService<ProcessMessageWindow>().ToggleProcess();
+
+    private void OnAutoSuggestGotFocus(object sender, RoutedEventArgs e)
+    {
+        _toggleProcess();
+    }
+
+    private void OnAutoSuggestLostFocus(object sender, RoutedEventArgs e)
+    {
+        _toggleProcess();
     }
 }

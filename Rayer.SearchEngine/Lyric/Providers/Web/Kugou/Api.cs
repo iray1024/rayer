@@ -1,10 +1,12 @@
 ﻿using Lyricify.Lyrics.Providers.Web.Kugou;
+using Rayer.Core.Framework.Injection;
 using Rayer.Core.Http.Abstractions;
 using Rayer.SearchEngine.Extensions;
 using Rayer.SearchEngine.Internal.Abstractions;
 
 namespace Rayer.SearchEngine.Lyric.Providers.Web.Kugou;
 
+[Inject]
 internal class Api(IHttpClientProvider httpClientProvider) : RequestBase(httpClientProvider)
 {
     public async Task<SearchSongResponse?> GetSearchSong(string keywords)

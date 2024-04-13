@@ -1,20 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Rayer.Abstractions;
-using Rayer.Command;
 using Rayer.Core;
-using Rayer.Core.Abstractions;
 using Rayer.Core.FileSystem.Abstractions;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Settings.Abstractions;
-using Rayer.Core.Menu;
-using Rayer.Core.PlayControl.Abstractions;
 using Rayer.Core.Playing;
 using Rayer.SearchEngine.Extensions;
 using Rayer.Services;
-using Rayer.ViewModels;
-using Rayer.Views.Pages;
 using System.Windows;
 using System.Windows.Threading;
 using Wpf.Ui;
@@ -32,34 +25,16 @@ public partial class App : Application
         .ConfigureServices((_, services) =>
         {
             services.AddHostedService<ApplicationHostService>();
-
-            services.AddSingleton<IWindow, MainWindow>();
-            services.AddSingleton<MainWindowViewModel>();
-            services.AddSingleton<ImmersivePlayerViewModel>();
-            services.AddSingleton<PlaybarViewModel>();
-            services.AddSingleton<RightPlaybarPanelViewModel>();
-            services.AddSingleton<ProcessMessageWindow>();
-
-            services.AddSingleton<AudioLibraryPage>();
-
+            
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<ISnackbarService, SnackbarService>();
             services.AddSingleton<IContentDialogService, ContentDialogService>();
-
-            services.AddSingleton<IPlaybarService, PlaybarService>();
-            services.AddSingleton<IPlaylistService, PlaylistService>();
-            services.AddSingleton<IThemeResourceProvider, ThemeResourceProvider>();
-            services.AddSingleton<IContextMenuFactory, ContextMenuFactory>();
-            services.AddSingleton<ICommandBinding, CommandBindingService>();
-            services.AddSingleton<IImmersivePlayerService, ImmersivePlayerService>();
-            services.AddSingleton<IImmersivePresenterProvider, ImmersivePresenterProvider>();
-
-            services.AddSingleton<WindowsProviderService>();
-
+            
             services.AddRayerCore();
             services.AddSearchEngine(builder =>
             {
-                builder.SetHttpEndpoint("https://netease-cloud-music-api-rayer.vercel.app");
+                //builder.SetHttpEndpoint("https://netease-cloud-music-api-rayer.vercel.app");
+                builder.SetHttpEndpoint("http://localhost:3000");
             });
 
             services.AddTransientFromNamespace("Rayer.Views", RayerAssembly.Assembly);
@@ -81,6 +56,12 @@ public partial class App : Application
         where T : class
     {
         return _host.Services.GetService<T>();
+    }
+
+    public static IEnumerable<T> GetServices<T>()
+        where T : class
+    {
+        return _host.Services.GetServices<T>();
     }
 
     protected override void OnStartup(StartupEventArgs e)

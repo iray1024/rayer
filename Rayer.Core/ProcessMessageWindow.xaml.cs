@@ -1,4 +1,5 @@
-﻿using Rayer.Core.Framework.Settings.Abstractions;
+﻿using Rayer.Core.Framework.Injection;
+using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.PlayControl.Abstractions;
 using System.ComponentModel;
 using System.Reflection;
@@ -9,6 +10,7 @@ using static Rayer.Core.PInvoke.Win32;
 
 namespace Rayer.Core;
 
+[Inject]
 public partial class ProcessMessageWindow : Window
 {
     private int _hookId;
@@ -16,6 +18,17 @@ public partial class ProcessMessageWindow : Window
 
     private readonly IPlaybarService _playbarService;
     private readonly ISettingsService _settingsService;
+
+    private volatile int _isProcess = 1;
+
+    private bool IsProcess
+    {
+        get => _isProcess != 0;
+        set
+        {
+            _ = Interlocked.Exchange(ref _isProcess, value ? 1 : 0);
+        }
+    }
 
     public ProcessMessageWindow(IPlaybarService playbarService, ISettingsService settingsService)
     {
@@ -26,6 +39,11 @@ public partial class ProcessMessageWindow : Window
 
         WindowStartupLocation = WindowStartupLocation.Manual;
         Left = -99999;
+    }
+
+    public void ToggleProcess()
+    {
+        IsProcess = !IsProcess;
     }
 
     private void OnSourceInitialized(object sender, EventArgs e)
@@ -44,7 +62,7 @@ public partial class ProcessMessageWindow : Window
 
     private int KeyboardHookProcHandler(int nCode, int wParam, IntPtr lParam)
     {
-        if (!Application.Current.MainWindow.IsActive)
+        if (!Application.Current.MainWindow.IsActive || !IsProcess)
         {
             return 0;
         }

@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>  
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
 
   <ItemGroup>
     <PackageReference Include="CHTCHSConv" Version="1.0.0" />
@@ -13,5 +14,15 @@
   <ItemGroup>
     <ProjectReference Include="..\Rayer.Core\Rayer.Core.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="assets\dark\cloud-music.png" />
+    <Resource Include="assets\dark\spot.png" />
+    <Resource Include="assets\dark\user.png" />
+    <Resource Include="assets\light\cloud-music.png" />
+    <Resource Include="assets\light\spot.png" />
+    <Resource Include="assets\light\user.png" />
+  </ItemGroup>
+
 
 </Project>

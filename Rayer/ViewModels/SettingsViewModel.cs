@@ -125,7 +125,7 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         _pitchProvider = _settings.Settings.PitchProvider;
         _lyricSearcher = _settings.Settings.LyricSearcher;
 
-        AudioLibrary.CollectionChanged += AudioLibrary_CollectionChanged;
+        AudioLibrary.CollectionChanged += OnCollectionChanged;
     }
 
     public void UpdateConfigFile()
@@ -138,7 +138,7 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         if (!_isInitialized)
         {
             InitializeViewModel();
-        }
+        }        
     }
 
     public void OnNavigatedFrom()
@@ -228,7 +228,7 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         }
     }
 
-    private void AudioLibrary_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    private void OnCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         OnPropertyChanged(nameof(IsEmpty));
     }

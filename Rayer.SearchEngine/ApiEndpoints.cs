@@ -48,7 +48,7 @@ internal static class ApiEndpoints
         internal static string TrackDetail = "/song/detail";
 
         [Description("获取音质详情")]
-        internal static string TrackAudioDetail = "song/music/detail";
+        internal static string TrackQualityDetail = "song/music/detail";
     }
 
     internal static class Search

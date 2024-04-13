@@ -1,11 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
+using Rayer.Core.Framework.Injection;
 using Rayer.Core.Menu;
 using System.Windows.Controls;
 
 namespace Rayer.ViewModels;
 
+[Inject]
 public partial class RightPlaybarPanelViewModel : ObservableObject
 {
     private readonly IAudioManager _audioManager;

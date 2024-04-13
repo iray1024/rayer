@@ -1,8 +1,10 @@
-﻿using Rayer.Core.Http.Abstractions;
+﻿using Rayer.Core.Framework.Injection;
+using Rayer.Core.Http.Abstractions;
 using Rayer.SearchEngine.Internal.Abstractions;
 
 namespace Rayer.SearchEngine.Internal;
 
+[Inject<IRequestService>]
 internal class RequestService(IHttpClientProvider httpClientProvider) : RequestBase(httpClientProvider), IRequestService
 {
     protected override Dictionary<string, string> GetAdditionalHeaders()

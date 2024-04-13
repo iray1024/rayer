@@ -1,4 +1,4 @@
-﻿namespace Rayer.SearchEngine.Login.Abstractions;
+﻿namespace Rayer.SearchEngine.Business.Login.Abstractions;
 
 public interface IPhoneService
 {

@@ -74,7 +74,7 @@
                             Margin="80,0,0,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
-                            Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                            Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
                             Text="{Binding Album, Mode=OneWay}" />
                         <TextBlock
                             Grid.RowSpan="2"
@@ -82,7 +82,7 @@
                             Margin="0,0,6,0"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                            Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
                             Text="{Binding Duration, Mode=OneWay, Converter={StaticResource TimeSpanConverter}}" />
                     </Grid>
                 </DataTemplate>

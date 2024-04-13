@@ -1,6 +1,9 @@
-﻿namespace Rayer.SearchEngine.Abstractions;
+﻿using Rayer.SearchEngine.Models.Response.Search;
+
+namespace Rayer.SearchEngine.Abstractions;
 
 public interface ISearchEngine
 {
+    Task<SearchAggregationModel> SearchAsync(string queryText, CancellationToken cancellationToken = default);
 
 }

@@ -85,7 +85,7 @@ internal class EqualizerAdorner : Adorner
             : (ImageSource)StaticThemeResources.GetDynamicResource(nameof(ThemeSymbol.Equalizer));
     }
 
-    private string GetToolTip()
+    private static string GetToolTip()
     {
         return $"均衡器";
     }

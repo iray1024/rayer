@@ -1,4 +1,5 @@
 ﻿using Rayer.Core.FileSystem.Abstractions;
+using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Models;
 using Rayer.Core.Utils;
@@ -8,6 +9,7 @@ using System.IO;
 
 namespace Rayer.Core.FileSystem;
 
+[Inject<IAudioFileWatcher>]
 internal class AudioFileWatcher : IAudioFileWatcher
 {
     private static readonly string[] _filters = IAudioFileWatcher.MediaFilter.Split('|');

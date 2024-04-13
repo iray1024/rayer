@@ -1,16 +1,5 @@
-﻿using Rayer.Core.Abstractions;
-using Rayer.Core.AudioEffect.Abstractions;
-using Rayer.Core.AudioEffect.Factory;
-using Rayer.Core.AudioEffect.Providers;
-using Rayer.Core.FileSystem;
-using Rayer.Core.FileSystem.Abstractions;
-using Rayer.Core.Framework.Settings.Abstractions;
-using Rayer.Core.Framework.Settings.Impl;
-using Rayer.Core.Http;
-using Rayer.Core.Http.Abstractions;
-using Rayer.Core.PlayControl;
-using Rayer.Core.PlayControl.Abstractions;
-using Rayer.Core.Services;
+﻿using Rayer.Core.Framework.Injection;
+using System.IO;
 using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -44,16 +33,45 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddRayerCore(this IServiceCollection services)
     {
-        services.AddSingleton<IAudioManager, AudioManager>();
-        services.AddSingleton<ISettingsService, SettingsService>();
-        services.AddSingleton<IAudioFileWatcher, AudioFileWatcher>();
-        services.AddSingleton<IPlayQueueProvider, PlayQueueProvider>();
-        services.AddSingleton<IWaveMetadataFactory, WaveMetadataFactory>();
-        services.AddSingleton<IDeviceManager, DeviceManager>();
-        services.AddSingleton<IEqualizerProvider, EqualizerProvider>();
-        services.AddSingleton<IPitchShiftingProviderFactory, PitchShiftingProviderFactory>();
+        var projectPath = AppContext.BaseDirectory;
 
-        services.AddSingleton<IHttpClientProvider, HttpClientProvider>();
+        var assemblies = Directory.GetFiles(projectPath, "Rayer*.dll");
+
+        foreach (var path in assemblies)
+        {
+            var assembly = Assembly.LoadFrom(path);
+
+            assembly
+                .GetTypes()
+                .Where(x => x.IsDefined(typeof(InjectAttribute), true))
+                .ToList()
+                .ForEach(x =>
+                {
+                    var attr = x.GetCustomAttribute<InjectAttribute>(true);
+
+                    if (attr is not null)
+                    {
+                        var type = attr.GetType();
+
+                        var interfaceType = type.IsGenericType ? type.GenericTypeArguments[0] : null;
+
+                        switch (attr.ServiceLifetime)
+                        {
+                            case ServiceLifetime.Singleton:
+                                _ = interfaceType is not null ? services.AddSingleton(interfaceType, x) : services.AddSingleton(x);
+                                break;
+                            case ServiceLifetime.Scoped:
+                                _ = interfaceType is not null ? services.AddScoped(interfaceType, x) : services.AddScoped(x);
+                                break;
+                            case ServiceLifetime.Transient:
+                                _ = interfaceType is not null ? services.AddTransient(interfaceType, x) : services.AddTransient(x);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+        }
 
         return services;
     }

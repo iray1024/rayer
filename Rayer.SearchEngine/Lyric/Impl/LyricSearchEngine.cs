@@ -1,4 +1,5 @@
 ﻿using Rayer.Core.Common;
+using Rayer.Core.Framework.Injection;
 using Rayer.Core.Lyric.Abstractions;
 using Rayer.SearchEngine.Lyric.Abstractions;
 using Rayer.SearchEngine.Lyric.Models;
@@ -6,6 +7,7 @@ using Rayer.SearchEngine.Lyric.Searchers.Impl;
 
 namespace Rayer.SearchEngine.Lyric.Impl;
 
+[Inject<ILyricSearchEngine>]
 internal class LyricSearchEngine : ILyricSearchEngine
 {
     private static readonly QQMusicSearcher _qqMusicSearcher = new();

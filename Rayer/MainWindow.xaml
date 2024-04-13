@@ -55,7 +55,6 @@
             x:Name="NavigationView"
             Grid.Row="0"
             Padding="22,10,22,10"
-            BreadcrumbBar="{Binding ElementName=BreadcrumbBar}"
             EnableDebugMessages="True"
             FooterMenuItemsSource="{Binding ViewModel.FooterMenuItems, Mode=OneWay}"
             FrameMargin="0"
@@ -71,15 +70,23 @@
             Transition="FadeInWithSlide">
             <ui:NavigationView.Header>
                 <StackPanel Margin="32,32,42,20">
-                    <ui:BreadcrumbBar x:Name="BreadcrumbBar" />
+                    <ui:TextBlock x:Name="PageTitle" FontTypography="Title" />
                 </StackPanel>
             </ui:NavigationView.Header>
+            <ui:NavigationView.AutoSuggestBox>
+                <ui:AutoSuggestBox
+                    x:Name="AutoSuggest"
+                    Margin="8,0,8,8"
+                    Focusable="True"
+                    GotFocus="OnAutoSuggestGotFocus"
+                    LostFocus="OnAutoSuggestLostFocus"
+                    PlaceholderText="搜索" />
+            </ui:NavigationView.AutoSuggestBox>
             <ui:NavigationView.ContentOverlay>
                 <Grid>
                     <ui:SnackbarPresenter x:Name="SnackbarPresenter" />
                 </Grid>
             </ui:NavigationView.ContentOverlay>
-
         </ui:NavigationView>
 
         <immersive:ImmersivePlayer

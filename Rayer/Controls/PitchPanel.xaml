@@ -31,9 +31,12 @@
             Grid.Column="1"
             Width="100"
             IsSnapToTickEnabled="True"
+            IsTabStop="False"
             LargeChange="0.05"
-            Maximum="2" MouseEnter="OnMouseEnter" MouseLeave="OnMouseLeave"
+            Maximum="2"
             Minimum="0.5"
+            MouseEnter="OnMouseEnter"
+            MouseLeave="OnMouseLeave"
             SmallChange="0.05"
             TickFrequency="0.05"
             Value="{Binding ViewModel.Value, Mode=TwoWay}" />

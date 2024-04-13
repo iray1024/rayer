@@ -1,4 +1,5 @@
 ﻿using Rayer.Core;
+using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.ViewModels;
 using System.Windows;
 using System.Windows.Interop;
@@ -7,6 +8,7 @@ using Wpf.Ui.Appearance;
 
 namespace Rayer.SearchEngine.Views.Windows;
 
+[Inject]
 public partial class DynamicIsland : Window
 {
     private readonly Storyboard? _dynamicIslandStoryboard = new();

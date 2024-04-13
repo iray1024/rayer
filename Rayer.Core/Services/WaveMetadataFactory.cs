@@ -5,12 +5,14 @@ using NAudio.Wave.SampleProviders;
 using Rayer.Core.Abstractions;
 using Rayer.Core.AudioEffect.Abstractions;
 using Rayer.Core.AudioReader.Flac;
+using Rayer.Core.Framework.Injection;
 using Rayer.Core.Http.Abstractions;
 using Rayer.Core.Models;
 using System.IO;
 
 namespace Rayer.Core.Services;
 
+[Inject<IWaveMetadataFactory>]
 internal class WaveMetadataFactory : IWaveMetadataFactory
 {
     private readonly MediaFoundationReader.MediaFoundationReaderSettings _meidaSettings = new() { RequestFloatOutput = true };
@@ -39,7 +41,7 @@ internal class WaveMetadataFactory : IWaveMetadataFactory
         {
             if (filepath.StartsWith("http"))
             {
-                var stream = _httpClientProvider.HttpClient.GetStreamAsync(filepath).Result;
+                using var stream = _httpClientProvider.HttpClient.GetStreamAsync(filepath).Result;
 
                 var buffer = new MemoryStream();
 

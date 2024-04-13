@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
+using Rayer.Core.Framework.Injection;
 
 namespace Rayer.ViewModels;
 
+[Inject]
 public partial class ImmersivePlayerViewModel : ImmersiveViewModelBase
 {
     [ObservableProperty]

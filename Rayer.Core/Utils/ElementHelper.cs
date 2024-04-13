@@ -14,12 +14,12 @@ public class ElementHelper
 
             if (child is Control control)
             {
-                control.IsTabStop = false;
-
-                if (control is UIElement element)
+                if (control.Name == "AutoSuggest")
                 {
-                    element.Focusable = false;
+                    continue;
                 }
+
+                control.IsTabStop = false;
             }
 
             TraverseControlsAndSetNoneFocusable(child);

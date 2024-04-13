@@ -1,10 +1,12 @@
-﻿using Rayer.Core.Http.Abstractions;
+﻿using Rayer.Core.Framework.Injection;
+using Rayer.Core.Http.Abstractions;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 
 namespace Rayer.SearchEngine.Services;
 
+[Inject<ICookieManager>]
 internal partial class CookieManager : ICookieManager
 {
     private readonly HttpClientHandler _handler = new();

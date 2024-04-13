@@ -1,5 +1,6 @@
 ﻿using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
+using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Lyric;
 using Rayer.Core.Lyric.Abstractions;
@@ -11,6 +12,7 @@ using Rayer.SearchEngine.Lyric.Abstractions;
 
 namespace Rayer.SearchEngine.Services;
 
+[Inject<ILyricProvider>]
 internal class LyricProvider : ILyricProvider
 {
     private readonly ILyricSearchEngine _lyricSearchEngine;

@@ -1,6 +1,6 @@
 ﻿using Rayer.SearchEngine.Models.Response.Login.QrCode;
 
-namespace Rayer.SearchEngine.Login.Abstractions;
+namespace Rayer.SearchEngine.Business.Login.Abstractions;
 
 public interface IQrCodeService
 {

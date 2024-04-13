@@ -9,15 +9,19 @@ internal abstract class SearchEngineBase
     {
         ServiceProvider = serviceProvider;
 
-        Search = serviceProvider.GetRequiredService<IRequestService>();
+        Searcher = serviceProvider.GetRequiredService<IRequestService>();
         Login = serviceProvider.GetRequiredService<LoginApiSelector>();
         Account = serviceProvider.GetRequiredService<AccountApiSelector>();
+        Search = serviceProvider.GetRequiredService<SearchApiSelector>();
+        Track = serviceProvider.GetRequiredService<TrackApiSelector>();
     }
 
     protected IServiceProvider ServiceProvider { get; }
 
-    protected IRequestService Search { get; }
+    protected IRequestService Searcher { get; }
 
     protected LoginApiSelector Login { get; }
     protected AccountApiSelector Account { get; }
+    protected SearchApiSelector Search { get; }
+    protected TrackApiSelector Track { get; }
 }

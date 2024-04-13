@@ -1,9 +1,11 @@
 ﻿using Rayer.Core.Common;
+using Rayer.Core.Framework.Injection;
 using Rayer.Core.Models;
 using Rayer.Core.PlayControl.Abstractions;
 
 namespace Rayer.Core.PlayControl;
 
+[Inject<IPlayQueueProvider>]
 internal class PlayQueueProvider : IPlayQueueProvider
 {
     public SortableObservableCollection<Audio> Queue { get; }

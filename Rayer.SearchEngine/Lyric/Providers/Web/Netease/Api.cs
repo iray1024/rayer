@@ -1,4 +1,5 @@
-﻿using Rayer.Core.Http.Abstractions;
+﻿using Rayer.Core.Framework.Injection;
+using Rayer.Core.Http.Abstractions;
 using Rayer.SearchEngine.Extensions;
 using Rayer.SearchEngine.Internal.Abstractions;
 using System.ComponentModel;
@@ -8,6 +9,7 @@ using System.Security.Cryptography;
 
 namespace Rayer.SearchEngine.Lyric.Providers.Web.Netease;
 
+[Inject]
 internal class Api : RequestBase
 {
     protected override string HttpRefer => "https://music.163.com/";

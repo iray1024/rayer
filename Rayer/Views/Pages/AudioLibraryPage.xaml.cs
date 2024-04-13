@@ -2,6 +2,7 @@
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Events;
+using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Utils;
 using Rayer.ViewModels;
@@ -12,6 +13,7 @@ using Wpf.Ui.Controls;
 
 namespace Rayer.Views.Pages;
 
+[Inject]
 public partial class AudioLibraryPage : INavigableView<AudioLibraryViewModel>
 {
     private readonly IAudioManager _audioManager;

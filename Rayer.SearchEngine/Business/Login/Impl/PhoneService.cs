@@ -1,8 +1,10 @@
-﻿using Rayer.SearchEngine.Internal.Abstractions;
-using Rayer.SearchEngine.Login.Abstractions;
+﻿using Rayer.Core.Framework.Injection;
+using Rayer.SearchEngine.Business.Login.Abstractions;
+using Rayer.SearchEngine.Internal.Abstractions;
 
-namespace Rayer.SearchEngine.Login.Impl;
+namespace Rayer.SearchEngine.Business.Login.Impl;
 
+[Inject<IPhoneService>(ServiceLifetime = Microsoft.Extensions.DependencyInjection.ServiceLifetime.Scoped)]
 internal class PhoneService : SearchEngineBase, IPhoneService
 {
 
@@ -19,7 +21,7 @@ internal class PhoneService : SearchEngineBase, IPhoneService
 
     public async Task LoginWithCaptchaAsync(string phone, string captcha, CancellationToken cancellationToken = default)
     {
-        //var result = await Search.GetAsync(UrlBuilder.Build(ApiEndpoints.Login.PhoneLogin, new Dictionary<string, string>()
+        //var result = await Searcher.GetAsync(UrlBuilder.Build(ApiEndpoints.Login.PhoneLogin, new Dictionary<string, string>()
         //{
         //    ["phone"] = phone,
         //    ["captcha"] = captcha
@@ -28,12 +30,12 @@ internal class PhoneService : SearchEngineBase, IPhoneService
 
     public async Task SendCaptchaAsync(string phone, CancellationToken cancellationToken = default)
     {
-        //var result = await Search.GetAsync(UrlBuilder.Build(ApiEndpoints.Login.Captcha, new Dictionary<string, string>() { ["phone"] = phone }));
+        //var result = await Searcher.GetAsync(UrlBuilder.Build(ApiEndpoints.Login.Captcha, new Dictionary<string, string>() { ["phone"] = phone }));
     }
 
     public async Task<bool> VerifyCaptchaAsync(string phone, string captcha, CancellationToken cancellationToken = default)
     {
-        //var result = await Search.GetAsync(UrlBuilder.Build(ApiEndpoints.Login.CaptchaVerify, new Dictionary<string, string>() 
+        //var result = await Searcher.GetAsync(UrlBuilder.Build(ApiEndpoints.Login.CaptchaVerify, new Dictionary<string, string>() 
         //{ 
         //    ["phone"] = phone ,
         //    ["captcha"] = captcha

@@ -1,4 +1,5 @@
-﻿using Rayer.Core.Http.Abstractions;
+﻿using Rayer.Core.Framework.Injection;
+using Rayer.Core.Http.Abstractions;
 using Rayer.SearchEngine.Extensions;
 using Rayer.SearchEngine.Internal.Abstractions;
 using Rayer.SearchEngine.Lyric.Decrypter.Qrc;
@@ -8,6 +9,7 @@ using System.Xml;
 
 namespace Rayer.SearchEngine.Lyric.Providers.Web.QQMusic;
 
+[Inject]
 internal partial class Api(IHttpClientProvider httpClientProvider) : RequestBase(httpClientProvider)
 {
     protected override string HttpRefer => "https://c.y.qq.com/";

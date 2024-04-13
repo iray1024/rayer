@@ -1,10 +1,12 @@
 ﻿using Rayer.Core.Abstractions;
+using Rayer.Core.Framework.Injection;
 using System.Windows;
 using System.Windows.Media;
 using Wpf.Ui.Appearance;
 
 namespace Rayer.Services;
 
+[Inject<IThemeResourceProvider>]
 internal class ThemeResourceProvider : IThemeResourceProvider
 {
     private static readonly string _themeResourceUriPrefix = "pack://application:,,,/Themes";
@@ -15,10 +17,14 @@ internal class ThemeResourceProvider : IThemeResourceProvider
             [ApplicationTheme.Dark] = new Uri($"{_themeResourceUriPrefix}/Symbols.Dark.xaml"),
         };
 
+    private readonly IEnumerable<(string Namespace, IDictionary<ApplicationTheme, Uri> Resources)> _pluginsThemeResources;
+
     private ApplicationTheme _currentTheme = ApplicationTheme.Unknown;
 
     public ThemeResourceProvider()
     {
+        _pluginsThemeResources = App.GetServices<IThemeResourceDictionaryPlugin>().Select(x => x.Register());
+
         ApplicationThemeManager.Changed += ThemeChanged;
     }
 
@@ -41,15 +47,25 @@ internal class ThemeResourceProvider : IThemeResourceProvider
 
         if (_currentTheme is ApplicationTheme.Light)
         {
-            UpdateDictionary(_themeResource[ApplicationTheme.Light]);
+            UpdateDictionary(string.Empty, _themeResource[ApplicationTheme.Light]);
+
+            foreach (var (Namespace, Resources) in _pluginsThemeResources)
+            {
+                UpdateDictionary(Namespace, Resources[ApplicationTheme.Light]);
+            }
         }
         else
         {
-            UpdateDictionary(_themeResource[ApplicationTheme.Dark]);
+            UpdateDictionary(string.Empty, _themeResource[ApplicationTheme.Dark]);
+
+            foreach (var (Namespace, Resources) in _pluginsThemeResources)
+            {
+                UpdateDictionary(Namespace, Resources[ApplicationTheme.Dark]);
+            }
         }
     }
 
-    private static void UpdateDictionary(Uri newResourceUri)
+    private static void UpdateDictionary(string @namespace, Uri newResourceUri)
     {
         var applicationDictionaries = Application.Current.Resources.MergedDictionaries;
 
@@ -61,7 +77,7 @@ internal class ThemeResourceProvider : IThemeResourceProvider
             {
                 sourceUri = applicationDictionaries[i].Source.ToString().ToLower().Trim();
 
-                if (!sourceUri.Contains(';') && sourceUri.Contains("symbol"))
+                if (sourceUri.Contains(@namespace, StringComparison.OrdinalIgnoreCase) && sourceUri.Contains("symbol"))
                 {
                     applicationDictionaries[i] = new() { Source = newResourceUri };
 
@@ -80,7 +96,7 @@ internal class ThemeResourceProvider : IThemeResourceProvider
                     .MergedDictionaries[j]
                     .Source.ToString().ToLower().Trim();
 
-                if (sourceUri.Contains(';') || !sourceUri.Contains("symbol"))
+                if (!sourceUri.Contains("symbol") || !sourceUri.Contains(@namespace))
                 {
                     continue;
                 }

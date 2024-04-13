@@ -1,6 +1,7 @@
 ﻿using NAudio.Extras;
 using Rayer.Core.AudioEffect.Abstractions;
 using Rayer.Core.Common;
+using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Utils;
 using System.Collections.Immutable;
@@ -8,6 +9,7 @@ using System.IO;
 
 namespace Rayer.Core.AudioEffect.Providers;
 
+[Inject<IEqualizerProvider>]
 internal class EqualizerProvider : IEqualizerProvider
 {
     private readonly ISettingsService _settingsService;

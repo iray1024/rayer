@@ -1,7 +1,9 @@
-﻿using Rayer.Core.Abstractions;
+﻿using Rayer.Core;
+using Rayer.Core.Abstractions;
 using Rayer.Core.Models;
 using Rayer.SearchEngine.ViewModels;
 using System.Windows;
+using Wpf.Ui;
 using Wpf.Ui.Controls;
 
 namespace Rayer.SearchEngine.Views.Pages;
@@ -28,19 +30,18 @@ public partial class ExplorePage : INavigableView<ExploreViewModel>
     {
         var audio = new Audio
         {
-            Title = "一笑江湖",
-            Artists = ["姜姜"],
-            Path = "http://m8.music.126.net/20240413040827/88de232d9d81c0e89f20107afda06b70/ymusic/obj/w5zDlMODwrDDiGjCn8Ky/2696902133/cb84/fa1d/89d4/4a19746870f59373124d76576b7d2d90.mp3"
+            Title = "旧梦一场",
+            Artists = ["钟意"],
+            Path = "http://m8.music.126.net/20240413094548/0eda6d451337feba7423c65edce3dccc/ymusic/obj/w5zDlMODwrDDiGjCn8Ky/14051866484/b9d6/66aa/2e32/e4059e481fb72dcead344bebdbee3f3e.mp3"
         };
 
         await _audioManager.Playback.Play(audio);
     }
 
-    private async void OnLoaded(object sender, RoutedEventArgs e)
+    private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        //await ViewModel.LoadAsAnonymousAsync();
+        var navigationService = AppCore.GetRequiredService<INavigationService>();
 
-        //var loginWindow = AppCore.GetRequiredService<LoginWindow>();
-        //loginWindow.Show();
+        navigationService.SetNavigationControl(Presenter);
     }
 }

@@ -1,7 +1,9 @@
-﻿using Rayer.SearchEngine.Internal.Abstractions;
+﻿using Rayer.Core.Framework.Injection;
+using Rayer.SearchEngine.Internal.Abstractions;
 
 namespace Rayer.SearchEngine.Internal.ApiSelector;
 
+[Inject]
 internal class AccountApiSelector(SearchEngineOptions options) : ApiSelectorBase(options)
 {
     public ParamBuilder UserDetail()

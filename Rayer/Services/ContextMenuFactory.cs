@@ -1,9 +1,11 @@
 ﻿using Rayer.Core.Common;
+using Rayer.Core.Framework.Injection;
 using Rayer.Core.Menu;
 using System.Windows.Controls;
 
 namespace Rayer.Services;
 
+[Inject<IContextMenuFactory>]
 internal class ContextMenuFactory : IContextMenuFactory
 {
     private readonly ICommandBinding _commandBinding;

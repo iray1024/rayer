@@ -1,12 +1,14 @@
 ﻿using Rayer.Abstractions;
 using Rayer.Controls.Immersive;
 using Rayer.Core.Common;
+using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace Rayer.Services;
 
+[Inject<IImmersivePresenterProvider>]
 internal class ImmersivePresenterProvider(ISettingsService settingsService) : IImmersivePresenterProvider
 {
     private static readonly Lazy<ImmersiveVinylPresenter> _vinylPresenter;
@@ -20,6 +22,7 @@ internal class ImmersivePresenterProvider(ISettingsService settingsService) : II
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center
         });
+
         _audioVisualizerlPresenter = new Lazy<ImmersiveVisualizerPresenter>(() => new ImmersiveVisualizerPresenter()
         {
             HorizontalAlignment = HorizontalAlignment.Center,
