@@ -48,27 +48,30 @@ public static class ServiceCollectionExtensions
                 .ToList()
                 .ForEach(x =>
                 {
-                    var attr = x.GetCustomAttribute<InjectAttribute>(true);
+                    var attrs = x.GetCustomAttributes<InjectAttribute>(true);
 
-                    if (attr is not null)
+                    foreach (var attr in attrs)
                     {
-                        var type = attr.GetType();
-
-                        var interfaceType = type.IsGenericType ? type.GenericTypeArguments[0] : null;
-
-                        switch (attr.ServiceLifetime)
+                        if (attr is not null)
                         {
-                            case ServiceLifetime.Singleton:
-                                _ = interfaceType is not null ? services.AddSingleton(interfaceType, x) : services.AddSingleton(x);
-                                break;
-                            case ServiceLifetime.Scoped:
-                                _ = interfaceType is not null ? services.AddScoped(interfaceType, x) : services.AddScoped(x);
-                                break;
-                            case ServiceLifetime.Transient:
-                                _ = interfaceType is not null ? services.AddTransient(interfaceType, x) : services.AddTransient(x);
-                                break;
-                            default:
-                                break;
+                            var type = attr.GetType();
+
+                            var interfaceType = type.IsGenericType ? type.GenericTypeArguments[0] : null;
+
+                            switch (attr.ServiceLifetime)
+                            {
+                                case ServiceLifetime.Singleton:
+                                    _ = interfaceType is not null ? services.AddSingleton(interfaceType, x) : services.AddSingleton(x);
+                                    break;
+                                case ServiceLifetime.Scoped:
+                                    _ = interfaceType is not null ? services.AddScoped(interfaceType, x) : services.AddScoped(x);
+                                    break;
+                                case ServiceLifetime.Transient:
+                                    _ = interfaceType is not null ? services.AddTransient(interfaceType, x) : services.AddTransient(x);
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     }
                 });

@@ -66,7 +66,16 @@ public partial class MainWindowViewModel : ObservableObject
     {
         var model = await _searchEngine.SearchAsync(args.QueryText, AppCore.StoppingToken);
 
-        _navigationService.Navigate(typeof(SearchPage), model);
+        if (_navigationService.GetNavigationControl().SelectedItem?.TargetPageType != typeof(SearchPage))
+        {
+            _navigationService.Navigate(typeof(SearchPage), model);
+        }
+        else
+        {
+            var searchAware = App.GetRequiredService<SearchPage>();
+
+            await searchAware.OnSearchAsync(model);
+        }
     }
 
     public async Task OnAutoSuggestChosen(AutoSuggestBoxSuggestionChosenEventArgs args)

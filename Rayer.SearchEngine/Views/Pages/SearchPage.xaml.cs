@@ -1,6 +1,7 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
+using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Controls;
 using Rayer.SearchEngine.Internal.Abstractions;
 using Rayer.SearchEngine.Models.Response.Search;
@@ -13,8 +14,8 @@ using Wpf.Ui.Controls;
 
 namespace Rayer.SearchEngine.Views.Pages;
 
-[Inject(ServiceLifetime = Microsoft.Extensions.DependencyInjection.ServiceLifetime.Scoped)]
-public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAware
+[Inject(ServiceLifetime = Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton)]
+public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAware, ISearchAware
 {
     private readonly ISearchPresenterProvider _searchPresenterProvider;
 
@@ -43,7 +44,7 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
 
     private async void OnCheckedChanged(object sender, RoutedEventArgs e)
     {
-        if (e.OriginalSource is RadioButton radioButton)
+        if (e.OriginalSource is RadioButton radioButton && radioButton.IsChecked == true)
         {
             await SearchProcess(radioButton);
         }
@@ -132,6 +133,16 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
         navigationHeaderUpdater.Show(titleBar);
 
         AppCore.MainWindow.SizeChanged += OnWindowSizeChanged;
+    }
+
+    public async Task OnSearchAsync(SearchAggregationModel model)
+    {
+        ViewModel.Model = model;
+
+        var titleBar = AppCore.GetRequiredService<SearchTitleBar>();
+
+        titleBar.DefaultPage.IsChecked = false;
+        titleBar.DefaultPage.IsChecked = true;
     }
 
     public void OnNavigatedFrom()
