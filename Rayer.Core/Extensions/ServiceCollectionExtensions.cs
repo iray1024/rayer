@@ -17,6 +17,7 @@ public static class ServiceCollectionExtensions
                 .Where(x =>
                     x.IsClass &&
                     !x.IsAbstract &&
+                    !x.IsDefined(typeof(InjectAttribute), true) &&
                     x.Namespace?.StartsWith(namespaceName, StringComparison.InvariantCultureIgnoreCase) == true);
 
             foreach (var type in types)

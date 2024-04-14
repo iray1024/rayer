@@ -47,11 +47,11 @@ internal class NavigationMenuPlugin : INavigationMenuPlugin
         {
             Icon = new ImageIcon()
             {
-                Source = (ImageSource)Application.Current.Resources["User"],
+                Source = (ImageSource)Application.Current.Resources["Search"],
                 Width = 24,
                 Height = 24,
             },
             TargetPageTag = "Search"
-        },
+        }
     ];
 }

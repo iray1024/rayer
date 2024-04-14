@@ -7,4 +7,6 @@ public interface ISearchAudioEngine
     Task<SearchAudioResposne> SearchAsync(string keywords, int offset);
 
     Task<SearchAudioDetailResponse> SearchDetailAsync(string ids);
+
+    Task<GetAudioResponse> GetAudioAsync(long id);
 }

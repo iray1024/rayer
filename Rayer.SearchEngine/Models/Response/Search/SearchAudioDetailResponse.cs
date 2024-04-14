@@ -14,6 +14,9 @@ public class SearchAudioDetailAudioDetail
 
     public string Name { get; set; } = string.Empty;
 
+    [JsonPropertyName("ar")]
+    public SearchAudioDetailArtistDetail[] Artists { get; set; } = [];
+
     [JsonPropertyName("al")]
     public SearchAudioDetailAlbumDetail? Album { get; set; }
 
@@ -28,11 +31,18 @@ public class SearchAudioDetailAudioDetail
     public int OriginCoverType { get; set; }
 }
 
+public class SearchAudioDetailArtistDetail
+{
+    public long Id { get; set; }
+
+    public string Name { get; set; } = string.Empty;
+}
+
 public class SearchAudioDetailAlbumDetail
 {
     public long Id { get; set; }
 
-    public string Title { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
     [JsonPropertyName("picUrl")]
     public string Picture { get; set; } = string.Empty;

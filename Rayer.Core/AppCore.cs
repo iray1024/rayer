@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
+using System.Windows;
 
 namespace Rayer.Core;
 
@@ -9,6 +10,8 @@ public static class AppCore
     private static IServiceProvider _serviceProvider = default!;
 
     public static CancellationToken StoppingToken => _cancellationTokenSource.Token;
+
+    public static Window MainWindow => Application.Current.MainWindow;
 
     public static T GetRequiredService<T>()
         where T : class

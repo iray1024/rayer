@@ -15,4 +15,9 @@ internal class TrackApiSelector(SearchEngineOptions options) : ApiSelectorBase(o
     {
         return CreateBuilder(ApiEndpoints.Track.TrackQualityDetail);
     }
+
+    public ParamBuilder GetTrack()
+    {
+        return CreateBuilder(ApiEndpoints.Track.GetTrack);
+    }
 }

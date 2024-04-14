@@ -61,6 +61,7 @@
             IsBackButtonVisible="Visible"
             IsPaneToggleVisible="True"
             MenuItemsSource="{Binding ViewModel.MenuItems, Mode=OneWay}"
+            Navigating="OnNavigating"
             OpenPaneLength="180"
             PaneClosed="NavigationView_OnPaneClosed"
             PaneDisplayMode="Left"
@@ -69,8 +70,9 @@
             TitleBar="{Binding ElementName=TitleBar, Mode=OneWay}"
             Transition="FadeInWithSlide">
             <ui:NavigationView.Header>
-                <StackPanel Margin="32,32,42,20">
-                    <ui:TextBlock x:Name="PageTitle" FontTypography="Title" />
+                <StackPanel x:Name="PageHeaderContainer" Margin="32,32,42,20">
+                    <ui:TextBlock x:Name="PageHeader" FontTypography="Title" />
+                    <ContentPresenter x:Name="Presenter" />
                 </StackPanel>
             </ui:NavigationView.Header>
             <ui:NavigationView.AutoSuggestBox>

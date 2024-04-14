@@ -1,0 +1,97 @@
+﻿<UserControl
+    x:Class="Rayer.SearchEngine.Controls.Search.SearchAudioPresenter"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Rayer.SearchEngine.Controls.Search"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="clr-namespace:Rayer.SearchEngine.Models.Response.Search"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DataContext="{d:DesignInstance local:SearchAudioPresenter,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Loaded="OnLoaded"
+    mc:Ignorable="d">
+    <Grid
+        Margin="0,0,-22,0"
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <ui:ListView
+            Name="LibListView"
+            Grid.RowSpan="2"
+            VerticalContentAlignment="Top"
+            d:ItemsSource="{d:SampleData ItemCount=2}"
+            ItemsSource="{Binding ViewModel.PresenterDataContext.Details, Mode=OneWay, IsAsync=True}"
+            ScrollViewer.CanContentScroll="False"
+            VirtualizingPanel.IsVirtualizing="True"
+            VirtualizingPanel.VirtualizationMode="Recycling">
+            <ui:ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type model:SearchAudioDetailAudioDetail}">
+                    <Grid PreviewMouseRightButtonUp="OnListViewItemRightButtonUp">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <ui:Image
+                            x:Name="Image"
+                            Grid.RowSpan="2"
+                            Grid.Column="0"
+                            Width="40"
+                            Height="40"
+                            Margin="6"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            CornerRadius="6"
+                            RenderOptions.BitmapScalingMode="Fant"
+                            Source="{Binding Album.Picture, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="6,8,0,0"
+                            FontSize="14"
+                            FontWeight="Normal"
+                            Text="{Binding Name, Mode=OneWay}" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="6,0,0,6"
+                            Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                            Text="{Binding Artists, Mode=OneWay, Converter={StaticResource WebArtistsConverter}}" />
+                        <TextBlock
+                            Grid.RowSpan="2"
+                            Grid.Column="2"
+                            Margin="80,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
+                            Text="{Binding Album.Name, Mode=OneWay}" />
+                        <TextBlock
+                            Grid.RowSpan="2"
+                            Grid.Column="3"
+                            Margin="0,0,28,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
+                            Text="{Binding Duration, Mode=OneWay, Converter={StaticResource WebDurationConverter}}" />
+                    </Grid>
+                </DataTemplate>
+            </ui:ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style BasedOn="{StaticResource {x:Type ui:ListViewItem}}" TargetType="ui:ListViewItem">
+                    <EventSetter Event="MouseDoubleClick" Handler="OnListViewItemDoubleClick" />
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ui:ListView>
+    </Grid>
+</UserControl>

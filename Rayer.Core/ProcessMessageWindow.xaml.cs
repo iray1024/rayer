@@ -2,6 +2,7 @@
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.PlayControl.Abstractions;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -60,6 +61,7 @@ public partial class ProcessMessageWindow : Window
         UnhookWindowsHookEx(_hookId);
     }
 
+    [DebuggerStepThrough]
     private int KeyboardHookProcHandler(int nCode, int wParam, IntPtr lParam)
     {
         if (!Application.Current.MainWindow.IsActive || !IsProcess)

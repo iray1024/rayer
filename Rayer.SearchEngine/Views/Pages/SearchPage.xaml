@@ -8,7 +8,6 @@
     xmlns:local="clr-namespace:Rayer.SearchEngine.Views.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    Title="SearchPage"
     d:DataContext="{d:DesignInstance local:SearchPage,
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
@@ -16,7 +15,17 @@
     Loaded="OnLoaded"
     mc:Ignorable="d">
     <Grid>
-        <controls:SearchTitleBar CheckedChanged="OnCheckedChanged"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
+        <Grid x:Name="Presenter" Grid.RowSpan="2" />
+
+        <ui:ProgressRing
+            x:Name="Loading"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            IsIndeterminate="True" />
     </Grid>
 </framework:NoneFocusablePage>

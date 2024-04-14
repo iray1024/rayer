@@ -3,6 +3,8 @@ using Rayer.Core;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
+using Rayer.SearchEngine.ViewModels;
+using Rayer.SearchEngine.Views.Pages;
 using Rayer.SearchEngine.Views.Windows;
 using Rayer.ViewModels;
 using Rayer.Views.Pages;
@@ -49,6 +51,23 @@ public partial class MainWindow : IWindow
 
     public MainWindowViewModel ViewModel { get; set; } = null!;
 
+    private void OnNavigating(NavigationView sender, NavigatingCancelEventArgs args)
+    {
+        var pageType = args.Page.GetType();
+
+        NavigationView.HeaderVisibility =
+            pageType != typeof(AudioLibraryPage) &&
+            pageType != typeof(SettingsPage)
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+
+        PageHeaderContainer.Visibility =
+            pageType != typeof(AudioLibraryPage) &&
+            pageType != typeof(SettingsPage)
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+    }
+
     private void OnNavigationSelectionChanged(object sender, RoutedEventArgs e)
     {
         if (sender is not NavigationView navigationView)
@@ -56,13 +75,19 @@ public partial class MainWindow : IWindow
             return;
         }
 
-        PageTitle.Text = navigationView.SelectedItem?.Content.ToString();
+        PageHeader.Text = navigationView.SelectedItem?.Content.ToString();
 
-        NavigationView.HeaderVisibility =
-            navigationView.SelectedItem?.TargetPageType == typeof(AudioLibraryPage) ||
-            navigationView.SelectedItem?.TargetPageType == typeof(SettingsPage)
-                ? Visibility.Visible
-                : Visibility.Collapsed;
+        if (navigationView.SelectedItem?.TargetPageType == typeof(SearchPage))
+        {
+            NavigationView.HeaderVisibility = Visibility.Visible;
+            PageHeaderContainer.Visibility = Visibility.Visible;
+            if (App.GetRequiredService<SearchViewModel>() is { Model: null })
+            {
+                NavigationView.GoBack();
+
+                AutoSuggest.Focus();
+            }
+        }
     }
 
     private void OnThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)

@@ -66,7 +66,7 @@ public partial class MainWindowViewModel : ObservableObject
     {
         var model = await _searchEngine.SearchAsync(args.QueryText, AppCore.StoppingToken);
 
-        _navigationService.NavigateWithHierarchy(typeof(SearchPage), model);
+        _navigationService.Navigate(typeof(SearchPage), model);
     }
 
     public async Task OnAutoSuggestChosen(AutoSuggestBoxSuggestionChosenEventArgs args)

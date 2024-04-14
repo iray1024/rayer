@@ -123,6 +123,7 @@ internal partial class ImmersivePlayerService : IImmersivePlayerService
         var presenter = _presenterProvider.Presenter;
 
         var previousPresenter = _player.Presenter.Children[0];
+
         _player.Presenter.Children.Remove(previousPresenter);
         _player.Presenter.Children.Add(presenter);
 

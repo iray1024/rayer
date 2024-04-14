@@ -6,4 +6,5 @@
     <BitmapImage x:Key="CloudMusic" UriSource="pack://application:,,,/Rayer.SearchEngine;component/assets/dark/cloud-music.png" />
     <BitmapImage x:Key="Spot" UriSource="pack://application:,,,/Rayer.SearchEngine;component/assets/dark/spot.png" />
     <BitmapImage x:Key="User" UriSource="pack://application:,,,/Rayer.SearchEngine;component/assets/dark/user.png" />
+    <BitmapImage x:Key="Search" UriSource="pack://application:,,,/Rayer.SearchEngine;component/assets/dark/search.png" />
 </ResourceDictionary>

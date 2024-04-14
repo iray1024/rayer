@@ -1,4 +1,5 @@
 ﻿using Rayer.Core;
+using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.ViewModels.Explore;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,6 +8,7 @@ using System.Windows.Media.Animation;
 
 namespace Rayer.SearchEngine.Controls;
 
+[Inject]
 public partial class SearchTitleBar : UserControl
 {
     private readonly Storyboard _titlebarControlStoryboard = new();

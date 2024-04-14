@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Data;
 
-namespace Rayer.SearchEngine.Internal.Converters;
+namespace Rayer.SearchEngine.Converters;
 
 public class DynamicIslandWidthConverter : IValueConverter
 {
