@@ -129,9 +129,9 @@ public partial class DynamicIsland : Window
 
         var hwnd = new WindowInteropHelper(this).Handle;
 
-        var exStyle = Win32.GetWindowLong(hwnd, Win32.GWL_EXSTYLE);
+        var exStyle = Win32.User32.GetWindowLong(hwnd, Win32.User32.GWL_EXSTYLE);
 
-        _ = Win32.SetWindowLong(hwnd, Win32.GWL_EXSTYLE, exStyle | Win32.WS_EX_TOOLWINDOW);
+        _ = Win32.User32.SetWindowLong(hwnd, Win32.User32.GWL_EXSTYLE, exStyle | Win32.User32.WS_EX_TOOLWINDOW);
     }
 
     private void OnLocationChanged(object? sender, EventArgs e)

@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
-using static Rayer.Core.PInvoke.Win32;
+using static Rayer.Core.PInvoke.Win32.User32;
 
 namespace Rayer.Core;
 

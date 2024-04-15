@@ -160,6 +160,7 @@
                                 x:Name="PlaybarSlider"
                                 Width="{Binding ViewModel.ProgressWidth}"
                                 HorizontalAlignment="Center"
+                                IsTabStop="False"
                                 Maximum="100"
                                 Minimum="0"
                                 PreviewMouseDown="Slider_PreviewMouseDown"

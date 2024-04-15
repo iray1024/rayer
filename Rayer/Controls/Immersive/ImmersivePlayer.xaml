@@ -15,23 +15,39 @@
     mc:Ignorable="d">
     <Grid PreviewMouseLeftButtonDown="OnMouseDown">
         <Grid>
-            <Grid x:Name="UpSingerMask">
-                <Grid.Background>
+            <Border
+                x:Name="UpSingerMask"
+                RenderOptions.BitmapScalingMode="Fant"
+                ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                SnapsToDevicePixels="True"
+                UseLayoutRounding="True">
+                <Border.Background>
                     <ImageBrush
                         ImageSource="{Binding ViewModel.Current.Cover, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}"
                         RenderOptions.BitmapScalingMode="Fant"
                         Stretch="UniformToFill" />
-                </Grid.Background>
-            </Grid>
+                </Border.Background>
+                <Border.Effect>
+                    <BlurEffect x:Name="GridUpSingerBlurEffect" Radius="20" />
+                </Border.Effect>
+            </Border>
 
-            <Grid x:Name="DownSingerMask">
-                <Grid.Background>
+            <Border
+                x:Name="DownSingerMask"
+                RenderOptions.BitmapScalingMode="Fant"
+                ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                SnapsToDevicePixels="True"
+                UseLayoutRounding="True">
+                <Border.Background>
                     <ImageBrush
                         ImageSource="{Binding ViewModel.Current.Cover, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}"
                         RenderOptions.BitmapScalingMode="Fant"
                         Stretch="UniformToFill" />
-                </Grid.Background>
-            </Grid>
+                </Border.Background>
+                <Border.Effect>
+                    <BlurEffect x:Name="GridDownSingerBlurEffect" Radius="20" />
+                </Border.Effect>
+            </Border>
 
             <Grid>
                 <Grid
