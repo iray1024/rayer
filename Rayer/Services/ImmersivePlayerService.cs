@@ -133,8 +133,8 @@ internal partial class ImmersivePlayerService : IImmersivePlayerService
         {
             var mainWnd = Application.Current.MainWindow;
 
-            visualizerPresenter.Width = mainWnd.Width;
-            visualizerPresenter.Height = mainWnd.Height;
+            visualizerPresenter.Width = mainWnd.ActualWidth;
+            visualizerPresenter.Height = mainWnd.ActualHeight;
 
             visualizerPresenter.SampleDrawingPanel.Width = mainWnd.Width * 2;
             visualizerPresenter.SampleDrawingPanel.Height = mainWnd.Height * 2;

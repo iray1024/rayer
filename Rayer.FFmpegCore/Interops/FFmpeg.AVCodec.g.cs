@@ -41,23 +41,6 @@ internal unsafe partial struct RcOverride
     internal float @quality_factor;
 }
 
-internal unsafe partial struct AVPanScan
-{
-    internal int @id;
-    internal int @width;
-    internal int @height;
-    internal fixed short @position0[2]; internal fixed short @position1[2]; internal fixed short @position2[2]; 
-}
-
-internal unsafe partial struct AVCPBProperties
-{
-    internal int @max_bitrate;
-    internal int @min_bitrate;
-    internal int @avg_bitrate;
-    internal int @buffer_size;
-    internal ulong @vbv_delay;
-}
-
 internal unsafe partial struct AVPacketSideData
 {
     internal sbyte* @data;
@@ -519,18 +502,6 @@ internal unsafe partial struct AVBSFInternal
 {
 }
 
-internal unsafe partial struct AVBSFContext
-{
-    internal AVClass* @av_class;
-    internal AVBitStreamFilter* @filter;
-    internal AVBSFInternal* @internal;
-    internal void* @priv_data;
-    internal AVCodecParameters* @par_in;
-    internal AVCodecParameters* @par_out;
-    internal AVRational @time_base_in;
-    internal AVRational @time_base_out;
-}
-
 internal unsafe partial struct AVBitStreamFilter
 {
     internal sbyte* @name;
@@ -544,20 +515,6 @@ internal unsafe partial struct AVBitStreamFilter
 
 internal unsafe partial struct AVBSFList
 {
-}
-
-internal enum Motion_Est_ID : int
-{
-    @ME_ZERO = 1,
-    @ME_FULL = 2,
-    @ME_LOG = 3,
-    @ME_PHODS = 4,
-    @ME_EPZS = 5,
-    @ME_X1 = 6,
-    @ME_HEX = 7,
-    @ME_UMH = 8,
-    @ME_TESA = 9,
-    @ME_ITER = 50,
 }
 
 internal enum AVDiscard : int
@@ -610,14 +567,6 @@ internal enum AVPacketSideDataType : int
     @AV_PKT_DATA_MASTERING_DISPLAY_METADATA = 79,
 }
 
-internal enum AVSideDataParamChangeFlags : int
-{
-    @AV_SIDE_DATA_PARAM_CHANGE_CHANNEL_COUNT = 1,
-    @AV_SIDE_DATA_PARAM_CHANGE_CHANNEL_LAYOUT = 2,
-    @AV_SIDE_DATA_PARAM_CHANGE_SAMPLE_RATE = 4,
-    @AV_SIDE_DATA_PARAM_CHANGE_DIMENSIONS = 8,
-}
-
 internal enum AVFieldOrder : int
 {
     @AV_FIELD_UNKNOWN = 0,
@@ -642,14 +591,6 @@ internal enum AVPictureStructure : int
     @AV_PICTURE_STRUCTURE_TOP_FIELD = 1,
     @AV_PICTURE_STRUCTURE_BOTTOM_FIELD = 2,
     @AV_PICTURE_STRUCTURE_FRAME = 3,
-}
-
-internal enum AVLockOp : int
-{
-    @AV_LOCK_CREATE = 0,
-    @AV_LOCK_OBTAIN = 1,
-    @AV_LOCK_RELEASE = 2,
-    @AV_LOCK_DESTROY = 3,
 }
 
 internal unsafe static partial class FFmpeg
@@ -1069,488 +1010,25 @@ internal unsafe static partial class FFmpeg
     internal const int PARSER_FLAG_FETCHED_OFFSET = 0x0004;
     internal const int PARSER_FLAG_USE_CODEC_TS = 0x1000;
     private const string libavcodec = "avcodec-57";
-    
-    [DllImport(libavcodec, EntryPoint = "av_codec_get_pkt_timebase", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVRational av_codec_get_pkt_timebase(AVCodecContext* @avctx);
-    
-    [DllImport(libavcodec, EntryPoint = "av_codec_set_pkt_timebase", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_codec_set_pkt_timebase(AVCodecContext* @avctx, AVRational @val);
-    
-    [DllImport(libavcodec, EntryPoint = "av_codec_get_codec_descriptor", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVCodecDescriptor* av_codec_get_codec_descriptor(AVCodecContext* @avctx);
-    
-    [DllImport(libavcodec, EntryPoint = "av_codec_set_codec_descriptor", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_codec_set_codec_descriptor(AVCodecContext* @avctx, AVCodecDescriptor* @desc);
-    
-    [DllImport(libavcodec, EntryPoint = "av_codec_get_codec_properties", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern uint av_codec_get_codec_properties(AVCodecContext* @avctx);
-    
-    [DllImport(libavcodec, EntryPoint = "av_codec_get_lowres", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_codec_get_lowres(AVCodecContext* @avctx);
-    
-    [DllImport(libavcodec, EntryPoint = "av_codec_set_lowres", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_codec_set_lowres(AVCodecContext* @avctx, int @val);
-    
-    [DllImport(libavcodec, EntryPoint = "av_codec_get_seek_preroll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_codec_get_seek_preroll(AVCodecContext* @avctx);
-    
-    [DllImport(libavcodec, EntryPoint = "av_codec_set_seek_preroll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_codec_set_seek_preroll(AVCodecContext* @avctx, int @val);
-    
-    [DllImport(libavcodec, EntryPoint = "av_codec_get_chroma_intra_matrix", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern ushort* av_codec_get_chroma_intra_matrix(AVCodecContext* @avctx);
-    
-    [DllImport(libavcodec, EntryPoint = "av_codec_set_chroma_intra_matrix", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_codec_set_chroma_intra_matrix(AVCodecContext* @avctx, ushort* @val);
-    
-    [DllImport(libavcodec, EntryPoint = "av_codec_get_max_lowres", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_codec_get_max_lowres(AVCodec* @codec);
-    
-    [DllImport(libavcodec, EntryPoint = "av_codec_next", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVCodec* av_codec_next(AVCodec* @c);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_version", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern uint avcodec_version();
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_configuration", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ConstCharPtrMarshaler))]
-    internal static extern string avcodec_configuration();
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_license", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ConstCharPtrMarshaler))]
-    internal static extern string avcodec_license();
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_register", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void avcodec_register(AVCodec* @codec);
-    
+            
     [DllImport(libavcodec, EntryPoint = "avcodec_register_all", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     internal static extern void avcodec_register_all();
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_alloc_context3", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVCodecContext* avcodec_alloc_context3(AVCodec* @codec);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_free_context", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void avcodec_free_context(AVCodecContext** @avctx);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_get_context_defaults3", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_get_context_defaults3(AVCodecContext* @s, AVCodec* @codec);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_get_class", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVClass* avcodec_get_class();
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_get_frame_class", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVClass* avcodec_get_frame_class();
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_get_subtitle_rect_class", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVClass* avcodec_get_subtitle_rect_class();
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_copy_context", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_copy_context(AVCodecContext* @dest, AVCodecContext* @src);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_parameters_alloc", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVCodecParameters* avcodec_parameters_alloc();
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_parameters_free", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void avcodec_parameters_free(AVCodecParameters** @par);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_parameters_copy", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_parameters_copy(AVCodecParameters* @dst, AVCodecParameters* @src);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_parameters_from_context", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_parameters_from_context(AVCodecParameters* @par, AVCodecContext* @codec);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_parameters_to_context", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_parameters_to_context(AVCodecContext* @codec, AVCodecParameters* @par);
     
     [DllImport(libavcodec, EntryPoint = "avcodec_open2", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     internal static extern int avcodec_open2(AVCodecContext* @avctx, AVCodec* @codec, AVDictionary** @options);
     
     [DllImport(libavcodec, EntryPoint = "avcodec_close", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_close(AVCodecContext* @avctx);
-    
-    [DllImport(libavcodec, EntryPoint = "avsubtitle_free", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void avsubtitle_free(AVSubtitle* @sub);
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_alloc", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVPacket* av_packet_alloc();
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_clone", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVPacket* av_packet_clone(AVPacket* @src);
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_free", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_packet_free(AVPacket** @pkt);
+    internal static extern int avcodec_close(AVCodecContext* @avctx);        
     
     [DllImport(libavcodec, EntryPoint = "av_init_packet", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     internal static extern void av_init_packet(AVPacket* @pkt);
     
-    [DllImport(libavcodec, EntryPoint = "av_new_packet", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_new_packet(AVPacket* @pkt, int @size);
-    
-    [DllImport(libavcodec, EntryPoint = "av_shrink_packet", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_shrink_packet(AVPacket* @pkt, int @size);
-    
-    [DllImport(libavcodec, EntryPoint = "av_grow_packet", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_grow_packet(AVPacket* @pkt, int @grow_by);
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_from_data", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_packet_from_data(AVPacket* @pkt, sbyte* @data, int @size);
-    
-    [DllImport(libavcodec, EntryPoint = "av_dup_packet", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_dup_packet(AVPacket* @pkt);
-    
-    [DllImport(libavcodec, EntryPoint = "av_copy_packet", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_copy_packet(AVPacket* @dst, AVPacket* @src);
-    
-    [DllImport(libavcodec, EntryPoint = "av_copy_packet_side_data", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_copy_packet_side_data(AVPacket* @dst, AVPacket* @src);
-    
-    [DllImport(libavcodec, EntryPoint = "av_free_packet", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_free_packet(AVPacket* @pkt);
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_new_side_data", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern sbyte* av_packet_new_side_data(AVPacket* @pkt, AVPacketSideDataType @type, int @size);
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_add_side_data", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_packet_add_side_data(AVPacket* @pkt, AVPacketSideDataType @type, sbyte* @data, ulong @size);
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_shrink_side_data", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_packet_shrink_side_data(AVPacket* @pkt, AVPacketSideDataType @type, int @size);
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_get_side_data", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern sbyte* av_packet_get_side_data(AVPacket* @pkt, AVPacketSideDataType @type, int* @size);
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_merge_side_data", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_packet_merge_side_data(AVPacket* @pkt);
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_split_side_data", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_packet_split_side_data(AVPacket* @pkt);
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_side_data_name", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ConstCharPtrMarshaler))]
-    internal static extern string av_packet_side_data_name(AVPacketSideDataType @type);
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_pack_dictionary", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern sbyte* av_packet_pack_dictionary(AVDictionary* @dict, int* @size);
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_unpack_dictionary", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_packet_unpack_dictionary(sbyte* @data, int @size, AVDictionary** @dict);
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_free_side_data", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_packet_free_side_data(AVPacket* @pkt);
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_ref", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_packet_ref(AVPacket* @dst, AVPacket* @src);
-    
     [DllImport(libavcodec, EntryPoint = "av_packet_unref", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     internal static extern void av_packet_unref(AVPacket* @pkt);
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_move_ref", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_packet_move_ref(AVPacket* @dst, AVPacket* @src);
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_copy_props", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_packet_copy_props(AVPacket* @dst, AVPacket* @src);
-    
-    [DllImport(libavcodec, EntryPoint = "av_packet_rescale_ts", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_packet_rescale_ts(AVPacket* @pkt, AVRational @tb_src, AVRational @tb_dst);
     
     [DllImport(libavcodec, EntryPoint = "avcodec_find_decoder", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     internal static extern AVCodec* avcodec_find_decoder(AvCodecId @id);
     
-    [DllImport(libavcodec, EntryPoint = "avcodec_find_decoder_by_name", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVCodec* avcodec_find_decoder_by_name([MarshalAs(UnmanagedType.LPStr)] string @name);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_default_get_buffer2", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_default_get_buffer2(AVCodecContext* @s, AVFrame* @frame, int @flags);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_get_edge_width", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern uint avcodec_get_edge_width();
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_align_dimensions", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void avcodec_align_dimensions(AVCodecContext* @s, int* @width, int* @height);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_align_dimensions2", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void avcodec_align_dimensions2(AVCodecContext* @s, int* @width, int* @height, [MarshalAs(UnmanagedType.LPArray, SizeConst=8)] int[] @linesize_align);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_enum_to_chroma_pos", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_enum_to_chroma_pos(int* @xpos, int* @ypos, AVChromaLocation @pos);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_chroma_pos_to_enum", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVChromaLocation avcodec_chroma_pos_to_enum(int @xpos, int @ypos);
-    
     [DllImport(libavcodec, EntryPoint = "avcodec_decode_audio4", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_decode_audio4(AVCodecContext* @avctx, AVFrame* @frame, int* @got_frame_ptr, AVPacket* @avpkt);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_decode_video2", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_decode_video2(AVCodecContext* @avctx, AVFrame* @picture, int* @got_picture_ptr, AVPacket* @avpkt);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_decode_subtitle2", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_decode_subtitle2(AVCodecContext* @avctx, AVSubtitle* @sub, int* @got_sub_ptr, AVPacket* @avpkt);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_send_packet", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_send_packet(AVCodecContext* @avctx, AVPacket* @avpkt);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_receive_frame", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_receive_frame(AVCodecContext* @avctx, AVFrame* @frame);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_send_frame", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_send_frame(AVCodecContext* @avctx, AVFrame* @frame);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_receive_packet", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_receive_packet(AVCodecContext* @avctx, AVPacket* @avpkt);
-    
-    [DllImport(libavcodec, EntryPoint = "av_parser_next", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVCodecParser* av_parser_next(AVCodecParser* @c);
-    
-    [DllImport(libavcodec, EntryPoint = "av_register_codec_parser", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_register_codec_parser(AVCodecParser* @parser);
-    
-    [DllImport(libavcodec, EntryPoint = "av_parser_init", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVCodecParserContext* av_parser_init(int @codec_id);
-    
-    [DllImport(libavcodec, EntryPoint = "av_parser_parse2", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_parser_parse2(AVCodecParserContext* @s, AVCodecContext* @avctx, sbyte** @poutbuf, int* @poutbuf_size, sbyte* @buf, int @buf_size, long @pts, long @dts, long @pos);
-    
-    [DllImport(libavcodec, EntryPoint = "av_parser_change", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_parser_change(AVCodecParserContext* @s, AVCodecContext* @avctx, sbyte** @poutbuf, int* @poutbuf_size, sbyte* @buf, int @buf_size, int @keyframe);
-    
-    [DllImport(libavcodec, EntryPoint = "av_parser_close", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_parser_close(AVCodecParserContext* @s);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_find_encoder", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVCodec* avcodec_find_encoder(AvCodecId @id);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_find_encoder_by_name", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVCodec* avcodec_find_encoder_by_name([MarshalAs(UnmanagedType.LPStr)] string @name);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_encode_audio2", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_encode_audio2(AVCodecContext* @avctx, AVPacket* @avpkt, AVFrame* @frame, int* @got_packet_ptr);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_encode_video2", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_encode_video2(AVCodecContext* @avctx, AVPacket* @avpkt, AVFrame* @frame, int* @got_packet_ptr);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_encode_subtitle", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_encode_subtitle(AVCodecContext* @avctx, sbyte* @buf, int @buf_size, AVSubtitle* @sub);
-    
-    [DllImport(libavcodec, EntryPoint = "av_audio_resample_init", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern ReSampleContext* av_audio_resample_init(int @output_channels, int @input_channels, int @output_rate, int @input_rate, AVSampleFormat @sample_fmt_out, AVSampleFormat @sample_fmt_in, int @filter_length, int @log2_phase_count, int @linear, double @cutoff);
-    
-    [DllImport(libavcodec, EntryPoint = "audio_resample", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int audio_resample(ReSampleContext* @s, short* @output, short* @input, int @nb_samples);
-    
-    [DllImport(libavcodec, EntryPoint = "audio_resample_close", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void audio_resample_close(ReSampleContext* @s);
-    
-    [DllImport(libavcodec, EntryPoint = "av_resample_init", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVResampleContext* av_resample_init(int @out_rate, int @in_rate, int @filter_length, int @log2_phase_count, int @linear, double @cutoff);
-    
-    [DllImport(libavcodec, EntryPoint = "av_resample", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_resample(AVResampleContext* @c, short* @dst, short* @src, int* @consumed, int @src_size, int @dst_size, int @update_ctx);
-    
-    [DllImport(libavcodec, EntryPoint = "av_resample_compensate", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_resample_compensate(AVResampleContext* @c, int @sample_delta, int @compensation_distance);
-    
-    [DllImport(libavcodec, EntryPoint = "av_resample_close", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_resample_close(AVResampleContext* @c);
-    
-    [DllImport(libavcodec, EntryPoint = "avpicture_alloc", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avpicture_alloc(AVPicture* @picture, AVPixelFormat @pix_fmt, int @width, int @height);
-    
-    [DllImport(libavcodec, EntryPoint = "avpicture_free", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void avpicture_free(AVPicture* @picture);
-    
-    [DllImport(libavcodec, EntryPoint = "avpicture_fill", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avpicture_fill(AVPicture* @picture, sbyte* @ptr, AVPixelFormat @pix_fmt, int @width, int @height);
-    
-    [DllImport(libavcodec, EntryPoint = "avpicture_layout", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avpicture_layout(AVPicture* @src, AVPixelFormat @pix_fmt, int @width, int @height, sbyte* @dest, int @dest_size);
-    
-    [DllImport(libavcodec, EntryPoint = "avpicture_get_size", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avpicture_get_size(AVPixelFormat @pix_fmt, int @width, int @height);
-    
-    [DllImport(libavcodec, EntryPoint = "av_picture_copy", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_picture_copy(AVPicture* @dst, AVPicture* @src, AVPixelFormat @pix_fmt, int @width, int @height);
-    
-    [DllImport(libavcodec, EntryPoint = "av_picture_crop", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_picture_crop(AVPicture* @dst, AVPicture* @src, AVPixelFormat @pix_fmt, int @top_band, int @left_band);
-    
-    [DllImport(libavcodec, EntryPoint = "av_picture_pad", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_picture_pad(AVPicture* @dst, AVPicture* @src, int @height, int @width, AVPixelFormat @pix_fmt, int @padtop, int @padbottom, int @padleft, int @padright, int* @color);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_get_chroma_sub_sample", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void avcodec_get_chroma_sub_sample(AVPixelFormat @pix_fmt, int* @h_shift, int* @v_shift);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_pix_fmt_to_codec_tag", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern uint avcodec_pix_fmt_to_codec_tag(AVPixelFormat @pix_fmt);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_get_pix_fmt_loss", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_get_pix_fmt_loss(AVPixelFormat @dst_pix_fmt, AVPixelFormat @src_pix_fmt, int @has_alpha);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_find_best_pix_fmt_of_list", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVPixelFormat avcodec_find_best_pix_fmt_of_list(AVPixelFormat* @pix_fmt_list, AVPixelFormat @src_pix_fmt, int @has_alpha, int* @loss_ptr);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_find_best_pix_fmt_of_2", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVPixelFormat avcodec_find_best_pix_fmt_of_2(AVPixelFormat @dst_pix_fmt1, AVPixelFormat @dst_pix_fmt2, AVPixelFormat @src_pix_fmt, int @has_alpha, int* @loss_ptr);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_find_best_pix_fmt2", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVPixelFormat avcodec_find_best_pix_fmt2(AVPixelFormat @dst_pix_fmt1, AVPixelFormat @dst_pix_fmt2, AVPixelFormat @src_pix_fmt, int @has_alpha, int* @loss_ptr);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_default_get_format", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVPixelFormat avcodec_default_get_format(AVCodecContext* @s, AVPixelFormat* @fmt);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_set_dimensions", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void avcodec_set_dimensions(AVCodecContext* @s, int @width, int @height);
-    
-    [DllImport(libavcodec, EntryPoint = "av_get_codec_tag_string", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern ulong av_get_codec_tag_string(IntPtr @buf, ulong @buf_size, uint @codec_tag);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_string", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void avcodec_string(IntPtr @buf, int @buf_size, AVCodecContext* @enc, int @encode);
-    
-    [DllImport(libavcodec, EntryPoint = "av_get_profile_name", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ConstCharPtrMarshaler))]
-    internal static extern string av_get_profile_name(AVCodec* @codec, int @profile);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_profile_name", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ConstCharPtrMarshaler))]
-    internal static extern string avcodec_profile_name(AvCodecId @codec_id, int @profile);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_default_execute", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_default_execute(AVCodecContext* @c, IntPtr @func, void* @arg, int* @ret, int @count, int @size);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_default_execute2", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_default_execute2(AVCodecContext* @c, IntPtr @func, void* @arg, int* @ret, int @count);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_fill_audio_frame", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_fill_audio_frame(AVFrame* @frame, int @nb_channels, AVSampleFormat @sample_fmt, sbyte* @buf, int @buf_size, int @align);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_flush_buffers", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void avcodec_flush_buffers(AVCodecContext* @avctx);
-    
-    [DllImport(libavcodec, EntryPoint = "av_get_bits_per_sample", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_get_bits_per_sample(AvCodecId @codec_id);
-    
-    [DllImport(libavcodec, EntryPoint = "av_get_pcm_codec", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AvCodecId av_get_pcm_codec(AVSampleFormat @fmt, int @be);
-    
-    [DllImport(libavcodec, EntryPoint = "av_get_exact_bits_per_sample", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_get_exact_bits_per_sample(AvCodecId @codec_id);
-    
-    [DllImport(libavcodec, EntryPoint = "av_get_audio_frame_duration", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_get_audio_frame_duration(AVCodecContext* @avctx, int @frame_bytes);
-    
-    [DllImport(libavcodec, EntryPoint = "av_get_audio_frame_duration2", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_get_audio_frame_duration2(AVCodecParameters* @par, int @frame_bytes);
-    
-    [DllImport(libavcodec, EntryPoint = "av_register_bitstream_filter", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_register_bitstream_filter(AVBitStreamFilter* @bsf);
-    
-    [DllImport(libavcodec, EntryPoint = "av_bitstream_filter_init", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVBitStreamFilterContext* av_bitstream_filter_init([MarshalAs(UnmanagedType.LPStr)] string @name);
-    
-    [DllImport(libavcodec, EntryPoint = "av_bitstream_filter_filter", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_bitstream_filter_filter(AVBitStreamFilterContext* @bsfc, AVCodecContext* @avctx, [MarshalAs(UnmanagedType.LPStr)] string @args, sbyte** @poutbuf, int* @poutbuf_size, sbyte* @buf, int @buf_size, int @keyframe);
-    
-    [DllImport(libavcodec, EntryPoint = "av_bitstream_filter_close", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_bitstream_filter_close(AVBitStreamFilterContext* @bsf);
-    
-    [DllImport(libavcodec, EntryPoint = "av_bitstream_filter_next", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVBitStreamFilter* av_bitstream_filter_next(AVBitStreamFilter* @f);
-    
-    [DllImport(libavcodec, EntryPoint = "av_bsf_get_by_name", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVBitStreamFilter* av_bsf_get_by_name([MarshalAs(UnmanagedType.LPStr)] string @name);
-    
-    [DllImport(libavcodec, EntryPoint = "av_bsf_next", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVBitStreamFilter* av_bsf_next(void** @opaque);
-    
-    [DllImport(libavcodec, EntryPoint = "av_bsf_alloc", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_bsf_alloc(AVBitStreamFilter* @filter, AVBSFContext** @ctx);
-    
-    [DllImport(libavcodec, EntryPoint = "av_bsf_init", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_bsf_init(AVBSFContext* @ctx);
-    
-    [DllImport(libavcodec, EntryPoint = "av_bsf_send_packet", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_bsf_send_packet(AVBSFContext* @ctx, AVPacket* @pkt);
-    
-    [DllImport(libavcodec, EntryPoint = "av_bsf_receive_packet", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_bsf_receive_packet(AVBSFContext* @ctx, AVPacket* @pkt);
-    
-    [DllImport(libavcodec, EntryPoint = "av_bsf_free", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_bsf_free(AVBSFContext** @ctx);
-    
-    [DllImport(libavcodec, EntryPoint = "av_bsf_get_class", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVClass* av_bsf_get_class();
-    
-    [DllImport(libavcodec, EntryPoint = "av_bsf_list_alloc", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVBSFList* av_bsf_list_alloc();
-    
-    [DllImport(libavcodec, EntryPoint = "av_bsf_list_free", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_bsf_list_free(AVBSFList** @lst);
-    
-    [DllImport(libavcodec, EntryPoint = "av_bsf_list_append", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_bsf_list_append(AVBSFList* @lst, AVBSFContext* @bsf);
-    
-    [DllImport(libavcodec, EntryPoint = "av_bsf_list_append2", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_bsf_list_append2(AVBSFList* @lst, [MarshalAs(UnmanagedType.LPStr)] string @bsf_name, AVDictionary** @options);
-    
-    [DllImport(libavcodec, EntryPoint = "av_bsf_list_finalize", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_bsf_list_finalize(AVBSFList** @lst, AVBSFContext** @bsf);
-    
-    [DllImport(libavcodec, EntryPoint = "av_bsf_list_parse_str", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_bsf_list_parse_str([MarshalAs(UnmanagedType.LPStr)] string @str, AVBSFContext** @bsf);
-    
-    [DllImport(libavcodec, EntryPoint = "av_bsf_get_null_filter", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_bsf_get_null_filter(AVBSFContext** @bsf);
-    
-    [DllImport(libavcodec, EntryPoint = "av_fast_padded_malloc", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_fast_padded_malloc(void* @ptr, uint* @size, ulong @min_size);
-    
-    [DllImport(libavcodec, EntryPoint = "av_fast_padded_mallocz", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_fast_padded_mallocz(void* @ptr, uint* @size, ulong @min_size);
-    
-    [DllImport(libavcodec, EntryPoint = "av_xiphlacing", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern uint av_xiphlacing(sbyte* @s, uint @v);
-    
-    [DllImport(libavcodec, EntryPoint = "av_log_missing_feature", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_log_missing_feature(void* @avc, [MarshalAs(UnmanagedType.LPStr)] string @feature, int @want_sample);
-    
-    [DllImport(libavcodec, EntryPoint = "av_log_ask_for_sample", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_log_ask_for_sample(void* @avc, [MarshalAs(UnmanagedType.LPStr)] string @msg);
-    
-    [DllImport(libavcodec, EntryPoint = "av_register_hwaccel", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern void av_register_hwaccel(AVHWAccel* @hwaccel);
-    
-    [DllImport(libavcodec, EntryPoint = "av_hwaccel_next", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVHWAccel* av_hwaccel_next(AVHWAccel* @hwaccel);
-    
-    [DllImport(libavcodec, EntryPoint = "av_lockmgr_register", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_lockmgr_register(IntPtr @cb);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_get_type", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVMediaType avcodec_get_type(AvCodecId @codec_id);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_get_name", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ConstCharPtrMarshaler))]
-    internal static extern string avcodec_get_name(AvCodecId @id);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_is_open", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int avcodec_is_open(AVCodecContext* @s);
-    
-    [DllImport(libavcodec, EntryPoint = "av_codec_is_encoder", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_codec_is_encoder(AVCodec* @codec);
-    
-    [DllImport(libavcodec, EntryPoint = "av_codec_is_decoder", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern int av_codec_is_decoder(AVCodec* @codec);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_descriptor_get", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVCodecDescriptor* avcodec_descriptor_get(AvCodecId @id);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_descriptor_next", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVCodecDescriptor* avcodec_descriptor_next(AVCodecDescriptor* @prev);
-    
-    [DllImport(libavcodec, EntryPoint = "avcodec_descriptor_get_by_name", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVCodecDescriptor* avcodec_descriptor_get_by_name([MarshalAs(UnmanagedType.LPStr)] string @name);
-    
-    [DllImport(libavcodec, EntryPoint = "av_cpb_properties_alloc", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-    internal static extern AVCPBProperties* av_cpb_properties_alloc(ulong* @size);
-    
+    internal static extern int avcodec_decode_audio4(AVCodecContext* @avctx, AVFrame* @frame, int* @got_frame_ptr, AVPacket* @avpkt);    
 }

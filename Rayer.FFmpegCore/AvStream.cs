@@ -1,5 +1,5 @@
-﻿using CSCore;
-using Rayer.FFmpegCore.Interops;
+﻿using Rayer.FFmpegCore.Interops;
+using Rayer.FFmpegCore.Modules;
 
 namespace Rayer.FFmpegCore;
 
@@ -7,13 +7,7 @@ internal sealed class AvStream : IDisposable
 {
     private readonly unsafe AVStream* _stream;
 
-    public unsafe AVStream Stream
-    {
-        get
-        {
-            return _stream == null ? default : *_stream;
-        }
-    }
+    public unsafe AVStream Stream => _stream is null ? default : *_stream;
 
     public unsafe WaveFormat GetSuggestedWaveFormat()
     {
@@ -52,11 +46,12 @@ internal sealed class AvStream : IDisposable
                 encoding = AudioEncoding.IeeeFloat;
                 break;
             default:
-                throw new NotSupportedException("Audio Sample Format not supported.");
+                throw new NotSupportedException("不支持音频样本格式。");
         }
 
         var waveFormat = new WaveFormat(_stream->codec->sample_rate, bitsPerSample, _stream->codec->channels,
             encoding);
+
         return waveFormat;
     }
 
@@ -64,7 +59,7 @@ internal sealed class AvStream : IDisposable
     {
         if (stream == nint.Zero)
         {
-            throw new ArgumentNullException("stream");
+            throw new ArgumentNullException(nameof(stream));
         }
 
         _stream = (AVStream*)stream;

@@ -1,6 +1,7 @@
 ﻿using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using Rayer.FFmpegCore;
+using System.IO;
 using WaveFormat = NAudio.Wave.WaveFormat;
 
 namespace Rayer.Core.AudioReader.Flac;
@@ -12,11 +13,25 @@ internal class FlacAudioReader : WaveStream, ISampleProvider
     private FFmpegDecoder _ffmpegDecoder = null!;
     private readonly WaveFormat _waveFormat = null!;
 
+    public FlacAudioReader(Stream stream)
+    {
+        _ffmpegDecoder = new FFmpegDecoder(stream);
+
+        if (_ffmpegDecoder is not null)
+        {
+            var sampleRate = _ffmpegDecoder.WaveFormat.SampleRate;
+            var bitsPerSample = _ffmpegDecoder.WaveFormat.BitsPerSample;
+            var channels = _ffmpegDecoder.WaveFormat.Channels;
+
+            _waveFormat = new WaveFormat(sampleRate, bitsPerSample, channels);
+        }
+    }
+
     public FlacAudioReader(string path)
     {
         _ffmpegDecoder = new FFmpegDecoder(path);
 
-        if (null != _ffmpegDecoder)
+        if (_ffmpegDecoder is not null)
         {
             var sampleRate = _ffmpegDecoder.WaveFormat.SampleRate;
             var bitsPerSample = _ffmpegDecoder.WaveFormat.BitsPerSample;

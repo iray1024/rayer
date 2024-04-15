@@ -59,7 +59,7 @@ internal class WaveMetadataFactory : IWaveMetadataFactory
 #pragma warning disable IDE0045
                 if (extension is ".flac")
                 {
-                    waveStream = new FlacAudioReader(filepath);
+                    waveStream = new FlacAudioReader(baseStream);
                 }
                 else if (extension is ".ogg")
                 {

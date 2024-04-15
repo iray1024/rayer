@@ -170,8 +170,10 @@ internal sealed class AvFrame(AvFormatContext formatContext) : IDisposable
                 pflt[i] = (float)pdbl[i];
             }
         }
+
         Array.Clear(buffer, offset, count);
         Buffer.BlockCopy(fltBuffer, 0, buffer, offset, fltBuffer.Length);
+
         return fltBuffer.Length;
     }
 

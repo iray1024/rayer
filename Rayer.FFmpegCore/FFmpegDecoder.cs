@@ -1,4 +1,6 @@
-﻿using CSCore;
+﻿using Rayer.FFmpegCore.Modules;
+using Rayer.FFmpegCore.Modules.Abstractions;
+using Rayer.FFmpegCore.Modules.Extensions;
 
 namespace Rayer.FFmpegCore;
 
@@ -82,11 +84,10 @@ public class FFmpegDecoder : IWaveSource
             int bufferLength;
             lock (_lockObject)
             {
-                using (var frame = new AvFrame(_formatContext))
-                {
-                    bufferLength = frame.ReadNextFrame(out var seconds, ref _overflowBuffer);
-                    packetPosition = this.GetRawElements(TimeSpan.FromSeconds(seconds));
-                }
+                using var frame = new AvFrame(_formatContext);
+
+                bufferLength = frame.ReadNextFrame(out var seconds, ref _overflowBuffer);
+                packetPosition = this.GetRawElements(TimeSpan.FromSeconds(seconds));
             }
             if (bufferLength <= 0)
             {
@@ -99,8 +100,11 @@ public class FFmpegDecoder : IWaveSource
                     break;
                 }
             }
+
             var bytesToCopy = Math.Min(count - read, bufferLength);
+
             Array.Copy(_overflowBuffer, 0, buffer, offset, bytesToCopy);
+
             read += bytesToCopy;
             offset += bytesToCopy;
 
@@ -130,6 +134,7 @@ public class FFmpegDecoder : IWaveSource
 
         _ffmpegStream = new FfmpegStream(stream, false);
         _formatContext = new AvFormatContext(_ffmpegStream);
+
         Initialize();
     }
 
@@ -145,11 +150,13 @@ public class FFmpegDecoder : IWaveSource
         {
             stream = File.OpenRead(filename);
             InitializeWithStream(stream, true);
+
             return true;
         }
         catch (Exception)
         {
             stream?.Dispose();
+
             return false;
         }
     }
@@ -173,13 +180,16 @@ public class FFmpegDecoder : IWaveSource
         if (_overflowCount != 0 && _overflowBuffer != null && count > 0)
         {
             var bytesToCopy = Math.Min(count, _overflowCount);
+
             Array.Copy(_overflowBuffer, _overflowOffset, buffer, offset, bytesToCopy);
 
             _overflowCount -= bytesToCopy;
             _overflowOffset += bytesToCopy;
             offset += bytesToCopy;
+
             return bytesToCopy;
         }
+
         return 0;
     }
 

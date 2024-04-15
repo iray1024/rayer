@@ -26,6 +26,7 @@ internal sealed class AvioBuffer : IDisposable
     public void Dispose()
     {
         GC.SuppressFinalize(this);
+
         if (SuppressAvFree != true)
         {
             FFmpegCalls.AvFree(Buffer);

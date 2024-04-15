@@ -8,15 +8,6 @@ internal static partial class InteropHelper
 
     public static void RegisterLibrariesSearchPath(string path)
     {
-        if (!Directory.Exists(path))
-        {
-            var directory = FFmpegUtils.FindFfmpegDirectory(Environment.OSVersion.Platform);
-            if (directory != null)
-            {
-                path = directory.FullName;
-            }
-        }
-
         switch (Environment.OSVersion.Platform)
         {
             case PlatformID.Win32NT:

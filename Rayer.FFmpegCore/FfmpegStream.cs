@@ -15,21 +15,18 @@ internal sealed class FfmpegStream : IDisposable
 
     public FfmpegStream(Stream stream, bool allowWrite)
     {
-        if (stream == null)
-        {
-            throw new ArgumentNullException("stream");
-        }
+        ArgumentNullException.ThrowIfNull(stream);
 
         if (!stream.CanRead)
         {
-            throw new ArgumentException("Stream is not readable.", "stream");
+            throw new ArgumentException("Á÷²»¿É¶Á¡£", nameof(stream));
         }
 
         _stream = stream;
 
         AvioContext = new AvioContext(ReadDataCallback,
-            stream.CanSeek ? new FFmpegCalls.AvioSeek(SeekCallback) : null,
-            stream.CanWrite && allowWrite ? new FFmpegCalls.AvioWriteData(WriteDataCallback) : null);
+            stream.CanSeek ? new FFmpegCalls.AvioSeek(SeekCallback) : null!,
+            stream.CanWrite && allowWrite ? new FFmpegCalls.AvioWriteData(WriteDataCallback) : null!);
     }
 
     private long SeekCallback(nint opaque, long offset, FFmpegCalls.SeekFlags whence)
@@ -105,7 +102,7 @@ internal sealed class FfmpegStream : IDisposable
         if (AvioContext != null)
         {
             AvioContext.Dispose();
-            AvioContext = null;
+            AvioContext = null!;
         }
     }
 
