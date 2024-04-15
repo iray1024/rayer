@@ -31,20 +31,20 @@ public class SearchAudioResultDetail
     public int Status { get; set; }
 
     public int Fee { get; set; }
-}
 
-public class SearchAudioArtistsDetail
-{
-    public long Id { get; set; }
+    public class SearchAudioArtistsDetail
+    {
+        public long Id { get; set; }
 
-    public string Name { get; set; } = string.Empty;
-}
+        public string Name { get; set; } = string.Empty;
+    }
 
-public class SearchAudioAlbumDetail
-{
-    public long Id { get; set; }
+    public class SearchAudioAlbumDetail
+    {
+        public long Id { get; set; }
 
-    public string Name { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
-    public int Status { get; set; }
+        public int Status { get; set; }
+    }
 }

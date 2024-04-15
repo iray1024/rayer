@@ -25,11 +25,11 @@ public partial class App : Application
         .ConfigureServices((_, services) =>
         {
             services.AddHostedService<ApplicationHostService>();
-            
+
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<ISnackbarService, SnackbarService>();
             services.AddSingleton<IContentDialogService, ContentDialogService>();
-            
+
             services.AddRayerCore();
             services.AddSearchEngine(builder =>
             {
@@ -118,7 +118,7 @@ public partial class App : Application
                 await dialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions
                 {
                     Title = "异常",
-                    Content = $"{ex?.Message}\n{ex?.StackTrace}",
+                    Content = $"{ex?.Message}",
                     CloseButtonText = "关闭"
                 }, AppCore.StoppingToken);
             });

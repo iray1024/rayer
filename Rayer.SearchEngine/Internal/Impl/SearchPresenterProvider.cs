@@ -1,6 +1,7 @@
 ﻿using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Controls;
 using Rayer.SearchEngine.Controls.Search;
+using Rayer.SearchEngine.Enums;
 using Rayer.SearchEngine.Internal.Abstractions;
 using System.Windows;
 
@@ -10,6 +11,10 @@ namespace Rayer.SearchEngine.Internal.Impl;
 internal class SearchPresenterProvider : ISearchPresenterProvider
 {
     private static readonly Lazy<SearchAudioPresenter> _audioPresenter;
+    private static readonly Lazy<SearchSingerPresenter> _singerPresenter;
+    private static readonly Lazy<SearchAlbumPresenter> _albumPresenter;
+    private static readonly Lazy<SearchVideoPresenter> _videoPresenter;
+    private static readonly Lazy<SearchPlaylistPresenter> _plyalistPresenter;
 
     static SearchPresenterProvider()
     {
@@ -18,33 +23,48 @@ internal class SearchPresenterProvider : ISearchPresenterProvider
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top,
         });
+
+        _singerPresenter = new Lazy<SearchSingerPresenter>(() => new SearchSingerPresenter()
+        {
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
+        });
+
+        _albumPresenter = new Lazy<SearchAlbumPresenter>(() => new SearchAlbumPresenter()
+        {
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
+        });
+
+        _videoPresenter = new Lazy<SearchVideoPresenter>(() => new SearchVideoPresenter()
+        {
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
+        });
+
+        _plyalistPresenter = new Lazy<SearchPlaylistPresenter>(() => new SearchPlaylistPresenter()
+        {
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
+        });
     }
 
-    public IPresenterControl<TViewModel, TResponse> GetPresenter<TViewModel, TResponse>(string identifier)
+    public IPresenterControl<TViewModel, TResponse> GetPresenter<TViewModel, TResponse>(SearchType searchType)
         where TViewModel : IPresenterViewModel<TResponse>
         where TResponse : class
     {
-        if (identifier is "歌曲")
+        return searchType switch
         {
-            return (IPresenterControl<TViewModel, TResponse>)_audioPresenter.Value;
-        }
-        else if (identifier is "艺人")
-        {
+            SearchType.Audio => (IPresenterControl<TViewModel, TResponse>)_audioPresenter.Value,
 
-        }
-        else if (identifier is "专辑")
-        {
+            SearchType.Singer => (IPresenterControl<TViewModel, TResponse>)_singerPresenter.Value,
 
-        }
-        else if (identifier is "视频")
-        {
+            SearchType.Album => (IPresenterControl<TViewModel, TResponse>)_albumPresenter.Value,
 
-        }
-        else if (identifier is "歌单")
-        {
+            SearchType.Video => (IPresenterControl<TViewModel, TResponse>)_videoPresenter.Value,
 
-        }
-
-        return null!;
+            SearchType.Playlist => (IPresenterControl<TViewModel, TResponse>)_plyalistPresenter.Value,
+            _ => throw new NotImplementedException()
+        };
     }
 }

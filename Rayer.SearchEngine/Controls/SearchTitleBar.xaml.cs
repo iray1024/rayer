@@ -1,6 +1,7 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.ViewModels.Explore;
+using System.Collections.Concurrent;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -33,8 +34,8 @@ public partial class SearchTitleBar : UserControl
 
     public event RoutedEventHandler CheckedChanged
     {
-        add { AddHandler(Checked, value); }
-        remove { RemoveHandler(Checked, value); }
+        add { TryAddHandler(value); }
+        remove { TryRemoveHandler(value); }
     }
 
     private async void OnTitleBarControlMouseEnter(object sender, MouseEventArgs e)
@@ -109,8 +110,35 @@ public partial class SearchTitleBar : UserControl
 
     private void OnChecked(object sender, RoutedEventArgs e)
     {
-        var agrs = new RoutedEventArgs(Checked, e.Source);
+        if (sender is RadioButton { IsChecked: true })
+        {
+            var agrs = new RoutedEventArgs(Checked, e.Source);
 
-        RaiseEvent(agrs);
+            RaiseEvent(agrs);
+        }
+    }
+
+    private readonly ConcurrentDictionary<Type, RoutedEventHandler> _singletoneSubscribeHandlers = [];
+
+    private void TryAddHandler(RoutedEventHandler handler)
+    {
+        if (handler.Target is not null)
+        {
+            if (_singletoneSubscribeHandlers.TryAdd(handler.Target.GetType(), handler))
+            {
+                AddHandler(Checked, handler);
+            }
+        }
+    }
+
+    private void TryRemoveHandler(RoutedEventHandler handler)
+    {
+        if (handler.Target is not null)
+        {
+            if (_singletoneSubscribeHandlers.TryRemove(handler.Target.GetType(), out _))
+            {
+                RemoveHandler(Checked, handler);
+            }
+        }
     }
 }

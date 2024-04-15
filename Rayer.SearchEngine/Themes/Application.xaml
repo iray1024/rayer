@@ -10,6 +10,7 @@
     <converters:WebArtistsConverter x:Key="WebArtistsConverter" />
     <converters:WebDurationConverter x:Key="WebDurationConverter" />
     <converters:PresenterHeightConverter x:Key="PresenterHeightConverter" />
+    <converters:SearchTypeConverter x:Key="SearchTypeConverter" />
 
     <Style x:Key="DefaultWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="Background" Value="Transparent" />

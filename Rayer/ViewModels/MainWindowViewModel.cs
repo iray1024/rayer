@@ -59,7 +59,24 @@ public partial class MainWindowViewModel : ObservableObject
 
     public async Task OnAutoSuggestTextChanged(AutoSuggestBoxTextChangedEventArgs args)
     {
+        if (args.Reason is AutoSuggestionBoxTextChangeReason.UserInput && args.Source is AutoSuggestBox box)
+        {
+            if (!string.IsNullOrEmpty(args.Text))
+            {
+                var model = await _searchEngine.SuggestAsync(args.Text);
 
+                if (model is not null && model.Code == 200)
+                {
+                    box.ItemsSource = model.Result.Audios.Length > 0
+                        ? model.Result.Audios.Select(x => x.Name).ToList()
+                        : null;
+                }
+            }
+            else
+            {
+                box.ItemsSource = MenuItems.Cast<NavigationViewItem>().Select(x => x.Name);
+            }
+        }
     }
 
     public async Task OnAutoSuggestQuerySubmitted(AutoSuggestBoxQuerySubmittedEventArgs args)
@@ -70,16 +87,26 @@ public partial class MainWindowViewModel : ObservableObject
         {
             _navigationService.Navigate(typeof(SearchPage), model);
         }
-        else
-        {
-            var searchAware = App.GetRequiredService<SearchPage>();
 
-            await searchAware.OnSearchAsync(model);
-        }
+        var searchAware = App.GetRequiredService<SearchPage>();
+
+        searchAware.OnSearch(model);
     }
 
     public async Task OnAutoSuggestChosen(AutoSuggestBoxSuggestionChosenEventArgs args)
     {
+        if (args.SelectedItem is string { Length: > 0 } queryText)
+        {
+            var model = await _searchEngine.SearchAsync(queryText, AppCore.StoppingToken);
 
+            if (_navigationService.GetNavigationControl().SelectedItem?.TargetPageType != typeof(SearchPage))
+            {
+                _navigationService.Navigate(typeof(SearchPage), model);
+            }
+
+            var searchAware = App.GetRequiredService<SearchPage>();
+
+            searchAware.OnSearch(model);
+        }
     }
 }

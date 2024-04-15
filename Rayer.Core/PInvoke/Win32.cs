@@ -30,6 +30,15 @@ public static partial class Win32
         public int dwExtraInfo;
     }
 
+    public const int GWL_EXSTYLE = -20;
+    public const int WS_EX_TOOLWINDOW = 0x00000080;
+
+    [LibraryImport("user32.dll", EntryPoint = "GetWindowLongA")]
+    internal static partial int GetWindowLong(IntPtr hWnd, int nIndex);
+
+    [LibraryImport("user32.dll", EntryPoint = "SetWindowLongA")]
+    internal static partial int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
     public const uint MONITOR_DEFAULTTONEAREST = 2;
     public const int SWP_NOSIZE = 0x0001;
     public const int SWP_NOZORDER = 0x0004;

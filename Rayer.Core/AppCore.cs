@@ -25,6 +25,11 @@ public static class AppCore
         return _serviceProvider.GetService<T>();
     }
 
+    public static object? GetService(Type type)
+    {
+        return _serviceProvider.GetService(type);
+    }
+
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static void UseServiceProvider(in IServiceProvider serviceProvider)
     {

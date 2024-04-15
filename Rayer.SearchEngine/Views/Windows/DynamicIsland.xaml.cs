@@ -1,5 +1,6 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Framework.Injection;
+using Rayer.Core.PInvoke;
 using Rayer.SearchEngine.ViewModels;
 using System.Windows;
 using System.Windows.Interop;
@@ -125,6 +126,12 @@ public partial class DynamicIsland : Window
         ViewModel.DynamicIsland = this;
 
         Application.Current.MainWindow.LocationChanged += OnLocationChanged;
+
+        var hwnd = new WindowInteropHelper(this).Handle;
+
+        var exStyle = Win32.GetWindowLong(hwnd, Win32.GWL_EXSTYLE);
+
+        _ = Win32.SetWindowLong(hwnd, Win32.GWL_EXSTYLE, exStyle | Win32.WS_EX_TOOLWINDOW);
     }
 
     private void OnLocationChanged(object? sender, EventArgs e)

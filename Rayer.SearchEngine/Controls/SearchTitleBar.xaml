@@ -13,20 +13,20 @@
     mc:Ignorable="d">
     <Grid>
         <Grid
-            Margin="0,6,0,12"
+            Margin="22,0,0,16"
             HorizontalAlignment="Left"
             VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="80" />
             </Grid.ColumnDefinitions>
             <RadioButton
                 x:Name="DefaultPage"
                 Grid.Column="0"
-                HorizontalAlignment="Left"
+                HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Checked="OnChecked"
                 Cursor="Hand"
@@ -38,11 +38,11 @@
                     FontSize="18"
                     FontWeight="Bold"
                     Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                    Text="歌曲" />
+                    Text="{Binding Converter={StaticResource SearchTypeConverter}, ConverterParameter=Audio, FallbackValue='歌曲'}" />
             </RadioButton>
             <RadioButton
                 Grid.Column="1"
-                HorizontalAlignment="Right"
+                HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Checked="OnChecked"
                 Cursor="Hand"
@@ -54,7 +54,7 @@
                     FontSize="18"
                     FontWeight="Bold"
                     Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                    Text="艺人" />
+                    Text="{Binding Converter={StaticResource SearchTypeConverter}, ConverterParameter=Singer, FallbackValue='艺人'}" />
             </RadioButton>
             <RadioButton
                 Grid.Column="2"
@@ -70,11 +70,11 @@
                     FontSize="18"
                     FontWeight="Bold"
                     Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                    Text="专辑" />
+                    Text="{Binding Converter={StaticResource SearchTypeConverter}, ConverterParameter=Album, FallbackValue='专辑'}" />
             </RadioButton>
             <RadioButton
                 Grid.Column="3"
-                HorizontalAlignment="Left"
+                HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Checked="OnChecked"
                 Cursor="Hand"
@@ -86,11 +86,11 @@
                     FontSize="18"
                     FontWeight="Bold"
                     Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                    Text="视频" />
+                    Text="{Binding Converter={StaticResource SearchTypeConverter}, ConverterParameter=Video, FallbackValue='视频'}" />
             </RadioButton>
             <RadioButton
                 Grid.Column="4"
-                HorizontalAlignment="Left"
+                HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Checked="OnChecked"
                 Cursor="Hand"
@@ -102,7 +102,7 @@
                     FontSize="18"
                     FontWeight="Bold"
                     Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                    Text="歌单" />
+                    Text="{Binding Converter={StaticResource SearchTypeConverter}, ConverterParameter=Playlist, FallbackValue='歌单'}" />
             </RadioButton>
         </Grid>
     </Grid>

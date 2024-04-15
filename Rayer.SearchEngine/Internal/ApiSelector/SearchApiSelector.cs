@@ -10,4 +10,9 @@ internal class SearchApiSelector(SearchEngineOptions options) : ApiSelectorBase(
     {
         return CreateBuilder(ApiEndpoints.Search.SampleSearch);
     }
+
+    public ParamBuilder SearchSuggestion()
+    {
+        return CreateBuilder(ApiEndpoints.Search.SearchSuggestion);
+    }
 }

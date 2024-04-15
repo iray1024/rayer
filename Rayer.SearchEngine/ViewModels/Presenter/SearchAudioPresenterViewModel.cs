@@ -8,6 +8,7 @@ using Rayer.Core.Utils;
 using Rayer.SearchEngine.Business.Search.Abstractions;
 using Rayer.SearchEngine.Controls;
 using Rayer.SearchEngine.Models.Response.Search;
+using System.Windows;
 
 namespace Rayer.SearchEngine.ViewModels.Presenter;
 
@@ -20,6 +21,21 @@ public partial class SearchAudioPresenterViewModel : ObservableObject, IPresente
 
     [ObservableProperty]
     private SearchAudioDetailResponse _presenterDataContext = null!;
+
+    [ObservableProperty]
+    private double _nameMaxWidth = 150;
+
+    [ObservableProperty]
+    private double _artistsNameMaxWidth = 250;
+
+    [ObservableProperty]
+    private double _albumNameMaxHeight = 250;
+
+    [ObservableProperty]
+    private double _durationMaxHeight = 35;
+
+    [ObservableProperty]
+    private Thickness _itemMargin = new (0,0,28,0);
 
     public SearchAudioPresenterViewModel(
         ISearchAudioEngine audioEngine,

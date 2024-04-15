@@ -1,4 +1,5 @@
-﻿using Rayer.Core.Framework.Injection;
+﻿using Microsoft.Extensions.Internal;
+using Rayer.Core.Framework.Injection;
 using System.IO;
 using System.Reflection;
 
@@ -34,6 +35,14 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddRayerCore(this IServiceCollection services)
     {
+        services.AddMemoryCache(options =>
+        {
+            options.Clock = new SystemClock();
+            options.ExpirationScanFrequency = TimeSpan.FromMinutes(1);            
+            options.CompactionPercentage = .15f;
+            options.TrackLinkedCacheEntries = true;
+        });
+
         var projectPath = AppContext.BaseDirectory;
 
         var assemblies = Directory.GetFiles(projectPath, "Rayer*.dll");

@@ -138,7 +138,7 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         if (!_isInitialized)
         {
             InitializeViewModel();
-        }        
+        }
     }
 
     public void OnNavigatedFrom()
@@ -148,7 +148,7 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
 
     private static void OnCurrentApplicationThemeChanged(ApplicationTheme newValue)
     {
-        ApplicationThemeManager.Apply(newValue, WindowBackdropType.Auto, false, false);
+        ApplicationThemeManager.Apply(newValue, WindowBackdropType.Mica, true);
     }
 
     private void InitializeViewModel()

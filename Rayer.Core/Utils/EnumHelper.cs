@@ -23,18 +23,31 @@ public static class EnumHelper
         return default!;
     }
 
-    public static string GetDescription<T>(T @enum)
+    public static string GetDescription<TEnum>(TEnum @enum)
+        where TEnum : struct, Enum
     {
-        if (@enum is not null)
-        {
-            var type = typeof(T);
+        var type = typeof(TEnum);
 
-            var fieldContent = @enum.ToString()!;
-            var field = type.GetField(fieldContent);
+        var fieldContent = @enum.ToString()!;
+        var field = type.GetField(fieldContent);
+
+        var ev = field?.GetCustomAttribute<DescriptionAttribute>();
+
+        return ev is null ? fieldContent : ev.Description;
+    }
+
+    public static string GetDescription<TEnum>(string value)
+        where TEnum : struct, Enum
+    {
+        if (!string.IsNullOrEmpty(value))
+        {
+            var type = typeof(TEnum);
+
+            var field = type.GetField(value);
 
             var ev = field?.GetCustomAttribute<DescriptionAttribute>();
 
-            return ev is null ? fieldContent : ev.Description;
+            return ev is null ? value : ev.Description;
         }
 
         return default!;

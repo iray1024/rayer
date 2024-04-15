@@ -8,9 +8,9 @@ internal sealed class WebArtistsConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is IEnumerable<SearchAudioDetailArtistDetail> details 
-            ? string.Join(" / ", details.Select(x => x.Name)) 
-            : (object)"Unknown";
+        return value is SearchAudioDetailArtistDetail[] details
+            ? string.Join(" / ", details.Select(x => x.Name))
+            : "Unknown";
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

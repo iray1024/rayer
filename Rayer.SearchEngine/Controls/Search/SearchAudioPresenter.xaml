@@ -12,6 +12,7 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     Loaded="OnLoaded"
+    Unloaded="OnUnloaded"
     mc:Ignorable="d">
     <Grid
         Margin="0,0,-22,0"
@@ -58,28 +59,36 @@
                         <TextBlock
                             Grid.Row="0"
                             Grid.Column="1"
+                            MaxWidth="{Binding ViewModel.ArtistsNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAudioPresenter}, NotifyOnSourceUpdated=True}"
                             Margin="6,8,0,0"
+                            HorizontalAlignment="Left"
                             FontSize="14"
                             FontWeight="Normal"
-                            Text="{Binding Name, Mode=OneWay}" />
+                            Text="{Binding Name, Mode=OneWay}"
+                            TextTrimming="WordEllipsis" />
                         <TextBlock
                             Grid.Row="1"
                             Grid.Column="1"
+                            MaxWidth="{Binding ViewModel.ArtistsNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAudioPresenter}}"
                             Margin="6,0,0,6"
+                            HorizontalAlignment="Left"
                             Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                            Text="{Binding Artists, Mode=OneWay, Converter={StaticResource WebArtistsConverter}}" />
+                            Text="{Binding Artists, Mode=OneWay, Converter={StaticResource WebArtistsConverter}}"
+                            TextTrimming="WordEllipsis" />
                         <TextBlock
                             Grid.RowSpan="2"
                             Grid.Column="2"
-                            Margin="80,0,0,0"
+                            MaxWidth="{Binding ViewModel.AlbumNameMaxHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAudioPresenter}}"
+                            Margin="00,0,0,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                            Text="{Binding Album.Name, Mode=OneWay}" />
+                            Text="{Binding Album.Name, Mode=OneWay}"
+                            TextTrimming="WordEllipsis" />
                         <TextBlock
                             Grid.RowSpan="2"
                             Grid.Column="3"
-                            Margin="0,0,28,0"
+                            Margin="0,0,6,0"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
@@ -89,7 +98,10 @@
             </ui:ListView.ItemTemplate>
             <ListView.ItemContainerStyle>
                 <Style BasedOn="{StaticResource {x:Type ui:ListViewItem}}" TargetType="ui:ListViewItem">
-                    <EventSetter Event="MouseDoubleClick" Handler="OnListViewItemDoubleClick" />
+                    <Style.Setters>
+                        <EventSetter Event="MouseDoubleClick" Handler="OnListViewItemDoubleClick" />
+                        <Setter Property="Margin" Value="{Binding ViewModel.ItemMargin, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAudioPresenter}}" />
+                    </Style.Setters>
                 </Style>
             </ListView.ItemContainerStyle>
         </ui:ListView>

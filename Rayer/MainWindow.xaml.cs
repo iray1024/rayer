@@ -3,6 +3,7 @@ using Rayer.Core;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
+using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.ViewModels;
 using Rayer.SearchEngine.Views.Pages;
 using Rayer.SearchEngine.Views.Windows;
@@ -28,21 +29,23 @@ public partial class MainWindow : IWindow
         IServiceProvider serviceProvider,
         INavigationService navigationService,
         ISnackbarService snackbarService,
-        IContentDialogService contentDialogService)
+        IContentDialogService contentDialogService,
+        ILoaderProvider loaderProvider)
     {
         SystemThemeWatcher.Watch(this);
-
+        
         ViewModel = viewModel;
         DataContext = this;
 
         InitializeComponent();
 
         var settings = App.GetRequiredService<ISettingsService>();
-        ApplicationThemeManager.Apply(settings.Settings.Theme, WindowBackdropType.Mica, true, true);
+        ApplicationThemeManager.Apply(settings.Settings.Theme, WindowBackdropType.Mica, true);
 
         navigationService.SetNavigationControl(NavigationView);
         snackbarService.SetSnackbarPresenter(SnackbarPresenter);
-        contentDialogService.SetContentPresenter(RootContentDialog);
+        contentDialogService.SetDialogHost(RootContentDialog);
+        loaderProvider.SetLoader(Loader, 160, 0);
 
         NavigationView.SetServiceProvider(serviceProvider);
 
@@ -84,6 +87,10 @@ public partial class MainWindow : IWindow
             if (App.GetRequiredService<SearchViewModel>() is { Model: null })
             {
                 NavigationView.GoBack();
+
+                var navigationHeaderUpdater = AppCore.GetRequiredService<INavigationHeaderUpdater>();
+
+                navigationHeaderUpdater.Hide();
 
                 AutoSuggest.Focus();
             }

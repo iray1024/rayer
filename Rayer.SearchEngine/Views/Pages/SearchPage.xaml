@@ -22,10 +22,5 @@
 
         <Grid x:Name="Presenter" Grid.RowSpan="2" />
 
-        <ui:ProgressRing
-            x:Name="Loading"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            IsIndeterminate="True" />
     </Grid>
 </framework:NoneFocusablePage>

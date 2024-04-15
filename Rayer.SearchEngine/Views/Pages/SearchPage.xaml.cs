@@ -1,14 +1,17 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
+using Rayer.Core.Utils;
 using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Controls;
+using Rayer.SearchEngine.Enums;
 using Rayer.SearchEngine.Internal.Abstractions;
 using Rayer.SearchEngine.Models.Response.Search;
 using Rayer.SearchEngine.ViewModels;
 using Rayer.SearchEngine.ViewModels.Presenter;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 
@@ -18,16 +21,31 @@ namespace Rayer.SearchEngine.Views.Pages;
 public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAware, ISearchAware
 {
     private readonly ISearchPresenterProvider _searchPresenterProvider;
+    private readonly ILoaderProvider _loaderProvider;
+
+    private CancellationTokenSource _requestToken = new();
+
+    private int _hasNavigationTo = 0;
 
     public SearchPage()
     {
         _searchPresenterProvider = AppCore.GetRequiredService<ISearchPresenterProvider>();
+        _loaderProvider = AppCore.GetRequiredService<ILoaderProvider>();
 
         var vm = AppCore.GetRequiredService<SearchViewModel>();
 
         ViewModel = vm;
 
         InitializeComponent();
+    }
+
+    public bool HasNavigationTo
+    {
+        get => _hasNavigationTo == 1;
+        set
+        {
+            _ = Interlocked.Exchange(ref _hasNavigationTo, value ? 1 : 0);
+        }
     }
 
     public SearchViewModel ViewModel { get; set; }
@@ -46,48 +64,68 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
     {
         if (e.OriginalSource is RadioButton radioButton && radioButton.IsChecked == true)
         {
-            await SearchProcess(radioButton);
+            _loaderProvider.Loading();
+
+            await _requestToken.CancelAsync();
+            _requestToken = new CancellationTokenSource();
+
+            var dispatcherTask = Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                await SearchProcess(radioButton, _requestToken.Token);
+
+                _loaderProvider.Loaded();
+            },
+            DispatcherPriority.Normal,
+            _requestToken.Token);
         }
     }
 
-    private async Task SearchProcess(RadioButton radio)
+    private async Task SearchProcess(RadioButton radio, CancellationToken cancellationToken = default)
     {
-        Loading.Visibility = Visibility.Visible;
-
         if (radio.Content is System.Windows.Controls.TextBlock textBlock)
         {
-            if (textBlock.Text is "歌曲")
+            var searchType = EnumHelper.ParseEnum<SearchType>(textBlock.Text);
+
+            if (searchType is SearchType.Audio)
             {
                 var dataContext = await ViewModel.LoadAudioAsync();
 
-                ApplyPresenter<SearchAudioPresenterViewModel, SearchAudioDetailResponse>(textBlock.Text, dataContext);
+                ApplyPresenter<SearchAudioPresenterViewModel, SearchAudioDetailResponse>(searchType, dataContext);
+            }
+            else if (searchType is SearchType.Singer)
+            {
+                var dataContext = await ViewModel.LoadSingerAsync();
 
-                Loading.Visibility = Visibility.Collapsed;
+                await Task.Delay(1000, cancellationToken);
+
+                ApplyPresenter<SearchSingerPresenterViewModel, SearchSingerDetailResponse>(searchType, dataContext);
             }
-            else if (textBlock.Text is "艺人")
+            else if (searchType is SearchType.Album)
             {
-                await ViewModel.LoadSingerAsync();
+                var dataContext = await ViewModel.LoadAlbumAsync();
+
+                ApplyPresenter<SearchAlbumPresenterViewModel, SearchAlbumDetailResponse>(searchType, dataContext);
             }
-            else if (textBlock.Text is "专辑")
+            else if (searchType is SearchType.Video)
             {
-                await ViewModel.LoadAlbumAsync();
+                var dataContext = await ViewModel.LoadVideoAsync();
+
+                ApplyPresenter<SearchVideoPresenterViewModel, SearchVideoDetailResponse>(searchType, dataContext);
             }
-            else if (textBlock.Text is "视频")
+            else if (searchType is SearchType.Playlist)
             {
-                await ViewModel.LoadVideoAsync();
-            }
-            else if (textBlock.Text is "歌单")
-            {
-                await ViewModel.LoadPlaylistAsync();
+                var dataContext = await ViewModel.LoadPlaylistAsync();
+
+                ApplyPresenter<SearchPlaylistPresenterViewModel, SearchPlaylistDetailResponse>(searchType, dataContext);
             }
         }
     }
 
-    private void ApplyPresenter<TViewModel, TResponse>(string identifier, TResponse dataContext)
+    private void ApplyPresenter<TViewModel, TResponse>(SearchType searchType, TResponse dataContext)
         where TViewModel : class, IPresenterViewModel<TResponse>
         where TResponse : class
     {
-        var presenter = _searchPresenterProvider.GetPresenter<TViewModel, TResponse>(identifier);
+        var presenter = _searchPresenterProvider.GetPresenter<TViewModel, TResponse>(searchType);
 
         if (presenter is UserControl control)
         {
@@ -101,43 +139,64 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
             control.Width = ActualWidth;
             control.Height = ActualHeight;
 
-            presenter.ViewModel.PresenterDataContext = dataContext;
+            if (presenter.ViewModel.PresenterDataContext is null ||
+                !presenter.ViewModel.PresenterDataContext.Equals(dataContext))
+            {
+                presenter.ViewModel.PresenterDataContext = dataContext;
+            }
         }
     }
 
     public void OnNavigatedTo()
     {
-        var titleBar = AppCore.GetRequiredService<SearchTitleBar>();
-        titleBar.CheckedChanged += OnCheckedChanged;
-
-        if (DataContext is SearchAggregationModel model)
+        if (!HasNavigationTo)
         {
-            ViewModel.Model = model;
+            HasNavigationTo = true;
 
-            DataContext = this;
+            var titleBar = AppCore.GetRequiredService<SearchTitleBar>();
+            titleBar.CheckedChanged += OnCheckedChanged;
 
-            titleBar.DefaultPage.IsChecked = true;
+            if (DataContext is SearchAggregationModel model)
+            {
+                ViewModel.Model = model;
+
+                DataContext = this;
+            }
+
+            var navView = AppCore.GetRequiredService<INavigationService>().GetNavigationControl() as NavigationView;
+
+            if (navView?.Template.FindName("PART_NavigationViewContentPresenter", navView) is NavigationViewContentPresenter navPresenter)
+            {
+                ScrollViewer.SetCanContentScroll(navPresenter, false);
+                ScrollViewer.SetHorizontalScrollBarVisibility(navPresenter, ScrollBarVisibility.Disabled);
+                ScrollViewer.SetVerticalScrollBarVisibility(navPresenter, ScrollBarVisibility.Disabled);
+                ScrollViewer.SetIsDeferredScrollingEnabled(navPresenter, false);
+            }
+
+            var navigationHeaderUpdater = AppCore.GetRequiredService<INavigationHeaderUpdater>();
+            navigationHeaderUpdater.Show(titleBar);
+
+            AppCore.MainWindow.SizeChanged += OnWindowSizeChanged;
         }
-
-        var navView = AppCore.GetRequiredService<INavigationService>().GetNavigationControl() as NavigationView;
-
-        if (navView?.Template.FindName("PART_NavigationViewContentPresenter", navView) is NavigationViewContentPresenter navPresenter)
-        {
-            ScrollViewer.SetCanContentScroll(navPresenter, false);
-            ScrollViewer.SetHorizontalScrollBarVisibility(navPresenter, ScrollBarVisibility.Disabled);
-            ScrollViewer.SetVerticalScrollBarVisibility(navPresenter, ScrollBarVisibility.Disabled);
-            ScrollViewer.SetIsDeferredScrollingEnabled(navPresenter, false);
-        }
-
-        var navigationHeaderUpdater = AppCore.GetRequiredService<INavigationHeaderUpdater>();
-        navigationHeaderUpdater.Show(titleBar);
-
-        AppCore.MainWindow.SizeChanged += OnWindowSizeChanged;
     }
 
-    public async Task OnSearchAsync(SearchAggregationModel model)
+    public void OnSearch(SearchAggregationModel model)
     {
         ViewModel.Model = model;
+
+        var presenterViewModelsTypes = TypeResolveUtils
+            .GetDerivedTypes(typeof(IPresenterViewModel<>));
+
+        foreach (var vmType in presenterViewModelsTypes)
+        {
+            var method = typeof(IPresenterViewModel<>)
+                .MakeGenericType(vmType.GetInterface("IPresenterViewModel`1")!.GenericTypeArguments[0])
+                .GetMethod("ResetData");
+
+            var vm = AppCore.GetService(vmType);
+
+            method?.Invoke(vm, null);
+        }
 
         var titleBar = AppCore.GetRequiredService<SearchTitleBar>();
 
@@ -147,22 +206,45 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
 
     public void OnNavigatedFrom()
     {
-        var navigationHeaderUpdater = AppCore.GetRequiredService<INavigationHeaderUpdater>();
+        if (HasNavigationTo)
+        {
+            HasNavigationTo = false;
 
-        navigationHeaderUpdater.Hide();
+            _loaderProvider.Loaded();
 
-        var titleBar = AppCore.GetRequiredService<SearchTitleBar>();
-        titleBar.CheckedChanged -= OnCheckedChanged;
+            var navigationHeaderUpdater = AppCore.GetRequiredService<INavigationHeaderUpdater>();
 
-        AppCore.MainWindow.SizeChanged -= OnWindowSizeChanged;
+            navigationHeaderUpdater.Hide();
+
+            var titleBar = AppCore.GetRequiredService<SearchTitleBar>();
+            titleBar.CheckedChanged -= OnCheckedChanged;
+
+            AppCore.MainWindow.SizeChanged -= OnWindowSizeChanged;
+        }
     }
 
     private void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
     {
         if (Presenter.Children.Count > 0 && Presenter.Children[0] is FrameworkElement element)
         {
-            element.Width = e.NewSize.Width - 230;
+            if (e.Source is Window window)
+            {
+                element.Width = window.WindowState is WindowState.Maximized
+                    ? e.NewSize.Width - 240
+                    : e.NewSize.Width <= 1000 ? e.NewSize.Width - 92 : e.NewSize.Width - 230;
+            }
+
             element.Height = e.NewSize.Height;
+
+            var navView = AppCore.GetRequiredService<INavigationService>().GetNavigationControl() as NavigationView;
+
+            if (navView?.Template.FindName("PART_NavigationViewContentPresenter", navView) is NavigationViewContentPresenter navPresenter)
+            {
+                ScrollViewer.SetCanContentScroll(navPresenter, false);
+                ScrollViewer.SetHorizontalScrollBarVisibility(navPresenter, ScrollBarVisibility.Disabled);
+                ScrollViewer.SetVerticalScrollBarVisibility(navPresenter, ScrollBarVisibility.Disabled);
+                ScrollViewer.SetIsDeferredScrollingEnabled(navPresenter, false);
+            }
         }
     }
 }

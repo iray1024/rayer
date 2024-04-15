@@ -46,6 +46,8 @@
             </ui:TitleBar.Icon>
         </ui:TitleBar>
 
+        <ContentPresenter x:Name="Loader" />
+
         <ContentPresenter
             x:Name="RootContentDialog"
             Grid.Row="0"

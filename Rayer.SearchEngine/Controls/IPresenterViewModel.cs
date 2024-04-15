@@ -1,7 +1,17 @@
 ﻿namespace Rayer.SearchEngine.Controls;
 
-internal interface IPresenterViewModel<T>
+public interface IPresenterViewModel
+{
+
+}
+
+public interface IPresenterViewModel<T> : IPresenterViewModel
     where T : class
 {
     T PresenterDataContext { get; set; }
+
+    void ResetData()
+    {
+        PresenterDataContext = null!;
+    }
 }

@@ -4,5 +4,5 @@ namespace Rayer.SearchEngine.Abstractions;
 
 public interface ISearchAware
 {
-    public Task OnSearchAsync(SearchAggregationModel model);
+    public void OnSearch(SearchAggregationModel model);
 }
