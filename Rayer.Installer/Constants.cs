@@ -17,7 +17,6 @@ internal static class Constants
             Name = "Equalizer",
             Path = "Rayer.Installer.assets.equalizer.zip",
             IsReplace = false,
-            IsFolder = true,
             DestinationDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Rayer")
         }
     };

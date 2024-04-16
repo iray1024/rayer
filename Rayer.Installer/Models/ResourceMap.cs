@@ -12,7 +12,5 @@ public class ResourceMap
 
     public bool IsReplace { get; set; } = true;
 
-    public bool IsFolder { get; set; } = false;
-
     public Stream? ResourceStream { get; set; }
 }

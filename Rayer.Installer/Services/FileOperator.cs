@@ -47,11 +47,6 @@ public static class FileOperator
                 var entryPath = Path.Combine(resource.DestinationDirectory, zipEntry.Name);
                 var entryDir = Path.GetDirectoryName(entryPath);
 
-                if (zipEntry.IsDirectory && resource.IsFolder && !resource.IsReplace)
-                {
-                    break;
-                }
-
                 if (!Directory.Exists(entryDir) && entryDir is not null)
                 {
                     Directory.CreateDirectory(entryDir);
@@ -61,7 +56,7 @@ public static class FileOperator
 
                 if (!string.IsNullOrEmpty(fileName))
                 {
-                    if (File.Exists(fileName) && !resource.IsReplace)
+                    if (File.Exists(entryPath) && !resource.IsReplace)
                     {
                         continue;
                     }

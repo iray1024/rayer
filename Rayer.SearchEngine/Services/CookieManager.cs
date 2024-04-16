@@ -9,7 +9,7 @@ namespace Rayer.SearchEngine.Services;
 [Inject<ICookieManager>]
 internal partial class CookieManager : ICookieManager
 {
-    private readonly HttpClientHandler _handler = new();
+    private readonly HttpClientHandler _handler;
     private readonly CookieContainer _cookieContainer;
     private static readonly Uri _csrfUri = new("https://netease-cloud-music-api-rayer.vercel.app");
 
@@ -17,7 +17,12 @@ internal partial class CookieManager : ICookieManager
     {
         _cookieContainer = new CookieContainer();
 
-        _handler.CookieContainer = _cookieContainer;
+        _handler = new HttpClientHandler
+        {
+            Proxy = new WebProxy(new Uri("http://127.0.0.1:10809"), true),
+            UseProxy = true,
+            CookieContainer = _cookieContainer
+        };
     }
 
     public HttpClientHandler HttpClientHandler => _handler;

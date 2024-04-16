@@ -5,12 +5,17 @@ using System.Net.Http.Json;
 
 namespace Rayer.SearchEngine.Internal.Abstractions;
 
-internal abstract class RequestBase(IHttpClientProvider httpClientProvider)
+internal abstract class RequestBase
 {
-    private readonly HttpClient _httpClient = httpClientProvider.HttpClient;
+    private readonly HttpClient _httpClient;
 
     public const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36";
     public const string Cookie = "os=pc;osver=Microsoft-Windows-10-Professional-build-16299.125-64bit;appver=2.0.3.131777;channel=netease;__remember_me=true";
+
+    protected RequestBase(IHttpClientProvider httpClientProvider)
+    {
+        _httpClient = httpClientProvider.HttpClient;
+    }
 
     protected HttpClient HttpClient => _httpClient;
 

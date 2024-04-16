@@ -1,7 +1,9 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Framework.Injection;
+using Rayer.Core.Http.Abstractions;
 using Rayer.Core.PInvoke;
 using Rayer.SearchEngine.ViewModels;
+using System.Net.Http;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Animation;
@@ -117,7 +119,7 @@ public partial class DynamicIsland : Window
         }
     }
 
-    private void OnLoaded(object sender, RoutedEventArgs e)
+    private async void OnLoaded(object sender, RoutedEventArgs e)
     {
         SetInitializePosition();
 
@@ -132,6 +134,18 @@ public partial class DynamicIsland : Window
         var exStyle = Win32.User32.GetWindowLong(hwnd, Win32.User32.GWL_EXSTYLE);
 
         _ = Win32.User32.SetWindowLong(hwnd, Win32.User32.GWL_EXSTYLE, exStyle | Win32.User32.WS_EX_TOOLWINDOW);
+
+        var searchEngineOptions = AppCore.GetRequiredService<SearchEngineOptions>();
+        var httpClient = AppCore.GetRequiredService<IHttpClientProvider>();
+
+        try
+        {
+            await httpClient.HttpClient.GetAsync($"{searchEngineOptions.HttpEndpoint}");
+        }
+        catch (HttpRequestException)
+        {
+            searchEngineOptions.HttpEndpoint = "https://netease-cloud-music-api-rayer.vercel.app";
+        }
     }
 
     private void OnLocationChanged(object? sender, EventArgs e)
