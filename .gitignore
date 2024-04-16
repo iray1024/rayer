@@ -360,3 +360,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+Rayer.Installer/assets/wife.jpg
+Rayer/assets/fallback_mm.jpg

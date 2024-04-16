@@ -4,12 +4,9 @@
     <OutputType>WinExe</OutputType>    
     <UseWPF>true</UseWPF>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <ApplicationIcon>assets\logo.ico</ApplicationIcon>        
+    <ApplicationIcon>assets\logo.ico</ApplicationIcon>
+		<AssemblyName>Rayer</AssemblyName>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="assets\Snipaste_2024-04-15_12-59-59.png" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="assets\logo.ico" />
@@ -67,11 +64,8 @@
     <Resource Include="assets\maximum.png" />
     <Resource Include="assets\minimum.png" />
     <Resource Include="assets\power.png" />
-    <Resource Include="assets\Snipaste_2024-04-15_12-59-59.png" />
     <Resource Include="assets\vinyl.png" />
     <Resource Include="assets\微信图片_20240415125410.jpg" />
-    <Resource Include="assets\微信图片_20240415125420.jpg" />
-    <Resource Include="assets\微信图片_20240415125426.jpg" />
   </ItemGroup>  
 
 </Project>

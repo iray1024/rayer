@@ -5,8 +5,10 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <SignAssembly>True</SignAssembly>
-		<Authors>喵蛙王子丶</Authors>		
+		<Authors>喵蛙王子丶</Authors>
+		<Company>喵蛙王子丶</Company>
 		<Copyright>喵蛙王子丶</Copyright>
+		<Product>Rayer-Music</Product>
 	  <AssemblyOriginatorKeyFile>$(SolutionDir)rayer.snk</AssemblyOriginatorKeyFile> 
   </PropertyGroup>
 

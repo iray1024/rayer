@@ -1,0 +1,54 @@
+﻿<UserControl
+    x:Class="Rayer.Installer.Transitions.Slide3"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Rayer.Installer.Transitions"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <materialDesign:ColorZone
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Mode="Dark">
+        <Grid Margin="64,64,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" TextWrapping="Wrap">Rayer 追求极简主义</TextBlock>
+            <TextBlock
+                Grid.Row="1"
+                Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                TextWrapping="Wrap">
+                Rayer 基于.NET 8，天生的性能巨兽
+            </TextBlock>
+            <StackPanel
+                Grid.Row="2"
+                Margin="0,12,0,0"
+                Orientation="Horizontal">
+                <Button
+                    Margin="16"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}"
+                    Focusable="False"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniButton}">
+                    <materialDesign:PackIcon Kind="StepBackward" />
+                </Button>
+                <Button
+                    Margin="16"
+                    VerticalAlignment="Top"
+                    Command="{x:Static materialDesign:Transitioner.MoveNextCommand}"
+                    Focusable="False"
+                    Style="{StaticResource MaterialDesignFloatingActionButton}">
+                    <materialDesign:PackIcon Kind="StepForward" />
+                </Button>
+            </StackPanel>
+        </Grid>
+    </materialDesign:ColorZone>
+</UserControl>

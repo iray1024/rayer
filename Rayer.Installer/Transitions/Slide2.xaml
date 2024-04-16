@@ -1,0 +1,72 @@
+﻿<UserControl
+    x:Class="Rayer.Installer.Transitions.Slide2"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Rayer.Installer.Transitions"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <materialDesign:ColorZone
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        VerticalContentAlignment="Stretch"
+        Mode="PrimaryDark">
+        <StackPanel
+            Margin="0,0,0,20"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <TextBlock
+                Margin="0,0,0,10"
+                Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                TextAlignment="Center"
+                TextWrapping="Wrap">
+                Rayer 是一款极简设计的音乐播放器
+            </TextBlock>
+            <TextBlock
+                Margin="0,0,0,10"
+                Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                TextAlignment="Center"
+                TextWrapping="Wrap">
+                允许播放时实时配置音频的音调、均衡器
+            </TextBlock>
+            <TextBlock
+                Margin="0,0,0,10"
+                Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                TextAlignment="Center"
+                TextWrapping="Wrap">
+                有高度设计的沉浸式播放模式、还能自动获取网络歌词
+            </TextBlock>
+            <TextBlock
+                Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                TextAlignment="Center"
+                TextWrapping="Wrap">
+                还可以模拟你的用户态从网易云获取播放源
+            </TextBlock>
+            <StackPanel
+                Margin="0,20,0,0"
+                HorizontalAlignment="Center"
+                Orientation="Horizontal">
+                <Button
+                    Margin="16"
+                    VerticalAlignment="Center"
+                    Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}"
+                    Cursor="Hand"
+                    Focusable="False"
+                    Style="{DynamicResource MaterialDesignFloatingActionMiniButton}">
+                    <materialDesign:PackIcon Kind="StepBackward" />
+                </Button>
+                <Button
+                    Margin="16"
+                    Command="{x:Static materialDesign:Transitioner.MoveNextCommand}"
+                    Focusable="False"
+                    Style="{DynamicResource MaterialDesignFloatingActionButton}">
+                    <materialDesign:PackIcon Kind="StepForward" />
+                </Button>
+            </StackPanel>
+        </StackPanel>
+    </materialDesign:ColorZone>
+</UserControl>

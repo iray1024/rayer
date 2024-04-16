@@ -1,0 +1,153 @@
+﻿<Window
+    x:Class="Rayer.Installer.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Rayer.Installer"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:transitions="clr-namespace:Rayer.Installer.Transitions"
+    Title="MainWindow"
+    Width="800"
+    Height="450"
+    Background="#323232"
+    ResizeMode="NoResize"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="30" />
+    </WindowChrome.WindowChrome>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <materialDesign:ColorZone
+            Grid.Row="0"
+            Margin="0"
+            Padding="5"
+            VerticalAlignment="Top"
+            ClipToBounds="False"
+            Mode="PrimaryMid"
+            MouseDown="OnColorZoneMouseDown">
+            <Grid>
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="24"
+                    Text="Rayer Installer"
+                    TextOptions.TextHintingMode="Auto"
+                    TextOptions.TextRenderingMode="ClearType" />
+                <Button
+                    x:Name="BtnClose"
+                    Width="35"
+                    Height="35"
+                    Margin="0,10,10,10"
+                    HorizontalAlignment="Right"
+                    Click="OnCloseClick"
+                    Cursor="Hand"
+                    Focusable="False"
+                    Foreground="White"
+                    Style="{StaticResource MaterialDesignIconButton}"
+                    WindowChrome.IsHitTestVisibleInChrome="True">
+                    <materialDesign:PackIcon
+                        Width="25"
+                        Height="25"
+                        Cursor="Hand"
+                        Kind="CloseThick" />
+                </Button>
+            </Grid>
+        </materialDesign:ColorZone>
+
+        <materialDesign:Transitioner
+            x:Name="Transitioner"
+            Grid.Row="1"
+            AutoApplyTransitionOrigins="True"
+            SelectedIndex="0">
+            <materialDesign:Transitioner.InputBindings>
+                <KeyBinding Key="Left" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" />
+                <KeyBinding Key="Right" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" />
+            </materialDesign:Transitioner.InputBindings>
+
+            <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect FadeIn}">
+                <transitions:Slide1 x:Name="StartPage" />
+            </materialDesign:TransitionerSlide>
+
+            <transitions:Slide2 />
+
+            <materialDesign:TransitionerSlide>
+                <materialDesign:TransitionerSlide.BackwardWipe>
+                    <materialDesign:CircleWipe />
+                </materialDesign:TransitionerSlide.BackwardWipe>
+                <materialDesign:TransitionerSlide.ForwardWipe>
+                    <materialDesign:SlideWipe Direction="Right" />
+                </materialDesign:TransitionerSlide.ForwardWipe>
+                <transitions:Slide3 />
+            </materialDesign:TransitionerSlide>
+
+            <materialDesign:TransitionerSlide
+                Background="{DynamicResource MaterialDesignDarkBackground}"
+                ClipToBounds="True"
+                Foreground="{DynamicResource MaterialDesignDarkForeground}">
+                <materialDesign:TransitionerSlide.OpeningEffects>
+                    <materialDesign:TransitionEffect Kind="SlideInFromLeft" Duration="0:0:0.8" />
+                    <materialDesign:TransitionEffect
+                        Kind="SlideInFromBottom"
+                        OffsetTime="0:0:0.15"
+                        Duration="0:0:0.8" />
+                </materialDesign:TransitionerSlide.OpeningEffects>
+                <transitions:Slide4 x:Name="EndPage" Margin="0,-12,0,0" />
+            </materialDesign:TransitionerSlide>
+
+        </materialDesign:Transitioner>
+
+        <ProgressBar
+            x:Name="ProgressBar"
+            Grid.RowSpan="2"
+            Height="10"
+            VerticalAlignment="Bottom"
+            BorderBrush="#00000000"
+            Foreground="#FF6A2BF3"
+            Maximum="100"
+            Minimum="0"
+            Visibility="Collapsed" />
+        <materialDesign:DialogHost
+            Grid.RowSpan="3"
+            DialogTheme="Inherit"
+            Identifier="RootDialog">
+            <materialDesign:DialogHost.DialogContent>
+                <Border
+                    x:Name="RuntimeForce"
+                    Padding="20"
+                    CornerRadius="6">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                            Grid.Row="0"
+                            FontSize="18"
+                            FontWeight="DemiBold">
+                            <Hyperlink
+                                x:Name="DotnetDownload"
+                                Click="OnNavigateToDownloadClick"
+                                NavigateUri="https://dotnet.microsoft.com/download/dotnet">
+                                请自行前往下载并安装.NET 8.0 Desktop Runtime(x64)
+                            </Hyperlink>
+                        </TextBlock>
+
+                        <Button
+                            Grid.Row="1"
+                            Width="60"
+                            Height="35"
+                            Margin="0,20,0,0"
+                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                            Content="好的" />
+                    </Grid>
+                </Border>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+    </Grid>
+</Window>
