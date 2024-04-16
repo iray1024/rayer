@@ -65,7 +65,7 @@
     <Resource Include="assets\minimum.png" />
     <Resource Include="assets\power.png" />
     <Resource Include="assets\vinyl.png" />
-    <Resource Include="assets\微信图片_20240415125410.jpg" />
+    <Resource Include="assets\fallback_mm.jpg" />
   </ItemGroup>  
 
 </Project>
