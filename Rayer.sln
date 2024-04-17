@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rayer.IntegrationTest", "Ra
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{7D1A8418-4A70-4665-A711-40F7A015D740}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rayer.Installer", "Rayer.Installer\Rayer.Installer.csproj", "{8197DC09-6D90-4D70-8C4D-3D8DF3AC24C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rayer.Installer", "Rayer.Installer\Rayer.Installer.csproj", "{8197DC09-6D90-4D70-8C4D-3D8DF3AC24C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
