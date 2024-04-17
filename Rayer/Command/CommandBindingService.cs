@@ -89,8 +89,8 @@ internal class CommandBindingService : ICommandBinding
         {
             if (parameter.Scope is ContextMenuScope.PlayQueue)
             {
-                if (_audioManager.Playback.Audio.Equals(parameter.Audio) &&
-                    _audioManager.Playback.Playing)
+                if (_audioManager.Playback.Playing &&
+                    _audioManager.Playback.Audio.Equals(parameter.Audio))
                 {
                     if (_audioManager.Playback.Queue.Count > 1)
                     {

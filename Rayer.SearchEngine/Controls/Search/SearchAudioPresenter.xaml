@@ -59,7 +59,7 @@
                         <TextBlock
                             Grid.Row="0"
                             Grid.Column="1"
-                            MaxWidth="{Binding ViewModel.ArtistsNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAudioPresenter}, NotifyOnSourceUpdated=True}"
+                            MaxWidth="{Binding ViewModel.ArtistsNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAudioPresenter}}"
                             Margin="6,8,0,0"
                             HorizontalAlignment="Left"
                             FontSize="14"
