@@ -32,8 +32,7 @@ public partial class App : Application
 
             services.AddRayerCore();
             services.AddSearchEngine(builder =>
-            {
-                //builder.SetHttpEndpoint("https://netease-cloud-music-api-rayer.vercel.app");
+            {                
                 builder.SetHttpEndpoint("http://localhost:3000");
             });
 

@@ -6,6 +6,7 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ApplicationIcon>assets\logo.ico</ApplicationIcon>
 		<AssemblyName>Rayer</AssemblyName>
+		<StartupObject>Rayer.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

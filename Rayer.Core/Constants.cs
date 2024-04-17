@@ -22,4 +22,11 @@ public static class Constants
         public static KeyBinding KeyForward { get; } = new KeyBinding() { Key = Key.Right };
         public static KeyBinding KeyRewind { get; } = new KeyBinding() { Key = Key.Left };
     }
+
+    public static class SingleInstance
+    {
+        public const string UniqueAppName = "RAYER:MM";
+
+        public static string PipeServerName { get; } = UniqueAppName + Environment.UserName;
+    }
 }

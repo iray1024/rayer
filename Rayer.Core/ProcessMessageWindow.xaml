@@ -8,6 +8,7 @@
     Title="ProcessMessageWindow"
     Width="800"
     Height="450"
+    Closing="OnClosing"
     ShowInTaskbar="False"
     Visibility="Hidden"
-    mc:Ignorable="d" SourceInitialized="OnSourceInitialized" Closing="OnClosing" />
+    mc:Ignorable="d" />

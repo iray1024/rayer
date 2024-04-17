@@ -9,6 +9,15 @@ internal static partial class Win32
     {
         public const string LibraryName = "user32";
 
+        public static readonly int WM_SHOWRAYER = RegisterWindowMessage("WM_SHOWRAYER");
+
+        [LibraryImport(LibraryName, EntryPoint = "RegisterWindowMessageA", StringMarshalling = StringMarshalling.Utf16)]
+        private static partial int RegisterWindowMessage(string message);
+
+        [LibraryImport(LibraryName)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static partial bool PostMessage(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam);
+
         [LibraryImport("user32.dll", EntryPoint = "GetWindowLongA")]
         internal static partial int GetWindowLong(IntPtr hWnd, int nIndex);
 

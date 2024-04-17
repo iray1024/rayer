@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 using static Rayer.Core.PInvoke.Win32.User32;
 
 namespace Rayer.Core;
@@ -45,18 +46,23 @@ public partial class ProcessMessageWindow : Window
         Left = -99999;
     }
 
-    public void ToggleProcess()
+    protected override void OnSourceInitialized(EventArgs e)
     {
-        IsProcess = !IsProcess;
-    }
+        base.OnSourceInitialized(e);
 
-    private void OnSourceInitialized(object sender, EventArgs e)
-    {
         var hInstance = Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]);
 
         KeyboardHookDelegate = new KeyboardHookProc(KeyboardHookProcHandler);
 
         _hookId = SetWindowsHookEx(13, KeyboardHookDelegate, hInstance, 0);
+
+        var source = PresentationSource.FromVisual(this) as HwndSource;
+        source?.AddHook(ProgramHook);
+    }
+
+    public void ToggleProcess()
+    {
+        IsProcess = !IsProcess;
     }
 
     private void OnClosing(object sender, CancelEventArgs e)
@@ -141,5 +147,15 @@ public partial class ProcessMessageWindow : Window
         {
             _playbarService.Rewind();
         }
+    }
+
+    private IntPtr ProgramHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        if (msg == WM_SHOWRAYER)
+        {
+            AppCore.MainWindow.WindowState = WindowState.Normal;
+        }
+
+        return IntPtr.Zero;
     }
 }
