@@ -93,6 +93,7 @@ public partial class MainWindow : Window
         {
             Application.Current.Dispatcher.InvokeAsync(async () =>
             {
+                StartPage.BtnInstall.ToolTip = "已安装";
                 EndPage.BtnComplete.IsEnabled = true;
                 BtnClose.IsEnabled = true;
 
