@@ -4,13 +4,12 @@ using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.SearchEngine.Abstractions;
-using Rayer.SearchEngine.ViewModels;
-using Rayer.SearchEngine.Views.Pages;
 using Rayer.SearchEngine.Views.Windows;
 using Rayer.ViewModels;
 using Rayer.Views.Pages;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
@@ -33,7 +32,7 @@ public partial class MainWindow : IWindow
         ILoaderProvider loaderProvider)
     {
         SystemThemeWatcher.Watch(this);
-        
+
         ViewModel = viewModel;
         DataContext = this;
 
@@ -79,22 +78,6 @@ public partial class MainWindow : IWindow
         }
 
         PageHeader.Text = navigationView.SelectedItem?.Content.ToString();
-
-        if (navigationView.SelectedItem?.TargetPageType == typeof(SearchPage))
-        {
-            NavigationView.HeaderVisibility = Visibility.Visible;
-            PageHeaderContainer.Visibility = Visibility.Visible;
-            if (App.GetRequiredService<SearchViewModel>() is { Model: null })
-            {
-                NavigationView.GoBack();
-
-                var navigationHeaderUpdater = AppCore.GetRequiredService<INavigationHeaderUpdater>();
-
-                navigationHeaderUpdater.Hide();
-
-                AutoSuggest.Focus();
-            }
-        }
     }
 
     private void OnThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)
@@ -160,9 +143,9 @@ public partial class MainWindow : IWindow
         await ViewModel.OnAutoSuggestQuerySubmitted(args);
     }
 
-    private async void OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+    private void OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
     {
-        await ViewModel.OnAutoSuggestChosen(args);
+        ViewModel.OnAutoSuggestChosen(args);
     }
 
     private void OnClosing(object sender, CancelEventArgs e)
@@ -198,5 +181,14 @@ public partial class MainWindow : IWindow
     private void OnAutoSuggestLostFocus(object sender, RoutedEventArgs e)
     {
         _toggleProcess();
+    }
+
+    private async void OnAutoSuggestPreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (AutoSuggest.IsSuggestionListOpen &&
+            e.Key is Key.Enter)
+        {
+            await ViewModel.OnUserRaiseAutoSuggestChosen(AutoSuggest);
+        }
     }
 }

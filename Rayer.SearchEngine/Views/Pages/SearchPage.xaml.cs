@@ -173,7 +173,7 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
                 ScrollViewer.SetIsDeferredScrollingEnabled(navPresenter, false);
             }
 
-            var navigationHeaderUpdater = AppCore.GetRequiredService<INavigationHeaderUpdater>();
+            var navigationHeaderUpdater = AppCore.GetRequiredService<INavigationCustomHeaderController>();
             navigationHeaderUpdater.Show(titleBar);
 
             AppCore.MainWindow.SizeChanged += OnWindowSizeChanged;
@@ -212,7 +212,7 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
 
             _loaderProvider.Loaded();
 
-            var navigationHeaderUpdater = AppCore.GetRequiredService<INavigationHeaderUpdater>();
+            var navigationHeaderUpdater = AppCore.GetRequiredService<INavigationCustomHeaderController>();
 
             navigationHeaderUpdater.Hide();
 

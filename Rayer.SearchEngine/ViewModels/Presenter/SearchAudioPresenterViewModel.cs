@@ -35,7 +35,7 @@ public partial class SearchAudioPresenterViewModel : ObservableObject, IPresente
     private double _durationMaxHeight = 35;
 
     [ObservableProperty]
-    private Thickness _itemMargin = new (0,0,28,0);
+    private Thickness _itemMargin = new(0, 0, 28, 0);
 
     public SearchAudioPresenterViewModel(
         ISearchAudioEngine audioEngine,
@@ -61,7 +61,8 @@ public partial class SearchAudioPresenterViewModel : ObservableObject, IPresente
             Path = audioInfomation.Data.FirstOrDefault()?.Url ?? string.Empty
         };
 
-        if (_settingsService.Settings.PlaySingleAudioStrategy is PlaySingleAudioStrategy.AddToQueue)
+        // 后续需要实现同时加入所有搜索项进入播放队列时，去除true
+        if (true || _settingsService.Settings.PlaySingleAudioStrategy is PlaySingleAudioStrategy.AddToQueue)
         {
             var index = _audioManager.Playback.Queue.IndexOf(audio);
 
@@ -69,11 +70,6 @@ public partial class SearchAudioPresenterViewModel : ObservableObject, IPresente
             {
                 _audioManager.Playback.Queue.Add(audio);
             }
-        }
-        else
-        {
-            //_audioManager.Playback.Queue.Clear();
-
         }
 
         await _audioManager.Playback.Play(audio);

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Business.Search.Abstractions;
 using Rayer.SearchEngine.Models.Response.Search;
+using System.Net.Http;
 
 namespace Rayer.SearchEngine.ViewModels;
 
@@ -28,13 +29,20 @@ public partial class SearchViewModel : ObservableObject
         }
         else
         {
-            var ids = string.Join(',', Model.Audio.Result.Songs.Select(x => x.Id));
+            if (Model.Audio.Code == 200)
+            {
+                var ids = string.Join(',', Model.Audio.Result.Songs.Select(x => x.Id));
 
-            var newResponse = await _audioEngine.SearchDetailAsync(ids);
+                var newResponse = await _audioEngine.SearchDetailAsync(ids);
 
-            _cache.Set(Model.Audio, newResponse, TimeSpan.FromMinutes(10));
+                _cache.Set(Model.Audio, newResponse, TimeSpan.FromMinutes(10));
 
-            return newResponse;
+                return newResponse;
+            }
+            else
+            {
+                throw new HttpRequestException("请求服务器失败");
+            }
         }
     }
 

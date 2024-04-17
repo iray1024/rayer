@@ -84,7 +84,8 @@
                     Focusable="True"
                     GotFocus="OnAutoSuggestGotFocus"
                     LostFocus="OnAutoSuggestLostFocus"
-                    PlaceholderText="搜索" />
+                    PlaceholderText="搜索"
+                    PreviewKeyDown="OnAutoSuggestPreviewKeyDown" />
             </ui:NavigationView.AutoSuggestBox>
             <ui:NavigationView.ContentOverlay>
                 <Grid>

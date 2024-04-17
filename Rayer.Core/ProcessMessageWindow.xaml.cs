@@ -20,11 +20,14 @@ public partial class ProcessMessageWindow : Window
     private readonly IPlaybarService _playbarService;
     private readonly ISettingsService _settingsService;
 
-    private volatile int _isProcess = 1;
+    private int _isProcess = 1;
 
     private bool IsProcess
     {
+        [DebuggerStepThrough]
         get => _isProcess != 0;
+
+        [DebuggerStepThrough]
         set
         {
             _ = Interlocked.Exchange(ref _isProcess, value ? 1 : 0);

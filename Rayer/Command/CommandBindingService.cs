@@ -83,15 +83,23 @@ internal class CommandBindingService : ICommandBinding
 
     }
 
-    private void Delete(object? sender)
+    private async void Delete(object? sender)
     {
         if (sender is AudioCommandParameter parameter)
         {
             if (parameter.Scope is ContextMenuScope.PlayQueue)
             {
-                if (_audioManager.Playback.Audio.Equals(parameter.Audio))
+                if (_audioManager.Playback.Audio.Equals(parameter.Audio) &&
+                    _audioManager.Playback.Playing)
                 {
-                    _audioManager.Playback.EndPlay();
+                    if (_audioManager.Playback.Queue.Count > 1)
+                    {
+                        await _audioManager.Playback.Next();
+                    }
+                    else
+                    {
+                        _audioManager.Playback.EndPlay();
+                    }
                 }
 
                 _audioManager.Playback.Queue.Remove(parameter.Audio);

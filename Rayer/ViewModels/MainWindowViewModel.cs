@@ -17,6 +17,9 @@ public partial class MainWindowViewModel : ObservableObject
     private readonly ISearchEngine _searchEngine;
     private readonly INavigationService _navigationService;
 
+    private string _currentSuggestText = string.Empty;
+    private bool _userRaiseClickSuggestItem = false;
+
     public MainWindowViewModel(
         ISearchEngine searchEngine,
         INavigationService navigationService)
@@ -35,6 +38,7 @@ public partial class MainWindowViewModel : ObservableObject
         _navigationService = navigationService;
     }
 
+    #region Properties    
     [ObservableProperty]
     private string _applicationTitle = "Rayer-Music";
 
@@ -56,31 +60,46 @@ public partial class MainWindowViewModel : ObservableObject
         new MenuItem { Header = "本地音乐", Tag = "tray_audioLibrary" },
         new MenuItem { Header = "退出", Tag = "tray_exit" }
     ];
+    #endregion
 
     public async Task OnAutoSuggestTextChanged(AutoSuggestBoxTextChangedEventArgs args)
     {
-        if (args.Reason is AutoSuggestionBoxTextChangeReason.UserInput && args.Source is AutoSuggestBox box)
+        if (args.Source is AutoSuggestBox box)
         {
-            if (!string.IsNullOrEmpty(args.Text))
+            if (args.Reason is AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                var model = await _searchEngine.SuggestAsync(args.Text);
-
-                if (model is not null && model.Code == 200)
+                if (!string.IsNullOrEmpty(args.Text))
                 {
-                    box.ItemsSource = model.Result.Audios.Length > 0
-                        ? model.Result.Audios.Select(x => x.Name).ToList()
-                        : null;
+                    args.Handled = true;
+
+                    var model = await _searchEngine.SuggestAsync(args.Text);
+
+                    if (model is not null && model.Code == 200)
+                    {
+                        box.ItemsSource = model.Result.Audios.Length > 0
+                            ? model.Result.Audios.Select(x => x.Name).ToList()
+                            : null;
+                    }
+                }
+                else
+                {
+                    box.ItemsSource = MenuItems.Cast<NavigationViewItem>().Select(x => x.Name);
                 }
             }
-            else
+            else if (args.Reason is AutoSuggestionBoxTextChangeReason.ProgrammaticChange && _userRaiseClickSuggestItem)
             {
-                box.ItemsSource = MenuItems.Cast<NavigationViewItem>().Select(x => x.Name);
+                _userRaiseClickSuggestItem = false;
+                _ = Interlocked.Exchange(ref _currentSuggestText, args.Text);
+
+                await OnUserRaiseAutoSuggestChosen(box);
             }
         }
     }
 
     public async Task OnAutoSuggestQuerySubmitted(AutoSuggestBoxQuerySubmittedEventArgs args)
     {
+        args.Handled = true;
+
         var model = await _searchEngine.SearchAsync(args.QueryText, AppCore.StoppingToken);
 
         if (_navigationService.GetNavigationControl().SelectedItem?.TargetPageType != typeof(SearchPage))
@@ -93,11 +112,33 @@ public partial class MainWindowViewModel : ObservableObject
         searchAware.OnSearch(model);
     }
 
-    public async Task OnAutoSuggestChosen(AutoSuggestBoxSuggestionChosenEventArgs args)
+    public void OnAutoSuggestChosen(AutoSuggestBoxSuggestionChosenEventArgs args)
     {
-        if (args.SelectedItem is string { Length: > 0 } queryText)
+        if (args.Source is AutoSuggestBox box)
         {
-            var model = await _searchEngine.SearchAsync(queryText, AppCore.StoppingToken);
+            if (box is { Text.Length: > 0, IsSuggestionListOpen: true } &&
+            args.SelectedItem is string { Length: > 0 } queryText)
+            {
+                args.Handled = true;
+
+                _ = Interlocked.Exchange(ref _currentSuggestText, queryText);
+            }
+            else
+            {
+                _userRaiseClickSuggestItem = true;
+            }
+        }
+    }
+
+    public async Task OnUserRaiseAutoSuggestChosen(AutoSuggestBox source)
+    {
+        if (!string.IsNullOrEmpty(_currentSuggestText))
+        {
+            source.Text = _currentSuggestText;
+
+            var model = await _searchEngine.SearchAsync(_currentSuggestText, AppCore.StoppingToken);
+
+            _ = Interlocked.Exchange(ref _currentSuggestText, string.Empty);
 
             if (_navigationService.GetNavigationControl().SelectedItem?.TargetPageType != typeof(SearchPage))
             {

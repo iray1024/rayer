@@ -34,7 +34,7 @@ public partial class SearchAudioPresenter : UserControl, IPresenterControl<Searc
         }
     }
 
-    private void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
+    private void OnLoaded(object sender, RoutedEventArgs e)
     {
         AppCore.MainWindow.SizeChanged += OnSizeChanged;
 
@@ -45,7 +45,7 @@ public partial class SearchAudioPresenter : UserControl, IPresenterControl<Searc
         ViewModel.AlbumNameMaxHeight = panelWidth + 80;
     }
 
-    private void OnUnloaded(object sender, System.Windows.RoutedEventArgs e)
+    private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         AppCore.MainWindow.SizeChanged -= OnSizeChanged;
     }

@@ -77,5 +77,9 @@ public partial class VolumePanel : UserControl
 
             });
         }
+        else
+        {
+            Flyout.Placement = PlacementMode.Top;
+        }
     }
 }

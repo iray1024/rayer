@@ -1,6 +1,5 @@
 ﻿using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
-using Rayer.SearchEngine.Views.Pages;
 using Rayer.SearchEngine.Views.Pages.Explore;
 using System.Windows;
 using System.Windows.Media;
@@ -43,15 +42,15 @@ internal class NavigationMenuPlugin : INavigationMenuPlugin
             },
             TargetPageTag = "User"
         },
-        new NavigationViewItem("搜索", SymbolRegular.Home24, typeof(SearchPage))
-        {
-            Icon = new ImageIcon()
-            {
-                Source = (ImageSource)Application.Current.Resources["Search"],
-                Width = 24,
-                Height = 24,
-            },
-            TargetPageTag = "Search"
-        }
+        //new NavigationViewItem("搜索", SymbolRegular.Home24, typeof(SearchPage))
+        //{
+        //    Icon = new ImageIcon()
+        //    {
+        //        Source = (ImageSource)Application.Current.Resources["Search"],
+        //        Width = 24,
+        //        Height = 24,
+        //    },
+        //    TargetPageTag = "Search"
+        //}
     ];
 }

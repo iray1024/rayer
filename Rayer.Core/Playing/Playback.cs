@@ -371,7 +371,7 @@ public class Playback : IDisposable
         {
             await PlayRepeat();
         }
-        else
+        else if (Playing)
         {
             await Next(true);
         }
