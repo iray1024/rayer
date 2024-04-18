@@ -15,7 +15,10 @@
     Unloaded="OnUnloaded"
     mc:Ignorable="d">
     <Grid>
-        <ItemsControl d:ItemsSource="{d:SampleData ItemCount=12}" ItemsSource="{Binding ViewModel.Playlist}">
+        <ItemsControl
+            x:Name="ItemGroup"
+            d:ItemsSource="{d:SampleData ItemCount=12}"
+            ItemsSource="{Binding ViewModel.Playlist}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid
@@ -28,10 +31,13 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Border
+                        x:Name="PART_Border"
                         Width="{Binding ViewModel.CoverMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailPlaylistPanel}}"
                         Margin="6,0,0,12"
                         HorizontalAlignment="Left"
-                        VerticalAlignment="Top">
+                        VerticalAlignment="Top"
+                        MouseEnter="OnMouseEnter"
+                        MouseLeave="OnMouseLeave">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto" />
@@ -42,20 +48,24 @@
                                 <ColumnDefinition Width="auto" />
                                 <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
-                            <Image
+                            <Grid
+                                Name="CoverGrid"
                                 Grid.Row="0"
                                 Grid.ColumnSpan="2"
-                                Width="{Binding ViewModel.CoverMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailPlaylistPanel}}"
-                                Height="{Binding ViewModel.CoverMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailPlaylistPanel}}"
-                                Margin="0,0,12,0"
-                                Source="{Binding Cover, IsAsync=True}">
-                                <Image.Clip>
-                                    <RectangleGeometry
-                                        RadiusX="6"
-                                        RadiusY="6"
-                                        Rect="{Binding ViewModel.CoverClip, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailPlaylistPanel}}" />
-                                </Image.Clip>
-                            </Image>
+                                Margin="0,0,12,2"
+                                ClipToBounds="True">
+                                <ui:Image
+                                    x:Name="Cover"
+                                    Width="{Binding ViewModel.CoverMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailPlaylistPanel}}"
+                                    Height="{Binding ViewModel.CoverMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailPlaylistPanel}}"
+                                    CornerRadius="6"
+                                    Cursor="Hand"
+                                    RenderOptions.BitmapScalingMode="Fant"
+                                    Source="{Binding Cover, IsAsync=True}" />
+                                <Grid.Clip>
+                                    <RectangleGeometry />
+                                </Grid.Clip>
+                            </Grid>
                             <ui:TextBlock
                                 Grid.Row="1"
                                 Grid.ColumnSpan="2"

@@ -2,7 +2,7 @@
 using Rayer.Core;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Business.Data.Abstractions;
-using System.Windows;
+using System.Windows.Media;
 using static Rayer.SearchEngine.Models.Response.User.UserPlaylistResponse;
 
 namespace Rayer.SearchEngine.ViewModels.Explore.LibraryDetail;
@@ -19,7 +19,7 @@ public partial class ExploreLibraryDetailPlaylistViewModel : ObservableObject
     private double _coverMaxWidth = 128;
 
     [ObservableProperty]
-    private Rect _coverClip = new(0, 0, 128, 128);
+    private RectangleGeometry _coverRectClip = new(new(0, 0, 128, 128), 6, 6);
 
     public ExploreLibraryDetailPlaylistViewModel()
     {

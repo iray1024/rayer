@@ -18,7 +18,7 @@
     <Grid Name="ViewPanel" Visibility="Collapsed">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
-            <RowDefinition Height="220" />
+            <RowDefinition Height="250" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>

@@ -29,6 +29,34 @@ public static class ElementHelper
         }
     }
 
+    public static T FindVisualChild<T>(DependencyObject container)
+        where T : DependencyObject
+    {
+        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(container); i++)
+        {
+            var child = VisualTreeHelper.GetChild(container, i);
+
+            if (child is not null)
+            {
+                if (child is T tChild)
+                {
+                    return tChild;
+                }
+                else
+                {
+                    var childOfChild = FindVisualChild<T>(child);
+
+                    if (childOfChild != null)
+                    {
+                        return childOfChild;
+                    }
+                }
+            }
+        }
+
+        return null!;
+    }
+
     public static void FullScreen(Window window)
     {
         var hwnd = new WindowInteropHelper(window).Handle;
