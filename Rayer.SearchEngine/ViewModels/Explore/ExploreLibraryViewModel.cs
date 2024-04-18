@@ -8,8 +8,10 @@ using Rayer.SearchEngine.Business.Login.Abstractions;
 using Rayer.SearchEngine.Business.Lyric.Abstractions;
 using Rayer.SearchEngine.Business.Playlist.Abstractions;
 using Rayer.SearchEngine.Business.User.Abstractions;
+using Rayer.SearchEngine.Extensions;
 using Rayer.SearchEngine.Models.Domian;
 using Rayer.SearchEngine.Models.Response.Login.User;
+using Rayer.SearchEngine.Models.Response.User;
 using Rayer.SearchEngine.Views.Windows;
 using System.Windows;
 using System.Windows.Threading;
@@ -114,7 +116,7 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
             LoginSucceed?.Invoke(this, EventArgs.Empty);
         }
         else
-        {            
+        {
             AppCore.GetRequiredService<INavigationService>().Navigate("本地音乐");
         }
 
@@ -143,8 +145,8 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
             var playlistDetail = await _playlistService.GetPlaylistDetailAsync(userPlaylists.Playlist[0].Id);
 
             Model.LikeCount = userPlaylists.Playlist[0].TrackCount;
-            Model.PainedLikeAudios = playlistDetail.Playlist.Tracks.Take(12).ToArray();
-            Model.TotalLikeAudios = playlistDetail.Playlist.Tracks;
+            Model.TotalLikeAudios = MapToAudioDetail(playlistDetail, playlistDetail.Playlist.TrackCount);
+            Model.PainedLikeAudios = Model.TotalLikeAudios[..12];
 
             var randomAudio = playlistDetail.Playlist.Tracks[Random.Shared.Next(0, Model.LikeCount - 1)];
             Model.RandomLyrics = await GetRandomLyricsAsync(randomAudio.Id, randomAudio.Name);
@@ -207,5 +209,35 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
         }
 
         return Model.RandomLyrics;
+    }
+
+    private static AudioDetail[] MapToAudioDetail(PlaylistDetailResponse response, int count)
+    {
+        var tracks = response.Playlist.Tracks;
+        var privileges = response.Privileges;
+
+        var audioDetails = new AudioDetail[count];
+
+        for (var i = 0; i < count; i++)
+        {
+            var audio = audioDetails[i] = new AudioDetail();
+            var track = tracks[i];
+            var privilege = privileges[i];
+
+            audio.Id = track.Id;
+            audio.Name = track.Name;
+            audio.Artists = track.Artists;
+            audio.Album = track.Album;
+            audio.Pop = track.Pop;
+            audio.Fee = track.Fee;
+            audio.Duration = track.Duration;
+            audio.OriginCoverType = track.OriginCoverType;
+            audio.NoCopyright = track.NoCopyright;
+            audio.Privilege = privilege;
+
+            audio.Playable();
+        }
+
+        return audioDetails;
     }
 }

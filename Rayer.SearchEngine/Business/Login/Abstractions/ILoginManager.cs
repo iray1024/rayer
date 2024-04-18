@@ -4,6 +4,8 @@ namespace Rayer.SearchEngine.Business.Login.Abstractions;
 
 public interface ILoginManager
 {
+    AccountInfoResponse AccountInfo { get; }
+
     IPhoneService UsePhone();
 
     IQrCodeService UseQrCode();

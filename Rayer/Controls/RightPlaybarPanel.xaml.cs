@@ -116,6 +116,10 @@ public partial class RightPlaybarPanel : UserControl
             {
                 ViewModel.Items.RemoveAt(e.OldStartingIndex);
             }
+            else if (e.Action is NotifyCollectionChangedAction.Reset)
+            {
+                ViewModel.Items.Clear();
+            }
 
             ViewModel.QueueCount = $"共{ViewModel.Items.Count}首歌曲";
         });

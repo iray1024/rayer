@@ -6,6 +6,7 @@ using Rayer.Core.Events;
 using Rayer.Core.Models;
 using Rayer.Core.PlayControl.Abstractions;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Threading;
 using Wpf.Ui;
@@ -310,6 +311,24 @@ public class Playback : IDisposable
         Audio = _fallbackAudio;
 
         AudioStopped?.Invoke(this, EventArgs.Empty);
+    }
+
+    [return: MaybeNull]
+    public bool TryGetAudio(long id, out Audio audio)
+    {
+        audio = null!;
+
+        foreach (var item in Queue)
+        {
+            if (item.Id == id)
+            {
+                audio = item;
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public async Task Next(bool isEventTriggered = false)

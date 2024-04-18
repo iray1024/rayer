@@ -1,4 +1,10 @@
-﻿using Rayer.Core.Utils;
+﻿using Rayer.Core;
+using Rayer.Core.Abstractions;
+using Rayer.Core.Models;
+using Rayer.Core.Utils;
+using Rayer.SearchEngine.Business.Search.Abstractions;
+using Rayer.SearchEngine.Internal.Effects;
+using Rayer.SearchEngine.Models.Domian;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -9,11 +15,18 @@ namespace Rayer.SearchEngine.Controls.Explore;
 
 public partial class ExploreLibraryPainedAudioPanel : UserControl
 {
+    private readonly IAudioManager _audioManager;
+
     private readonly Storyboard _hoverableControlStoryboard = new();
 
     public ExploreLibraryPainedAudioPanel()
     {
         InitializeComponent();
+
+        _audioManager = AppCore.GetRequiredService<IAudioManager>();
+
+        _audioManager.AudioChanged += OnAudioChanged;
+        _audioManager.AudioStopped += OnAudioStopped;
     }
 
     public static readonly DependencyProperty IsCheckedProperty =
@@ -22,6 +35,14 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
                 typeof(bool),
                 typeof(ExploreLibraryPainedAudioPanel),
                 new PropertyMetadata(false)
+            );
+
+    public static readonly DependencyProperty IsPlayableProperty =
+            DependencyProperty.RegisterAttached(
+                "IsPlayable",
+                typeof(bool),
+                typeof(ExploreLibraryPainedAudioPanel),
+                new PropertyMetadata(true)
             );
 
     public static bool GetIsChecked(DependencyObject obj)
@@ -34,9 +55,29 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
         obj.SetValue(IsCheckedProperty, value);
     }
 
+    public static bool GetIsPlayable(DependencyObject obj)
+    {
+        return (bool)obj.GetValue(IsPlayableProperty);
+    }
+
+    public static void SetIsPlayable(DependencyObject obj, bool value)
+    {
+        obj.SetValue(IsPlayableProperty, value);
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void OnUnLoaded(object sender, RoutedEventArgs e)
+    {
+
+    }
+
     private async void OnMouseEnter(object sender, MouseEventArgs e)
     {
-        if (sender is Border border && GetIsChecked(border))
+        if (sender is Border border && (GetIsChecked(border) || !GetIsPlayable(border)))
         {
             return;
         }
@@ -69,7 +110,7 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
 
     private async void OnMouseLeave(object sender, MouseEventArgs e)
     {
-        if (sender is Border border && GetIsChecked(border))
+        if (sender is Border border && (GetIsChecked(border) || !GetIsPlayable(border)))
         {
             return;
         }
@@ -100,10 +141,16 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
         });
     }
 
-    private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    private async void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (e.ClickCount == 2 && sender is Border border)
+        if (e.ClickCount == 2 && sender is Border border &&
+            border.DataContext is AudioDetail detail)
         {
+            if (!GetIsPlayable(border))
+            {
+                return;
+            }
+
             var currentThemeBrush = (SolidColorBrush)Application.Current.Resources["ControlStrokeColorDefaultBrush"];
             var currentTextPrimaryBrush = (SolidColorBrush)Application.Current.Resources["TextFillColorPrimaryBrush"];
             var currentTextSecondaryBrush = (SolidColorBrush)Application.Current.Resources["TextFillColorSecondaryBrush"];
@@ -118,6 +165,60 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
 
                 if (vBorder is not null)
                 {
+                    if (GetIsPlayable(vBorder))
+                    {
+                        vBorder.Background = new SolidColorBrush(currentThemeBrush.Color)
+                        {
+                            Opacity = 0
+                        };
+
+                        if (vBorder.Child is Grid vInnerGrid)
+                        {
+                            ((Wpf.Ui.Controls.TextBlock)vInnerGrid.Children[1]).Foreground = new SolidColorBrush(currentTextPrimaryBrush.Color);
+                            ((Wpf.Ui.Controls.TextBlock)vInnerGrid.Children[2]).Foreground = new SolidColorBrush(currentTextSecondaryBrush.Color);
+                        }
+
+                        SetIsChecked(vBorder, false);
+                    }
+                }
+            }
+
+            if (GetIsPlayable(border))
+            {
+                border.Background = new SolidColorBrush(Color.FromRgb(187, 205, 255));
+
+                if (border.Child is Grid innerGrid)
+                {
+                    ((Wpf.Ui.Controls.TextBlock)innerGrid.Children[1]).Foreground = new SolidColorBrush(Color.FromRgb(51, 94, 234));
+                    ((Wpf.Ui.Controls.TextBlock)innerGrid.Children[2]).Foreground = new SolidColorBrush(Color.FromRgb(51, 94, 234));
+                }
+
+                SetIsChecked(border, true);
+
+                await Play(detail);
+            }
+        }
+    }
+
+    private void OnAudioChanged(object? sender, Core.Events.AudioChangedArgs e)
+    {
+        var currentThemeBrush = (SolidColorBrush)Application.Current.Resources["ControlStrokeColorDefaultBrush"];
+        var currentTextPrimaryBrush = (SolidColorBrush)Application.Current.Resources["TextFillColorPrimaryBrush"];
+        var currentTextSecondaryBrush = (SolidColorBrush)Application.Current.Resources["TextFillColorSecondaryBrush"];
+
+        foreach (var item in ItemGroup.Items)
+        {
+            var vItem = ItemGroup.ItemContainerGenerator.ContainerFromItem(item);
+
+            var presenter = ElementHelper.FindVisualChild<Border>(vItem);
+
+            var vBorder = presenter.FindName("PART_Border") as Border;
+
+            if (vBorder is not null &&
+                vBorder.DataContext is AudioDetail detail)
+            {
+                if (GetIsChecked(vBorder) && GetIsPlayable(vBorder) && detail.Id != e.New.Id)
+                {
                     vBorder.Background = new SolidColorBrush(currentThemeBrush.Color)
                     {
                         Opacity = 0
@@ -131,17 +232,130 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
 
                     SetIsChecked(vBorder, false);
                 }
+                else if (!GetIsChecked(vBorder) && GetIsPlayable(vBorder) && detail.Id == e.New.Id)
+                {
+                    vBorder.Background = new SolidColorBrush(Color.FromRgb(187, 205, 255));
+
+                    if (vBorder.Child is Grid vInnerGrid)
+                    {
+                        ((Wpf.Ui.Controls.TextBlock)vInnerGrid.Children[1]).Foreground = new SolidColorBrush(Color.FromRgb(51, 94, 234));
+                        ((Wpf.Ui.Controls.TextBlock)vInnerGrid.Children[2]).Foreground = new SolidColorBrush(Color.FromRgb(51, 94, 234));
+                    }
+
+                    SetIsChecked(vBorder, true);
+                }
             }
+        }
+    }
 
-            border.Background = new SolidColorBrush(Color.FromRgb(187, 205, 255));
+    private void OnAudioStopped(object? sender, EventArgs e)
+    {
+        var currentThemeBrush = (SolidColorBrush)Application.Current.Resources["ControlStrokeColorDefaultBrush"];
+        var currentTextPrimaryBrush = (SolidColorBrush)Application.Current.Resources["TextFillColorPrimaryBrush"];
+        var currentTextSecondaryBrush = (SolidColorBrush)Application.Current.Resources["TextFillColorSecondaryBrush"];
 
-            if (border.Child is Grid innerGrid)
+        foreach (var item in ItemGroup.Items)
+        {
+            var vItem = ItemGroup.ItemContainerGenerator.ContainerFromItem(item);
+
+            var presenter = ElementHelper.FindVisualChild<Border>(vItem);
+
+            var vBorder = presenter.FindName("PART_Border") as Border;
+
+            if (vBorder is not null && GetIsChecked(vBorder))
             {
-                ((Wpf.Ui.Controls.TextBlock)innerGrid.Children[1]).Foreground = new SolidColorBrush(Color.FromRgb(51, 94, 234));
-                ((Wpf.Ui.Controls.TextBlock)innerGrid.Children[2]).Foreground = new SolidColorBrush(Color.FromRgb(51, 94, 234));
-            }
+                vBorder.Background = new SolidColorBrush(currentThemeBrush.Color)
+                {
+                    Opacity = 0
+                };
 
-            SetIsChecked(border, true);
+                if (vBorder.Child is Grid vInnerGrid)
+                {
+                    ((Wpf.Ui.Controls.TextBlock)vInnerGrid.Children[1]).Foreground = new SolidColorBrush(currentTextPrimaryBrush.Color);
+                    ((Wpf.Ui.Controls.TextBlock)vInnerGrid.Children[2]).Foreground = new SolidColorBrush(currentTextSecondaryBrush.Color);
+                }
+
+                SetIsChecked(vBorder, false);
+            }
+        }
+    }
+
+    private static async Task Play(AudioDetail detail)
+    {
+        var audioEngine = AppCore.GetRequiredService<ISearchAudioEngine>();
+        var audioManager = AppCore.GetRequiredService<IAudioManager>();
+
+        var audioInformation = await audioEngine.GetAudioAsync(detail.Id);
+
+        if (!audioManager.Playback.TryGetAudio(detail.Id, out var existsAudio))
+        {
+            var audio = new Audio()
+            {
+                Id = detail.Id,
+                Title = detail.Name,
+                Artists = detail.Artists.Select(x => x.Name).ToArray(),
+                Album = detail.Album?.Name ?? string.Empty,
+                Cover = detail.Album?.Picture is not null ? ImageSourceUtils.Create(detail.Album.Picture) : null,
+                Duration = TimeSpan.FromMilliseconds(detail.Duration),
+                Path = audioInformation.Data.FirstOrDefault()?.Url ?? string.Empty
+            };
+
+            audioManager.Playback.Queue.Add(audio);
+
+            await audioManager.Playback.Play(audio);
+        }
+        else
+        {
+            await audioManager.Playback.Play(existsAudio);
+        }
+    }
+
+    private void OnItemDataLoaded(object sender, RoutedEventArgs e)
+    {
+        RefreshState();
+    }
+
+    private void RefreshState()
+    {
+        foreach (var item in ItemGroup.Items)
+        {
+            var vItem = ItemGroup.ItemContainerGenerator.ContainerFromItem(item);
+
+            var presenter = ElementHelper.FindVisualChild<Border>(vItem);
+
+            var vBorder = presenter.FindName("PART_Border") as Border;
+
+            if (vBorder is not null)
+            {
+                if (vBorder.DataContext is AudioDetail detail)
+                {
+                    if (!string.IsNullOrEmpty(detail.NonePlayableReason))
+                    {
+                        SetIsPlayable(vBorder, false);
+                        vBorder.ToolTip = detail.NonePlayableReason;
+
+                        if (vBorder.Child is Grid innerGrid)
+                        {
+                            ((Image)innerGrid.Children[0]).Effect = new GrayscaleBitmapEffect();
+                            ((Wpf.Ui.Controls.TextBlock)innerGrid.Children[1]).Foreground = new SolidColorBrush(Color.FromRgb(96, 96, 96));
+                            ((Wpf.Ui.Controls.TextBlock)innerGrid.Children[2]).Foreground = new SolidColorBrush(Color.FromRgb(96, 96, 96));
+                        }
+                    }
+
+                    if (_audioManager.Playback.Audio is not null && detail.Id == _audioManager.Playback.Audio.Id && GetIsPlayable(vBorder))
+                    {
+                        vBorder.Background = new SolidColorBrush(Color.FromRgb(187, 205, 255));
+
+                        if (vBorder.Child is Grid innerGrid)
+                        {
+                            ((Wpf.Ui.Controls.TextBlock)innerGrid.Children[1]).Foreground = new SolidColorBrush(Color.FromRgb(51, 94, 234));
+                            ((Wpf.Ui.Controls.TextBlock)innerGrid.Children[2]).Foreground = new SolidColorBrush(Color.FromRgb(51, 94, 234));
+                        }
+
+                        SetIsChecked(vBorder, true);
+                    }
+                }
+            }
         }
     }
 }

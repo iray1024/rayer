@@ -49,29 +49,32 @@ public partial class SearchAudioPresenterViewModel : ObservableObject, IPresente
 
     public async Task PlayWebAudio(SearchAudioDetailAudioDetail item)
     {
-        var audioInfomation = await _audioEngine.GetAudioAsync(item.Id);
+        var audioInformation = await _audioEngine.GetAudioAsync(item.Id);
 
-        var audio = new Audio
+        if (!_audioManager.Playback.TryGetAudio(item.Id, out var existsAudio))
         {
-            Title = item.Name,
-            Artists = item.Artists.Select(x => x.Name).ToArray(),
-            Album = item.Album?.Name ?? string.Empty,
-            Cover = item.Album?.Picture is not null ? ImageSourceUtils.Create(item.Album.Picture) : null,
-            Duration = TimeSpan.FromMilliseconds(item.Duration),
-            Path = audioInfomation.Data.FirstOrDefault()?.Url ?? string.Empty
-        };
+            var audio = new Audio()
+            {
+                Id = item.Id,
+                Title = item.Name,
+                Artists = item.Artists.Select(x => x.Name).ToArray(),
+                Album = item.Album?.Name ?? string.Empty,
+                Cover = item.Album?.Picture is not null ? ImageSourceUtils.Create(item.Album.Picture) : null,
+                Duration = TimeSpan.FromMilliseconds(item.Duration),
+                Path = audioInformation.Data.FirstOrDefault()?.Url ?? string.Empty
+            };
 
-        // 后续需要实现同时加入所有搜索项进入播放队列时，去除true
-        if (true || _settingsService.Settings.PlaySingleAudioStrategy is PlaySingleAudioStrategy.AddToQueue)
-        {
-            var index = _audioManager.Playback.Queue.IndexOf(audio);
-
-            if (index == -1)
+            // 后续需要实现同时加入所有搜索项进入播放队列时，去除true
+            if (true || _settingsService.Settings.PlaySingleAudioStrategy is PlaySingleAudioStrategy.AddToQueue)
             {
                 _audioManager.Playback.Queue.Add(audio);
             }
-        }
 
-        await _audioManager.Playback.Play(audio);
+            await _audioManager.Playback.Play(audio);
+        }
+        else
+        {
+            await _audioManager.Playback.Play(existsAudio);
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Rayer.SearchEngine.Models.Response.Search;
-using static Rayer.SearchEngine.Models.Response.User.UserPlaylistResponse;
+﻿using static Rayer.SearchEngine.Models.Response.User.UserPlaylistResponse;
 
 namespace Rayer.SearchEngine.Models.Domian;
 
@@ -9,9 +8,9 @@ public class ExploreLibraryModel
 
     public string[] RandomLyrics { get; set; } = [];
 
-    public SearchAudioDetailAudioDetail[] PainedLikeAudios { get; set; } = [];
+    public AudioDetail[] PainedLikeAudios { get; set; } = [];
 
-    public SearchAudioDetailAudioDetail[] TotalLikeAudios { get; set; } = [];
+    public AudioDetail[] TotalLikeAudios { get; set; } = [];
 
     public ExploreLibraryDetailModel Detail { get; set; } = new();
 

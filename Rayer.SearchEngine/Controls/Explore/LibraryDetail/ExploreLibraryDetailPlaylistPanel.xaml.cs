@@ -1,9 +1,7 @@
 ﻿using Rayer.Core;
-using Rayer.Core.Utils;
 using Rayer.SearchEngine.ViewModels.Explore.LibraryDetail;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -12,8 +10,6 @@ namespace Rayer.SearchEngine.Controls.Explore.LibraryDetail;
 
 public partial class ExploreLibraryDetailPlaylistPanel : UserControl
 {
-    private readonly Storyboard _transformStoryboard = new();
-
     public ExploreLibraryDetailPlaylistPanel()
     {
         var vm = AppCore.GetRequiredService<ExploreLibraryDetailPlaylistViewModel>();
@@ -40,25 +36,6 @@ public partial class ExploreLibraryDetailPlaylistPanel : UserControl
 
         ViewModel.CoverMaxWidth = panelWidth + 60;
         ViewModel.CoverRectClip = new RectangleGeometry(new(0, 0, ViewModel.CoverMaxWidth, ViewModel.CoverMaxWidth), 6, 6);
-
-        foreach (var item in ItemGroup.Items)
-        {
-            var vItem = ItemGroup.ItemContainerGenerator.ContainerFromItem(item);
-
-            var presenter = ElementHelper.FindVisualChild<Border>(vItem);
-
-            var vBorder = presenter.FindName("PART_Border") as Border;
-
-            if (vBorder is not null)
-            {
-                var coverGrid = vBorder.FindName("CoverGrid") as Grid;
-
-                coverGrid?.SetBinding(ClipProperty, new Binding("CoverRectClip")
-                {
-                    Source = ViewModel
-                });
-            }
-        }
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)

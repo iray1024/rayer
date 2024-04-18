@@ -18,7 +18,20 @@ internal class LoginManager : SearchEngineBase, ILoginManager
         : base(serviceProvider)
     {
         _serviceProvider = serviceProvider;
+
+        AccountInfo = new AccountInfoResponse()
+        {
+            Account = new()
+            {
+                AnonimousUser = true,
+                Type = 0,
+                Status = -10,
+                VipType = 0,
+            }
+        };
     }
+
+    public AccountInfoResponse AccountInfo { get; private set; }
 
     public event EventHandler? LoginSucceed;
 
@@ -65,6 +78,13 @@ internal class LoginManager : SearchEngineBase, ILoginManager
 
         var response = result.ToEntity<AccountInfoResponse>();
 
-        return response is not null ? response : default!;
+        if (response is not null)
+        {
+            AccountInfo = response;
+
+            return response;
+        }
+
+        return default!;
     }
 }

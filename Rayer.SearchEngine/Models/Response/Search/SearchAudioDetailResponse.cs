@@ -6,6 +6,8 @@ public class SearchAudioDetailResponse : ResponseBase
 {
     [JsonPropertyName("songs")]
     public SearchAudioDetailAudioDetail[] Details { get; set; } = [];
+
+    public PrivilegesDetail[] Privileges { get; set; } = [];
 }
 
 public class SearchAudioDetailAudioDetail
@@ -29,6 +31,9 @@ public class SearchAudioDetailAudioDetail
     public long Duration { get; set; }
 
     public int OriginCoverType { get; set; }
+
+    [JsonPropertyName("noCopyrightRcmd")]
+    public SearchAudioNoCopyrightDetail? NoCopyright { get; set; }
 }
 
 public class SearchAudioDetailArtistDetail
@@ -46,4 +51,11 @@ public class SearchAudioDetailAlbumDetail
 
     [JsonPropertyName("picUrl")]
     public string Picture { get; set; } = string.Empty;
+}
+
+public class SearchAudioNoCopyrightDetail
+{
+    public int Type { get; set; }
+
+    public string TypeDesc { get; set; } = string.Empty;
 }

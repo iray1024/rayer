@@ -23,5 +23,6 @@
     <Resource Include="assets\light\search.png" />
     <Resource Include="assets\light\spot.png" />
     <Resource Include="assets\light\user.png" />
+    <Resource Include="Internal\Effects\GrayscaleEffect.ps" />
   </ItemGroup>   
 </Project>
