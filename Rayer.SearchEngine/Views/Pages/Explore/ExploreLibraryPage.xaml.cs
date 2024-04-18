@@ -1,20 +1,10 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Framework.Injection;
+using Rayer.SearchEngine.Abstractions;
+using Rayer.SearchEngine.Business.Data.Abstractions;
+using Rayer.SearchEngine.Business.Login.Abstractions;
 using Rayer.SearchEngine.ViewModels.Explore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Wpf.Ui.Controls;
 
 namespace Rayer.SearchEngine.Views.Pages.Explore;
@@ -24,7 +14,7 @@ public partial class ExploreLibraryPage : INavigableView<ExploreLibraryViewModel
 {
     public ExploreLibraryPage()
     {
-        var vm = AppCore.GetRequiredService<ExploreLibraryViewModel>();
+        var vm = (ExploreLibraryViewModel)AppCore.GetRequiredService<IExploreLibraryDataProvider>();
 
         ViewModel = vm;
         DataContext = this;
@@ -33,4 +23,28 @@ public partial class ExploreLibraryPage : INavigableView<ExploreLibraryViewModel
     }
 
     public ExploreLibraryViewModel ViewModel { get; set; }
+
+    private async void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        ViewModel.LoginSucceed += OnLoginSucceed;
+
+        var loader = AppCore.GetRequiredService<ILoaderProvider>();
+
+        loader.Loading();
+
+        await ViewModel.OnLoadAsync();
+
+        var login = AppCore.GetRequiredService<ILoginManager>();
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        ViewModel.LoginSucceed -= OnLoginSucceed;
+        ViewModel.Unload();
+    }
+
+    private void OnLoginSucceed(object? sender, EventArgs e)
+    {
+        ViewPanel.Visibility = Visibility.Visible;
+    }
 }

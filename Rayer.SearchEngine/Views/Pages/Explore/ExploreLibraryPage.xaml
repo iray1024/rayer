@@ -2,6 +2,7 @@
     x:Class="Rayer.SearchEngine.Views.Pages.Explore.ExploreLibraryPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Rayer.SearchEngine.Controls.Explore"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:framework="clr-namespace:Rayer.Core.Framework;assembly=Rayer.Core"
     xmlns:local="clr-namespace:Rayer.SearchEngine.Views.Pages.Explore"
@@ -11,11 +12,110 @@
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    Loaded="OnLoaded"
+    Unloaded="OnUnloaded"
     mc:Ignorable="d">
-    <Grid>
-        <Button
-            Width="80"
-            Height="60"
-            Content="音乐库" />
+    <Grid Name="ViewPanel" Visibility="Collapsed">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="220" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="6,12,0,0">
+            <Image
+                Width="48"
+                Height="48"
+                HorizontalAlignment="Left"
+                ClipToBounds="True"
+                Source="{Binding ViewModel.Account.Profile.Avatar}">
+                <Image.Clip>
+                    <RectangleGeometry
+                        RadiusX="24"
+                        RadiusY="24"
+                        Rect="0,0,48,48" />
+                </Image.Clip>
+            </Image>
+            <ui:TextBlock
+                Margin="60,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                FontTypography="TitleLarge"
+                Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
+                Text="{Binding ViewModel.Title}" />
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="6,24,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MaxWidth="400" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Border
+                    Padding="12"
+                    Background="#bbcdff"
+                    CornerRadius="6">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" VerticalAlignment="Top">
+                            <StackPanel>
+                                <ui:TextBlock
+                                    Margin="0,0,0,6"
+                                    FontSize="17"
+                                    FontTypography="BodyStrong"
+                                    FontWeight="Bold"
+                                    Foreground="#335eea"
+                                    Text="{Binding ViewModel.Model.RandomLyrics, Converter={StaticResource PainedLyricConverter}, ConverterParameter=0}"
+                                    TextTrimming="WordEllipsis" />
+                                <ui:TextBlock
+                                    FontSize="14"
+                                    FontTypography="Caption"
+                                    Foreground="#335eea"
+                                    Text="{Binding ViewModel.Model.RandomLyrics, Converter={StaticResource PainedLyricConverter}, ConverterParameter=1}"
+                                    TextTrimming="WordEllipsis" />
+                                <ui:TextBlock
+                                    FontSize="14"
+                                    FontTypography="Caption"
+                                    Foreground="#335eea"
+                                    Text="{Binding ViewModel.Model.RandomLyrics, Converter={StaticResource PainedLyricConverter}, ConverterParameter=2}"
+                                    TextTrimming="WordEllipsis" />
+                                <ui:TextBlock
+                                    FontSize="14"
+                                    FontTypography="Caption"
+                                    Foreground="#335eea"
+                                    Text="{Binding ViewModel.Model.RandomLyrics, Converter={StaticResource PainedLyricConverter}, ConverterParameter=3}"
+                                    TextTrimming="WordEllipsis" />
+                            </StackPanel>
+                        </Grid>
+                        <ui:TextBlock
+                            Grid.Row="1"
+                            VerticalAlignment="Bottom"
+                            FontTypography="Subtitle"
+                            Foreground="#335eea"
+                            Text="我喜欢的音乐" />
+                        <Grid Grid.Row="2" VerticalAlignment="Bottom">
+                            <ui:TextBlock
+                                FontTypography="Caption"
+                                Foreground="#335eea"
+                                Text="{Binding ViewModel.Model.LikeCount}" />
+                            <ui:TextBlock
+                                Margin="16,0,0,0"
+                                FontTypography="Caption"
+                                Foreground="#335eea"
+                                Text="首歌" />
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+            <Grid Grid.Column="1">
+                <controls:ExploreLibraryPainedAudioPanel DataContext="{Binding ViewModel.Model.PainedLikeAudios}" />
+            </Grid>
+        </Grid>
+
+        <controls:ExploreLibraryDetailPanel Grid.Row="2" Margin="0,12,0,0" />
     </Grid>
 </framework:NoneFocusablePage>

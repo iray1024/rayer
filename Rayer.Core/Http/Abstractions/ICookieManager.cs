@@ -10,4 +10,6 @@ public interface ICookieManager
     CookieContainer CookieContainer { get; }
 
     void SetCookies(string cookies);
+
+    void StoreCookie();
 }

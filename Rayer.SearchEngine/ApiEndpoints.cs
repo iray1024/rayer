@@ -34,6 +34,44 @@ internal static class ApiEndpoints
         internal static string AccountInfo = "/user/account";
     }
 
+    internal static class User
+    {
+        /// <summary>
+        /// 获取喜欢的音乐列表
+        /// </summary>
+        internal static string GetLikelist = "/likelist";
+
+        /// <summary>
+        /// 获取播放记录
+        /// </summary>
+        internal static string GetPlayRecord = "/user/record";
+
+        /// <summary>
+        /// 获取已收藏歌单列表
+        /// </summary>
+        internal static string GetPlaylist = "/user/playlist";
+
+        /// <summary>
+        /// 获取已收藏专辑列表
+        /// </summary>
+        internal static string GetFavAlbumlist = "album/sublist";
+
+        /// <summary>
+        /// 获取已关注艺人列表
+        /// </summary>
+        internal static string GetFavArtistlist = "artist/sublist";
+
+        /// <summary>
+        /// 获取已收藏MV列表
+        /// </summary>
+        internal static string GetFavMvlist = "mv/sublist";
+
+        /// <summary>
+        /// 获取云盘列表
+        /// </summary>
+        internal static string GetCloudlist = "user/cloud";
+    }
+
     internal static class Track
     {
         internal static string GetTrack = "/song/url";
@@ -63,6 +101,13 @@ internal static class ApiEndpoints
         internal static string HotSearchDetail = "/search/hot/detail";
 
         internal static string SearchSuggestion = "/search/suggest";
+    }
+
+    internal static class Playlist
+    {
+        internal static string GetPlaylistDetail = "/playlist/detail";
+
+        internal static string GetPlaylistAllAudio = "/playlist/track/all";
     }
 
     internal static class Lyric

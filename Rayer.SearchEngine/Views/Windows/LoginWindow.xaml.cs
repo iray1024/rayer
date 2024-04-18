@@ -28,7 +28,7 @@ public partial class LoginWindow
 
     private void OnLoginSucceed(object? sender, EventArgs e)
     {
-
+        Close();
     }
 
     private async void OnQrCodeExpired(object? sender, EventArgs e)
@@ -41,7 +41,7 @@ public partial class LoginWindow
 
     public LoginViewModel ViewModel { get; set; }
 
-    private async void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
+    private async void OnLoaded(object sender, RoutedEventArgs e)
     {
         await ViewModel.LoadAsync();
     }

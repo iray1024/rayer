@@ -16,5 +16,9 @@ public interface ILoginManager
 
     Task GetUserDetailAsync(CancellationToken cancellationToken = default);
 
+    void RaiseLoginSucceed();
+
     Task<AccountInfoResponse> GetAccountInfoAsync(CancellationToken cancellationToken = default);
+
+    event EventHandler LoginSucceed;
 }

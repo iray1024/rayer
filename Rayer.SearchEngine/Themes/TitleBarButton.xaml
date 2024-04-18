@@ -12,7 +12,7 @@
         BasedOn="{StaticResource {x:Type RadioButton}}"
         TargetType="RadioButton">
         <Setter Property="Height" Value="{StaticResource RadioButtonHeight}" />
-        <Setter Property="Width" Value="20" />
+        <Setter Property="Width" Value="{StaticResource RadioButtonWidth}" />
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
         <Setter Property="Foreground" Value="{DynamicResource RadioButtonForeground}" />
         <Setter Property="BorderBrush" Value="Transparent" />
@@ -36,17 +36,18 @@
                         <Grid Height="{TemplateBinding Height}" VerticalAlignment="Center">
                             <Rectangle
                                 x:Name="OuterEllipse"
-                                Width="{StaticResource RadioButtonWidth}"
+                                Width="{TemplateBinding Width}"
                                 Height="{StaticResource RadioButtonHeight}"
                                 UseLayoutRounding="False" />
                             <Border
                                 x:Name="CheckBorder"
-                                Width="{StaticResource RadioButtonWidth}"
+                                Width="{TemplateBinding Width}"
                                 Height="{StaticResource RadioButtonHeight}"
                                 Background="{DynamicResource ControlStrokeColorDefaultBrush}"
                                 BorderBrush="Transparent"
                                 BorderThickness="0"
                                 CornerRadius="6"
+                                Cursor=""
                                 Opacity="0"
                                 UseLayoutRounding="False" />
                             <ContentPresenter

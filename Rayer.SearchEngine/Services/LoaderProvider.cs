@@ -15,6 +15,13 @@ internal class LoaderProvider : ILoaderProvider
 
     public Control Loader => _loader;
 
+    private int _isLoading = 0;
+    public bool IsLoading
+    {
+        get => _isLoading == 1;
+        set => _ = Interlocked.Exchange(ref _isLoading, value ? 1 : 0);
+    }
+
     public void SetLoader(ContentPresenter presenter, int offsetX = 0, int offsetY = 0)
     {
         presenter.Content = _loader;
@@ -35,11 +42,15 @@ internal class LoaderProvider : ILoaderProvider
 
     public void Loading()
     {
+        IsLoading = true;
+
         _loader.PART_Loader.Visibility = Visibility.Visible;
     }
 
     public void Loaded()
     {
+        IsLoading = false;
+
         _loader.PART_Loader.Visibility = Visibility.Collapsed;
     }
 

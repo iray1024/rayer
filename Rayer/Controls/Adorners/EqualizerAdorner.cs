@@ -1,4 +1,5 @@
 ﻿using Rayer.Abstractions;
+using Rayer.Core.Framework;
 using Rayer.Markup;
 using Rayer.Services;
 using Rayer.Views.Windows;
@@ -63,7 +64,7 @@ internal class EqualizerAdorner : Adorner
 
     private void OnEqualizerMouseUp(object sender, MouseButtonEventArgs e)
     {
-        var wndProvider = App.GetRequiredService<WindowsProviderService>();
+        var wndProvider = App.GetRequiredService<IWindowsProviderService>();
 
         wndProvider.Show<EqualizerWindow>();
     }

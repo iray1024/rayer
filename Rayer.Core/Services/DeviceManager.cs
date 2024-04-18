@@ -126,12 +126,12 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
         {
             _metadata = metadata;
 #if DEBUG
-            Debug.WriteLine($"等待设备创建，正在等待同步锁，线程ID: {Environment.CurrentManagedThreadId}");
+            Debug.WriteLine($"等待设备创建，正在等待同步锁");
 #endif
 
             await _semaphore.WaitAsync(cancellationToken);
 #if DEBUG
-            Debug.WriteLine($"等待设备创建，已获取同步锁，线程ID: {Environment.CurrentManagedThreadId}");
+            Debug.WriteLine($"等待设备创建，已获取同步锁");
 #endif
             CreateDevice();
             _semaphore.Release();

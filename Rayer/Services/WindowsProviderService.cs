@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using System.Windows;
 
 namespace Rayer.Services;
 
-[Inject]
-internal class WindowsProviderService(IServiceProvider _serviceProvider)
+[Inject<IWindowsProviderService>]
+internal class WindowsProviderService(IServiceProvider _serviceProvider) : IWindowsProviderService
 {
     public void Show<T>()
         where T : class

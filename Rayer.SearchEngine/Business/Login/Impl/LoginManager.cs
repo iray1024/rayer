@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Rayer.Core;
 using Rayer.Core.Framework.Injection;
+using Rayer.Core.Http.Abstractions;
 using Rayer.SearchEngine.Business.Login.Abstractions;
 using Rayer.SearchEngine.Extensions;
 using Rayer.SearchEngine.Internal.Abstractions;
@@ -18,6 +20,8 @@ internal class LoginManager : SearchEngineBase, ILoginManager
         _serviceProvider = serviceProvider;
     }
 
+    public event EventHandler? LoginSucceed;
+
     public Task GetUserDetailAsync(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
@@ -28,9 +32,11 @@ internal class LoginManager : SearchEngineBase, ILoginManager
         throw new NotImplementedException();
     }
 
-    public Task RefreshLoginStateAsync(CancellationToken cancellationToken = default)
+    public async Task RefreshLoginStateAsync(CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        _ = await Searcher.GetAsync(Login.RefreshLogin().Build());
+
+        AppCore.GetRequiredService<ICookieManager>().StoreCookie();
     }
 
     public IAnonymousService UseAnonymous()
@@ -46,6 +52,11 @@ internal class LoginManager : SearchEngineBase, ILoginManager
     public IQrCodeService UseQrCode()
     {
         return _serviceProvider.GetRequiredService<IQrCodeService>();
+    }
+
+    public void RaiseLoginSucceed()
+    {
+        LoginSucceed?.Invoke(this, EventArgs.Empty);
     }
 
     public async Task<AccountInfoResponse> GetAccountInfoAsync(CancellationToken cancellationToken = default)

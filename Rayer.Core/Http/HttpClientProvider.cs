@@ -9,7 +9,9 @@ internal class HttpClientProvider : IHttpClientProvider
 {
     public HttpClientProvider()
     {
-        var cookieManager = AppCore.GetService<ICookieManager>();
+        var cookieManager = AppCore.GetRequiredService<ICookieManager>();
+
+        LoadCookie(cookieManager);
 
         HttpClient = cookieManager is not null
             ? new HttpClient(cookieManager.HttpClientHandler, false)
@@ -17,4 +19,16 @@ internal class HttpClientProvider : IHttpClientProvider
     }
 
     public HttpClient HttpClient { get; }
+
+    private static void LoadCookie(ICookieManager cookieManager)
+    {
+        try
+        {
+            var cookies = System.IO.File.ReadAllText(Constants.Paths.CookiePath, Encoding.UTF8);
+
+            cookieManager.SetCookies(cookies);
+        }
+        catch
+        { }
+    }
 }

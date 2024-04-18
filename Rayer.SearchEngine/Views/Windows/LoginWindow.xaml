@@ -8,8 +8,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="LoginWindow"
-    Width="800"
-    Height="450"
+    Width="350"
+    Height="400"
+    MinHeight="400"
     d:DataContext="{d:DesignInstance local:LoginWindow,
                                      IsDesignTimeCreatable=False}"
     ExtendsContentIntoTitleBar="True"
@@ -17,7 +18,7 @@
     SnapsToDevicePixels="True"
     UseLayoutRounding="True"
     WindowCornerPreference="Default"
-    WindowStartupLocation="CenterScreen"
+    WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
     <Grid>
         <ui:TitleBar
@@ -40,7 +41,7 @@
                 Grid.Row="0"
                 Width="256"
                 Height="256"
-                Margin="0,90,0,12"
+                Margin="0,70,0,12"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 RenderOptions.BitmapScalingMode="Fant"

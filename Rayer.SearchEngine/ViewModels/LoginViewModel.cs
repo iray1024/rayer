@@ -68,11 +68,9 @@ public partial class LoginViewModel : ObservableObject
                 {
                     State = "授权成功";
 
-                    var cookie = checkResult.Cookie;
+                    _cookieManager.StoreCookie();
 
-                    _cookieManager.SetCookies(cookie);
-
-                    await GetAccountInfoAsync();
+                    _loginManager.RaiseLoginSucceed();
                     LoginSucceed?.Invoke(null, EventArgs.Empty);
                     break;
                 }
@@ -104,11 +102,6 @@ public partial class LoginViewModel : ObservableObject
                 }
             }
         });
-    }
-
-    private async Task GetAccountInfoAsync()
-    {
-        await _loginManager.GetAccountInfoAsync();
     }
 
     private static BitmapImage ProcessQrCodeResponse(string response)

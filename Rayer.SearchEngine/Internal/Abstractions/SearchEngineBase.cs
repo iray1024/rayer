@@ -12,8 +12,11 @@ internal abstract class SearchEngineBase
         Searcher = serviceProvider.GetRequiredService<IRequestService>();
         Login = serviceProvider.GetRequiredService<LoginApiSelector>();
         Account = serviceProvider.GetRequiredService<AccountApiSelector>();
+        User = serviceProvider.GetRequiredService<UserApiSelector>();
+        Playlist = serviceProvider.GetRequiredService<PlaylistApiSelector>();
         Search = serviceProvider.GetRequiredService<SearchApiSelector>();
         Track = serviceProvider.GetRequiredService<TrackApiSelector>();
+        Lyric = serviceProvider.GetRequiredService<LyricApiSelector>();
     }
 
     protected IServiceProvider ServiceProvider { get; }
@@ -22,6 +25,9 @@ internal abstract class SearchEngineBase
 
     protected LoginApiSelector Login { get; }
     protected AccountApiSelector Account { get; }
+    protected UserApiSelector User { get; }
+    protected PlaylistApiSelector Playlist { get; }
     protected SearchApiSelector Search { get; }
     protected TrackApiSelector Track { get; }
+    protected LyricApiSelector Lyric { get; }
 }
