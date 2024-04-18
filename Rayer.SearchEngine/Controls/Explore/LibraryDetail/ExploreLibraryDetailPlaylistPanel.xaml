@@ -35,9 +35,7 @@
                         Width="{Binding ViewModel.CoverMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailPlaylistPanel}}"
                         Margin="6,0,0,12"
                         HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        MouseEnter="OnMouseEnter"
-                        MouseLeave="OnMouseLeave">
+                        VerticalAlignment="Top">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto" />
@@ -61,6 +59,8 @@
                                     Height="{Binding ViewModel.CoverMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailPlaylistPanel}}"
                                     CornerRadius="6"
                                     Cursor="Hand"
+                                    MouseEnter="OnMouseEnter"
+                                    MouseLeave="OnMouseLeave"
                                     RenderOptions.BitmapScalingMode="Fant"
                                     Source="{Binding Cover, IsAsync=True}" />
                             </Grid>

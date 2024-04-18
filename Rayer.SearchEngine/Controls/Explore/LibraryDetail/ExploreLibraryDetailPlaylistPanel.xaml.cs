@@ -55,76 +55,68 @@ public partial class ExploreLibraryDetailPlaylistPanel : UserControl
 
     private void OnMouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        if (sender is Border border)
+        if (sender is Wpf.Ui.Controls.Image cover)
         {
-            var cover = border.FindName("Cover") as Wpf.Ui.Controls.Image;
+            var center = (int)ViewModel.CoverMaxWidth >> 1;
 
-            if (cover is not null)
+            var transform = new ScaleTransform()
             {
-                var center = (int)ViewModel.CoverMaxWidth >> 1;
+                CenterX = center,
+                CenterY = center
+            };
 
-                var transform = new ScaleTransform()
-                {
-                    CenterX = center,
-                    CenterY = center
-                };
+            cover.RenderTransform = transform;
 
-                cover.RenderTransform = transform;
+            var animationX = new DoubleAnimation
+            {
+                To = 1.2,
+                Duration = TimeSpan.FromMilliseconds(500),
+                EasingFunction = new QuadraticEase()
+            };
 
-                var animationX = new DoubleAnimation
-                {
-                    To = 1.2,
-                    Duration = TimeSpan.FromMilliseconds(500),
-                    EasingFunction = new QuadraticEase()
-                };
+            var animationY = new DoubleAnimation
+            {
+                To = 1.2,
+                Duration = TimeSpan.FromMilliseconds(500),
+                EasingFunction = new QuadraticEase()
+            };
 
-                var animationY = new DoubleAnimation
-                {
-                    To = 1.2,
-                    Duration = TimeSpan.FromMilliseconds(500),
-                    EasingFunction = new QuadraticEase()
-                };
-
-                transform.BeginAnimation(ScaleTransform.ScaleXProperty, animationX);
-                transform.BeginAnimation(ScaleTransform.ScaleYProperty, animationY);
-            }
+            transform.BeginAnimation(ScaleTransform.ScaleXProperty, animationX);
+            transform.BeginAnimation(ScaleTransform.ScaleYProperty, animationY);
         }
     }
 
     private void OnMouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        if (sender is Border border)
+        if (sender is Wpf.Ui.Controls.Image cover)
         {
-            var cover = border.FindName("Cover") as Wpf.Ui.Controls.Image;
+            var center = (int)ViewModel.CoverMaxWidth >> 1;
 
-            if (cover is not null)
+            var transform = new ScaleTransform()
             {
-                var center = (int)ViewModel.CoverMaxWidth >> 1;
+                CenterX = center,
+                CenterY = center
+            };
+            cover.RenderTransform = transform;
 
-                var transform = new ScaleTransform()
-                {
-                    CenterX = center,
-                    CenterY = center
-                };
-                cover.RenderTransform = transform;
+            var animationX = new DoubleAnimation
+            {
+                From = 1.2,
+                To = 1,
+                Duration = TimeSpan.FromMilliseconds(500),
+                EasingFunction = new QuadraticEase()
+            };
 
-                var animationX = new DoubleAnimation
-                {
-                    To = 1,
-                    Duration = TimeSpan.FromMilliseconds(500),
-                    EasingFunction = new QuadraticEase()
-                };
+            var animationY = new DoubleAnimation
+            {
+                From = 1.2,
+                To = 1,
+                Duration = TimeSpan.FromMilliseconds(500),
+                EasingFunction = new QuadraticEase()
+            };
 
-                var animationY = new DoubleAnimation
-                {
-                    To = 1,
-                    Duration = TimeSpan.FromMilliseconds(500),
-                    EasingFunction = new QuadraticEase()
-                };
-
-                transform.BeginAnimation(ScaleTransform.ScaleXProperty, animationX);
-                transform.BeginAnimation(ScaleTransform.ScaleYProperty, animationY);
-            }
+            transform.BeginAnimation(ScaleTransform.ScaleXProperty, animationX);
+            transform.BeginAnimation(ScaleTransform.ScaleYProperty, animationY);
         }
     }
 }
