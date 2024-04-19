@@ -17,6 +17,7 @@ public partial class DynamicIsland : Window
     private readonly Storyboard? _dynamicIslandStoryboard = new();
     private static readonly Storyboard _windowStateChangedStoryboard = new();
     private string _currentScrrenDeviceName = string.Empty;
+    private static WindowState _lastWindowState = WindowState.Normal;
 
     public DynamicIsland()
     {
@@ -169,9 +170,10 @@ public partial class DynamicIsland : Window
         }
     }
 
+
     private void OnStateChanged(object? sender, EventArgs e)
     {
-        if (AppCore.MainWindow.WindowState is WindowState.Maximized)
+        if (AppCore.MainWindow.WindowState is WindowState.Maximized && _lastWindowState != WindowState.Minimized)
         {
             var targetTop = Top + 20;
 
@@ -191,11 +193,11 @@ public partial class DynamicIsland : Window
 
             _windowStateChangedStoryboard.Children.Add(animation);
 
-            Timeline.SetDesiredFrameRate(_windowStateChangedStoryboard, 60);
+            Timeline.SetDesiredFrameRate(_windowStateChangedStoryboard, 120);
 
             _windowStateChangedStoryboard.Begin();
         }
-        else if (AppCore.MainWindow.WindowState is WindowState.Normal)
+        else if (AppCore.MainWindow.WindowState is WindowState.Normal && _lastWindowState != WindowState.Minimized)
         {
             var targetTop = Top - 20;
 
@@ -215,9 +217,11 @@ public partial class DynamicIsland : Window
 
             _windowStateChangedStoryboard.Children.Add(animation);
 
-            Timeline.SetDesiredFrameRate(_windowStateChangedStoryboard, 60);
+            Timeline.SetDesiredFrameRate(_windowStateChangedStoryboard, 120);
 
             _windowStateChangedStoryboard.Begin();
         }
+
+        _lastWindowState = AppCore.MainWindow.WindowState;
     }
 }
