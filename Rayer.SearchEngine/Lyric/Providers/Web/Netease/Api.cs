@@ -183,13 +183,6 @@ internal class Api : RequestBase
         return raw.ToEntity<LyricResult>();
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="songId"></param>
-    /// <param name="bitrate"></param>
-    /// <returns></returns>
-    /// <exception cref="WebException"></exception>
     private async Task<SongUrls?> GetSongsUrl(string[] songId, long bitrate = 999000)
     {
         const string url = "https://music.163.com/weapi/song/enhance/player/url?csrf_token=";
@@ -253,7 +246,6 @@ internal class Api : RequestBase
         return data;
     }
 
-    // encrypt mod
     private static string RSAEncode(string text)
     {
         var srtext = new string(text.Reverse().ToArray());

@@ -6,7 +6,6 @@ namespace Rayer.Core.AudioVisualizer;
 
 public class Visualizer
 {
-    //private int _m;
     private readonly double[] _sampleData;
     private DateTime _lastTime;
     private readonly DynamicArray2D _dynamics;
@@ -24,6 +23,7 @@ public class Visualizer
         {
             throw new ArgumentException("长度必须是 2 的 n 次幂");
         }
+
         //_m = (int)Math.Log2(waveDataSize);
         _lastTime = DateTime.Now;
         _sampleData = new double[waveDataSize];
@@ -37,7 +37,7 @@ public class Visualizer
     /// </summary>
     /// <param name="num"></param>
     /// <returns></returns>
-    private bool Get2Flag(int num)
+    private static bool Get2Flag(int num)
     {
         return num >= 1 && (num & (num - 1)) == 0;
     }
@@ -76,7 +76,7 @@ public class Visualizer
         FFT.Forward(data);
 
         var halfLen = len / 2;
-        var spectrum = new double[halfLen];           // 傅里叶变换结果左右对称, 只需要取一半
+        var spectrum = new double[halfLen]; // 傅里叶变换结果左右对称, 只需要取一半
         for (var i = 0; i < halfLen; i++)
         {
             spectrum[i] = data[i].Magnitude / len;
@@ -86,7 +86,6 @@ public class Visualizer
         window.Create(halfLen);
         window.ApplyInPlace(spectrum, false);
 
-        //return spectrum;
         return _dynamics.Update(deltaTime, spectrum);
     }
 
@@ -117,25 +116,25 @@ public class Visualizer
     {
         double[] GetWeights(int radius)
         {
-            double Gaussian(double x) => Math.Pow(Math.E, -4 * x * x);        // 憨批高斯函数
+            double Gaussian(double x) => Math.Pow(Math.E, -4 * x * x); // 憨批高斯函数
 
-            var len = 1 + (radius * 2);                         // 长度
-            var end = len - 1;                                // 最后的索引
-            var radiusF = (double)radius;                    // 半径浮点数
-            var weights = new double[len];                 // 权重
+            var len = 1 + (radius * 2);                                // 长度
+            var end = len - 1;                                         // 最后的索引
+            var radiusF = (double)radius;                              // 半径浮点数
+            var weights = new double[len];                             // 权重
 
-            for (var i = 0; i <= radius; i++)                 // 先把右边的权重算出来
+            for (var i = 0; i <= radius; i++)                          // 先把右边的权重算出来
             {
                 weights[radius + i] = Gaussian(i / radiusF);
             }
 
-            for (var i = 0; i < radius; i++)                  // 把右边的权重拷贝到左边
+            for (var i = 0; i < radius; i++)                           // 把右边的权重拷贝到左边
             {
                 weights[i] = weights[end - i];
             }
 
             var total = weights.Sum();
-            for (var i = 0; i < len; i++)                  // 使权重合为 0
+            for (var i = 0; i < len; i++)                              // 使权重合为 0
             {
                 weights[i] = weights[i] / total;
             }
@@ -164,8 +163,8 @@ public class Visualizer
 
         for (var i = 0; i < radius; i++)
         {
-            Array.Fill(buffer, data[i], 0, radius + 1);      // 填充缺省
-            for (var j = 0; j < radius; j++)                 // 
+            Array.Fill(buffer, data[i], 0, radius + 1);
+            for (var j = 0; j < radius; j++)
             {
                 buffer[radius + 1 + j] = data[i + j];
             }
@@ -176,14 +175,14 @@ public class Visualizer
 
         for (var i = radius; i < data.Length - radius; i++)
         {
-            for (var j = 0; j < radius; j++)                 // 
+            for (var j = 0; j < radius; j++)
             {
                 buffer[j] = data[i - j];
             }
 
             buffer[radius] = data[i];
 
-            for (var j = 0; j < radius; j++)                 // 
+            for (var j = 0; j < radius; j++)
             {
                 buffer[radius + j + 1] = data[i + j];
             }
@@ -194,8 +193,8 @@ public class Visualizer
 
         for (var i = data.Length - radius; i < data.Length; i++)
         {
-            Array.Fill(buffer, data[i], 0, radius + 1);      // 填充缺省
-            for (var j = 0; j < radius; j++)                 // 
+            Array.Fill(buffer, data[i], 0, radius + 1);
+            for (var j = 0; j < radius; j++)
             {
                 buffer[radius + 1 + j] = data[i - j];
             }

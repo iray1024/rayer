@@ -198,11 +198,6 @@ internal partial class Api(IHttpClientProvider httpClientProvider) : RequestBase
         return resp.ToEntity<PlaylistResult>();
     }
 
-    /// <summary>
-    /// query music song
-    /// </summary>
-    /// <param name="id">query song by id, support songId and midId, eg: 001RaE0n4RrGX9 or 204422870</param>
-    /// <returns>music song</returns>
     public async Task<SongResult?> GetSong(string id)
     {
         const string callBack = "getOneSongInfoCallback";

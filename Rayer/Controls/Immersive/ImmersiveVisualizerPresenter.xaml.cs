@@ -23,18 +23,16 @@ public partial class ImmersiveVisualizerPresenter : UserControl
     /// </summary>
     private bool spectrumData_Clear = false;
     public ObservableCollection<double> spectrumData = [];// 频谱数据   
-    /// <summary>
-    /// 收集产生的PathGeometry
-    /// </summary>
+
     public ObservableCollection<PathGeometry> pathGeometries = [];
 
-    public WasapiCapture capture = default!; // 音频捕获
-    private Visualizer visualizer = default!; // 可视化
+    public WasapiCapture capture = default!;
+    private Visualizer visualizer = default!;
     public int wave_data_size;
     public Timer? dataTimer;
     public Timer? drawingTimer;
 
-    private ObservableCollection<Color> allColors = [];// 渐变颜色
+    private ObservableCollection<Color> allColors = [];
     public Storyboard AudioVisualizerStoryboard;
     public Storyboard SampleWaveShowStoryboard;
     public Storyboard SampleWaveHiddenStoryboard;
@@ -111,7 +109,6 @@ public partial class ImmersiveVisualizerPresenter : UserControl
     /// <param name="DeviceNumber"></param>
     public void Reset_Visualizer(int wave_data_size)
     {
-        //释放内存
         if (Environment.OSVersion.Platform == PlatformID.Win32NT)
         {
             SetProcessWorkingSetSize(System.Diagnostics.Process.GetCurrentProcess().Handle, -1, -1);
@@ -119,15 +116,14 @@ public partial class ImmersiveVisualizerPresenter : UserControl
         GC.Collect();
         GC.WaitForPendingFinalizers();
 
-        // 设置录制的音频输出源
         if (capture != null)
         {
             capture.Dispose();
-            capture = null;
+            capture = null!;
         }
-        visualizer = null;
+        visualizer = null!;
 
-        MMDevice defaultOutputDevice = null;
+        MMDevice defaultOutputDevice = null!;
 
         using var enumerator = new MMDeviceEnumerator();
         var devices = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
@@ -141,13 +137,13 @@ public partial class ImmersiveVisualizerPresenter : UserControl
 
         capture = new WasapiLoopbackCapture(defaultOutputDevice)
         {
-            ShareMode = AudioClientShareMode.Shared// 使用独占模式
-        }; // 捕获电脑发出的声音
+            ShareMode = AudioClientShareMode.Shared
+        };
 
-        visualizer = new Visualizer(wave_data_size); // 新建一个可视化器, 并使用 256 个采样进行傅里叶变换
+        visualizer = new Visualizer(wave_data_size);
 
-        capture.WaveFormat = WaveFormat.CreateIeeeFloatWaveFormat(8192, 1); // 指定捕获的格式, 单声道, 32位深度, IeeeFloat 编码, 8192采样率
-        capture.DataAvailable += Capture_DataAvailable; // 订阅事件
+        capture.WaveFormat = WaveFormat.CreateIeeeFloatWaveFormat(8192, 1);
+        capture.DataAvailable += Capture_DataAvailable;
 
         capture.StartRecording();
 
@@ -155,31 +151,28 @@ public partial class ImmersiveVisualizerPresenter : UserControl
         dataTimer = new Timer(DataTimer_Tick, null, 30, 30);
 
         allColors.Clear();
-        //Color.FromArgb(255, allColors[i].R, allColors[i].G, allColors[i].B);
-        allColors = new ObservableCollection<Color>(GetAllHsvColors()); // 获取所有的渐变颜色 (HSV 颜色)
+
+        allColors = new ObservableCollection<Color>(GetAllHsvColors());
 
         this.wave_data_size = wave_data_size;
 
-        //释放内存
         if (Environment.OSVersion.Platform == PlatformID.Win32NT)
         {
             SetProcessWorkingSetSize(System.Diagnostics.Process.GetCurrentProcess().Handle, -1, -1);
         }
+
         GC.Collect();
         GC.WaitForPendingFinalizers();
     }
 
-    /// <summary>
-    /// 关闭 频谱可视化
-    /// </summary>
     public void Close_Visualizer()
     {
         wave_data_size = 0;
 
         capture.StopRecording();
-        capture.DataAvailable -= Capture_DataAvailable; // 订阅事件
+        capture.DataAvailable -= Capture_DataAvailable;
         capture.Dispose();
-        capture = null;
+        capture = default!;
 
         spectrumData?.Clear();
         pathGeometries?.Clear();
@@ -187,17 +180,15 @@ public partial class ImmersiveVisualizerPresenter : UserControl
         dataTimer = null;
         drawingTimer = null;
 
-        visualizer = null;
+        visualizer = default!;
 
         allColors.Clear();
 
-        //AudioVisualizerStoryboard = null;
-
-        //释放内存
         if (Environment.OSVersion.Platform == PlatformID.Win32NT)
         {
             SetProcessWorkingSetSize(System.Diagnostics.Process.GetCurrentProcess().Handle, -1, -1);
         }
+
         GC.Collect();
         GC.WaitForPendingFinalizers();
     }
@@ -206,7 +197,7 @@ public partial class ImmersiveVisualizerPresenter : UserControl
     /// 获取 HSV 中所有的基础颜色 (饱和度和明度均为最大值)
     /// </summary>
     /// <returns>所有的 HSV 基础颜色(共 256 * 6 个, 并且随着索引增加, 颜色也会渐变)</returns>
-    private Color[] GetAllHsvColors()
+    private static Color[] GetAllHsvColors()
     {
         var result = new Color[256 * 6];
 
@@ -245,33 +236,20 @@ public partial class ImmersiveVisualizerPresenter : UserControl
 
     private void Capture_DataAvailable(object? sender, WaveInEventArgs e)
     {
-        var length = e.BytesRecorded / 4; // 采样的数量 (每一个采样是 4 字节)
-        var result = new double[length]; // 声明结果
+        var length = e.BytesRecorded / 4;
+        var result = new double[length];
 
         for (var i = 0; i < length; i++)
         {
-            result[i] = BitConverter.ToSingle(e.Buffer, i * 4); // 取出采样值
+            result[i] = BitConverter.ToSingle(e.Buffer, i * 4);
         }
 
-        visualizer?.PushSampleData(result); // 将新的采样存储到 可视化器 中
-
-        length = 0; result = null;
+        visualizer?.PushSampleData(result);
     }
 
-    /// <summary>
-    /// 画曲线
-    /// </summary>
-    /// <param name="g"></param>
-    /// <param name="brush"></param>
-    /// <param name="spectrumData"></param>
-    /// <param name="pointCount"></param>
-    /// <param name="drawingWidth"></param>
-    /// <param name="xOffset"></param>
-    /// <param name="yOffset"></param>
-    /// <param name="scale"></param>
     private void DrawCurve(Path g, Brush brush,
         ObservableCollection<double> spectrumData, int pointCount, double drawingWidth,
-        double xOffset, double yOffset, double scale)
+        double _, double yOffset, double scale)
     {
         if (pathGeometries != null)
         {
@@ -281,16 +259,16 @@ public partial class ImmersiveVisualizerPresenter : UserControl
                 var x = i * drawingWidth / pointCount;
                 var y = (spectrumData[i * spectrumData.Count / pointCount] * scale) + yOffset;
                 points[i] = new Point(x, y);
-
-                x = 0; y = 0;
             }
 
             var fig = new PathFigure
             {
                 StartPoint = points[0]
             };
+
             fig.Segments.Add(new PolyLineSegment(points, true));
             var pathGeometry = new PathGeometry();
+
             try
             {
                 if (!spectrumData_Clear)
@@ -310,10 +288,8 @@ public partial class ImmersiveVisualizerPresenter : UserControl
             }
             catch
             {
-                pathGeometry = null;
-            }
 
-            points = null; fig = null; brush = null;
+            }
         }
     }
 
@@ -343,26 +319,26 @@ public partial class ImmersiveVisualizerPresenter : UserControl
                 var rotationAngle = Math.PI / 180 * rotation;
 
                 //等分圆周，每个（竖条+空白）对应的弧度
-                var blockWidth = Math.PI * 2 / spectrumData.Count; // angle
+                var blockWidth = Math.PI * 2 / spectrumData.Count;
 
                 //每个竖条对应的弧度
-                var stripWidth = blockWidth - (MathF.PI / 180 * spacing); // angle
+                var stripWidth = blockWidth - (MathF.PI / 180 * spacing);
 
                 var points = new Point[spectrumData.Count];
 
                 for (var i = 0; i < spectrumData.Count; i++)
                 {
-                    var x = (blockWidth * i) + rotationAngle; // angle
+                    var x = (blockWidth * i) + rotationAngle;
                     double y = 0;
                     var result = spectrumData.FirstOrDefault();
-                    if (result != null)
+
+                    var num = i * spectrumData.Count / spectrumData.Count;
+
+                    if (num < spectrumData.Count)
                     {
-                        var num = i * spectrumData.Count / spectrumData.Count;
-                        if (num < spectrumData.Count)
-                        {
-                            y = spectrumData[i * spectrumData.Count / spectrumData.Count] * scale; // height
-                        }
+                        y = spectrumData[i * spectrumData.Count / spectrumData.Count] * scale;
                     }
+
                     points[i] = new Point(x, y);
                 }
 
@@ -393,6 +369,7 @@ public partial class ImmersiveVisualizerPresenter : UserControl
                             StartPoint = polygon[0],
                             IsFilled = true
                         };
+
                         fig.Segments.Add(new PolyLineSegment(polygon, false));
 
                         temp_pg.Figures.Add(fig);
@@ -407,7 +384,7 @@ public partial class ImmersiveVisualizerPresenter : UserControl
                     var maxHeight = points.Max(v => v.Y);
                     g.Fill = new LinearGradientBrush(
                         [
-                                /*new GradientStop(Colors.Transparent, 0),*/
+
                                 new GradientStop(
                                     Color.FromArgb(255, inner.R, inner.G, inner.B), radius / (radius + maxHeight)),
                                 new GradientStop(
@@ -452,26 +429,25 @@ public partial class ImmersiveVisualizerPresenter : UserControl
                 var rotationAngle = Math.PI / 180 * rotation;
 
                 //等分圆周，每个（竖条+空白）对应的弧度
-                var blockWidth = Math.PI * 2 / spectrumData.Count; // angle
+                var blockWidth = Math.PI * 2 / spectrumData.Count;
 
                 //每个竖条对应的弧度
-                var stripWidth = blockWidth - (MathF.PI / 180 * spacing); // angle
+                var stripWidth = blockWidth - (MathF.PI / 180 * spacing);
 
                 var points = new Point[spectrumData.Count];
 
                 for (var i = 0; i < spectrumData.Count; i++)
                 {
-                    var x = (blockWidth * i) + rotationAngle; // angle
+                    var x = (blockWidth * i) + rotationAngle;
                     double y = 0;
                     var result = spectrumData.FirstOrDefault();
-                    if (result != null)
+                    var num = i * spectrumData.Count / spectrumData.Count;
+
+                    if (num < spectrumData.Count)
                     {
-                        var num = i * spectrumData.Count / spectrumData.Count;
-                        if (num < spectrumData.Count)
-                        {
-                            y = spectrumData[i * spectrumData.Count / spectrumData.Count] * scale; // height
-                        }
+                        y = spectrumData[i * spectrumData.Count / spectrumData.Count] * scale;
                     }
+
                     points[i] = new Point(x, y);
                 }
 
@@ -482,7 +458,6 @@ public partial class ImmersiveVisualizerPresenter : UserControl
                 {
                     for (var i = 0; i < spectrumData.Count; i++)
                     {
-                        //绘制线条，并指定角度
                         var sinStart = Math.Sin(points[i].X);
                         var sinEnd = Math.Sin(points[i].X + stripWidth);
                         var cosStart = Math.Cos(points[i].X);
@@ -515,7 +490,6 @@ public partial class ImmersiveVisualizerPresenter : UserControl
                     var maxHeight = points.Max(v => v.Y);
                     g.Fill = new LinearGradientBrush(
                         [
-                                /*new GradientStop(Colors.Transparent, 0),*/
                                 new GradientStop(
                                     Color.FromArgb(255, inner.R, inner.G, inner.B), radius / (radius + maxHeight)),
                                 new GradientStop(
@@ -558,8 +532,8 @@ public partial class ImmersiveVisualizerPresenter : UserControl
         {
             if (visualizer.GetSpectrumData().Max() > 0)
             {
-                var newSpectrumData = visualizer.GetSpectrumData(); // 从可视化器中获取频谱数据
-                newSpectrumData = MakeSmooth(newSpectrumData, 2); // 平滑频谱数据
+                var newSpectrumData = visualizer.GetSpectrumData();
+                newSpectrumData = MakeSmooth(newSpectrumData, 2);
                 spectrumData = new ObservableCollection<double>(newSpectrumData);
 
                 if (spectrumData.Count == 0)
@@ -570,12 +544,12 @@ public partial class ImmersiveVisualizerPresenter : UserControl
                 {
                     if (spectrumData.Count == newSpectrumData.Length)
                     {
-                        for (var i = 0; i < newSpectrumData.Length; i++) // 计算旧频谱数据和新频谱数据之间的 "中间值"
+                        for (var i = 0; i < newSpectrumData.Length; i++)
                         {
                             var oldData = spectrumData[i];
                             var newData = newSpectrumData[i];
                             var lerpData =
-                                oldData + ((newData - oldData) * .4f); // 每一次执行, 频谱值会向目标值移动 20% (如果太大, 缓动效果不明显, 如果太小, 频谱会有延迟的感觉)
+                                oldData + ((newData - oldData) * .4f);
                             spectrumData[i] = lerpData;
 
                             oldData = 0; newData = 0; lerpData = 0;
@@ -643,17 +617,17 @@ public partial class ImmersiveVisualizerPresenter : UserControl
 
                             DrawCircleGradientStrips(
                                 SampleCircleFirst, allColors[colorIndex % allColors.Count], allColors[(colorIndex + 200) % allColors.Count],
-                                spectrumData, spectrumData.Count,//频谱数据
-                                SampleDrawingPanel.ActualWidth / 2, SampleDrawingPanel.ActualHeight / 2,//圆环位置
-                                110,//大小
-                                1, rotation, SampleDrawingPanel.ActualHeight * (visualizer.waveDataSize / 40 /* 通道数 / 51.2 */)  //频谱高度 幅度
+                                spectrumData, spectrumData.Count,
+                                SampleDrawingPanel.ActualWidth / 2, SampleDrawingPanel.ActualHeight / 2,
+                                110,
+                                1, rotation, SampleDrawingPanel.ActualHeight * (visualizer.waveDataSize / 40)
                             );
                             DrawCircleGradientStrips_Double(
                                 SampleCircleThird, allColors[colorIndex % allColors.Count], allColors[(colorIndex + 200) % allColors.Count],
-                                spectrumData, spectrumData.Count,//频谱数据
-                                SampleDrawingPanel.ActualWidth / 2, SampleDrawingPanel.ActualHeight / 2,//圆环位置
+                                spectrumData, spectrumData.Count,
+                                SampleDrawingPanel.ActualWidth / 2, SampleDrawingPanel.ActualHeight / 2,
                                 136 + (Math.Min(SampleDrawingPanel.ActualHeight, SampleDrawingPanel.ActualHeight) / 6 * (spectrumData.Average() * 120)),//大小
-                                2, -rotation, 1600  //频谱高度 幅度
+                                2, -rotation, 1600
                                 );
                         }
                         catch
@@ -684,12 +658,10 @@ public partial class ImmersiveVisualizerPresenter : UserControl
         }
 
         array.Clear();
-        array = null;
-
         return reversedArray;
     }
 
-    private ObservableCollection<double> SmoothData(ObservableCollection<double> data, int windowSize)
+    private static ObservableCollection<double> SmoothData(ObservableCollection<double> data, int windowSize)
     {
         ObservableCollection<double> smoothedData = [];
         for (var i = 0; i < data.Count; i++)
@@ -702,44 +674,39 @@ public partial class ImmersiveVisualizerPresenter : UserControl
                 sum += data[j];
             }
             smoothedData.Add((double)(sum / (windowEndIndex - windowStartIndex + 1)));
-
-            windowStartIndex = 0; windowEndIndex = 0; sum = 0;
         }
 
-        data.Clear(); data = null;
-        windowSize = 0;
+        data.Clear();
 
         return smoothedData;
     }
 
-    private double[] MakeSmooth(double[] data, int radius)
+    private static double[] MakeSmooth(double[] data, int radius)
     {
         double[] GetWeights(int radius)
         {
-            double Gaussian(double x) => Math.Pow(Math.E, -4 * x * x); // 憨批高斯函数
+            double Gaussian(double x) => Math.Pow(Math.E, -4 * x * x);
 
-            var len = 1 + (radius * 2); // 长度
-            var end = len - 1; // 最后的索引
-            var radiusF = (double)radius; // 半径浮点数
-            var weights = new double[len]; // 权重
+            var len = 1 + (radius * 2);
+            var end = len - 1;
+            var radiusF = (double)radius;
+            var weights = new double[len];
 
-            for (var i = 0; i <= radius; i++) // 先把右边的权重算出来
+            for (var i = 0; i <= radius; i++)
             {
                 weights[radius + i] = Gaussian(i / radiusF);
             }
 
-            for (var i = 0; i < radius; i++) // 把右边的权重拷贝到左边
+            for (var i = 0; i < radius; i++)
             {
                 weights[i] = weights[end - i];
             }
 
             var total = weights.Sum();
-            for (var i = 0; i < len; i++) // 使权重合为 0
+            for (var i = 0; i < len; i++)
             {
                 weights[i] = weights[i] / total;
             }
-
-            len = 0; end = 0; radiusF = 0; total = 0;
 
             return weights;
         }
@@ -751,8 +718,6 @@ public partial class ImmersiveVisualizerPresenter : UserControl
             {
                 buffer[i] = buffer[i] * weights[i];
             }
-
-            len = 0;
         }
 
         var weights = GetWeights(radius);
@@ -767,8 +732,8 @@ public partial class ImmersiveVisualizerPresenter : UserControl
 
         for (var i = 0; i < radius; i++)
         {
-            Array.Fill(buffer, data[i], 0, radius + 1); // 填充缺省
-            for (var j = 0; j < radius; j++) // 
+            Array.Fill(buffer, data[i], 0, radius + 1);
+            for (var j = 0; j < radius; j++)
             {
                 buffer[radius + 1 + j] = data[i + j];
             }
@@ -779,14 +744,14 @@ public partial class ImmersiveVisualizerPresenter : UserControl
 
         for (var i = radius; i < data.Length - radius; i++)
         {
-            for (var j = 0; j < radius; j++) // 
+            for (var j = 0; j < radius; j++)
             {
                 buffer[j] = data[i - j];
             }
 
             buffer[radius] = data[i];
 
-            for (var j = 0; j < radius; j++) // 
+            for (var j = 0; j < radius; j++)
             {
                 buffer[radius + j + 1] = data[i + j];
             }
@@ -797,8 +762,8 @@ public partial class ImmersiveVisualizerPresenter : UserControl
 
         for (var i = data.Length - radius; i < data.Length; i++)
         {
-            Array.Fill(buffer, data[i], 0, radius + 1); // 填充缺省
-            for (var j = 0; j < radius; j++) // 
+            Array.Fill(buffer, data[i], 0, radius + 1);
+            for (var j = 0; j < radius; j++)
             {
                 buffer[radius + 1 + j] = data[i - j];
             }
