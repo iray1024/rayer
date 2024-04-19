@@ -19,15 +19,13 @@ internal unsafe partial struct AVDictionary
     internal int count;
     internal AVDictionaryEntry* elems;
 
-    public AVDictionaryEntry[] Elements
-    {
-        get { return GetElements(); }
-    }
+    public AVDictionaryEntry[] Elements => GetElements();
 
     private AVDictionaryEntry[] GetElements()
     {
         var cpy = elems;
         AVDictionaryEntry[] elements = new AVDictionaryEntry[count];
+
         for (int i = 0; i < count; i++)
         {
             elements[i] = cpy[i];
@@ -541,6 +539,7 @@ internal unsafe static partial class FFmpeg
     internal const int AVSTREAM_INIT_IN_WRITE_HEADER = 0;
     internal const int AVSTREAM_INIT_IN_INIT_OUTPUT = 1;
     internal const int AV_FRAME_FILENAME_FLAGS_MULTIPLE = 1;
+
     private const string libavformat = "avformat-57";
     
     [DllImport(libavformat, EntryPoint = "av_register_all", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]

@@ -13,7 +13,7 @@ internal sealed class AvStream : IDisposable
     {
         if (_stream == null)
         {
-            throw new InvalidOperationException("No stream selected.");
+            throw new InvalidOperationException("没有选择流。");
         }
 
         int bitsPerSample;

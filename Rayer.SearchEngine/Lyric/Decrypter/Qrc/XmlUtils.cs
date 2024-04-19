@@ -3,19 +3,13 @@ using System.Xml;
 
 namespace Rayer.SearchEngine.Lyric.Decrypter.Qrc;
 
-public static class XmlUtils
+public static partial class XmlUtils
 {
-    private static readonly Regex AmpRegex = new("&(?![a-zA-Z]{2,6};|#[0-9]{2,4};)");
+    private static readonly Regex AmpRegex = GetAmpRegex();
 
     private static readonly Regex QuotRegex =
-        new(
-            "(\\s+[\\w:.-]+\\s*=\\s*\")(([^\"]*)((\")((?!\\s+[\\w:.-]+\\s*=\\s*\"|\\s*(?:/?|\\?)>))[^\"]*)*)\"");
+        GetQuotRegex();
 
-    /// <summary>
-    /// 创建 XML DOM
-    /// </summary>
-    /// <param name="content"></param>
-    /// <returns></returns>
     public static XmlDocument Create(string content)
     {
         content = RemoveIllegalContent(content);
@@ -86,11 +80,11 @@ public static class XmlUtils
                 var part = content.Substring(left, i - left + 1);
 
                 // 存在有且只有一个等号
-                if (part.Contains("=") && part.IndexOf("=") == part.LastIndexOf("="))
+                if (part.Contains('=') && part.IndexOf('=') == part.LastIndexOf('='))
                 {
                     // 等号和左括号之间没有空格 <a="b" />
-                    var part1 = content.Substring(left, part.IndexOf("="));
-                    if (!part1.Trim().Contains(" "))
+                    var part1 = content.Substring(left, part.IndexOf('='));
+                    if (!part1.Trim().Contains(' '))
                     {
                         content = content[..left] + content[(i + 1)..];
                         i = 0;
@@ -126,7 +120,16 @@ public static class XmlUtils
 
         for (var i = 0; i < xmlNode.ChildNodes.Count; i++)
         {
-            RecursionFindElement(xmlNode.ChildNodes.Item(i), mappingDict, resDict);
+            if (xmlNode.ChildNodes.Item(i) is XmlNode node)
+            {
+                RecursionFindElement(node, mappingDict, resDict);
+            }
         }
     }
+
+    [GeneratedRegex("&(?![a-zA-Z]{2,6};|#[0-9]{2,4};)")]
+    private static partial Regex GetAmpRegex();
+
+    [GeneratedRegex("(\\s+[\\w:.-]+\\s*=\\s*\")(([^\"]*)((\")((?!\\s+[\\w:.-]+\\s*=\\s*\"|\\s*(?:/?|\\?)>))[^\"]*)*)\"")]
+    private static partial Regex GetQuotRegex();
 }

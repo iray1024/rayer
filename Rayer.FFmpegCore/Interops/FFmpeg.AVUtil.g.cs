@@ -743,6 +743,7 @@ internal unsafe static partial class FFmpeg
     internal const int FF_LOSS_ALPHA = 0x0008;
     internal const int FF_LOSS_COLORQUANT = 0x0010;
     internal const int FF_LOSS_CHROMA = 0x0020;
+
     private const string libavutil = "avutil-55";
     
     [DllImport(libavutil, EntryPoint = "av_strerror", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]

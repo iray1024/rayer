@@ -263,7 +263,7 @@ public static class DESHelper
             KeySchedule(key[8..], schedule[1], DECRYPT);
             KeySchedule(key[16..], schedule[2], mode);
         }
-        else /*if (mode == DES_DECRYPT*/
+        else
         {
             KeySchedule(key[0..], schedule[2], mode);
             KeySchedule(key[8..], schedule[1], ENCRYPT);

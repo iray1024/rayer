@@ -1009,6 +1009,7 @@ internal unsafe static partial class FFmpeg
     internal const int PARSER_FLAG_ONCE = 0x0002;
     internal const int PARSER_FLAG_FETCHED_OFFSET = 0x0004;
     internal const int PARSER_FLAG_USE_CODEC_TS = 0x1000;
+
     private const string libavcodec = "avcodec-57";
             
     [DllImport(libavcodec, EntryPoint = "avcodec_register_all", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]

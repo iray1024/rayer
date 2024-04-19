@@ -61,6 +61,7 @@ public interface ILineInfo : IComparable
         }
 
         source = source.Trim();
+
         if (source[0] is '(' or '（')
         {
             source = source[1..];

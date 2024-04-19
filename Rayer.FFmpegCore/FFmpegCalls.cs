@@ -78,7 +78,7 @@ internal class FFmpegCalls
     {
         var buffer = FFmpeg.av_malloc((ulong)bufferSize);
         var ptr = new nint(buffer);
-        return ptr == nint.Zero ? throw new OutOfMemoryException("Could not allocate memory.") : ptr;
+        return ptr == nint.Zero ? throw new OutOfMemoryException("无法分配内存。") : ptr;
     }
 
     internal static unsafe void AvFree(nint buffer)
@@ -97,14 +97,14 @@ internal class FFmpegCalls
             writeable ? 1 : 0,
             (void*)userData,
             readData, writeData, seek);
-        return avioContext == null ? throw new FFmpegException("Could not allocate avio-context.", "avio_alloc_context") : avioContext;
+        return avioContext == null ? throw new FFmpegException("无法分配 avio-context.", "avio_alloc_context") : avioContext;
     }
 
     internal static unsafe AVFormatContext* AvformatAllocContext()
     {
         var formatContext = FFmpeg.avformat_alloc_context();
         return formatContext == null
-            ? throw new FFmpegException("Could not allocate avformat-context.", "avformat_alloc_context")
+            ? throw new FFmpegException("无法分配 avformat-context.", "avformat_alloc_context")
             : formatContext;
     }
 
@@ -148,7 +148,7 @@ internal class FFmpegCalls
         var decoder = FFmpeg.avcodec_find_decoder(codecId);
         return decoder == null
             ? throw new FFmpegException(
-                string.Format("Failed to find a decoder for CodecId {0}.", codecId),
+                string.Format("找不到 CodecId 的解码器 {0}.", codecId),
                 "avcodec_find_decoder")
             : decoder;
     }
@@ -167,7 +167,7 @@ internal class FFmpegCalls
     internal static unsafe AVFrame* AvFrameAlloc()
     {
         var frame = FFmpeg.av_frame_alloc();
-        return frame == null ? throw new FFmpegException("Could not allocate frame.", "av_frame_alloc") : frame;
+        return frame == null ? throw new FFmpegException("无法分配帧。", "av_frame_alloc") : frame;
     }
 
     internal static unsafe void AvFrameFree(AVFrame* frame)
@@ -211,7 +211,7 @@ internal class FFmpegCalls
     internal static int AvGetBytesPerSample(AVSampleFormat sampleFormat)
     {
         var dataSize = FFmpeg.av_get_bytes_per_sample(sampleFormat);
-        return dataSize <= 0 ? throw new FFmpegException("Could not calculate data size.") : dataSize;
+        return dataSize <= 0 ? throw new FFmpegException("无法计算数据大小。") : dataSize;
     }
 
     internal static unsafe int AvSamplesGetBufferSize(AVFrame* frame)
@@ -236,7 +236,7 @@ internal class FFmpegCalls
         var result = FFmpeg.av_strerror(errorCode, new nint(buffer), 500);
         if (result < 0)
         {
-            return "No description available.";
+            return "没有可用的描述。";
         }
 
         var errorMessage = Marshal.PtrToStringAnsi(new nint(buffer), 500).Trim('\0').Trim();

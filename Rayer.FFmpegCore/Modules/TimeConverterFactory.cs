@@ -28,7 +28,7 @@ internal sealed class TimeConverterFactory
         var type = typeof(TSource);
         if (_timeConverters.ContainsKey(type))
         {
-            throw new ArgumentException("A timeconverter for the same source type got already registered.");
+            throw new ArgumentException("已经注册了同一源类型的 TimeConverter。");
         }
 
         _timeConverters.Add(type, timeConverter);
@@ -40,7 +40,7 @@ internal sealed class TimeConverterFactory
         var type = typeof(TSource);
         if (!_timeConverters.ContainsKey(type))
         {
-            throw new ArgumentException("There is no timeconverter registered for the specified source type.");
+            throw new ArgumentException("没有为指定源类型注册的 TimeConverter。");
         }
 
         _timeConverters.Remove(type);
@@ -63,7 +63,7 @@ internal sealed class TimeConverterFactory
 
         if (!typeof(IAudioSource).IsAssignableFrom(sourceType))
         {
-            throw new ArgumentException("Specified type is no AudioSource.", nameof(sourceType));
+            throw new ArgumentException("指定的类型不是 AudioSource。", nameof(sourceType));
         }
 
         if (_cache.ContainsKey(sourceType))
@@ -91,11 +91,11 @@ internal sealed class TimeConverterFactory
                 if (baseTypes.Length == 0)
                 {
                     throw new ArgumentException(
-                        "No registered time converter for the specified source type was found.");
+                        "找不到指定源类型注册的 TimeConverter。");
                 }
 
                 throw new ArgumentException(
-                    "Multiple possible time converters, for the specified source type, were found. Specify which time converter to use, through the TimeConverterAttribute.");
+                    "为指定的源类型找到了多个可能的 TimeConverter。通过 TimeConverterAttribute 指定要使用的 TimeConverter。");
             }
 
             var timeConverterType = attribute.TimeConverterType;

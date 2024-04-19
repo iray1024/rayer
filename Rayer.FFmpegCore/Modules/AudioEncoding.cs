@@ -1,4 +1,5 @@
 ﻿namespace Rayer.FFmpegCore.Modules;
+
 public enum AudioEncoding : short
 {
     Unknown = 0x0000,

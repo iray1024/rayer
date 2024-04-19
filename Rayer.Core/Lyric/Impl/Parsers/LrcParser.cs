@@ -23,6 +23,7 @@ internal static class LrcParser
         var lastCharacterIsLineBreak = false;
         var state = CurrentState.None;
         var timeStampType = TimeStampType.None;
+
         for (var i = 0; i < input.Length; i++)
         {
             ref readonly var curChar = ref input[i];
@@ -237,7 +238,7 @@ internal static class LrcParser
                                 timeStampType = TimeStampType.Milliseconds;
                                 continue;
                             }
-                            throw new ArgumentOutOfRangeException();
+                            throw new ArgumentOutOfRangeException(nameof(input));
                         case ']':
                             if (currentTimestampPosition + 1 >= curTimestamps.Length)
                             {
@@ -258,7 +259,7 @@ internal static class LrcParser
 
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(input));
             }
         }
 
@@ -275,6 +276,7 @@ internal static class LrcParser
                 Type = LyricType.Lrc,
             }
         };
+
         return lyricsData;
     }
 
@@ -283,7 +285,7 @@ internal static class LrcParser
         var lines = new List<LineInfo>();
         var curStateStartPosition = 0;
         var timeCalculationCache = 0;
-        var curTimestamps = ArrayPool<int>.Shared.Rent(64); // Max Count 
+        var curTimestamps = ArrayPool<int>.Shared.Rent(64);
         var curTimestamp = 0;
         var currentTimestampPosition = 0;
         var reachesEnd = false;

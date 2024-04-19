@@ -38,7 +38,7 @@ public class WaveFormat : ICloneable, IEquatable<WaveFormat>
 
         if (channels < 1)
         {
-            throw new ArgumentOutOfRangeException(nameof(channels), "Number of channels has to be bigger than 0.");
+            throw new ArgumentOutOfRangeException(nameof(channels), "通道数必须大于0。");
         }
 
         _sampleRate = sampleRate;
@@ -146,12 +146,12 @@ public class WaveFormat : ICloneable, IEquatable<WaveFormat>
     {
         var builder = new StringBuilder();
 
-        builder.Append("ChannelsAvailable: " + Channels);
-        builder.Append("|SampleRate: " + SampleRate);
-        builder.Append("|Bps: " + BytesPerSecond);
-        builder.Append("|BlockAlign: " + BlockAlign);
-        builder.Append("|BitsPerSample: " + BitsPerSample);
-        builder.Append("|Encoding: " + _encoding);
+        builder.Append("可用通道数: " + Channels);
+        builder.Append("|采样率: " + SampleRate);
+        builder.Append("|每秒字节数: " + BytesPerSecond);
+        builder.Append("|块对齐: " + BlockAlign);
+        builder.Append("|每个样本的比特数: " + BitsPerSample);
+        builder.Append("|编码: " + _encoding);
 
         return builder;
     }

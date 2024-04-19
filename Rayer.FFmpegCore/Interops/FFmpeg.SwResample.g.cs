@@ -26,5 +26,6 @@ internal unsafe static partial class FFmpeg
     internal const int LIBSWRESAMPLE_VERSION_MINOR = 3;
     internal const int LIBSWRESAMPLE_VERSION_MICRO = 100;
     internal const int SWR_FLAG_RESAMPLE = 1;
+
     private const string libswresample = "swresample-2";       
 }

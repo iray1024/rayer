@@ -11,7 +11,7 @@ internal sealed class TimeConverterAttribute : Attribute
 
         if (!typeof(TimeConverter).IsAssignableFrom(timeConverterType))
         {
-            throw new ArgumentException("Specified type is no time converter.", nameof(timeConverterType));
+            throw new ArgumentException("指定的类型不是 TimeConverter。", nameof(timeConverterType));
         }
 
         TimeConverterType = timeConverterType;
