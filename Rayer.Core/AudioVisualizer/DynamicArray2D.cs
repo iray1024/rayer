@@ -2,13 +2,12 @@
 
 internal class DynamicArray2D
 {
-    private readonly double[] xps, xds;// previous input
-    private readonly double[] ys, yds; // state variables
-    private readonly double _w, _z, _d, k1, k2, k3; // dynamics constants
+    private readonly double[] xps, xds;
+    private readonly double[] ys, yds;
+    private readonly double _w, _z, _d, k1, k2, k3;
 
     public DynamicArray2D(double f, double z, double r, double x0, int size)
     {
-        //compute constants
         _w = 2 * Math.PI * f;
         _z = z;
         _d = _w * Math.Sqrt(Math.Abs((z * z) - 1));
@@ -16,7 +15,6 @@ internal class DynamicArray2D
         k2 = 1 / (2 * Math.PI * f * (2 * Math.PI * f));
         k3 = r * z / (2 * Math.PI * f);
 
-        // initialize variables
         xps = new double[size];
         ys = new double[size];
 
@@ -31,7 +29,7 @@ internal class DynamicArray2D
     {
         if (xs.Length != xps.Length)
         {
-            throw new ArgumentException();
+            throw new ArgumentException(null, nameof(deltaTime));
         }
 
         for (var i = 0; i < xds.Length; i++)
