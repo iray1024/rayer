@@ -6,6 +6,7 @@ using Rayer.Core.FileSystem.Abstractions;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Playing;
+using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Extensions;
 using Rayer.Services;
 using System.Windows;
@@ -32,7 +33,7 @@ public partial class App : Application
 
             services.AddRayerCore();
             services.AddSearchEngine(builder =>
-            {                
+            {
                 builder.SetHttpEndpoint("http://localhost:3000");
             });
 
@@ -108,6 +109,13 @@ public partial class App : Application
 
     private static async Task ShowException(Exception? ex)
     {
+        var loader = GetRequiredService<ILoaderProvider>();
+
+        if (loader.IsLoading)
+        {
+            loader.Loaded();
+        }
+
         var dialogService = GetService<IContentDialogService>();
 
         if (dialogService is not null)

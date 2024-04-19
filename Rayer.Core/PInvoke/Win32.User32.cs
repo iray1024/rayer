@@ -24,6 +24,10 @@ internal static partial class Win32
         [LibraryImport("user32.dll", EntryPoint = "SetWindowLongA")]
         internal static partial int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
+        [LibraryImport("user32.dll", EntryPoint = "SetWindowPos")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static partial bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
         public const uint MONITOR_DEFAULTTONEAREST = 2;
         public const int SWP_NOSIZE = 0x0001;
         public const int SWP_NOZORDER = 0x0004;
