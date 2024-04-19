@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Models.Response.User;
 
-public class UserLikelistResponse : ResponseBase
+public class UserLikelist : ResponseBase
 {
     public long[] Ids { get; set; } = [];
 

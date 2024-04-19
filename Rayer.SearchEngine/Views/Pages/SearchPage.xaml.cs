@@ -90,7 +90,7 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
             {
                 var dataContext = await ViewModel.LoadAudioAsync();
 
-                ApplyPresenter<SearchAudioPresenterViewModel, SearchAudioDetailResponse>(searchType, dataContext);
+                ApplyPresenter<SearchAudioPresenterViewModel, SearchAudioDetail>(searchType, dataContext);
             }
             else if (searchType is SearchType.Singer)
             {
@@ -98,25 +98,25 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
 
                 await Task.Delay(1000, cancellationToken);
 
-                ApplyPresenter<SearchSingerPresenterViewModel, SearchSingerDetailResponse>(searchType, dataContext);
+                ApplyPresenter<SearchSingerPresenterViewModel, SearchSingerDetail>(searchType, dataContext);
             }
             else if (searchType is SearchType.Album)
             {
                 var dataContext = await ViewModel.LoadAlbumAsync();
 
-                ApplyPresenter<SearchAlbumPresenterViewModel, SearchAlbumDetailResponse>(searchType, dataContext);
+                ApplyPresenter<SearchAlbumPresenterViewModel, SearchAlbumDetail>(searchType, dataContext);
             }
             else if (searchType is SearchType.Video)
             {
                 var dataContext = await ViewModel.LoadVideoAsync();
 
-                ApplyPresenter<SearchVideoPresenterViewModel, SearchVideoDetailResponse>(searchType, dataContext);
+                ApplyPresenter<SearchVideoPresenterViewModel, SearchVideoDetail>(searchType, dataContext);
             }
             else if (searchType is SearchType.Playlist)
             {
                 var dataContext = await ViewModel.LoadPlaylistAsync();
 
-                ApplyPresenter<SearchPlaylistPresenterViewModel, SearchPlaylistDetailResponse>(searchType, dataContext);
+                ApplyPresenter<SearchPlaylistPresenterViewModel, SearchPlaylistDetail>(searchType, dataContext);
             }
         }
     }

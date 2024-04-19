@@ -13,19 +13,19 @@ internal class UserService : SearchEngineBase, IUserService
     {
     }
 
-    public async Task<UserLikelistResponse> GetLikelistAsync(long uid)
+    public async Task<UserLikelist> GetLikelistAsync(long uid)
     {
         var result = await Searcher.GetAsync(
             User.GetLikelist()
                 .WithParam("uid", uid.ToString())
                 .Build());
 
-        var response = result.ToEntity<UserLikelistResponse>();
+        var response = result.ToEntity<UserLikelist>();
 
         return response is not null ? response : default!;
     }
 
-    public async Task<UserPlaylistResponse> GetPlaylistAsync(long uid, int limit = 30, int offset = 0)
+    public async Task<UserPlaylist> GetPlaylistAsync(long uid, int limit = 30, int offset = 0)
     {
         var result = await Searcher.GetAsync(
             User.GetPlaylist()
@@ -34,7 +34,7 @@ internal class UserService : SearchEngineBase, IUserService
                 .WithParam("offset", offset.ToString())
                 .Build());
 
-        var response = result.ToEntity<UserPlaylistResponse>();
+        var response = result.ToEntity<UserPlaylist>();
 
         if (response is not null)
         {

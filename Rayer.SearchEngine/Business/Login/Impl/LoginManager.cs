@@ -19,19 +19,10 @@ internal class LoginManager : SearchEngineBase, ILoginManager
     {
         _serviceProvider = serviceProvider;
 
-        AccountInfo = new AccountInfoResponse()
-        {
-            Account = new()
-            {
-                AnonimousUser = true,
-                Type = 0,
-                Status = -10,
-                VipType = 0,
-            }
-        };
+        AccountInfo = new AccountInfo();
     }
 
-    public AccountInfoResponse AccountInfo { get; private set; }
+    public AccountInfo AccountInfo { get; private set; }
 
     public event EventHandler? LoginSucceed;
 
@@ -72,11 +63,11 @@ internal class LoginManager : SearchEngineBase, ILoginManager
         LoginSucceed?.Invoke(this, EventArgs.Empty);
     }
 
-    public async Task<AccountInfoResponse> GetAccountInfoAsync(CancellationToken cancellationToken = default)
+    public async Task<AccountInfo> GetAccountInfoAsync(CancellationToken cancellationToken = default)
     {
         var result = await Searcher.GetAsync(Account.AccountInfo().Build());
 
-        var response = result.ToEntity<AccountInfoResponse>();
+        var response = result.ToEntity<AccountInfo>();
 
         if (response is not null)
         {

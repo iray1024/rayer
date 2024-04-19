@@ -18,7 +18,7 @@ using System.Windows.Shapes;
 
 namespace Rayer.SearchEngine.Controls.Search;
 
-public partial class SearchSingerPresenter : UserControl, IPresenterControl<SearchSingerPresenterViewModel, SearchSingerDetailResponse>
+public partial class SearchSingerPresenter : UserControl, IPresenterControl<SearchSingerPresenterViewModel, SearchSingerDetail>
 {
     public SearchSingerPresenter()
     {

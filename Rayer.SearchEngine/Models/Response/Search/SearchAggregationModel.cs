@@ -2,5 +2,5 @@
 
 public class SearchAggregationModel
 {
-    public SearchAudioResposne Audio { get; set; } = null!;
+    public SearchAudio Audio { get; set; } = null!;
 }

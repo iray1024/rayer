@@ -28,7 +28,7 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
     private readonly IPlaylistService _playlistService;
 
     [ObservableProperty]
-    private AccountInfoResponse _account = default!;
+    private AccountInfo _account = default!;
 
     [ObservableProperty]
     private ExploreLibraryModel _model;
@@ -126,7 +126,7 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
         }
     }
 
-    partial void OnAccountChanged(AccountInfoResponse value)
+    partial void OnAccountChanged(AccountInfo value)
     {
         if (value is { Profile: not null })
         {
@@ -211,7 +211,7 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
         return Model.RandomLyrics;
     }
 
-    private static AudioDetail[] MapToAudioDetail(PlaylistDetailResponse response, int count)
+    private static AudioDetail[] MapToAudioDetail(PlaylistDetail response, int count)
     {
         var tracks = response.Playlist.Tracks;
         var privileges = response.Privileges;

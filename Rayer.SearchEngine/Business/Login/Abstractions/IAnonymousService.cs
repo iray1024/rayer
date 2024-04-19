@@ -4,5 +4,5 @@ namespace Rayer.SearchEngine.Business.Login.Abstractions;
 
 public interface IAnonymousService
 {
-    Task<AnonymousResponse> AnonymousAsync();
+    Task<AnonymousUser> AnonymousAsync();
 }

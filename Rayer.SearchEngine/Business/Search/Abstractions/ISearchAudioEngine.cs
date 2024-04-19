@@ -4,9 +4,9 @@ namespace Rayer.SearchEngine.Business.Search.Abstractions;
 
 public interface ISearchAudioEngine
 {
-    Task<SearchAudioResposne> SearchAsync(string keywords, int offset);
+    Task<SearchAudio> SearchAsync(string keywords, int offset);
 
-    Task<SearchAudioDetailResponse> SearchDetailAsync(string ids);
+    Task<SearchAudioDetail> SearchDetailAsync(string ids);
 
-    Task<GetAudioResponse> GetAudioAsync(long id);
+    Task<WebAudio> GetAudioAsync(long id);
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rayer.SearchEngine.Models.Response.Search;
 
-public class SearchVideoDetailResponse : ResponseBase
+public class SearchPlaylistDetail : ResponseBase
 {
 
 }

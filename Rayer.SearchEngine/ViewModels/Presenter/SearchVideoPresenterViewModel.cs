@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 namespace Rayer.SearchEngine.ViewModels.Presenter;
 
 [Inject]
-public partial class SearchVideoPresenterViewModel : ObservableObject, IPresenterViewModel<SearchVideoDetailResponse>
+public partial class SearchVideoPresenterViewModel : ObservableObject, IPresenterViewModel<SearchVideoDetail>
 {
     [ObservableProperty]
-    private SearchVideoDetailResponse _presenterDataContext = null!;
+    private SearchVideoDetail _presenterDataContext = null!;
 }

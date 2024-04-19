@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Models.Response;
 
-public class PrivilegesDetail
+public class Privileges
 {
     public long Id { get; set; }
 

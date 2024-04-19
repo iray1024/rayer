@@ -6,5 +6,5 @@ public interface ISearchEngine
 {
     Task<SearchAggregationModel> SearchAsync(string queryText, CancellationToken cancellationToken = default);
 
-    Task<SearchSuggestResponse> SuggestAsync(string keywords, CancellationToken cancellationToken = default);
+    Task<SearchSuggest> SuggestAsync(string keywords, CancellationToken cancellationToken = default);
 }

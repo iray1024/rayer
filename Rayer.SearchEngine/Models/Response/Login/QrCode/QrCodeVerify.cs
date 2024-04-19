@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Models.Response.Login.QrCode;
 
-public class QrCodeVerifyResponse : ResponseBase
+public class QrCodeVerify : ResponseBase
 {
     public string Message { get; set; } = string.Empty;
 

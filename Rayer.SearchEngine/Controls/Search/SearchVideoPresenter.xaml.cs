@@ -18,7 +18,7 @@ using System.Windows.Shapes;
 
 namespace Rayer.SearchEngine.Controls.Search;
 
-public partial class SearchVideoPresenter : UserControl, IPresenterControl<SearchVideoPresenterViewModel, SearchVideoDetailResponse>
+public partial class SearchVideoPresenter : UserControl, IPresenterControl<SearchVideoPresenterViewModel, SearchVideoDetail>
 {
     public SearchVideoPresenter()
     {

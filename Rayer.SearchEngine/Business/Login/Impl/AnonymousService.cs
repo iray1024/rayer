@@ -9,13 +9,13 @@ namespace Rayer.SearchEngine.Business.Login.Impl;
 [Inject<IAnonymousService>(ServiceLifetime = Microsoft.Extensions.DependencyInjection.ServiceLifetime.Scoped)]
 internal class AnonymousService(IServiceProvider serviceProvider) : SearchEngineBase(serviceProvider), IAnonymousService
 {
-    public async Task<AnonymousResponse> AnonymousAsync()
+    public async Task<AnonymousUser> AnonymousAsync()
     {
         var anonymousResult = await Searcher.GetAsync(
             Login.AnonymousLogin()
                 .Build());
 
-        var response = anonymousResult.ToEntity<AnonymousResponse>();
+        var response = anonymousResult.ToEntity<AnonymousUser>();
 
         return response is not null ? response : default!;
     }

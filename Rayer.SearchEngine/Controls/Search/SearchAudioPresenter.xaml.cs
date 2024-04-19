@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace Rayer.SearchEngine.Controls.Search;
 
-public partial class SearchAudioPresenter : UserControl, IPresenterControl<SearchAudioPresenterViewModel, SearchAudioDetailResponse>
+public partial class SearchAudioPresenter : UserControl, IPresenterControl<SearchAudioPresenterViewModel, SearchAudioDetail>
 {
     public SearchAudioPresenter()
     {
@@ -28,7 +28,7 @@ public partial class SearchAudioPresenter : UserControl, IPresenterControl<Searc
     private async void OnListViewItemDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         if (e.Source is ListViewItem listViewItem &&
-            listViewItem.DataContext is SearchAudioDetailAudioDetail item)
+            listViewItem.DataContext is SearchAudioDetailInformation item)
         {
             await ViewModel.PlayWebAudio(item);
         }

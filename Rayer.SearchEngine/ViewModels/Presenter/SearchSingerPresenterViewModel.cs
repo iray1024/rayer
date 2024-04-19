@@ -6,8 +6,8 @@ using Rayer.SearchEngine.Models.Response.Search;
 namespace Rayer.SearchEngine.ViewModels.Presenter;
 
 [Inject]
-public partial class SearchSingerPresenterViewModel : ObservableObject, IPresenterViewModel<SearchSingerDetailResponse>
+public partial class SearchSingerPresenterViewModel : ObservableObject, IPresenterViewModel<SearchSingerDetail>
 {
     [ObservableProperty]
-    public SearchSingerDetailResponse _presenterDataContext = null!;
+    public SearchSingerDetail _presenterDataContext = null!;
 }

@@ -4,7 +4,7 @@ namespace Rayer.SearchEngine.Business.Login.Abstractions;
 
 public interface ILoginManager
 {
-    AccountInfoResponse AccountInfo { get; }
+    AccountInfo AccountInfo { get; }
 
     IPhoneService UsePhone();
 
@@ -20,7 +20,7 @@ public interface ILoginManager
 
     void RaiseLoginSucceed();
 
-    Task<AccountInfoResponse> GetAccountInfoAsync(CancellationToken cancellationToken = default);
+    Task<AccountInfo> GetAccountInfoAsync(CancellationToken cancellationToken = default);
 
     event EventHandler LoginSucceed;
 }

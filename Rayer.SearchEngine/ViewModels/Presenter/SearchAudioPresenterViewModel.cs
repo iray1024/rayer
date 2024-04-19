@@ -13,14 +13,14 @@ using System.Windows;
 namespace Rayer.SearchEngine.ViewModels.Presenter;
 
 [Inject]
-public partial class SearchAudioPresenterViewModel : ObservableObject, IPresenterViewModel<SearchAudioDetailResponse>
+public partial class SearchAudioPresenterViewModel : ObservableObject, IPresenterViewModel<SearchAudioDetail>
 {
     private readonly ISearchAudioEngine _audioEngine;
     private readonly IAudioManager _audioManager;
     private readonly ISettingsService _settingsService;
 
     [ObservableProperty]
-    private SearchAudioDetailResponse _presenterDataContext = null!;
+    private SearchAudioDetail _presenterDataContext = null!;
 
     [ObservableProperty]
     private double _nameMaxWidth = 150;
@@ -47,7 +47,7 @@ public partial class SearchAudioPresenterViewModel : ObservableObject, IPresente
         _settingsService = settingsService;
     }
 
-    public async Task PlayWebAudio(SearchAudioDetailAudioDetail item)
+    public async Task PlayWebAudio(SearchAudioDetailInformation item)
     {
         var audioInformation = await _audioEngine.GetAudioAsync(item.Id);
 

@@ -32,7 +32,7 @@
             VirtualizingPanel.IsVirtualizing="True"
             VirtualizingPanel.VirtualizationMode="Recycling">
             <ui:ListView.ItemTemplate>
-                <DataTemplate DataType="{x:Type model:SearchAudioDetailAudioDetail}">
+                <DataTemplate DataType="{x:Type model:SearchAudioDetailInformation}">
                     <Grid PreviewMouseRightButtonUp="OnListViewItemRightButtonUp">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />

@@ -1,4 +1,4 @@
-﻿using static Rayer.SearchEngine.Models.Response.User.UserPlaylistResponse;
+﻿using Rayer.SearchEngine.Models.Response.User;
 
 namespace Rayer.SearchEngine.Models.Domian;
 
@@ -16,7 +16,7 @@ public class ExploreLibraryModel
 
     public class ExploreLibraryDetailModel
     {
-        public UserPlaylistReponseDetail[] Playlist { get; set; } = [];
+        public PlaylistDetailInformation[] Playlist { get; set; } = [];
 
     }
 }

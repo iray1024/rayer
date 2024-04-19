@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Models.Response.Login;
 
-public class AnonymousResponse : ResponseBase
+public class AnonymousUser : ResponseBase
 {
     public long UserId { get; set; }
 

@@ -1,10 +1,10 @@
 ﻿namespace Rayer.SearchEngine.Models.Response.Search;
 
-public class GetAudioResponse : ResponseBase
+public class WebAudio : ResponseBase
 {
-    public SearchAudioUrlResponseDetail[] Data { get; set; } = [];
+    public WebAudioDetail[] Data { get; set; } = [];
 
-    public class SearchAudioUrlResponseDetail
+    public class WebAudioDetail
     {
         public long Id { get; set; }
 

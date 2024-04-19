@@ -30,14 +30,14 @@ internal class SearchEngine : SearchEngineBase, ISearchEngine
         return model;
     }
 
-    public async Task<SearchSuggestResponse> SuggestAsync(string keywords, CancellationToken cancellationToken = default)
+    public async Task<SearchSuggest> SuggestAsync(string keywords, CancellationToken cancellationToken = default)
     {
         var result = await Searcher.GetAsync(
             Search.SearchSuggestion()
                 .WithParam("keywords", keywords)
                 .Build());
 
-        var response = result.ToEntity<SearchSuggestResponse>();
+        var response = result.ToEntity<SearchSuggest>();
 
         return response is not null ? response : default!;
     }

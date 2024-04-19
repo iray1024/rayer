@@ -2,8 +2,8 @@
 using Rayer.Core;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Business.Data.Abstractions;
+using Rayer.SearchEngine.Models.Response.User;
 using System.Windows.Media;
-using static Rayer.SearchEngine.Models.Response.User.UserPlaylistResponse;
 
 namespace Rayer.SearchEngine.ViewModels.Explore.LibraryDetail;
 
@@ -13,7 +13,7 @@ public partial class ExploreLibraryDetailPlaylistViewModel : ObservableObject
     private readonly IExploreLibraryDataProvider _dataProvider;
 
     [ObservableProperty]
-    private UserPlaylistReponseDetail[] _playlist = [];
+    private PlaylistDetailInformation[] _playlist = [];
 
     [ObservableProperty]
     private double _coverMaxWidth = 128;

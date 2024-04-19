@@ -18,7 +18,7 @@ using System.Windows.Shapes;
 
 namespace Rayer.SearchEngine.Controls.Search;
 
-public partial class SearchPlaylistPresenter : UserControl, IPresenterControl<SearchPlaylistPresenterViewModel, SearchPlaylistDetailResponse>
+public partial class SearchPlaylistPresenter : UserControl, IPresenterControl<SearchPlaylistPresenterViewModel, SearchPlaylistDetail>
 {
     public SearchPlaylistPresenter()
     {

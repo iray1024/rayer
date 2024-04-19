@@ -4,7 +4,7 @@ namespace Rayer.SearchEngine.Business.User.Abstractions;
 
 public interface IUserService
 {
-    Task<UserLikelistResponse> GetLikelistAsync(long uid);
+    Task<UserLikelist> GetLikelistAsync(long uid);
 
-    Task<UserPlaylistResponse> GetPlaylistAsync(long uid, int limit = 30, int offset = 0);
+    Task<UserPlaylist> GetPlaylistAsync(long uid, int limit = 30, int offset = 0);
 }

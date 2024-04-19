@@ -4,5 +4,5 @@ namespace Rayer.SearchEngine.Business.Playlist.Abstractions;
 
 public interface IPlaylistService
 {
-    Task<PlaylistDetailResponse> GetPlaylistDetailAsync(long id);
+    Task<PlaylistDetail> GetPlaylistDetailAsync(long id);
 }

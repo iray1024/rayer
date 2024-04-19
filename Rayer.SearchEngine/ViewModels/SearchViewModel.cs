@@ -21,9 +21,9 @@ public partial class SearchViewModel : ObservableObject
 
     public SearchAggregationModel Model { get; set; } = null!;
 
-    public async Task<SearchAudioDetailResponse> LoadAudioAsync()
+    public async Task<SearchAudioDetail> LoadAudioAsync()
     {
-        if (_cache.TryGetValue<SearchAudioDetailResponse>(Model.Audio, out var response) && response is not null)
+        if (_cache.TryGetValue<SearchAudioDetail>(Model.Audio, out var response) && response is not null)
         {
             return response;
         }
@@ -46,23 +46,23 @@ public partial class SearchViewModel : ObservableObject
         }
     }
 
-    public async Task<SearchSingerDetailResponse> LoadSingerAsync()
+    public async Task<SearchSingerDetail> LoadSingerAsync()
     {
 
         return default!;
     }
 
-    public async Task<SearchAlbumDetailResponse> LoadAlbumAsync()
+    public async Task<SearchAlbumDetail> LoadAlbumAsync()
     {
         return default!;
     }
 
-    public async Task<SearchVideoDetailResponse> LoadVideoAsync()
+    public async Task<SearchVideoDetail> LoadVideoAsync()
     {
         return default!;
     }
 
-    public async Task<SearchPlaylistDetailResponse> LoadPlaylistAsync()
+    public async Task<SearchPlaylistDetail> LoadPlaylistAsync()
     {
         return default!;
     }

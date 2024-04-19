@@ -13,14 +13,19 @@ internal class PlaylistService : SearchEngineBase, IPlaylistService
     {
     }
 
-    public async Task<PlaylistDetailResponse> GetPlaylistDetailAsync(long id)
+    /// <summary>
+    /// 根据ID获取歌单详情
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public async Task<PlaylistDetail> GetPlaylistDetailAsync(long id)
     {
         var result = await Searcher.GetAsync(
             Playlist.GetPlaylistDetail()
                 .WithParam("id", id.ToString())
                 .Build());
 
-        var response = result.ToEntity<PlaylistDetailResponse>();
+        var response = result.ToEntity<PlaylistDetail>();
 
         return response is not null ? response : default!;
     }

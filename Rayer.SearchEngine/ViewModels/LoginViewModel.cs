@@ -57,7 +57,7 @@ public partial class LoginViewModel : ObservableObject
 
         await Application.Current.Dispatcher.InvokeAsync(async () =>
         {
-            QrCodeVerifyResponse checkResult;
+            QrCodeVerify checkResult;
             while (true)
             {
                 await Task.Delay(100);

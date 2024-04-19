@@ -10,9 +10,9 @@ public class AudioDetail
 
     public string Name { get; set; } = string.Empty;
 
-    public SearchAudioDetailArtistDetail[] Artists { get; set; } = [];
+    public Artist[] Artists { get; set; } = [];
 
-    public SearchAudioDetailAlbumDetail? Album { get; set; }
+    public Album? Album { get; set; }
 
     [Description("热度")]
     public float Pop { get; set; }
@@ -24,9 +24,9 @@ public class AudioDetail
 
     public int OriginCoverType { get; set; }
 
-    public SearchAudioNoCopyrightDetail? NoCopyright { get; set; }
+    public SearchAudioDetailInformation.NoCopyrightDetail? NoCopyright { get; set; }
 
-    public PrivilegesDetail Privilege { get; set; } = default!;
+    public Privileges Privilege { get; set; } = default!;
 
     public string NonePlayableReason { get; set; } = string.Empty;
 }
