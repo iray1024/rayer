@@ -6,7 +6,6 @@ using Rayer.Core.FileSystem.Abstractions;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Playing;
-using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Extensions;
 using Rayer.Services;
 using System.Windows;

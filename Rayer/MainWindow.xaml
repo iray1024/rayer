@@ -46,7 +46,10 @@
             </ui:TitleBar.Icon>
         </ui:TitleBar>
 
-        <ContentPresenter x:Name="Loader" />
+        <ContentPresenter
+            x:Name="Loader"
+            HorizontalAlignment="Right"
+            Panel.ZIndex="9999999" />
 
         <ContentPresenter
             x:Name="RootContentDialog"

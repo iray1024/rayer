@@ -15,6 +15,7 @@ namespace Rayer.SearchEngine.Views.Windows;
 public partial class DynamicIsland : Window
 {
     private readonly Storyboard? _dynamicIslandStoryboard = new();
+    private static readonly Storyboard _windowStateChangedStoryboard = new();
     private string _currentScrrenDeviceName = string.Empty;
 
     public DynamicIsland()
@@ -28,6 +29,11 @@ public partial class DynamicIsland : Window
 
         TextBlurStroyboard = Resources["TextBlurStroyboard"] as Storyboard
             ?? throw new ArgumentNullException("未找到 AlbumRotateStoryboard 资源");
+
+        _windowStateChangedStoryboard.Completed += static (s, e) =>
+        {
+            _windowStateChangedStoryboard.Stop();
+        };
     }
 
     public DynamicIslandViewModel ViewModel { get; set; }
@@ -128,6 +134,7 @@ public partial class DynamicIsland : Window
         ViewModel.DynamicIsland = this;
 
         Application.Current.MainWindow.LocationChanged += OnLocationChanged;
+        Application.Current.MainWindow.StateChanged += OnStateChanged;
 
         var hwnd = new WindowInteropHelper(this).Handle;
 
@@ -154,10 +161,63 @@ public partial class DynamicIsland : Window
 
         if (currentScreen.DeviceName != _currentScrrenDeviceName)
         {
+            _windowStateChangedStoryboard.Stop();
             _currentScrrenDeviceName = currentScreen.DeviceName;
 
             Left = ((currentScreen.Bounds.Width - ActualWidth) / 2) + currentScreen.Bounds.Left;
             Top = currentScreen.Bounds.Top + 50;
+        }
+    }
+
+    private void OnStateChanged(object? sender, EventArgs e)
+    {
+        if (AppCore.MainWindow.WindowState is WindowState.Maximized)
+        {
+            var targetTop = Top + 20;
+
+            _windowStateChangedStoryboard.Stop();
+            _windowStateChangedStoryboard.Children.Clear();
+
+            var animation = new DoubleAnimation()
+            {
+                From = Top,
+                To = targetTop,
+                Duration = TimeSpan.FromMilliseconds(800),
+                EasingFunction = new BackEase { EasingMode = EasingMode.EaseInOut }
+            };
+
+            Storyboard.SetTarget(animation, this);
+            Storyboard.SetTargetProperty(animation, new PropertyPath(TopProperty));
+
+            _windowStateChangedStoryboard.Children.Add(animation);
+
+            Timeline.SetDesiredFrameRate(_windowStateChangedStoryboard, 60);
+
+            _windowStateChangedStoryboard.Begin();
+        }
+        else if (AppCore.MainWindow.WindowState is WindowState.Normal)
+        {
+            var targetTop = Top - 20;
+
+            _windowStateChangedStoryboard.Stop();
+            _windowStateChangedStoryboard.Children.Clear();
+
+            var animation = new DoubleAnimation()
+            {
+                From = Top,
+                To = targetTop,
+                Duration = TimeSpan.FromMilliseconds(800),
+                EasingFunction = new BackEase { EasingMode = EasingMode.EaseInOut }
+            };
+
+            Storyboard.SetTarget(animation, this);
+            Storyboard.SetTargetProperty(animation, new PropertyPath(TopProperty));
+
+            _windowStateChangedStoryboard.Children.Add(animation);
+
+            Timeline.SetDesiredFrameRate(_windowStateChangedStoryboard, 60);
+
+            _windowStateChangedStoryboard.Begin();
         }
     }
 }

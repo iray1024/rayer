@@ -1,6 +1,6 @@
 ﻿using Rayer.Core;
+using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
-using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Business.Data.Abstractions;
 using Rayer.SearchEngine.Business.Login.Abstractions;
 using Rayer.SearchEngine.ViewModels.Explore;

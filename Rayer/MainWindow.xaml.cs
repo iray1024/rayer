@@ -3,7 +3,6 @@ using Rayer.Core;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
-using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Views.Windows;
 using Rayer.ViewModels;
 using Rayer.Views.Pages;

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Rayer.SearchEngine.Abstractions;
+namespace Rayer.Core.Framework;
 
 public interface ILoaderProvider
 {

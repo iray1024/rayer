@@ -9,6 +9,8 @@ namespace Rayer.SearchEngine.Controls.Explore.LibraryDetail;
 
 public partial class ExploreLibraryDetailPlaylistPanel : UserControl
 {
+    private readonly Wpf.Ui.Controls.INavigationView _navigationView;
+
     public ExploreLibraryDetailPlaylistPanel()
     {
         var vm = AppCore.GetRequiredService<ExploreLibraryDetailPlaylistViewModel>();
@@ -17,6 +19,11 @@ public partial class ExploreLibraryDetailPlaylistPanel : UserControl
         DataContext = this;
 
         InitializeComponent();
+
+        _navigationView = AppCore.GetRequiredService<Wpf.Ui.INavigationService>().GetNavigationControl();
+
+        _navigationView.PaneOpened += OnPaneOpened;
+        _navigationView.PaneClosed += OnPaneClosed;
     }
 
     public ExploreLibraryDetailPlaylistViewModel ViewModel { get; set; }
@@ -42,12 +49,17 @@ public partial class ExploreLibraryDetailPlaylistPanel : UserControl
 
     private void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        var factor = (e.NewSize.Width + 500) / SystemParameters.PrimaryScreenWidth;
+        Resize(e.NewSize.Width);
+    }
 
-        var panelWidth = ((e.NewSize.Width - 180) / 5) - (100 * Math.Min(factor, 1));
+    private void OnPaneOpened(Wpf.Ui.Controls.NavigationView sender, RoutedEventArgs args)
+    {
+        Resize(AppCore.MainWindow.ActualWidth);
+    }
 
-        ViewModel.CoverMaxWidth = panelWidth + 60;
-        ViewModel.CoverRectClip = new RectangleGeometry(new Rect(0, 0, ViewModel.CoverMaxWidth, ViewModel.CoverMaxWidth), 6, 6);
+    private void OnPaneClosed(Wpf.Ui.Controls.NavigationView sender, RoutedEventArgs args)
+    {
+        Resize(AppCore.MainWindow.ActualWidth);
     }
 
     private void OnMouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
@@ -115,5 +127,15 @@ public partial class ExploreLibraryDetailPlaylistPanel : UserControl
             transform.BeginAnimation(ScaleTransform.ScaleXProperty, animationX);
             transform.BeginAnimation(ScaleTransform.ScaleYProperty, animationY);
         }
+    }
+
+    private void Resize(double newWidth)
+    {
+        var factor = (newWidth + 500) / SystemParameters.PrimaryScreenWidth;
+
+        var panelWidth = ((newWidth - (_navigationView.IsPaneOpen ? 160 : 90)) / 5) - (100 * Math.Min(factor, 1));
+
+        ViewModel.CoverMaxWidth = panelWidth + 60;
+        ViewModel.CoverRectClip = new RectangleGeometry(new Rect(0, 0, ViewModel.CoverMaxWidth, ViewModel.CoverMaxWidth), 6, 6);
     }
 }

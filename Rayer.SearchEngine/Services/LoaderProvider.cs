@@ -1,5 +1,6 @@
-﻿using Rayer.Core.Framework.Injection;
-using Rayer.SearchEngine.Abstractions;
+﻿using Rayer.Core;
+using Rayer.Core.Framework;
+using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Controls;
 using System.Windows;
 using System.Windows.Controls;
@@ -37,7 +38,22 @@ internal class LoaderProvider : ILoaderProvider
             e.SizeChanged += OnSizeChanged;
         }
 
-        Panel.SetZIndex(Loader, 99999);
+        Panel.SetZIndex(Loader, 9999999);
+
+        var navigationView = AppCore.GetRequiredService<Wpf.Ui.INavigationService>().GetNavigationControl();
+
+        navigationView.PaneOpened += OnPaneOpened;
+        navigationView.PaneClosed += OnPaneClosed;
+    }
+
+    private void OnPaneOpened(Wpf.Ui.Controls.NavigationView sender, RoutedEventArgs args)
+    {
+        Loader.Width += _offsetX;
+    }
+
+    private void OnPaneClosed(Wpf.Ui.Controls.NavigationView sender, RoutedEventArgs args)
+    {
+        Loader.Width -= _offsetX;
     }
 
     public void Loading()
