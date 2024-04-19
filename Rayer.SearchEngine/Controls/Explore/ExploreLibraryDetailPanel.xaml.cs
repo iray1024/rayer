@@ -106,7 +106,7 @@ public partial class ExploreLibraryDetailPanel : UserControl
         {
             var agrs = new RoutedEventArgs(Checked, e.Source);
 
-            RaiseEvent(agrs);            
+            RaiseEvent(agrs);
         }
     }
 

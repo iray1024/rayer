@@ -9,7 +9,7 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance local:ImmersiveVisualizerPresenter,
                                      IsDesignTimeCreatable=False}"
-    d:DesignHeight="450"
+    d:DesignHeight="450" Loaded="OnLoaded"
     d:DesignWidth="800"
     mc:Ignorable="d">
     <UserControl.Background>

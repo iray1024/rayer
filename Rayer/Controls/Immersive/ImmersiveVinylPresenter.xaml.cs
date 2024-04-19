@@ -1,7 +1,9 @@
 ﻿using NAudio.Wave;
+using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
 using Rayer.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
@@ -88,5 +90,42 @@ public partial class ImmersiveVinylPresenter : UserControl
         keyFramesAnimation.KeyFrames[1].Value = 0;
 
         AlbumOpenStoryboard.Begin(Album, false);
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        AppCore.MainWindow.SizeChanged += OnSizeChanged;
+
+        var width = Math.Max(300, AppCore.MainWindow.ActualWidth / 4);
+
+        ViewModel.CurrentVinyWidth = width * 280 / 300;
+        ViewModel.CurrentCoverWidth = width;
+        ViewModel.CurrentRotateCoverWidth = width * 0.6;
+        ViewModel.CurrentRotateCoverCanvasLeft = (width - 300) / 1.9;
+        ViewModel.CurrentRotateCoverCanvasTop = (width - ViewModel.CurrentVinyWidth) / 2;
+        MagneticCircle.Width = width / 3;
+        MagneticCircle.Height = MagneticCircle.Width;
+        MagneticMiddleCircle.Width = width / 10;
+        MagneticMiddleCircle.Height = MagneticMiddleCircle.Width;
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        AppCore.MainWindow.SizeChanged -= OnSizeChanged;
+    }
+
+    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        var width = Math.Max(300, e.NewSize.Width / 4);
+
+        ViewModel.CurrentVinyWidth = width * 280 / 300;
+        ViewModel.CurrentCoverWidth = width;
+        ViewModel.CurrentRotateCoverWidth = width * 0.6;
+        ViewModel.CurrentRotateCoverCanvasLeft = (width - 300) / 1.9;
+        ViewModel.CurrentRotateCoverCanvasTop = (width - ViewModel.CurrentVinyWidth) / 2;
+        MagneticCircle.Width = width / 3;
+        MagneticCircle.Height = MagneticCircle.Width;
+        MagneticMiddleCircle.Width = width / 10;
+        MagneticMiddleCircle.Height = MagneticMiddleCircle.Width;
     }
 }

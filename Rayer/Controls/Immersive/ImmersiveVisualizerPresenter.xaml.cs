@@ -1,5 +1,6 @@
 ﻿using NAudio.CoreAudioApi;
 using NAudio.Wave;
+using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.AudioVisualizer;
 using Rayer.Core.Events;
@@ -807,5 +808,13 @@ public partial class ImmersiveVisualizerPresenter : UserControl
         }
 
         return result;
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        var mainWindow = AppCore.MainWindow;
+
+        Width = mainWindow.ActualWidth;
+        Height = mainWindow.ActualHeight;
     }
 }

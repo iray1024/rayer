@@ -1,7 +1,6 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Framework.IPC;
 using Rayer.Core.PInvoke;
-using System.Diagnostics;
 using System.Windows;
 using Wpf.Ui;
 using Wpf.Ui.Extensions;
@@ -18,6 +17,7 @@ internal class Program
     {
         try
         {
+
             if (!_mutex.WaitOne(TimeSpan.FromSeconds(1), false))
             {
                 try
@@ -36,9 +36,9 @@ internal class Program
         }
         catch (AbandonedMutexException e)
         {
-#if DEBUG
-            Debug.WriteLine(e.Message);
-#endif
+
+            System.Diagnostics.Debug.WriteLine(e.Message);
+
         }
 
         try

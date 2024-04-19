@@ -2,7 +2,6 @@
 using Rayer.SearchEngine.ViewModels.Explore.LibraryDetail;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -28,9 +27,7 @@ public partial class ExploreLibraryDetailPlaylistPanel : UserControl
 
         var currentWindowWidth = AppCore.MainWindow.ActualWidth;
 
-        var currentScreen = System.Windows.Forms.Screen.FromHandle(new WindowInteropHelper(Application.Current.MainWindow).Handle);
-
-        var factor = (currentWindowWidth + 500) / currentScreen.Bounds.Width;
+        var factor = (currentWindowWidth + 500) / SystemParameters.PrimaryScreenWidth;
 
         var panelWidth = ((currentWindowWidth - 180) / 5) - (100 * Math.Min(factor, 1));
 

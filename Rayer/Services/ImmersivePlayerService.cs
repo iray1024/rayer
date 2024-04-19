@@ -198,7 +198,7 @@ internal partial class ImmersivePlayerService : IImmersivePlayerService
 
     internal void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        if (_player.Presenter.Children[0] is FrameworkElement element)
+        if (_player.Presenter.Children[0] is ImmersiveVisualizerPresenter element)
         {
             element.Width = e.NewSize.Width;
             element.Height = e.NewSize.Height;

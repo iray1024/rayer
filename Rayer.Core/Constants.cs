@@ -26,8 +26,12 @@ public static class Constants
 
     public static class SingleInstance
     {
+#if DEBUG
+        public const string UniqueAppName = "RAYER:MM-DEBUG";
+#endif
+#if RELEASE
         public const string UniqueAppName = "RAYER:MM";
-
+#endif
         public static string PipeServerName { get; } = UniqueAppName + Environment.UserName;
     }
 }

@@ -9,6 +9,21 @@ public partial class ImmersiveVinylPresenterViewModel : ImmersiveViewModelBase
     [ObservableProperty]
     private Audio? _current;
 
+    [ObservableProperty]
+    private double _currentVinyWidth = 300;
+
+    [ObservableProperty]
+    private double _currentCoverWidth = 300;
+
+    [ObservableProperty]
+    private double _currentRotateCoverWidth = 300;
+
+    [ObservableProperty]
+    private double _currentRotateCoverCanvasLeft = 0;
+
+    [ObservableProperty]
+    private double _currentRotateCoverCanvasTop = 0;
+
     public ImmersiveVinylPresenterViewModel(IAudioManager audioManager)
         : base(audioManager)
     {
