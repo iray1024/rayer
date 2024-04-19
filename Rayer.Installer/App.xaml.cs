@@ -49,12 +49,12 @@ public partial class App : System.Windows.Application
         var extractor = Services.GetRequiredService<IResourceExtractor>();
 
         using var copyright = extractor.GetResource("Rayer.Installer.assets.copyright.jpg");
-        using var wife = extractor.GetResource("Rayer.Installer.assets.wife.jpg");
+        //using var partner = extractor.GetResource("Rayer.Installer.assets.partner.jpg");
 
-        if (copyright is not null && wife is not null)
+        if (copyright is not null/* && partner is not null*/)
         {
             FileOperator.Save(copyright, Path.Combine(Constants.InstallerTempDir, "copyright.jpg"));
-            FileOperator.Save(wife, Path.Combine(Constants.InstallerTempDir, "wife.jpg"));
+            //FileOperator.Save(partner, Path.Combine(Constants.InstallerTempDir, "partner.jpg"));
         }
     }
 }

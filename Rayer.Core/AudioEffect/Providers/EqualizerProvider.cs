@@ -20,14 +20,27 @@ internal class EqualizerProvider : IEqualizerProvider
 
     public EqualizerProvider(ISettingsService settingsService)
     {
-        _immutableSourceBands = Initialize();
-
         _settingsService = settingsService;
 
-        ReplaceEqualizerBands(_sourceBands[Index]);
+        try
+        {
+            _immutableSourceBands = Initialize();
+
+            ReplaceEqualizerBands(_sourceBands[Index]);
+        }
+        catch (DirectoryNotFoundException)
+        {
+            Available = false;
+        }
+        catch (FileNotFoundException)
+        {
+            Available = false;
+        }
     }
 
     public EqualizerBand[] Equalizer => _currentBands;
+
+    public bool Available { get; } = true;
 
     private int Index => (int)_settingsService.Settings.EqualizerMode;
 

@@ -8,6 +8,8 @@ public interface IEqualizerProvider
 
     EqualizerBand[] Equalizer { get; }
 
+    bool Available { get; }
+
     void SwitchEqualizer(string identifier);
 
     void SwitchToCustom();

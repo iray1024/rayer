@@ -144,7 +144,7 @@ public partial class MainWindow : Window
         Close();
     }
 
-    private bool EnsureDotNetRuntimeIsReady()
+    private static bool EnsureDotNetRuntimeIsReady()
     {
         var process = new Process();
         process.StartInfo.FileName = "dotnet";

@@ -21,7 +21,7 @@
     <EmbeddedResource Include="assets\copyright.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-		<EmbeddedResource Include="assets\wife.jpg">
+		<EmbeddedResource Include="assets\partner.jpg">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</EmbeddedResource>
     <EmbeddedResource Include="assets\rayer.zip">

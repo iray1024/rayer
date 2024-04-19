@@ -27,12 +27,12 @@ public class MainViewModel : ObservableObject
         Copyright.CacheOption = BitmapCacheOption.OnLoad;
         Copyright.EndInit();
 
-        Wife = new BitmapImage();
+        //Partner = new BitmapImage();
 
-        Wife.BeginInit();
-        Wife.UriSource = new Uri(Path.Combine(Constants.InstallerTempDir, "wife.jpg"));
-        Wife.CacheOption = BitmapCacheOption.OnLoad;
-        Wife.EndInit();
+        //Partner.BeginInit();
+        //Partner.UriSource = new Uri(Path.Combine(Constants.InstallerTempDir, "partner.jpg"));
+        //Partner.CacheOption = BitmapCacheOption.OnLoad;
+        //Partner.EndInit();
 
         using var key = Registry.CurrentUser.OpenSubKey(Constants.RegisterKey);
 
@@ -51,7 +51,7 @@ public class MainViewModel : ObservableObject
         }
     }
 
-    public BitmapImage Wife
+    public BitmapImage Partner
     {
         get => _wife;
         set

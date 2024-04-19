@@ -33,7 +33,14 @@
                         <Image
                             Width="32"
                             Height="32"
-                            Source="{Binding Copyright}" />
+                            Source="{Binding Copyright}">
+                            <Image.Clip>
+                                <RectangleGeometry
+                                    RadiusX="6"
+                                    RadiusY="6"
+                                    Rect="0,0,32,32" />
+                            </Image.Clip>
+                        </Image>
                         <TextBlock Margin="16,0,0,0" Style="{StaticResource MaterialDesignHeadline5TextBlock}">致谢</TextBlock>
                     </StackPanel>
                 </materialDesign:ColorZone>
@@ -77,12 +84,26 @@
                         <Image
                             Width="128"
                             Height="128"
-                            Source="{Binding Copyright}" />
-                        <Image
+                            Source="{Binding Copyright}">
+                            <Image.Clip>
+                                <RectangleGeometry
+                                    RadiusX="6"
+                                    RadiusY="6"
+                                    Rect="0,0,128,128" />
+                            </Image.Clip>
+                        </Image>
+                        <!--<Image
                             Width="128"
                             Height="128"
                             Margin="24,0,0,0"
-                            Source="{Binding Wife}" />
+                            Source="{Binding Partner}">
+                            <Image.Clip>
+                                <RectangleGeometry
+                                    RadiusX="6"
+                                    RadiusY="6"
+                                    Rect="0,0,128,128" />
+                            </Image.Clip>
+                        </Image>-->
                     </StackPanel>
                 </materialDesign:TransitioningContent>
             </ItemsControl>

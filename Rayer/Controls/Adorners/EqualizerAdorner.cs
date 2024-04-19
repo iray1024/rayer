@@ -1,4 +1,5 @@
 ﻿using Rayer.Abstractions;
+using Rayer.Core.AudioEffect.Abstractions;
 using Rayer.Core.Framework;
 using Rayer.Markup;
 using Rayer.Services;
@@ -36,11 +37,20 @@ internal class EqualizerAdorner : Adorner
             Source = GetSource(),
         };
 
-        _equalizer.MouseUp += OnEqualizerMouseUp; ;
+        var equalizerProvider = App.GetRequiredService<IEqualizerProvider>();
+
+        if (equalizerProvider.Available)
+        {
+            _equalizer.MouseUp += OnEqualizerMouseUp;
+
+            ToolTipService.SetToolTip(_equalizer, GetToolTip());
+        }
+        else
+        {
+            _equalizer.ToolTip = "缺少均衡器参数文件";
+        }
 
         RenderOptions.SetBitmapScalingMode(_equalizer, BitmapScalingMode.Fant);
-        ToolTipService.SetToolTip(_equalizer, GetToolTip());
-
         AddVisualChild(_equalizer);
 
         ApplicationThemeManager.Changed += OnThemeChanged;
