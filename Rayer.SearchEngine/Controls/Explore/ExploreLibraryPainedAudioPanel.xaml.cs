@@ -84,7 +84,6 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
 
         await Application.Current.Dispatcher.InvokeAsync(() =>
         {
-            _hoverableControlStoryboard.Stop();
             _hoverableControlStoryboard.Children.Clear();
 
             var animation = new DoubleAnimation()
@@ -117,7 +116,6 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
 
         await Application.Current.Dispatcher.InvokeAsync(() =>
         {
-            _hoverableControlStoryboard.Stop();
             _hoverableControlStoryboard.Children.Clear();
 
             var animation = new DoubleAnimation()
