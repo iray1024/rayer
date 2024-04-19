@@ -2,6 +2,8 @@ using System.Runtime.InteropServices;
 
 namespace Rayer.FFmpegCore.Interops;
 
+#pragma warning disable CS0649
+
 internal unsafe partial struct AVRational
 {
     internal int @num;
@@ -184,6 +186,8 @@ internal unsafe partial struct AVOptionRanges
     internal int @nb_ranges;
     internal int @nb_components;
 }
+
+#pragma warning restore CS0649
 
 internal enum AVMediaType : int
 {

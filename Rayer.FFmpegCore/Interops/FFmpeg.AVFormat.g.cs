@@ -2,6 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace Rayer.FFmpegCore.Interops;
 
+#pragma warning disable CS0649
 internal unsafe partial struct AVBuffer
 {
 }
@@ -403,6 +404,8 @@ internal unsafe partial struct AVPacketList
     internal AVPacket @pkt;
     internal AVPacketList* @next;
 }
+
+#pragma warning restore CS0649
 
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 internal unsafe delegate int av_format_control_message(AVFormatContext* @s, int @type, void* @data, ulong @data_size);

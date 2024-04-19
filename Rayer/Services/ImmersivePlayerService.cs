@@ -4,7 +4,6 @@ using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media.Animation;
 
@@ -226,13 +225,13 @@ internal partial class ImmersivePlayerService : IImmersivePlayerService
                 if (visualizerPresenter.spectrumData is not null)
                 {
                     visualizerPresenter.spectrumData.Clear();
-                    visualizerPresenter.spectrumData = null;
+                    visualizerPresenter.spectrumData = default!;
                 }
 
                 if (visualizerPresenter.pathGeometries is not null)
                 {
                     visualizerPresenter.pathGeometries.Clear();
-                    visualizerPresenter.pathGeometries = null;
+                    visualizerPresenter.pathGeometries = default!;
                 }
 
                 visualizerPresenter.AudioVisualizerStoryboard.Stop();
@@ -240,15 +239,10 @@ internal partial class ImmersivePlayerService : IImmersivePlayerService
                 visualizerPresenter.Close_Visualizer();
 
             }
-            catch (Exception ex)
+            catch
             {
-
                 throw;
             }
         }
     }
-
-    [LibraryImport("kernel32.dll")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static partial bool SetProcessWorkingSetSize(IntPtr proc, int min, int max);
 }

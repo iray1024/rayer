@@ -3,6 +3,8 @@ using Rayer.SearchEngine.Lyric.Models;
 
 namespace Rayer.SearchEngine.Lyric.Providers.Web.Netease;
 
+#pragma warning disable CS8618
+
 public class SearchResult
 {
     public bool NeedLogin { get; set; }
@@ -405,3 +407,5 @@ public class Ar
     public List<object> Tns { get; set; }
     public List<object> Alias { get; set; }
 }
+
+#pragma warning restore CS8618

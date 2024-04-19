@@ -4,9 +4,9 @@ using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.AudioVisualizer;
 using Rayer.Core.Events;
+using Rayer.Core.PInvoke;
 using Rayer.ViewModels;
 using System.Collections.ObjectModel;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -98,10 +98,6 @@ public partial class ImmersiveVisualizerPresenter : UserControl
         SampleWaveHiddenStoryboard.Begin();
     }
 
-    [LibraryImport("kernel32.dll")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static partial bool SetProcessWorkingSetSize(IntPtr proc, int min, int max);
-
     /// <summary>
     /// 重置启动 频谱可视化
     /// </summary>
@@ -111,7 +107,7 @@ public partial class ImmersiveVisualizerPresenter : UserControl
     {
         if (Environment.OSVersion.Platform == PlatformID.Win32NT)
         {
-            SetProcessWorkingSetSize(System.Diagnostics.Process.GetCurrentProcess().Handle, -1, -1);
+            Win32.SetProcessWorkingSetSize(System.Diagnostics.Process.GetCurrentProcess().Handle, -1, -1);
         }
         GC.Collect();
         GC.WaitForPendingFinalizers();
@@ -158,7 +154,7 @@ public partial class ImmersiveVisualizerPresenter : UserControl
 
         if (Environment.OSVersion.Platform == PlatformID.Win32NT)
         {
-            SetProcessWorkingSetSize(System.Diagnostics.Process.GetCurrentProcess().Handle, -1, -1);
+            Win32.SetProcessWorkingSetSize(System.Diagnostics.Process.GetCurrentProcess().Handle, -1, -1);
         }
 
         GC.Collect();
@@ -186,7 +182,7 @@ public partial class ImmersiveVisualizerPresenter : UserControl
 
         if (Environment.OSVersion.Platform == PlatformID.Win32NT)
         {
-            SetProcessWorkingSetSize(System.Diagnostics.Process.GetCurrentProcess().Handle, -1, -1);
+            Win32.SetProcessWorkingSetSize(System.Diagnostics.Process.GetCurrentProcess().Handle, -1, -1);
         }
 
         GC.Collect();

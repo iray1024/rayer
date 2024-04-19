@@ -2,6 +2,8 @@ using System.Runtime.InteropServices;
 
 namespace Rayer.FFmpegCore.Interops;
 
+#pragma warning disable CS0649
+
 internal unsafe partial struct AVBuffer
 {
 }
@@ -512,6 +514,8 @@ internal unsafe partial struct AVBitStreamFilter
     internal IntPtr @filter;
     internal IntPtr @close;
 }
+
+#pragma warning restore CS0649
 
 internal unsafe partial struct AVBSFList
 {
