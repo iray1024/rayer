@@ -18,9 +18,9 @@ internal class ImmersivePresenterProvider(ISettingsService settingsService) : II
     {
         _vinylPresenter = new Lazy<ImmersiveVinylPresenter>(() => new ImmersiveVinylPresenter()
         {
-            Margin = new Thickness(140, -140, 0, 0),
+            Margin = new Thickness(140, 180, 0, 0),
             HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center
+            VerticalAlignment = VerticalAlignment.Top
         });
 
         _audioVisualizerlPresenter = new Lazy<ImmersiveVisualizerPresenter>(() => new ImmersiveVisualizerPresenter()

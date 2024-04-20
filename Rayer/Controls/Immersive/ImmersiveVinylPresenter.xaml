@@ -47,6 +47,7 @@
     </UserControl.Resources>
     <Grid
         x:Name="VinlyPanel"
+        Margin="{Binding ViewModel.CurrentPanelMargin}"
         HorizontalAlignment="Left"
         VerticalAlignment="Top">
         <Canvas
@@ -96,7 +97,7 @@
             </Canvas>
             <Grid
                 x:Name="Album"
-                Canvas.Left="{Binding ViewModel.CurrentRotateCoverCanvasLeft}"
+                Canvas.Left="0"
                 Canvas.Top="{Binding ViewModel.CurrentRotateCoverCanvasTop, FallbackValue=12}"
                 Panel.ZIndex="-1">
                 <Grid.RenderTransform>

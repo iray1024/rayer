@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
+using System.Windows;
 
 namespace Rayer.ViewModels;
 
@@ -19,10 +20,10 @@ public partial class ImmersiveVinylPresenterViewModel : ImmersiveViewModelBase
     private double _currentRotateCoverWidth = 300;
 
     [ObservableProperty]
-    private double _currentRotateCoverCanvasLeft = 0;
+    private double _currentRotateCoverCanvasTop = 0;
 
     [ObservableProperty]
-    private double _currentRotateCoverCanvasTop = 0;
+    private Thickness _currentPanelMargin = new(0);
 
     public ImmersiveVinylPresenterViewModel(IAudioManager audioManager)
         : base(audioManager)
