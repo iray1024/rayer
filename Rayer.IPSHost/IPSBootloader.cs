@@ -96,6 +96,8 @@ internal partial class IPSBootloader : IIPSBootloader
     public void Exit()
     {
         _runner?.Kill();
+
+        TcpPortFinder.KillPort((ushort)Port, true, true);
     }
 
     [GeneratedRegex(@"server running")]
