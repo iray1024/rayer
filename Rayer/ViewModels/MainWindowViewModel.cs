@@ -107,7 +107,7 @@ public partial class MainWindowViewModel : ObservableObject
             _navigationService.Navigate(typeof(SearchPage), model);
         }
 
-        var searchAware = App.GetRequiredService<SearchPage>();
+        var searchAware = App.GetRequiredService<ISearchAware>();
 
         searchAware.OnSearch(model);
     }
@@ -145,7 +145,7 @@ public partial class MainWindowViewModel : ObservableObject
                 _navigationService.Navigate(typeof(SearchPage), model);
             }
 
-            var searchAware = App.GetRequiredService<SearchPage>();
+            var searchAware = App.GetRequiredService<ISearchAware>();
 
             searchAware.OnSearch(model);
         }

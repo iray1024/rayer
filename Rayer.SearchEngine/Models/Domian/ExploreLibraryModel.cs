@@ -1,4 +1,4 @@
-﻿using Rayer.SearchEngine.Models.Response.User;
+﻿using Rayer.SearchEngine.Models.Response.Netease.User;
 
 namespace Rayer.SearchEngine.Models.Domian;
 

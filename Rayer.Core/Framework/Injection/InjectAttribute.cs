@@ -13,4 +13,6 @@ public class InjectAttribute<T> : InjectAttribute
 public class InjectAttribute : Attribute
 {
     public ServiceLifetime ServiceLifetime { get; set; } = ServiceLifetime.Singleton;
+
+    public bool ResolveServiceType { get; set; } = false;
 }

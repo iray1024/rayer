@@ -2,7 +2,7 @@
 using Rayer.SearchEngine.Business.Playlist.Abstractions;
 using Rayer.SearchEngine.Extensions;
 using Rayer.SearchEngine.Internal.Abstractions;
-using Rayer.SearchEngine.Models.Response.User;
+using Rayer.SearchEngine.Models.Response.Netease.User;
 
 namespace Rayer.SearchEngine.Business.Playlist.Impl;
 

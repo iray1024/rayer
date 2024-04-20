@@ -2,7 +2,7 @@
 using Rayer.SearchEngine.Business.Search.Abstractions;
 using Rayer.SearchEngine.Extensions;
 using Rayer.SearchEngine.Internal.Abstractions;
-using Rayer.SearchEngine.Models.Response.Search;
+using Rayer.SearchEngine.Models.Response.Netease.Search;
 
 namespace Rayer.SearchEngine.Business.Search.Impl;
 
@@ -37,7 +37,20 @@ internal class SearchAudioEngine : SearchEngineBase, ISearchAudioEngine
 
         var response = result.ToEntity<SearchAudioDetail>();
 
-        return response is not null ? response : default!;
+        if (response is not null)
+        {
+            foreach (var detail in response.Details)
+            {
+                if (detail.Album is not null)
+                {
+                    detail.Album.Picture += "?param=512y512";
+                }
+            }
+
+            return response;
+        }
+
+        return default!;
     }
 
     public async Task<WebAudio> GetAudioAsync(long id)

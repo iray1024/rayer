@@ -5,7 +5,7 @@ using Rayer.Core.Http.Abstractions;
 using Rayer.SearchEngine.Business.Login.Abstractions;
 using Rayer.SearchEngine.Extensions;
 using Rayer.SearchEngine.Internal.Abstractions;
-using Rayer.SearchEngine.Models.Response.Login.User;
+using Rayer.SearchEngine.Models.Response.Netease.Login.User;
 
 namespace Rayer.SearchEngine.Business.Login.Impl;
 

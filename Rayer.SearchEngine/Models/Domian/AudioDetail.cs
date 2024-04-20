@@ -1,5 +1,5 @@
-﻿using Rayer.SearchEngine.Models.Response;
-using Rayer.SearchEngine.Models.Response.Search;
+﻿using Rayer.SearchEngine.Models.Response.Netease;
+using Rayer.SearchEngine.Models.Response.Netease.Search;
 using System.ComponentModel;
 
 namespace Rayer.SearchEngine.Models.Domian;

@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Rayer.Core.Http.Abstractions;
 using Rayer.SearchEngine.Business.Login.Abstractions;
-using Rayer.SearchEngine.Models.Response.Login.QrCode;
+using Rayer.SearchEngine.Models.Response.Netease.Login.QrCode;
 using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;

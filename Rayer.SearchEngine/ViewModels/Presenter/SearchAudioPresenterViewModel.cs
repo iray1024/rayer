@@ -7,7 +7,7 @@ using Rayer.Core.Models;
 using Rayer.Core.Utils;
 using Rayer.SearchEngine.Business.Search.Abstractions;
 using Rayer.SearchEngine.Controls;
-using Rayer.SearchEngine.Models.Response.Search;
+using Rayer.SearchEngine.Models.Response.Netease.Search;
 using System.Windows;
 
 namespace Rayer.SearchEngine.ViewModels.Presenter;

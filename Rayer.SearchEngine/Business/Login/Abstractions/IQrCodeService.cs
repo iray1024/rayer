@@ -1,4 +1,4 @@
-﻿using Rayer.SearchEngine.Models.Response.Login.QrCode;
+﻿using Rayer.SearchEngine.Models.Response.Netease.Login.QrCode;
 
 namespace Rayer.SearchEngine.Business.Login.Abstractions;
 

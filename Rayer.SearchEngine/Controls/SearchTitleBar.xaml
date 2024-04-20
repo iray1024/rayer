@@ -14,7 +14,7 @@
     <Grid>
         <Grid
             Margin="22,0,0,16"
-            HorizontalAlignment="Left"
+            HorizontalAlignment="Stretch"
             VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80" />
@@ -22,6 +22,7 @@
                 <ColumnDefinition Width="80" />
                 <ColumnDefinition Width="80" />
                 <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <RadioButton
                 x:Name="DefaultPage"
@@ -104,6 +105,14 @@
                     Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
                     Text="{Binding Converter={StaticResource SearchTypeConverter}, ConverterParameter=Playlist, FallbackValue='歌单'}" />
             </RadioButton>
+            <ComboBox
+                Grid.Column="5"
+                Margin="0,0,12,0" SelectionChanged="OnSearcherSelectionChanged"
+                HorizontalAlignment="Right"
+                SelectedIndex="{Binding ViewModel.Searcher, FallbackValue=0, Mode=TwoWay}">
+                <ComboBoxItem Content="网易云" />
+                <ComboBoxItem Content="哔哩哔哩" />
+            </ComboBox>
         </Grid>
     </Grid>
 </UserControl>

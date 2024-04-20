@@ -2,7 +2,7 @@
 using Rayer.Core;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Business.Data.Abstractions;
-using Rayer.SearchEngine.Models.Response.User;
+using Rayer.SearchEngine.Models.Response.Netease.User;
 using System.Windows.Media;
 
 namespace Rayer.SearchEngine.ViewModels.Explore.LibraryDetail;

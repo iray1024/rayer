@@ -2,7 +2,7 @@
 using Rayer.SearchEngine.Business.Login.Abstractions;
 using Rayer.SearchEngine.Extensions;
 using Rayer.SearchEngine.Internal.Abstractions;
-using Rayer.SearchEngine.Models.Response.Login;
+using Rayer.SearchEngine.Models.Response.Netease.Login;
 
 namespace Rayer.SearchEngine.Business.Login.Impl;
 

@@ -1,4 +1,4 @@
-﻿using Rayer.SearchEngine.Models.Response;
+﻿using Rayer.SearchEngine.Models.Response.Netease;
 using System.Globalization;
 using System.Windows.Data;
 

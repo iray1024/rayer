@@ -141,4 +141,9 @@ public partial class SearchTitleBar : UserControl
             }
         }
     }
+
+    private async void OnSearcherSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        await ViewModel.OnSearcherChanged();
+    }
 }

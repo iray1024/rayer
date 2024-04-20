@@ -2,7 +2,7 @@
 using Rayer.SearchEngine.Business.User.Abstractions;
 using Rayer.SearchEngine.Extensions;
 using Rayer.SearchEngine.Internal.Abstractions;
-using Rayer.SearchEngine.Models.Response.User;
+using Rayer.SearchEngine.Models.Response.Netease.User;
 
 namespace Rayer.SearchEngine.Business.User.Impl;
 

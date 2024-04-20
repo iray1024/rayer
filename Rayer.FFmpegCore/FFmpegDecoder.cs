@@ -26,6 +26,7 @@ public class FFmpegDecoder : IWaveSource
         try
         {
             _formatContext = new AvFormatContext(url);
+
             Initialize();
         }
         catch (FFmpegException ex)

@@ -1,4 +1,4 @@
-﻿using Rayer.SearchEngine.Models.Response.Lyric;
+﻿using Rayer.SearchEngine.Models.Response.Netease.Lyric;
 
 namespace Rayer.SearchEngine.Business.Lyric.Abstractions;
 

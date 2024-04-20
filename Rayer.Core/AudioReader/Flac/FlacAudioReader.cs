@@ -47,7 +47,7 @@ internal class FlacAudioReader : WaveStream, ISampleProvider
     {
         get
         {
-            return _ffmpegDecoder != null ? _ffmpegDecoder.Length : 0;
+            return _ffmpegDecoder is not null ? _ffmpegDecoder.Length : 0;
         }
     }
 
@@ -65,7 +65,7 @@ internal class FlacAudioReader : WaveStream, ISampleProvider
 
     public override int Read(byte[] buffer, int offset, int count)
     {
-        if (_ffmpegDecoder == null)
+        if (_ffmpegDecoder is null)
         {
             return 0;
         }
@@ -95,7 +95,7 @@ internal class FlacAudioReader : WaveStream, ISampleProvider
 
     protected override void Dispose(bool disposing)
     {
-        if (null != _ffmpegDecoder)
+        if (_ffmpegDecoder is not null)
         {
             _ffmpegDecoder.Dispose();
             _ffmpegDecoder = null!;

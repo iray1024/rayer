@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Caching.Memory;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Business.Search.Abstractions;
-using Rayer.SearchEngine.Models.Response.Search;
+using Rayer.SearchEngine.Models.Response.Netease.Search;
 using System.Net.Http;
 
 namespace Rayer.SearchEngine.ViewModels;

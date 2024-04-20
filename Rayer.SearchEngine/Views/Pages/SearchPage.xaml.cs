@@ -6,7 +6,7 @@ using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Controls;
 using Rayer.SearchEngine.Enums;
 using Rayer.SearchEngine.Internal.Abstractions;
-using Rayer.SearchEngine.Models.Response.Search;
+using Rayer.SearchEngine.Models.Response.Netease.Search;
 using Rayer.SearchEngine.ViewModels;
 using Rayer.SearchEngine.ViewModels.Presenter;
 using System.Windows;
@@ -17,7 +17,7 @@ using Wpf.Ui.Controls;
 
 namespace Rayer.SearchEngine.Views.Pages;
 
-[Inject(ServiceLifetime = Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton)]
+[Inject<ISearchAware>(ResolveServiceType = true)]
 public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAware, ISearchAware
 {
     private readonly ISearchPresenterProvider _searchPresenterProvider;

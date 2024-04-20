@@ -1,5 +1,5 @@
 ﻿using Rayer.Core;
-using Rayer.SearchEngine.Models.Response.Search;
+using Rayer.SearchEngine.Models.Response.Netease.Search;
 using Rayer.SearchEngine.ViewModels.Presenter;
 using System.Windows;
 using System.Windows.Controls;
