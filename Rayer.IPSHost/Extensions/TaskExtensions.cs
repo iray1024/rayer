@@ -16,6 +16,8 @@ internal static class TaskExtensions
 
     public static async Task<T> WithTimeout<T>(this Task<T> task, TimeSpan timeoutDelay, string message)
     {
-        return task == await Task.WhenAny(task, Task.Delay(timeoutDelay)) ? task.Result : throw new TimeoutException(message);
+        return task == await Task.WhenAny(task, Task.Delay(timeoutDelay))
+            ? task.Result
+            : throw new TimeoutException(message);
     }
 }

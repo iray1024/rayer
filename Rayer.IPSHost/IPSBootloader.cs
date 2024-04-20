@@ -3,7 +3,6 @@ using Rayer.Core;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.IPSHost.Utils;
-using System.IO;
 using System.Text.RegularExpressions;
 
 namespace Rayer.IPSHost;

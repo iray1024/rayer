@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Rayer.IPSHost.EventedStream;
 
@@ -109,17 +108,17 @@ internal class EventedStreamReader
         }
     }
 
-    private void OnChunk(ArraySegment<char> chunk)
+    protected virtual void OnChunk(ArraySegment<char> chunk)
     {
         OnReceivedChunk?.Invoke(chunk);
     }
 
-    private void OnCompleteLine(string line)
+    protected virtual void OnCompleteLine(string line)
     {
         OnReceivedLine?.Invoke(line);
     }
 
-    private void OnClosed()
+    protected virtual void OnClosed()
     {
         OnStreamClosed?.Invoke();
     }
