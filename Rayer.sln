@@ -24,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{7D1A8418-4
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rayer.Installer", "Rayer.Installer\Rayer.Installer.csproj", "{8197DC09-6D90-4D70-8C4D-3D8DF3AC24C2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rayer.IPSHost", "Rayer.IPSHost\Rayer.IPSHost.csproj", "{FFBA5B60-3058-4976-96BC-F9A94F5E0597}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,10 @@ Global
 		{8197DC09-6D90-4D70-8C4D-3D8DF3AC24C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8197DC09-6D90-4D70-8C4D-3D8DF3AC24C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8197DC09-6D90-4D70-8C4D-3D8DF3AC24C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFBA5B60-3058-4976-96BC-F9A94F5E0597}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFBA5B60-3058-4976-96BC-F9A94F5E0597}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFBA5B60-3058-4976-96BC-F9A94F5E0597}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFBA5B60-3058-4976-96BC-F9A94F5E0597}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

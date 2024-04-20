@@ -3,7 +3,9 @@ using Rayer.Core;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
+using Rayer.SearchEngine;
 using Rayer.SearchEngine.Views.Windows;
+using Rayer.Services;
 using Rayer.ViewModels;
 using Rayer.Views.Pages;
 using System.ComponentModel;
@@ -116,7 +118,7 @@ public partial class MainWindow : IWindow
         _isUserClosedPane = true;
     }
 
-    private void OnLoaded(object sender, RoutedEventArgs e)
+    private async void OnLoaded(object sender, RoutedEventArgs e)
     {
         ApplyNavigationMenuIcons();
 
@@ -130,6 +132,8 @@ public partial class MainWindow : IWindow
         AutoSuggest.TextChanged += OnAutoSuggestTextChanged;
         AutoSuggest.SuggestionChosen += OnSuggestionChosen;
         AutoSuggest.QuerySubmitted += OnAutoSuggestQuerySubmitted;
+
+        await OnBootloaderInjectingAsync();
     }
 
     private async void OnAutoSuggestTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -189,5 +193,26 @@ public partial class MainWindow : IWindow
         {
             await ViewModel.OnUserRaiseAutoSuggestChosen(AutoSuggest);
         }
+    }
+
+    private static async Task OnBootloaderInjectingAsync()
+    {
+        var snackbar = App.GetRequiredService<ISnackbarFactory>();
+        var bootloader = App.GetRequiredService<IIPSBootloader>();
+
+#if DEBUG
+        var logger = LocalLoggerFactory.GetOrCreateLogger(AppCore.ServiceProvider, "Rayer Server");
+        var uri = await bootloader.RunAsync(logger);
+#else
+        var uri = await bootloader.RunAsync();
+#endif
+        var searchEngineOptions = App.GetRequiredService<SearchEngineOptions>();
+
+        searchEngineOptions.HttpEndpoint = uri.OriginalString;
+
+        snackbar.ShowSecondary(
+            "Cloud Server",
+            $"Cloud Server注入成功",
+            TimeSpan.FromSeconds(3));
     }
 }

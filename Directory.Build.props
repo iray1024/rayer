@@ -11,5 +11,5 @@
 		<Product>Rayer-Music</Product>
 	  <AssemblyOriginatorKeyFile>$(SolutionDir)rayer.snk</AssemblyOriginatorKeyFile> 
   </PropertyGroup>
-
+	
 </Project>

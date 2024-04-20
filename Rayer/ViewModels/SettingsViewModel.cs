@@ -2,7 +2,9 @@
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.FileSystem.Abstractions;
+using Rayer.Core.Framework;
 using Rayer.Core.Framework.Settings.Abstractions;
+using Rayer.SearchEngine;
 using Rayer.SearchEngine.Abstractions;
 using System.Collections.ObjectModel;
 using System.Reflection;
@@ -111,9 +113,16 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         }
     }
 
+    [ObservableProperty]
+    private bool _isCloudServerAvaliable = true;
+
+    [ObservableProperty]
+    private string _cloudServerPortNumber = "3000";
+
     public SettingsViewModel(
         INavigationService navigationService,
-        ISettingsService settings)
+        ISettingsService settings,
+        IIPSBootloader bootloader)
     {
         _navigationService = navigationService;
         _settings = settings;
@@ -126,6 +135,11 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         _lyricSearcher = _settings.Settings.LyricSearcher;
 
         AudioLibrary.CollectionChanged += OnCollectionChanged;
+
+        bootloader.Exited += OnBootloaderExited;
+
+        IsCloudServerAvaliable = bootloader.IsServerAvaliable;
+        CloudServerPortNumber = bootloader.Port.ToString();
     }
 
     public void UpdateConfigFile()
@@ -196,6 +210,27 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         }
     }
 
+    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    private async Task RestartServer()
+    {
+        var snackbar = App.GetRequiredService<ISnackbarFactory>();
+        var bootloader = App.GetRequiredService<IIPSBootloader>();
+
+        var uri = await bootloader.Restart();
+
+        var searchEngineOptions = App.GetRequiredService<SearchEngineOptions>();
+
+        searchEngineOptions.HttpEndpoint = uri.OriginalString;
+
+        snackbar.ShowSecondary(
+            "Cloud Server",
+            $"Cloud Server重启成功",
+            TimeSpan.FromSeconds(3));
+
+        IsCloudServerAvaliable = true;
+        CloudServerPortNumber = uri.Port.ToString();
+    }
+
     private void AddLibrary()
     {
         var folderBrowserDialog = new FolderBrowserDialog()
@@ -231,5 +266,11 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
     private void OnCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         OnPropertyChanged(nameof(IsEmpty));
+    }
+
+    private void OnBootloaderExited(object? sender, EventArgs e)
+    {
+        IsCloudServerAvaliable = false;
+        CloudServerPortNumber = "N/A";
     }
 }

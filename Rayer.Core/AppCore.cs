@@ -9,6 +9,8 @@ public static class AppCore
     private static readonly CancellationTokenSource _cancellationTokenSource = new();
     private static IServiceProvider _serviceProvider = default!;
 
+    public static IServiceProvider ServiceProvider => _serviceProvider;
+
     public static CancellationToken StoppingToken => _cancellationTokenSource.Token;
 
     public static Window MainWindow => Application.Current.MainWindow;
