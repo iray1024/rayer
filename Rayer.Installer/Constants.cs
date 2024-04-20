@@ -18,6 +18,12 @@ internal static class Constants
             Path = "Rayer.Installer.assets.equalizer.zip",
             IsReplace = false,
             DestinationDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Rayer")
+        },
+        new(){
+            Name = "CloudServer",
+            Path = "Rayer.Installer.assets.cloud-server.zip",
+            IsReplace = false,
+            DestinationDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Rayer")
         }
     };
 
