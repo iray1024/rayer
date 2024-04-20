@@ -19,6 +19,7 @@
         <ui:CardExpander
             Margin="0,0,0,6"
             ContentPadding="0"
+            CornerRadius="6"
             Icon="{ui:SymbolIcon Keyboard24}">
             <ui:CardExpander.Header>
                 <Grid>

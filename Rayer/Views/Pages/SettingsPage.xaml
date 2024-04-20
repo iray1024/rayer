@@ -26,6 +26,7 @@
             Text="外观和行为" />
         <ui:CardControl
             Margin="0,0,0,12"
+            CornerRadius="6"
             Icon="{ui:SymbolIcon Color24}"
             RenderOptions.BitmapScalingMode="Fant">
             <ui:CardControl.Header>
@@ -61,7 +62,8 @@
         <Border
             Margin="0,0,0,8"
             Padding="14,16,14,16"
-            Background="{DynamicResource CardBackground}">
+            Background="{DynamicResource CardBackground}"
+            CornerRadius="6">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -149,6 +151,7 @@
         <ui:CardExpander
             Margin="0,0,0,6"
             ContentPadding="0"
+            CornerRadius="6"
             Icon="{ui:SymbolIcon Library24}"
             RenderOptions.BitmapScalingMode="Fant">
             <ui:CardExpander.Header>
@@ -233,6 +236,7 @@
 
         <ui:CardControl
             Margin="0,0,0,12"
+            CornerRadius="6"
             Icon="{ui:SymbolIcon NoteAdd24}"
             RenderOptions.BitmapScalingMode="Fant">
             <ui:CardControl.Header>
@@ -262,6 +266,7 @@
 
         <ui:CardControl
             Margin="0,0,0,12"
+            CornerRadius="6"
             Icon="{ui:SymbolIcon PlayCircle24}"
             RenderOptions.BitmapScalingMode="Fant">
             <ui:CardControl.Header>
@@ -292,6 +297,7 @@
         <ui:CardControl
             x:Name="PitchProviderSetting"
             Margin="0,0,0,12"
+            CornerRadius="6"
             Icon="{ui:ImageIcon {markup:ThemeSymbol Pitch},
                                 Width=24,
                                 Height=24}"
@@ -324,6 +330,7 @@
         <ui:CardControl
             x:Name="LyricSearcherSetting"
             Margin="0,0,0,12"
+            CornerRadius="6"
             Icon="{ui:ImageIcon {markup:ThemeSymbol Lyric},
                                 Width=24,
                                 Height=24}"
