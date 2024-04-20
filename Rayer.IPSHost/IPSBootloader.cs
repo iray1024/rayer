@@ -55,6 +55,7 @@ internal partial class IPSBootloader : IIPSBootloader
             runner.RunnerProcess.Exited += (s, e) =>
             {
                 IsServerAvaliable = false;
+                Port = -1;
 
                 Exited?.Invoke(this, EventArgs.Empty);
             };
