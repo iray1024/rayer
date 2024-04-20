@@ -30,6 +30,9 @@ internal partial class IPSBootloader : IIPSBootloader
     {
         if (!File.Exists(_loaderPath))
         {
+            IsServerAvaliable = false;
+            Port = -1;
+
             throw new InvalidOperationException("未注入cloud-server，请确认 Rayer 安装完整");
         }
 

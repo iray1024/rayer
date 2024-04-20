@@ -139,7 +139,9 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         bootloader.Exited += OnBootloaderExited;
 
         IsCloudServerAvaliable = bootloader.IsServerAvaliable;
-        CloudServerPortNumber = bootloader.Port.ToString();
+        CloudServerPortNumber = bootloader.Port != -1
+            ? bootloader.Port.ToString()
+            : "N/A";
     }
 
     public void UpdateConfigFile()

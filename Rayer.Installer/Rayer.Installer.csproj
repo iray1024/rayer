@@ -15,16 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="assets\cloud-server.zip">     
-    </EmbeddedResource>
-    <EmbeddedResource Include="assets\equalizer.zip">     
-    </EmbeddedResource>
-    <EmbeddedResource Include="assets\copyright.jpg">      
-    </EmbeddedResource>
-		<EmbeddedResource Include="assets\partner.jpg">			
-		</EmbeddedResource>
-    <EmbeddedResource Include="assets\rayer.zip">      
-    </EmbeddedResource>
+    <EmbeddedResource Include="assets\cloud-server.zip" />
+    <EmbeddedResource Include="assets\equalizer.zip" />     
+    <EmbeddedResource Include="assets\copyright.jpg" />      
+		<EmbeddedResource Include="assets\partner.jpg" />			
+    <EmbeddedResource Include="assets\rayer.zip" />      
   </ItemGroup>
 
   <ItemGroup>
