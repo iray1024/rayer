@@ -101,6 +101,8 @@ public partial class ImmersiveVinylPresenter : UserControl
 
         var width = Math.Max(300, AppCore.MainWindow.ActualWidth / 4);
 
+        var lastCoverWidth = ViewModel.CurrentCoverWidth;
+
         ViewModel.CurrentVinyWidth = width * 280 / 300;
         ViewModel.CurrentCoverWidth = width;
         ViewModel.CurrentRotateCoverWidth = width * 0.6;
@@ -109,6 +111,22 @@ public partial class ImmersiveVinylPresenter : UserControl
         MagneticCircle.Height = MagneticCircle.Width;
         MagneticMiddleCircle.Width = width / 10;
         MagneticMiddleCircle.Height = MagneticMiddleCircle.Width;
+
+        var currentWindowHeight = AppCore.MainWindow.ActualHeight;
+        var currentTopMargin = Math.Max(0, ((currentWindowHeight - width) / 5) - 100);
+
+        ViewModel.CurrentPanelMargin = new Thickness(0, currentTopMargin, 0, 0);
+
+        _transformFactor = 160 + ((lastCoverWidth - 300) * 160 / 300);
+
+        var animation = new DoubleAnimation()
+        {
+            From = AlbumPop.X,
+            To = _transformFactor,
+            Duration = TimeSpan.FromMicroseconds(100)
+        };
+
+        AlbumPop.BeginAnimation(TranslateTransform.XProperty, animation);
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
