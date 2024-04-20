@@ -1,6 +1,4 @@
-﻿#if DEBUG
-using Microsoft.Extensions.Logging;
-#endif
+﻿using Microsoft.Extensions.Logging;
 using Rayer.Core;
 using Rayer.Core.Framework;
 using Rayer.IPSHost.EventedStream;
@@ -130,9 +128,7 @@ internal class ScriptRunner
     public ScriptRunnerType Runner { get; }
 
     public void AttachToLogger(
-#if DEBUG
         ILogger logger
-#endif
         )
     {
         StdOut.OnReceivedLine += line =>
@@ -143,16 +139,15 @@ internal class ScriptRunner
                 {
                     line = line[3..];
                 }
-#if DEBUG
+
                 if (logger == null)
                 {
                     Console.Error.WriteLine(line);
                 }
                 else
-                {                    
+                {
                     logger.LogInformation("{msg}", StripAnsiColors(line).TrimEnd('\n'));
                 }
-#endif
             }
         };
 
@@ -164,7 +159,7 @@ internal class ScriptRunner
                 {
                     line = line[3..];
                 }
-#if DEBUG
+
                 if (logger == null)
                 {
                     Console.Error.WriteLine(line);
@@ -173,7 +168,6 @@ internal class ScriptRunner
                 {
                     logger.LogError("{msg}", StripAnsiColors(line).TrimEnd('\n'));
                 }
-#endif
             }
         };
 

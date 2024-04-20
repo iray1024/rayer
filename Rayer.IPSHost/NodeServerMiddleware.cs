@@ -1,6 +1,4 @@
-﻿#if DEBUG
-using Microsoft.Extensions.Logging;
-#endif
+﻿using Microsoft.Extensions.Logging;
 using Rayer.IPSHost.Extensions;
 using Rayer.IPSHost.Utils;
 
@@ -9,9 +7,7 @@ namespace Rayer.IPSHost;
 internal static class NodeServerMiddleware
 {
     public static ScriptRunner Run(
-#if DEBUG
         ILogger? logger,
-#endif
         string sourcePath,
         string arguments,
         Dictionary<string, string>? env = null)
@@ -31,23 +27,19 @@ internal static class NodeServerMiddleware
 
         var npmScriptRunner = new ScriptRunner(sourcePath, arguments, envVars);
 
-#if DEBUG
         if (logger is not null)
         {
             npmScriptRunner.AttachToLogger(logger);
         }
-#endif
+
         AppDomain.CurrentDomain.DomainUnload += (s, e) => npmScriptRunner?.Kill();
         AppDomain.CurrentDomain.ProcessExit += (s, e) => npmScriptRunner?.Kill();
-        AppDomain.CurrentDomain.UnhandledException += (s, e) => npmScriptRunner?.Kill();
 
         return npmScriptRunner;
     }
 
     public static ScriptRunner RunScript(
-#if DEBUG
         ILogger? logger,
-#endif
         string sourcePath,
         string npmScript,
         ScriptRunnerType runner)
@@ -58,23 +50,20 @@ internal static class NodeServerMiddleware
         };
 
         var npmScriptRunner = new ScriptRunner(sourcePath, npmScript, envVars, runner: runner);
-#if DEBUG
+
         if (logger is not null)
         {
             npmScriptRunner.AttachToLogger(logger);
         }
-#endif
+
         AppDomain.CurrentDomain.DomainUnload += (s, e) => npmScriptRunner?.Kill();
         AppDomain.CurrentDomain.ProcessExit += (s, e) => npmScriptRunner?.Kill();
-        AppDomain.CurrentDomain.UnhandledException += (s, e) => npmScriptRunner?.Kill();
 
         return npmScriptRunner;
     }
 
     public static async void Attach(
-#if DEBUG
         ILogger? logger,
-#endif
         string sourcePath,
         string scriptName,
         int port = 8080,
@@ -90,11 +79,9 @@ internal static class NodeServerMiddleware
         {
             throw new ArgumentException("启动脚本不能为空", nameof(scriptName));
         }
-#if DEBUG
+
         var portTask = StartNodeServerAsync(sourcePath, scriptName, port, runner, logger);
-#else
-        var portTask = StartNodeServerAsync(sourcePath, scriptName, port, runner);
-#endif
+
         var targetUriTask = portTask.ContinueWith(
             task => new UriBuilder(https ? "https" : "http", "127.0.0.1", task.Result).Uri);
 
@@ -109,19 +96,16 @@ internal static class NodeServerMiddleware
             string sourcePath,
             string npmScriptName,
             int portNumber,
-            ScriptRunnerType runner
-#if DEBUG
-            , ILogger? logger = null
-#endif
-        )
+            ScriptRunnerType runner,
+            ILogger? logger = null)
     {
         if (portNumber < 80)
         {
             portNumber = TcpPortFinder.FindAvailablePort();
         }
-#if DEBUG
+
         logger?.LogInformation("正在启动 Node.js 服务，端口号： {portNumber}...", portNumber);
-#endif
+
         var envVars = new Dictionary<string, string>
             {
                 { "PORT", portNumber.ToString() },
@@ -130,15 +114,14 @@ internal static class NodeServerMiddleware
             };
 
         var npmScriptRunner = new ScriptRunner(sourcePath, npmScriptName, $"--port {portNumber:0}", envVars, runner: runner);
-#if DEBUG
+
         if (logger is not null)
         {
             npmScriptRunner.AttachToLogger(logger);
         }
-#endif
+
         AppDomain.CurrentDomain.DomainUnload += (s, e) => npmScriptRunner?.Kill();
         AppDomain.CurrentDomain.ProcessExit += (s, e) => npmScriptRunner?.Kill();
-        AppDomain.CurrentDomain.UnhandledException += (s, e) => npmScriptRunner?.Kill();
 
         return Task.FromResult(portNumber);
     }

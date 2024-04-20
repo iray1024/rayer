@@ -83,9 +83,11 @@ public partial class App : Application
     {
         var playback = GetService<Playback>();
         var watcher = GetService<IAudioFileWatcher>();
+        var bootloader = GetService<IIPSBootloader>();
 
         playback?.Dispose();
         watcher?.Dispose();
+        bootloader?.Exit();
 
         AppCore.Exit();
 
