@@ -187,8 +187,9 @@ internal class ScriptRunner
 
     public void Kill()
     {
-        try { RunnerProcess?.Kill(); } catch { }
-        try { RunnerProcess?.WaitForExit(); } catch { }
+        try { RunnerProcess?.Close(); } catch { }
+        try { RunnerProcess?.Kill(true); } catch { }
+        try { RunnerProcess?.WaitForExit(TimeSpan.FromMilliseconds(1000)); } catch { }
     }
 
     private string GetExeName()

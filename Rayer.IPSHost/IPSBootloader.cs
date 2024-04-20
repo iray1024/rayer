@@ -92,7 +92,7 @@ internal partial class IPSBootloader : IIPSBootloader
 
     public void Exit()
     {
-        _runner?.RunnerProcess.WaitForExit();
+        _runner?.Kill();
     }
 
     [GeneratedRegex(@"server running")]
