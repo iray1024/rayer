@@ -9,7 +9,8 @@
 		<Company>喵蛙王子丶</Company>
 		<Copyright>喵蛙王子丶</Copyright>
 		<Product>Rayer-Music</Product>
-	  <AssemblyOriginatorKeyFile>$(SolutionDir)rayer.snk</AssemblyOriginatorKeyFile> 
+	  <AssemblyOriginatorKeyFile>$(SolutionDir)rayer.snk</AssemblyOriginatorKeyFile>
+		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
   </PropertyGroup>
 	
 </Project>
