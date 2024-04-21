@@ -34,6 +34,13 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
+    public static IServiceCollection UseAutoMapper(this IServiceCollection services, Assembly assembly)
+    {
+        services.AddAutoMapper(cfg => cfg.AddExpressionMapping(), assembly);
+
+        return services;
+    }
+
     public static IServiceCollection UseAutoMapper(this IServiceCollection services)
     {
         var projectPath = AppContext.BaseDirectory;
@@ -82,7 +89,7 @@ public static class ServiceCollectionExtensions
 
                             var interfaceType = type.IsGenericType ? type.GenericTypeArguments[0] : null;
 
-                            Inject(services, interfaceType, type, attr);
+                            Inject(services, interfaceType, x, attr);
                         }
                     }
                 });
@@ -96,52 +103,126 @@ public static class ServiceCollectionExtensions
         switch (attr.ServiceLifetime)
         {
             case ServiceLifetime.Singleton:
-                if (interfaceType is not null)
-                {
-                    services.AddSingleton(interfaceType, serviceType);
-
-                    if (attr.ResolveServiceType)
-                    {
-                        services.AddSingleton(serviceType, sp => sp.GetRequiredService(interfaceType));
-                    }
-                }
-                else
-                {
-                    services.AddSingleton(serviceType);
-                }
+                InjectSingleton(services, interfaceType, serviceType, attr);
                 break;
             case ServiceLifetime.Scoped:
-                if (interfaceType is not null)
-                {
-                    services.AddScoped(interfaceType, serviceType);
-
-                    if (attr.ResolveServiceType)
-                    {
-                        services.AddScoped(serviceType, sp => sp.GetRequiredService(interfaceType));
-                    }
-                }
-                else
-                {
-                    services.AddScoped(serviceType);
-                }
+                InjectScoped(services, interfaceType, serviceType, attr);
                 break;
             case ServiceLifetime.Transient:
-                if (interfaceType is not null)
-                {
-                    services.AddTransient(interfaceType, serviceType);
-
-                    if (attr.ResolveServiceType)
-                    {
-                        services.AddTransient(serviceType, sp => sp.GetRequiredService(interfaceType));
-                    }
-                }
-                else
-                {
-                    services.AddTransient(serviceType);
-                }
+                InjectTransient(services, interfaceType, serviceType, attr);
                 break;
             default:
                 break;
         }
     }
+
+    #region Internal
+    private static void InjectSingleton(IServiceCollection services, Type? interfaceType, Type serviceType, InjectAttribute attr)
+    {
+        if (attr.ServiceKey is null)
+        {
+            if (interfaceType is not null)
+            {
+                services.AddSingleton(interfaceType, serviceType);
+
+                if (attr.ResolveServiceType)
+                {
+                    services.AddSingleton(serviceType, sp => sp.GetRequiredService(interfaceType));
+                }
+            }
+            else
+            {
+                services.AddSingleton(serviceType);
+            }
+        }
+        else
+        {
+            if (interfaceType is not null)
+            {
+                services.AddKeyedSingleton(interfaceType, attr.ServiceKey, serviceType);
+
+                if (attr.ResolveServiceType)
+                {
+                    services.AddKeyedSingleton(serviceType, attr.ServiceKey, (sp, k) => sp.GetRequiredKeyedService(interfaceType, k));
+                }
+            }
+            else
+            {
+                services.AddKeyedSingleton(serviceType, attr.ServiceKey);
+            }
+        }
+    }
+
+    private static void InjectScoped(IServiceCollection services, Type? interfaceType, Type serviceType, InjectAttribute attr)
+    {
+        if (attr.ServiceKey is null)
+        {
+            if (interfaceType is not null)
+            {
+                services.AddScoped(interfaceType, serviceType);
+
+                if (attr.ResolveServiceType)
+                {
+                    services.AddScoped(serviceType, sp => sp.GetRequiredService(interfaceType));
+                }
+            }
+            else
+            {
+                services.AddScoped(serviceType);
+            }
+        }
+        else
+        {
+            if (interfaceType is not null)
+            {
+                services.AddKeyedScoped(interfaceType, attr.ServiceKey, serviceType);
+
+                if (attr.ResolveServiceType)
+                {
+                    services.AddKeyedScoped(serviceType, attr.ServiceKey, (sp, k) => sp.GetRequiredKeyedService(interfaceType, k));
+                }
+            }
+            else
+            {
+                services.AddKeyedScoped(serviceType, attr.ServiceKey);
+            }
+        }
+    }
+
+    private static void InjectTransient(IServiceCollection services, Type? interfaceType, Type serviceType, InjectAttribute attr)
+    {
+        if (attr.ServiceKey is null)
+        {
+            if (interfaceType is not null)
+            {
+                services.AddTransient(interfaceType, serviceType);
+
+                if (attr.ResolveServiceType)
+                {
+                    services.AddTransient(serviceType, sp => sp.GetRequiredService(interfaceType));
+                }
+            }
+            else
+            {
+                services.AddTransient(serviceType);
+            }
+        }
+        else
+        {
+            if (interfaceType is not null)
+            {
+                services.AddKeyedTransient(interfaceType, attr.ServiceKey, serviceType);
+
+                if (attr.ResolveServiceType)
+                {
+                    services.AddKeyedTransient(serviceType, attr.ServiceKey, (sp, k) => sp.GetRequiredKeyedService(interfaceType, k));
+                }
+            }
+            else
+            {
+                services.AddKeyedTransient(serviceType, attr.ServiceKey);
+            }
+        }
+    }
+    #endregion
 }

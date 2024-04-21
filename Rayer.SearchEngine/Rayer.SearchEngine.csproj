@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Rayer.Core\Rayer.Core.csproj" />
+    <ProjectReference Include="..\Rayer.SearchEngine.Core\Rayer.SearchEngine.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

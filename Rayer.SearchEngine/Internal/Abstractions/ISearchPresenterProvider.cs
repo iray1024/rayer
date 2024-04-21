@@ -1,5 +1,5 @@
 ﻿using Rayer.SearchEngine.Controls;
-using Rayer.SearchEngine.Enums;
+using Rayer.SearchEngine.Core.Enums;
 
 namespace Rayer.SearchEngine.Internal.Abstractions;
 

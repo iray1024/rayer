@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Rayer.Core\Rayer.Core.csproj" />
+    <ProjectReference Include="..\Rayer.SearchEngine.Core\Rayer.SearchEngine.Core.csproj" />
+  </ItemGroup>
+
+</Project>

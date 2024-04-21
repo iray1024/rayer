@@ -1,4 +1,4 @@
-﻿using Rayer.SearchEngine.Models.Response.Netease.Search;
+﻿using Rayer.SearchEngine.Core.Domain.Aggregation;
 
 namespace Rayer.SearchEngine.Abstractions;
 

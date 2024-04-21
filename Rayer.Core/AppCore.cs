@@ -21,6 +21,12 @@ public static class AppCore
         return _serviceProvider.GetRequiredService<T>();
     }
 
+    public static T GetRequiredKeyedService<T>(object? serviceKey)
+         where T : notnull
+    {
+        return _serviceProvider.GetRequiredKeyedService<T>(serviceKey);
+    }
+
     public static T? GetService<T>()
         where T : class
     {

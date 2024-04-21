@@ -8,7 +8,7 @@ public class AdjustPanelRowConverter : IValueConverter
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         return value is int count && parameter is string colCount
-            ? Math.Ceiling(count / int.Parse(colCount) * 1.0)
+            ? Math.Ceiling(1.0 * count / int.Parse(colCount) * 1.0)
             : 1;
     }
 

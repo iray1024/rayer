@@ -3,15 +3,11 @@ using Rayer.Core;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Lyric;
-using Rayer.SearchEngine.Business.Data.Abstractions;
-using Rayer.SearchEngine.Business.Login.Abstractions;
-using Rayer.SearchEngine.Business.Lyric.Abstractions;
-using Rayer.SearchEngine.Business.Playlist.Abstractions;
-using Rayer.SearchEngine.Business.User.Abstractions;
-using Rayer.SearchEngine.Extensions;
-using Rayer.SearchEngine.Models.Domian;
-using Rayer.SearchEngine.Models.Response.Netease.Login.User;
-using Rayer.SearchEngine.Models.Response.Netease.User;
+using Rayer.SearchEngine.Core.Abstractions.Provider;
+using Rayer.SearchEngine.Core.Business.Data;
+using Rayer.SearchEngine.Core.Business.Lyric;
+using Rayer.SearchEngine.Core.Domain.Aggregation;
+using Rayer.SearchEngine.Core.Domain.Authority;
 using Rayer.SearchEngine.Views.Windows;
 using System.Windows;
 using System.Windows.Threading;
@@ -22,13 +18,10 @@ namespace Rayer.SearchEngine.ViewModels.Explore;
 [Inject<IExploreLibraryDataProvider>]
 public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibraryDataProvider
 {
-    private readonly ILoginManager _loginManager;
-
-    private readonly IUserService _userService;
-    private readonly IPlaylistService _playlistService;
+    private readonly IAggregationServiceProvider _provider;
 
     [ObservableProperty]
-    private AccountInfo _account = default!;
+    private User _user = default!;
 
     [ObservableProperty]
     private ExploreLibraryModel _model;
@@ -36,13 +29,9 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
     private string _title = string.Empty;
 
     public ExploreLibraryViewModel(
-        ILoginManager loginManager,
-        IUserService userService,
-        IPlaylistService playlistService)
+        IAggregationServiceProvider provider)
     {
-        _loginManager = loginManager;
-        _userService = userService;
-        _playlistService = playlistService;
+        _provider = provider;
 
         Model = new();
 
@@ -70,12 +59,12 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
 
     public async Task OnLoadAsync()
     {
-        await _loginManager.RefreshLoginStateAsync(AppCore.StoppingToken);
-        var accountInfo = await _loginManager.GetAccountInfoAsync(AppCore.StoppingToken);
+        await _provider.LoginManager.RefreshLoginStateAsync(AppCore.StoppingToken);
+        var user = await _provider.LoginManager.GetAccountInfoAsync(AppCore.StoppingToken);
 
-        if (accountInfo.Profile is not null)
+        if (user.Profile is not null)
         {
-            Account = accountInfo;
+            User = user;
 
             if (AppCore.GetRequiredService<ILoaderProvider>() is { IsLoading: true } loader)
             {
@@ -105,11 +94,11 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
 
     private async void OnLoginWindowClosed(object? sender, EventArgs e)
     {
-        var accountInfo = await _loginManager.GetAccountInfoAsync(AppCore.StoppingToken);
+        var user = await _provider.LoginManager.GetAccountInfoAsync(AppCore.StoppingToken);
 
-        if (accountInfo is { Account.AnonimousUser: false } && accountInfo.Profile is not null)
+        if (user is { Account.Anonimous: false } && user.Profile is not null)
         {
-            Account = accountInfo;
+            User = user;
 
             await LoadInformationAsync();
 
@@ -126,32 +115,32 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
         }
     }
 
-    partial void OnAccountChanged(AccountInfo value)
+    partial void OnUserChanged(User value)
     {
         if (value is { Profile: not null })
         {
-            Title = $"{value.Profile.NickName}的音乐库";
+            Title = $"{value.Profile.Name}的音乐库";
         }
     }
 
     private async Task LoadInformationAsync()
     {
-        var likelist = await _userService.GetLikelistAsync(Account.Account.Id);
+        var likelist = await _provider.UserService.GetLikelistAsync(User.Account.Id);
 
-        var userPlaylists = await _userService.GetPlaylistAsync(Account.Account.Id);
+        var userPlaylists = await _provider.UserService.GetPlaylistAsync(User.Account.Id);
 
-        if (userPlaylists.Playlist.Length > 0)
+        if (userPlaylists.Length > 0)
         {
-            var playlistDetail = await _playlistService.GetPlaylistDetailAsync(userPlaylists.Playlist[0].Id);
+            var playlistDetail = await _provider.PlaylistService.GetPlaylistDetailAsync(userPlaylists[0].Id);
 
-            Model.LikeCount = userPlaylists.Playlist[0].TrackCount;
-            Model.TotalLikeAudios = MapToAudioDetail(playlistDetail, playlistDetail.Playlist.TrackCount);
+            Model.LikeCount = userPlaylists[0].AudioCount;
+            Model.TotalLikeAudios = playlistDetail.Audios;
             Model.PainedLikeAudios = Model.TotalLikeAudios[..12];
 
-            var randomAudio = playlistDetail.Playlist.Tracks[Random.Shared.Next(0, Model.LikeCount - 1)];
-            Model.RandomLyrics = await GetRandomLyricsAsync(randomAudio.Id, randomAudio.Name);
+            var randomAudio = playlistDetail.Audios[Random.Shared.Next(0, Model.LikeCount - 1)];
+            Model.RandomLyrics = await GetRandomLyricsAsync(randomAudio.Id, randomAudio.Title);
 
-            Model.Detail.Playlist = userPlaylists.Playlist.Length > 1 ? userPlaylists.Playlist[1..] : userPlaylists.Playlist;
+            Model.Detail.Playlist = userPlaylists;
 
             OnPropertyChanged(nameof(Model));
 
@@ -165,7 +154,7 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
     private async void OnTick(object? sender, EventArgs e)
     {
         var randomAudio = Model.TotalLikeAudios[Random.Shared.Next(0, Model.LikeCount - 1)];
-        Model.RandomLyrics = await GetRandomLyricsAsync(randomAudio.Id, randomAudio.Name);
+        Model.RandomLyrics = await GetRandomLyricsAsync(randomAudio.Id, randomAudio.Title);
 
         OnPropertyChanged(nameof(Model));
     }
@@ -181,7 +170,7 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
             return Model.RandomLyrics;
         }
 
-        var lyricData = LyricParser.ParseLyrics(lyricResult.Lrc.Lyric, Core.Lyric.Enums.LyricRawType.Lrc);
+        var lyricData = LyricParser.ParseLyrics(lyricResult.Lrc.Lyric, Rayer.Core.Lyric.Enums.LyricRawType.Lrc);
 
         if (lyricData is { Lines: not null })
         {
@@ -209,35 +198,5 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
         }
 
         return Model.RandomLyrics;
-    }
-
-    private static AudioDetail[] MapToAudioDetail(PlaylistDetail response, int count)
-    {
-        var tracks = response.Playlist.Tracks;
-        var privileges = response.Privileges;
-
-        var audioDetails = new AudioDetail[count];
-
-        for (var i = 0; i < count; i++)
-        {
-            var audio = audioDetails[i] = new AudioDetail();
-            var track = tracks[i];
-            var privilege = privileges[i];
-
-            audio.Id = track.Id;
-            audio.Name = track.Name;
-            audio.Artists = track.Artists;
-            audio.Album = track.Album;
-            audio.Pop = track.Pop;
-            audio.Fee = track.Fee;
-            audio.Duration = track.Duration;
-            audio.OriginCoverType = track.OriginCoverType;
-            audio.NoCopyright = track.NoCopyright;
-            audio.Privilege = privilege;
-
-            audio.Playable();
-        }
-
-        return audioDetails;
     }
 }

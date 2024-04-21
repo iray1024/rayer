@@ -1,4 +1,4 @@
-﻿using Rayer.SearchEngine.Models.Response.Netease;
+﻿using Rayer.SearchEngine.Core.Domain.Artist;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -8,7 +8,7 @@ internal sealed class WebArtistsConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is Artist[] details
+        return value is ArtistDefinition[] details
             ? string.Join(" / ", details.Select(x => x.Name))
             : "Unknown";
     }

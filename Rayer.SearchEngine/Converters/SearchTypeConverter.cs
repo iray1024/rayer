@@ -1,5 +1,5 @@
 ﻿using Rayer.Core.Utils;
-using Rayer.SearchEngine.Enums;
+using Rayer.SearchEngine.Core.Enums;
 using System.Globalization;
 using System.Windows.Data;
 

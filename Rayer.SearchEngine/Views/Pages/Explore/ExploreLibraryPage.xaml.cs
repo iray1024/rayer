@@ -1,8 +1,8 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
-using Rayer.SearchEngine.Business.Data.Abstractions;
-using Rayer.SearchEngine.Business.Login.Abstractions;
+using Rayer.SearchEngine.Core.Business.Data;
+using Rayer.SearchEngine.Core.Business.Login;
 using Rayer.SearchEngine.ViewModels.Explore;
 using System.Windows;
 using Wpf.Ui.Controls;

@@ -1,7 +1,8 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Framework.Injection;
-using Rayer.Core.Http.Abstractions;
+using Rayer.Core.Http;
 using Rayer.Core.PInvoke;
+using Rayer.SearchEngine.Core.Options;
 using Rayer.SearchEngine.ViewModels;
 using System.Net.Http;
 using System.Windows;
@@ -169,7 +170,6 @@ public partial class DynamicIsland : Window
             Top = currentScreen.Bounds.Top + 50;
         }
     }
-
 
     private void OnStateChanged(object? sender, EventArgs e)
     {

@@ -1,7 +1,7 @@
 ﻿using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Controls;
 using Rayer.SearchEngine.Controls.Search;
-using Rayer.SearchEngine.Enums;
+using Rayer.SearchEngine.Core.Enums;
 using Rayer.SearchEngine.Internal.Abstractions;
 using System.Windows;
 
@@ -11,7 +11,7 @@ namespace Rayer.SearchEngine.Internal.Impl;
 internal class SearchPresenterProvider : ISearchPresenterProvider
 {
     private static readonly Lazy<SearchAudioPresenter> _audioPresenter;
-    private static readonly Lazy<SearchSingerPresenter> _singerPresenter;
+    private static readonly Lazy<SearchArtistPresenter> _artistPresenter;
     private static readonly Lazy<SearchAlbumPresenter> _albumPresenter;
     private static readonly Lazy<SearchVideoPresenter> _videoPresenter;
     private static readonly Lazy<SearchPlaylistPresenter> _plyalistPresenter;
@@ -24,7 +24,7 @@ internal class SearchPresenterProvider : ISearchPresenterProvider
             VerticalAlignment = VerticalAlignment.Top,
         });
 
-        _singerPresenter = new Lazy<SearchSingerPresenter>(() => new SearchSingerPresenter()
+        _artistPresenter = new Lazy<SearchArtistPresenter>(() => new SearchArtistPresenter()
         {
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top,
@@ -57,7 +57,7 @@ internal class SearchPresenterProvider : ISearchPresenterProvider
         {
             SearchType.Audio => (IPresenterControl<TViewModel, TResponse>)_audioPresenter.Value,
 
-            SearchType.Singer => (IPresenterControl<TViewModel, TResponse>)_singerPresenter.Value,
+            SearchType.Artist => (IPresenterControl<TViewModel, TResponse>)_artistPresenter.Value,
 
             SearchType.Album => (IPresenterControl<TViewModel, TResponse>)_albumPresenter.Value,
 

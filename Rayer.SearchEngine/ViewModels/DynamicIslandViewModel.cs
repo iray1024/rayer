@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Rayer.Core.Abstractions;
+using Rayer.Core.Events;
 using Rayer.Core.Lyric.Abstractions;
 using Rayer.Core.Lyric.Impl;
 using Rayer.SearchEngine.Abstractions;
@@ -54,7 +55,7 @@ public partial class DynamicIslandViewModel : ObservableObject
 
     public DynamicIsland DynamicIsland { get; set; } = default!;
 
-    private void OnAudioPlaying(object? sender, Core.Events.AudioPlayingArgs e)
+    private void OnAudioPlaying(object? sender, AudioPlayingArgs e)
     {
         if (e.PlaybackState is NAudio.Wave.PlaybackState.Paused)
         {
@@ -64,7 +65,7 @@ public partial class DynamicIslandViewModel : ObservableObject
         }
     }
 
-    private async void OnAudioChanged(object? sender, Core.Events.AudioChangedArgs e)
+    private async void OnAudioChanged(object? sender, AudioChangedArgs e)
     {
         _timer.Stop();
 

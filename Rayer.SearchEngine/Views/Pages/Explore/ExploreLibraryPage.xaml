@@ -28,7 +28,7 @@
                 Height="48"
                 HorizontalAlignment="Left"
                 ClipToBounds="True"
-                Source="{Binding ViewModel.Account.Profile.Avatar}">
+                Source="{Binding ViewModel.User.Profile.Avatar}">
                 <Image.Clip>
                     <RectangleGeometry
                         RadiusX="24"

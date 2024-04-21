@@ -15,6 +15,12 @@ internal sealed class WebDurationConverter : IValueConverter
                 ? timeSpan.ToString(@"mm\:ss")
                 : timeSpan.ToString(@"hh\:mm\:ss");
         }
+        else if (value is TimeSpan timespan)
+        {
+            return timespan.Hours == 0
+                ? timespan.ToString(@"mm\:ss")
+                : timespan.ToString(@"hh\:mm\:ss");
+        }
 
         return "00:00";
     }

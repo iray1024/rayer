@@ -1,0 +1,1 @@
+﻿global using Rayer.SearchEngine.Core.Http.Serialization;

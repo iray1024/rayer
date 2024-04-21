@@ -1,0 +1,24 @@
+﻿using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
+using Rayer.Core;
+using Rayer.SearchEngine.Core.Enums;
+using Rayer.SearchEngine.Core.Http.Abstractions;
+
+namespace Rayer.SearchEngine.Core.Abstractions;
+
+public abstract class SearchEngineCoreBase
+{
+    protected SearchEngineCoreBase(SearcherType searcherType = SearcherType.Netease)
+    {
+        ServiceProvider = AppCore.ServiceProvider;
+
+        Searcher = ServiceProvider.GetRequiredKeyedService<IRequestService>(searcherType);
+        Mapper = ServiceProvider.GetRequiredService<IMapper>();
+    }
+
+    protected IServiceProvider ServiceProvider { get; }
+
+    protected IRequestService Searcher { get; }
+
+    protected IMapper Mapper { get; }
+}

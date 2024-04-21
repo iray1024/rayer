@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Rayer.SearchEngine.Abstractions;
+using Rayer.SearchEngine.Core.Options;
 using System.Reflection;
 
 namespace Rayer.SearchEngine.Extensions;

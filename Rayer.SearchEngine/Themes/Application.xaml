@@ -14,6 +14,7 @@
     <converters:PainedLyricConverter x:Key="PainedLyricConverter" />
     <converters:AdjustPanelRowConverter x:Key="AdjustPanelRowConverter" />
     <converters:PlaylistCreatorConverter x:Key="PlaylistCreatorConverter" />
+    <converters:SearcherTypeConverter x:Key="SearcherTypeConverter" />
 
     <Style x:Key="DefaultWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="Background" Value="Transparent" />

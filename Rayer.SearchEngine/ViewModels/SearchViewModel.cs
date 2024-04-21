@@ -1,8 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Caching.Memory;
 using Rayer.Core.Framework.Injection;
-using Rayer.SearchEngine.Business.Search.Abstractions;
-using Rayer.SearchEngine.Models.Response.Netease.Search;
+using Rayer.SearchEngine.Abstractions.Provider;
+using Rayer.SearchEngine.Core.Domain.Aduio;
+using Rayer.SearchEngine.Core.Domain.Aggregation;
+using Rayer.SearchEngine.Core.Domain.Album;
+using Rayer.SearchEngine.Core.Domain.Artist;
+using Rayer.SearchEngine.Core.Domain.Playlist;
+using Rayer.SearchEngine.Core.Domain.Video;
 using System.Net.Http;
 
 namespace Rayer.SearchEngine.ViewModels;
@@ -10,34 +15,38 @@ namespace Rayer.SearchEngine.ViewModels;
 [Inject]
 public partial class SearchViewModel : ObservableObject
 {
-    private readonly ISearchAudioEngine _audioEngine;
+    private readonly ISearchAudioEngineProvider _audioEngineProvider;
     private readonly IMemoryCache _cache;
 
-    public SearchViewModel(ISearchAudioEngine audioEngine, IMemoryCache cache)
+    public SearchViewModel(ISearchAudioEngineProvider audioEngineProvider, IMemoryCache cache)
     {
-        _audioEngine = audioEngine;
+        _audioEngineProvider = audioEngineProvider;
         _cache = cache;
     }
 
     public SearchAggregationModel Model { get; set; } = null!;
 
-    public async Task<SearchAudioDetail> LoadAudioAsync()
+    public async Task<SearchAudio> LoadAudioAsync()
     {
-        if (_cache.TryGetValue<SearchAudioDetail>(Model.Audio, out var response) && response is not null)
+        var cacheKey = Model.GetHashCode();
+
+        if (_cache.TryGetValue<SearchAudio>(cacheKey, out var response) && response is not null)
         {
             return response;
         }
         else
         {
-            if (Model.Audio.Code == 200)
+            if (Model.Audio.Details.Length > 0)
             {
-                var ids = string.Join(',', Model.Audio.Result.Songs.Select(x => x.Id));
+                var ids = string.Join(',', Model.Audio.Details.Select(x => x.Id));
 
-                var newResponse = await _audioEngine.SearchDetailAsync(ids);
+                var newResponse = await _audioEngineProvider.AudioEngine.SearchDetailAsync(ids);
 
-                _cache.Set(Model.Audio, newResponse, TimeSpan.FromMinutes(10));
+                Model.Audio.Details = newResponse;
 
-                return newResponse;
+                _cache.Set(cacheKey, Model.Audio, TimeSpan.FromMinutes(10));
+
+                return Model.Audio;
             }
             else
             {
@@ -46,23 +55,23 @@ public partial class SearchViewModel : ObservableObject
         }
     }
 
-    public async Task<SearchSingerDetail> LoadSingerAsync()
+    public async Task<SearchArtist> LoadArtistAsync()
     {
 
         return default!;
     }
 
-    public async Task<SearchAlbumDetail> LoadAlbumAsync()
+    public async Task<SearchAlbum> LoadAlbumAsync()
     {
         return default!;
     }
 
-    public async Task<SearchVideoDetail> LoadVideoAsync()
+    public async Task<SearchVideo> LoadVideoAsync()
     {
         return default!;
     }
 
-    public async Task<SearchPlaylistDetail> LoadPlaylistAsync()
+    public async Task<SearchPlaylist> LoadPlaylistAsync()
     {
         return default!;
     }

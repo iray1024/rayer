@@ -11,6 +11,7 @@ public static class Constants
 
         public static string SettingsPath { get; } = Path.Combine(AppDataDir, "settings.json");
         public static string CookiePath { get; } = Path.Combine(AppDataDir, "cookie.dat");
+        public static string BilibiliCookiePath { get; } = Path.Combine(AppDataDir, "bcookie.dat");
     }
 
     public static class DefaultKeyBinding

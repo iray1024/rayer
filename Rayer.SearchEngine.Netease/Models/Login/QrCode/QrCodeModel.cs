@@ -1,0 +1,17 @@
+﻿using Rayer.SearchEngine.Core.Http.Abstractions;
+
+namespace Rayer.SearchEngine.Netease.Models.Login.QrCode;
+
+public class QrCodeModel : ResponseBase
+{
+    public QrCodeResponseDetail Data { get; set; } = default!;
+
+    public class QrCodeResponseDetail
+    {
+        [JsonPropertyName("qrurl")]
+        public string Url { get; set; } = string.Empty;
+
+        [JsonPropertyName("qrimg")]
+        public string Image { get; set; } = string.Empty;
+    }
+}

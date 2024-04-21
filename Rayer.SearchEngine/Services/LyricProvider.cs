@@ -38,18 +38,18 @@ internal class LyricProvider : ILyricProvider
 
     public LyricSearcher LyricSearcher => _settingsService.Settings.LyricSearcher;
 
-    public event EventHandler<Core.Events.AudioPlayingArgs>? AudioPlaying;
-    public event EventHandler<Core.Events.AudioChangedArgs>? AudioChanged;
+    public event EventHandler<Rayer.Core.Events.AudioPlayingArgs>? AudioPlaying;
+    public event EventHandler<Rayer.Core.Events.AudioChangedArgs>? AudioChanged;
     public event EventHandler? AudioPaused;
     public event EventHandler? AudioStopped;
     public event EventHandler<SwitchLyricSearcherArgs>? LyricChanged;
 
-    protected virtual void OnAudioPlaying(object? sender, Core.Events.AudioPlayingArgs e)
+    protected virtual void OnAudioPlaying(object? sender, Rayer.Core.Events.AudioPlayingArgs e)
     {
         AudioPlaying?.Invoke(this, e);
     }
 
-    protected virtual async void OnAudioChanged(object? sender, Core.Events.AudioChangedArgs e)
+    protected virtual async void OnAudioChanged(object? sender, Rayer.Core.Events.AudioChangedArgs e)
     {
         var metadata = new TrackMultiArtistMetadata()
         {
@@ -111,7 +111,7 @@ internal class LyricProvider : ILyricProvider
 
             if (lyricResult is not null && lyricResult.GetLyric().Lyric is string lyric)
             {
-                LyricData = LyricParser.ParseLyrics(lyric, Core.Lyric.Enums.LyricRawType.Lrc);
+                LyricData = LyricParser.ParseLyrics(lyric, Rayer.Core.Lyric.Enums.LyricRawType.Lrc);
 
                 if (LyricData is not null)
                 {

@@ -5,9 +5,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Rayer.SearchEngine.Controls.Explore"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:model="clr-namespace:Rayer.SearchEngine.Models.Response.Search"
+    xmlns:model="clr-namespace:Rayer.SearchEngine.Core.Domain.Aduio;assembly=Rayer.SearchEngine.Core"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    d:DataContext="{d:DesignInstance model:SearchAudioDetailInformation,
+    d:DataContext="{d:DesignInstance model:SearchAudioDetail,
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -78,7 +78,7 @@
                                 FontSize="16"
                                 FontTypography="BodyStrong"
                                 Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                                Text="{Binding Name}"
+                                Text="{Binding Title}"
                                 TextOptions.TextHintingMode="Animated"
                                 TextTrimming="WordEllipsis" />
                             <ui:TextBlock

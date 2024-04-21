@@ -149,6 +149,7 @@ public partial class ProcessMessageWindow : Window
         }
     }
 
+    [DebuggerStepThrough]
     private IntPtr ProgramHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
         if (msg == WM_SHOWRAYER)

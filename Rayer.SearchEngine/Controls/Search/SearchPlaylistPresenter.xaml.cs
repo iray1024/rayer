@@ -1,5 +1,5 @@
 ﻿using Rayer.Core;
-using Rayer.SearchEngine.Models.Response.Netease.Search;
+using Rayer.SearchEngine.Core.Domain.Playlist;
 using Rayer.SearchEngine.ViewModels.Presenter;
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using System.Windows.Shapes;
 
 namespace Rayer.SearchEngine.Controls.Search;
 
-public partial class SearchPlaylistPresenter : UserControl, IPresenterControl<SearchPlaylistPresenterViewModel, SearchPlaylistDetail>
+public partial class SearchPlaylistPresenter : UserControl, IPresenterControl<SearchPlaylistPresenterViewModel, SearchPlaylist>
 {
     public SearchPlaylistPresenter()
     {

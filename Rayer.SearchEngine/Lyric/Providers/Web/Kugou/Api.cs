@@ -1,8 +1,8 @@
 ﻿using Lyricify.Lyrics.Providers.Web.Kugou;
 using Rayer.Core.Framework.Injection;
-using Rayer.Core.Http.Abstractions;
-using Rayer.SearchEngine.Extensions;
-using Rayer.SearchEngine.Internal.Abstractions;
+using Rayer.Core.Http;
+using Rayer.SearchEngine.Core.Http.Abstractions;
+using Rayer.SearchEngine.Core.Http.Serialization;
 
 namespace Rayer.SearchEngine.Lyric.Providers.Web.Kugou;
 

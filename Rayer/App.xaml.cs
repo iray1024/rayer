@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Rayer.Core;
@@ -6,7 +7,9 @@ using Rayer.Core.FileSystem.Abstractions;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Playing;
+using Rayer.SearchEngine.Bilibili.Extensions;
 using Rayer.SearchEngine.Extensions;
+using Rayer.SearchEngine.Netease.Extensions;
 using Rayer.Services;
 using System.Windows;
 using System.Windows.Threading;
@@ -29,6 +32,9 @@ public partial class App : Application
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<ISnackbarService, SnackbarService>();
             services.AddSingleton<IContentDialogService, ContentDialogService>();
+
+            services.UseBilibili();
+            services.UseNetease();
 
             services.AddRayerCore();
             services.AddSearchEngine(builder =>
@@ -63,7 +69,7 @@ public partial class App : Application
         return _host.Services.GetServices<T>();
     }
 
-    protected override void OnStartup(StartupEventArgs e)
+    protected override async void OnStartup(StartupEventArgs e)
     {
         Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture;
 
@@ -75,6 +81,8 @@ public partial class App : Application
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
         AppCore.UseServiceProvider(_host.Services);
+
+        await Preload();
 
         _host.Start();
     }
@@ -131,5 +139,15 @@ public partial class App : Application
                 }, AppCore.StoppingToken);
             });
         }
+    }
+
+    private static async Task Preload()
+    {
+        await Current.Dispatcher.InvokeAsync(() =>
+        {
+            var mapper = GetRequiredService<IMapper>();
+
+            mapper.ConfigurationProvider.CompileMappings();
+        });
     }
 }

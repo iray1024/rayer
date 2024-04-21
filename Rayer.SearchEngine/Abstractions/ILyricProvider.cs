@@ -12,8 +12,8 @@ public interface ILyricProvider
 
     Task SwitchSearcherAsync();
 
-    event EventHandler<Core.Events.AudioPlayingArgs> AudioPlaying;
-    event EventHandler<Core.Events.AudioChangedArgs> AudioChanged;
+    event EventHandler<Rayer.Core.Events.AudioPlayingArgs> AudioPlaying;
+    event EventHandler<Rayer.Core.Events.AudioChangedArgs> AudioChanged;
     event EventHandler AudioPaused;
     event EventHandler AudioStopped;
     event EventHandler<SwitchLyricSearcherArgs> LyricChanged;

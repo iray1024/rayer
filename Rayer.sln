@@ -24,7 +24,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{7D1A8418-4
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rayer.Installer", "Rayer.Installer\Rayer.Installer.csproj", "{8197DC09-6D90-4D70-8C4D-3D8DF3AC24C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rayer.IPSHost", "Rayer.IPSHost\Rayer.IPSHost.csproj", "{FFBA5B60-3058-4976-96BC-F9A94F5E0597}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rayer.IPSHost", "Rayer.IPSHost\Rayer.IPSHost.csproj", "{FFBA5B60-3058-4976-96BC-F9A94F5E0597}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SearchEngine", "SearchEngine", "{8E439F97-5394-4488-9C57-9DFE1CE37D0F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rayer.SearchEngine.Netease", "Rayer.SearchEngine.Netease\Rayer.SearchEngine.Netease.csproj", "{13E5BDDD-9E3C-4E77-AAB0-ED1F096C8FC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rayer.SearchEngine.Bilibili", "Rayer.SearchEngine.Bilibili\Rayer.SearchEngine.Bilibili.csproj", "{8EFEFEC1-3B3C-4B6B-8CAC-884D9F962C10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rayer.SearchEngine.Core", "Rayer.SearchEngine.Core\Rayer.SearchEngine.Core.csproj", "{DE3888A1-A1F4-476B-BF68-E94481921718}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,12 +68,27 @@ Global
 		{FFBA5B60-3058-4976-96BC-F9A94F5E0597}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFBA5B60-3058-4976-96BC-F9A94F5E0597}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFBA5B60-3058-4976-96BC-F9A94F5E0597}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13E5BDDD-9E3C-4E77-AAB0-ED1F096C8FC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13E5BDDD-9E3C-4E77-AAB0-ED1F096C8FC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13E5BDDD-9E3C-4E77-AAB0-ED1F096C8FC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13E5BDDD-9E3C-4E77-AAB0-ED1F096C8FC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EFEFEC1-3B3C-4B6B-8CAC-884D9F962C10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EFEFEC1-3B3C-4B6B-8CAC-884D9F962C10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EFEFEC1-3B3C-4B6B-8CAC-884D9F962C10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EFEFEC1-3B3C-4B6B-8CAC-884D9F962C10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE3888A1-A1F4-476B-BF68-E94481921718}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE3888A1-A1F4-476B-BF68-E94481921718}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE3888A1-A1F4-476B-BF68-E94481921718}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE3888A1-A1F4-476B-BF68-E94481921718}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9CC851B7-75F3-490E-9034-F0D8DF142CCF} = {7D1A8418-4A70-4665-A711-40F7A015D740}
+		{13E5BDDD-9E3C-4E77-AAB0-ED1F096C8FC0} = {8E439F97-5394-4488-9C57-9DFE1CE37D0F}
+		{8EFEFEC1-3B3C-4B6B-8CAC-884D9F962C10} = {8E439F97-5394-4488-9C57-9DFE1CE37D0F}
+		{DE3888A1-A1F4-476B-BF68-E94481921718} = {8E439F97-5394-4488-9C57-9DFE1CE37D0F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C1047A46-F20F-4A34-A0E2-63FAA6E8A990}

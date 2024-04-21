@@ -1,10 +1,11 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Abstractions;
+using Rayer.Core.Events;
 using Rayer.Core.Models;
 using Rayer.Core.Utils;
-using Rayer.SearchEngine.Business.Search.Abstractions;
+using Rayer.SearchEngine.Core.Abstractions.Provider;
+using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.Internal.Effects;
-using Rayer.SearchEngine.Models.Domian;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -142,7 +143,7 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
     private async void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ClickCount == 2 && sender is Border border &&
-            border.DataContext is AudioDetail detail)
+            border.DataContext is SearchAudioDetail detail)
         {
             if (!GetIsPlayable(border))
             {
@@ -198,7 +199,7 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
         }
     }
 
-    private void OnAudioChanged(object? sender, Core.Events.AudioChangedArgs e)
+    private void OnAudioChanged(object? sender, AudioChangedArgs e)
     {
         var currentThemeBrush = (SolidColorBrush)Application.Current.Resources["ControlStrokeColorDefaultBrush"];
         var currentTextPrimaryBrush = (SolidColorBrush)Application.Current.Resources["TextFillColorPrimaryBrush"];
@@ -213,7 +214,7 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
             var vBorder = presenter.FindName("PART_Border") as Border;
 
             if (vBorder is not null &&
-                vBorder.DataContext is AudioDetail detail)
+                vBorder.DataContext is SearchAudioDetail detail)
             {
                 if (GetIsChecked(vBorder) && GetIsPlayable(vBorder) && detail.Id != e.New.Id)
                 {
@@ -278,24 +279,24 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
         }
     }
 
-    private static async Task Play(AudioDetail detail)
+    private static async Task Play(SearchAudioDetail detail)
     {
-        var audioEngine = AppCore.GetRequiredService<ISearchAudioEngine>();
+        var provider = AppCore.GetRequiredService<IAggregationServiceProvider>();
         var audioManager = AppCore.GetRequiredService<IAudioManager>();
 
-        var audioInformation = await audioEngine.GetAudioAsync(detail.Id);
+        var audioInformation = await provider.AudioEngine.GetAudioAsync(detail.Id);
 
         if (!audioManager.Playback.TryGetAudio(detail.Id, out var existsAudio))
         {
             var audio = new Audio()
             {
                 Id = detail.Id,
-                Title = detail.Name,
+                Title = detail.Title,
                 Artists = detail.Artists.Select(x => x.Name).ToArray(),
-                Album = detail.Album?.Name ?? string.Empty,
+                Album = detail.Album?.Title ?? string.Empty,
                 Cover = detail.Album?.Picture is not null ? ImageSourceUtils.Create(detail.Album.Picture) : null,
-                Duration = TimeSpan.FromMilliseconds(detail.Duration),
-                Path = audioInformation.Data.FirstOrDefault()?.Url ?? string.Empty
+                Duration = detail.Duration,
+                Path = audioInformation.Url ?? string.Empty
             };
 
             audioManager.Playback.Queue.Add(audio);
@@ -325,12 +326,12 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
 
             if (vBorder is not null)
             {
-                if (vBorder.DataContext is AudioDetail detail)
+                if (vBorder.DataContext is SearchAudioDetail detail)
                 {
-                    if (!string.IsNullOrEmpty(detail.NonePlayableReason))
+                    if (!string.IsNullOrEmpty(detail.Copyright.Reason))
                     {
                         SetIsPlayable(vBorder, false);
-                        vBorder.ToolTip = detail.NonePlayableReason;
+                        vBorder.ToolTip = detail.Copyright.Reason;
 
                         if (vBorder.Child is Grid innerGrid)
                         {

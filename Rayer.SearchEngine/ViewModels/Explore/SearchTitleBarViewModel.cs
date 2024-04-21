@@ -2,7 +2,9 @@
 using Rayer.Core;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Abstractions;
-using Rayer.SearchEngine.Enums;
+using Rayer.SearchEngine.Core.Abstractions.Provider;
+using Rayer.SearchEngine.Core.Enums;
+using Rayer.SearchEngine.Core.Options;
 
 namespace Rayer.SearchEngine.ViewModels.Explore;
 
@@ -12,6 +14,8 @@ public partial class SearchTitleBarViewModel : ObservableObject
     [ObservableProperty]
     private SearcherType _searcher = 0;
 
+    private bool _isInitialized = false;
+
     public SearchTitleBarViewModel()
     {
 
@@ -19,13 +23,22 @@ public partial class SearchTitleBarViewModel : ObservableObject
 
     public async Task OnSearcherChanged()
     {
+        if (!_isInitialized)
+        {
+            _isInitialized = true;
+
+            return;
+        }
+
         var searchEngineOptions = AppCore.GetRequiredService<SearchEngineOptions>();
 
         searchEngineOptions.SearcherType = Searcher;
 
-        var engine = AppCore.GetRequiredService<ISearchEngine>();
+        var provider = AppCore.GetRequiredService<ISearchEngineProvider>();
 
-        var model = await engine.SearchAsync(searchEngineOptions.LatestQueryText, AppCore.StoppingToken);
+        var model = await provider.SearchEngine.SearchAsync(searchEngineOptions.LatestQueryText, AppCore.StoppingToken);
+
+        model.QueryText = searchEngineOptions.LatestQueryText;
 
         var searchAware = AppCore.GetRequiredService<ISearchAware>();
 

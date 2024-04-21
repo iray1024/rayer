@@ -3,6 +3,7 @@ using Rayer.Core;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Abstractions;
+using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Views.Pages;
 using Rayer.Views.Pages;
 using System.Collections.ObjectModel;
@@ -14,14 +15,13 @@ namespace Rayer.ViewModels;
 [Inject]
 public partial class MainWindowViewModel : ObservableObject
 {
-    private readonly ISearchEngine _searchEngine;
+    private readonly ISearchEngineProvider _searchEngineProvider;
     private readonly INavigationService _navigationService;
 
     private string _currentSuggestText = string.Empty;
     private bool _userRaiseClickSuggestItem = false;
 
     public MainWindowViewModel(
-        ISearchEngine searchEngine,
         INavigationService navigationService)
     {
         var plugins = App.GetServices<INavigationMenuPlugin>();
@@ -34,7 +34,7 @@ public partial class MainWindowViewModel : ObservableObject
             }
         }
 
-        _searchEngine = searchEngine;
+        _searchEngineProvider = App.GetRequiredService<ISearchEngineProvider>();
         _navigationService = navigationService;
     }
 
@@ -72,12 +72,12 @@ public partial class MainWindowViewModel : ObservableObject
                 {
                     args.Handled = true;
 
-                    var model = await _searchEngine.SuggestAsync(args.Text);
+                    var model = await _searchEngineProvider.SearchEngine.SuggestAsync(args.Text);
 
                     if (model is not null && model.Code == 200)
                     {
-                        box.ItemsSource = model.Result.Audios.Length > 0
-                            ? model.Result.Audios.Select(x => x.Name).ToList()
+                        box.ItemsSource = model.Audios.Length > 0
+                            ? model.Audios.Select(x => x.Name).ToList()
                             : null;
                     }
                 }
@@ -100,7 +100,9 @@ public partial class MainWindowViewModel : ObservableObject
     {
         args.Handled = true;
 
-        var model = await _searchEngine.SearchAsync(args.QueryText, AppCore.StoppingToken);
+        var model = await _searchEngineProvider.SearchEngine.SearchAsync(args.QueryText, AppCore.StoppingToken);
+
+        model.QueryText = args.QueryText;
 
         if (_navigationService.GetNavigationControl().SelectedItem?.TargetPageType != typeof(SearchPage))
         {
@@ -136,8 +138,8 @@ public partial class MainWindowViewModel : ObservableObject
         {
             source.Text = _currentSuggestText;
 
-            var model = await _searchEngine.SearchAsync(_currentSuggestText, AppCore.StoppingToken);
-
+            var model = await _searchEngineProvider.SearchEngine.SearchAsync(_currentSuggestText, AppCore.StoppingToken);
+            model.QueryText = _currentSuggestText;
             _ = Interlocked.Exchange(ref _currentSuggestText, string.Empty);
 
             if (_navigationService.GetNavigationControl().SelectedItem?.TargetPageType != typeof(SearchPage))

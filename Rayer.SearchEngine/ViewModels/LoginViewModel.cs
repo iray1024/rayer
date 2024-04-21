@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Rayer.Core.Http.Abstractions;
-using Rayer.SearchEngine.Business.Login.Abstractions;
-using Rayer.SearchEngine.Models.Response.Netease.Login.QrCode;
+using Rayer.Core.Http;
+using Rayer.SearchEngine.Core.Business.Login;
+using Rayer.SearchEngine.Core.Domain.Authority.Login;
 using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -35,20 +35,11 @@ public partial class LoginViewModel : ObservableObject
     {
         var login = _loginManager.UseQrCode();
 
-        var keyResponse = await login.GetQrCodeKeyAsync();
-
-        if (keyResponse is null)
-        {
-            State = "二维码加载失败";
-
-            return;
-        }
-
-        var response = await login.GetQrCodeAsync(keyResponse.Data.Unikey);
+        var response = await login.GetQrCodeAsync();
 
         if (response is not null)
         {
-            QrCode = ProcessQrCodeResponse(response.Data.Image);
+            QrCode = ProcessQrCodeResponse(response.Image);
 
             State = "等待扫码";
 
@@ -62,7 +53,7 @@ public partial class LoginViewModel : ObservableObject
             {
                 await Task.Delay(100);
 
-                checkResult = await login.CheckAsync(keyResponse.Data.Unikey);
+                checkResult = await login.CheckAsync();
 
                 if (checkResult is { Code: 803 })
                 {

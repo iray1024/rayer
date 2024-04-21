@@ -1,7 +1,7 @@
 ﻿using Rayer.Core.Framework.Injection;
-using Rayer.Core.Http.Abstractions;
-using Rayer.SearchEngine.Extensions;
-using Rayer.SearchEngine.Internal.Abstractions;
+using Rayer.Core.Http;
+using Rayer.SearchEngine.Core.Http.Abstractions;
+using Rayer.SearchEngine.Core.Http.Serialization;
 using System.ComponentModel;
 using System.IO;
 using System.Numerics;

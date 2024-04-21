@@ -1,12 +1,12 @@
 ﻿using Rayer.Core;
-using Rayer.SearchEngine.Models.Response.Netease.Search;
+using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.ViewModels.Presenter;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace Rayer.SearchEngine.Controls.Search;
 
-public partial class SearchAudioPresenter : UserControl, IPresenterControl<SearchAudioPresenterViewModel, SearchAudioDetail>
+public partial class SearchAudioPresenter : UserControl, IPresenterControl<SearchAudioPresenterViewModel, SearchAudio>
 {
     public SearchAudioPresenter()
     {
@@ -28,7 +28,7 @@ public partial class SearchAudioPresenter : UserControl, IPresenterControl<Searc
     private async void OnListViewItemDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         if (e.Source is ListViewItem listViewItem &&
-            listViewItem.DataContext is SearchAudioDetailInformation item)
+            listViewItem.DataContext is SearchAudioDetail item)
         {
             await ViewModel.PlayWebAudio(item);
         }

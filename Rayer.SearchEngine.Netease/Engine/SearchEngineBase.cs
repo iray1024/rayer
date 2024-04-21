@@ -1,0 +1,29 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+using Rayer.SearchEngine.Core.Abstractions;
+using Rayer.SearchEngine.Core.Enums;
+using Rayer.SearchEngine.Netease.Http.Selector;
+
+namespace Rayer.SearchEngine.Netease.Engine;
+
+internal abstract class SearchEngineBase : SearchEngineCoreBase
+{
+    protected SearchEngineBase()
+        : base(SearcherType.Netease)
+    {
+        LoginSelector = ServiceProvider.GetRequiredService<LoginApiSelector>();
+        AccountSelector = ServiceProvider.GetRequiredService<AccountApiSelector>();
+        UserSelector = ServiceProvider.GetRequiredService<UserApiSelector>();
+        PlaylistSelector = ServiceProvider.GetRequiredService<PlaylistApiSelector>();
+        SearchSelector = ServiceProvider.GetRequiredService<SearchApiSelector>();
+        TrackSelector = ServiceProvider.GetRequiredService<TrackApiSelector>();
+        LyricSelector = ServiceProvider.GetRequiredService<LyricApiSelector>();
+    }
+
+    protected LoginApiSelector LoginSelector { get; }
+    protected AccountApiSelector AccountSelector { get; }
+    protected UserApiSelector UserSelector { get; }
+    protected PlaylistApiSelector PlaylistSelector { get; }
+    protected SearchApiSelector SearchSelector { get; }
+    protected TrackApiSelector TrackSelector { get; }
+    protected LyricApiSelector LyricSelector { get; }
+}

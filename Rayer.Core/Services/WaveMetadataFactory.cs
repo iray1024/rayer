@@ -6,7 +6,7 @@ using Rayer.Core.Abstractions;
 using Rayer.Core.AudioEffect.Abstractions;
 using Rayer.Core.AudioReader.Flac;
 using Rayer.Core.Framework.Injection;
-using Rayer.Core.Http.Abstractions;
+using Rayer.Core.Http;
 using Rayer.Core.Models;
 using System.IO;
 

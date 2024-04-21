@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Rayer.SearchEngine.Business.Login.Abstractions;
+using Rayer.SearchEngine.Core.Business.Login;
 
 namespace Rayer.SearchEngine.ViewModels.Explore;
 
