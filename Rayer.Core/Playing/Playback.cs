@@ -412,9 +412,9 @@ public class Playback : IDisposable
 
     private int GetNextAudioIndex()
     {
-        var index = Shuffle
-            ? Random.Shared.Next(0, Queue.Count)
-            : Queue.IndexOf(Audio) + 1;
+        var currentIndex = Queue.IndexOf(Audio);
+
+        var index = Shuffle ? GetExcludeRandomIndex(currentIndex) : currentIndex + 1;
 
         return index >= Queue.Count ? 0 : index;
     }
@@ -442,6 +442,20 @@ public class Playback : IDisposable
         DispatcherTimer.Stop();
 
         _deviceManager.Stop();
+    }
+
+    private int GetExcludeRandomIndex(int exclude)
+    {
+        int index;
+
+        index = Random.Shared.Next(0, Queue.Count);
+
+        if (index == exclude)
+        {
+            index = GetExcludeRandomIndex(exclude);
+        }
+
+        return index;
     }
 
     public void Dispose()
