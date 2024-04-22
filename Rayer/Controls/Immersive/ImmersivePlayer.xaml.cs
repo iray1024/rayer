@@ -1,4 +1,6 @@
-﻿using Rayer.ViewModels;
+﻿using Rayer.Core;
+using Rayer.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -21,6 +23,13 @@ public partial class ImmersivePlayer : UserControl
         if (e.LeftButton == MouseButtonState.Pressed)
         {
             App.MainWindow.DragMove();
+        }
+
+        if (e.ClickCount == 2)
+        {
+            var mainwindow = AppCore.MainWindow;
+
+            mainwindow.WindowState = mainwindow.WindowState is WindowState.Normal ? WindowState.Maximized : WindowState.Normal;
         }
     }
 }
