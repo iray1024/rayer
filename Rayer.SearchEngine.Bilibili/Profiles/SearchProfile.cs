@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using Rayer.SearchEngine.Bilibili.Models.Search;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.Core.Domain.Album;
 using Rayer.SearchEngine.Core.Domain.Artist;
-using Rayer.SearchEngine.Models.Response.Bilibili.Search;
 using System.Text.RegularExpressions;
 
 namespace Rayer.SearchEngine.Bilibili.Profiles;

@@ -5,8 +5,8 @@ using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Models;
 using Rayer.Core.Utils;
-using Rayer.SearchEngine.Abstractions.Provider;
 using Rayer.SearchEngine.Controls;
+using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using System.Windows;
 

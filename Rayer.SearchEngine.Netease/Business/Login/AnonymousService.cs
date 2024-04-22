@@ -6,7 +6,7 @@ using Rayer.SearchEngine.Core.Domain.Authority;
 using Rayer.SearchEngine.Netease.Engine;
 using Rayer.SearchEngine.Netease.Models.Login;
 
-namespace Rayer.SearchEngine.Business.Login.Impl;
+namespace Rayer.SearchEngine.Netease.Business.Login;
 
 [Inject<IAnonymousService>(ServiceLifetime = ServiceLifetime.Scoped, ServiceKey = SearcherType.Netease)]
 internal class AnonymousService : SearchEngineBase, IAnonymousService

@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Caching.Memory;
 using Rayer.Core.Framework.Injection;
-using Rayer.SearchEngine.Abstractions.Provider;
+using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.Core.Domain.Aggregation;
 using Rayer.SearchEngine.Core.Domain.Album;

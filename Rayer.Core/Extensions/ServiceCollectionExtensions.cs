@@ -1,10 +1,11 @@
 ﻿using AutoMapper.Extensions.ExpressionMapping;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Internal;
 using Rayer.Core.Framework.Injection;
 using System.IO;
 using System.Reflection;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace Rayer.Core.Extensions;
 
 public static class ServiceCollectionExtensions
 {

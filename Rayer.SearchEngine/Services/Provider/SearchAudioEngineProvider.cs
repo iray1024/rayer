@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using Rayer.Core;
 using Rayer.Core.Framework.Injection;
-using Rayer.SearchEngine.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Abstractions;
+using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Options;
 
 namespace Rayer.SearchEngine.Services.Provider;

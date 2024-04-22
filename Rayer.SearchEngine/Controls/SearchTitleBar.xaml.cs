@@ -150,6 +150,6 @@ public partial class SearchTitleBar : UserControl
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        ViewModel.Searcher = AppCore.GetRequiredService<ISettingsService>().Settings.DefaultSearcher;
+        
     }
 }

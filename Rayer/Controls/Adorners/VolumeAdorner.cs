@@ -8,7 +8,7 @@ using System.Windows.Media;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
-namespace Rayer.Controls;
+namespace Rayer.Controls.Adorners;
 
 public class VolumeAdorner : Adorner
 {

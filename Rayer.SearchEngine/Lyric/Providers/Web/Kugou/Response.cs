@@ -2,7 +2,7 @@
 using Rayer.SearchEngine.Lyric.Abstractions;
 using Rayer.SearchEngine.Lyric.Models;
 
-namespace Lyricify.Lyrics.Providers.Web.Kugou;
+namespace Rayer.SearchEngine.Lyric.Providers.Web.Kugou;
 
 public class SearchSongResponse
 {
@@ -164,3 +164,4 @@ public class LyricResult : ILyricResult
         };
     }
 }
+#nullable restore

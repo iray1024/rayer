@@ -1,6 +1,4 @@
-﻿using Rayer.SearchEngine.Core.Abstractions;
-
-namespace Rayer.SearchEngine.Abstractions.Provider;
+﻿namespace Rayer.SearchEngine.Core.Abstractions.Provider;
 
 public interface ISearchAudioEngineProvider
 {

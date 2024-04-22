@@ -1,5 +1,4 @@
-﻿using Lyricify.Lyrics.Providers.Web.Kugou;
-using Rayer.Core.Framework.Injection;
+﻿using Rayer.Core.Framework.Injection;
 using Rayer.Core.Http;
 using Rayer.SearchEngine.Core.Http.Abstractions;
 using Rayer.SearchEngine.Core.Http.Serialization;

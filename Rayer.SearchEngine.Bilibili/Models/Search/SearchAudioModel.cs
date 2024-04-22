@@ -1,6 +1,6 @@
 ﻿using Rayer.SearchEngine.Core.Http.Abstractions;
 
-namespace Rayer.SearchEngine.Models.Response.Bilibili.Search;
+namespace Rayer.SearchEngine.Bilibili.Models.Search;
 
 public class SearchAudioModel : ResponseBase
 {

@@ -1,4 +1,5 @@
-﻿using Rayer.Core.Abstractions;
+﻿using Microsoft.Extensions.Options;
+using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
@@ -7,6 +8,7 @@ using Rayer.Core.Lyric.Abstractions;
 using Rayer.Core.Lyric.Impl;
 using Rayer.Core.Lyric.Models;
 using Rayer.SearchEngine.Abstractions;
+using Rayer.SearchEngine.Core.Options;
 using Rayer.SearchEngine.Events;
 using Rayer.SearchEngine.Lyric.Abstractions;
 
@@ -19,14 +21,19 @@ internal class LyricProvider : ILyricProvider
     private readonly IAudioManager _audioManager;
     private readonly ISettingsService _settingsService;
 
+    private readonly SearchEngineOptions _searchEngineOptions;
+
     public LyricProvider(
         ILyricSearchEngine lyricSearchEngine,
         IAudioManager audioManager,
-        ISettingsService settingsService)
+        ISettingsService settingsService,
+        IOptionsSnapshot<SearchEngineOptions> snapshot)
     {
         _lyricSearchEngine = lyricSearchEngine;
         _audioManager = audioManager;
         _settingsService = settingsService;
+
+        _searchEngineOptions = snapshot.Value;
 
         _audioManager.AudioPlaying += OnAudioPlaying;
         _audioManager.AudioChanged += OnAudioChanged;
@@ -51,18 +58,26 @@ internal class LyricProvider : ILyricProvider
 
     protected virtual async void OnAudioChanged(object? sender, Rayer.Core.Events.AudioChangedArgs e)
     {
-        var metadata = new TrackMultiArtistMetadata()
+        if (_searchEngineOptions.SearcherType is SearcherType.Netease)
         {
-            Title = e.New.Title,
-            Album = e.New.Album,
-            Artists = [.. e.New.Artists],
-            DurationMs = (int)e.New.Duration.TotalMilliseconds
-        };
+            var metadata = new TrackMultiArtistMetadata()
+            {
+                Title = e.New.Title,
+                Album = e.New.Album,
+                Artists = [.. e.New.Artists],
+                DurationMs = (int)e.New.Duration.TotalMilliseconds
+            };
 
-        var result = await InternalSearchAsync(metadata);
+            var result = await InternalSearchAsync(metadata);
 
-        if (result)
+            if (result)
+            {
+                AudioChanged?.Invoke(this, e);
+            }
+        }
+        else
         {
+            LyricData = null;
             AudioChanged?.Invoke(this, e);
         }
     }

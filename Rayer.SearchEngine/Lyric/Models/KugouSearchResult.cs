@@ -1,5 +1,5 @@
-﻿using Lyricify.Lyrics.Providers.Web.Kugou;
-using Rayer.SearchEngine.Lyric.Abstractions;
+﻿using Rayer.SearchEngine.Lyric.Abstractions;
+using Rayer.SearchEngine.Lyric.Providers.Web.Kugou;
 using Rayer.SearchEngine.Lyric.Searchers.Abstractions;
 using Rayer.SearchEngine.Lyric.Searchers.Impl;
 

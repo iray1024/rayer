@@ -1,12 +1,15 @@
-﻿using Rayer.SearchEngine.Core.Domain.Aduio;
+﻿using Rayer.Core.Common;
+using Rayer.SearchEngine.Core.Domain.Aduio;
 
 namespace Rayer.SearchEngine.Core.Domain.Aggregation;
 
-public class SearchAggregationModel
+public class SearchAggregationModel(SearcherType searcherType)
 {
     public string QueryText { get; set; } = string.Empty;
 
     public SearchAudio Audio { get; set; } = null!;
+
+    public SearcherType SearcherType { get; set; } = searcherType;
 
     public override int GetHashCode()
     {
@@ -14,6 +17,7 @@ public class SearchAggregationModel
             QueryText,
             Audio.Page,
             Audio.PageSize,
-            Audio.Details.Length);
+            Audio.Total,
+            SearcherType);
     }
 }

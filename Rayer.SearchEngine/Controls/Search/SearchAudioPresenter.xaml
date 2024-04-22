@@ -27,16 +27,14 @@
             Grid.RowSpan="2"
             VerticalContentAlignment="Top"
             d:ItemsSource="{d:SampleData ItemCount=2}"
+            CacheMode="BitmapCache"
             ItemsSource="{Binding ViewModel.PresenterDataContext.Details, Mode=OneWay, IsAsync=True}"
             ScrollViewer.CanContentScroll="False"
             VirtualizingPanel.IsVirtualizing="True"
             VirtualizingPanel.VirtualizationMode="Recycling">
             <ui:ListView.ItemTemplate>
                 <DataTemplate DataType="{x:Type model:SearchAudioDetail}">
-                    <Grid
-                        Loaded="OnDataPanelLoaded"
-                        PreviewMouseRightButtonUp="OnListViewItemRightButtonUp"
-                        ToolTip="{Binding Title, Mode=OneWay}">
+                    <Grid PreviewMouseRightButtonUp="OnListViewItemRightButtonUp" ToolTip="{Binding Title, Mode=OneWay}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />

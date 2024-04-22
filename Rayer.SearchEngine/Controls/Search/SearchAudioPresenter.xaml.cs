@@ -80,18 +80,4 @@ public partial class SearchAudioPresenter : UserControl, IPresenterControl<Searc
         AppCore.MainWindow.Width += 1;
         AppCore.MainWindow.Width -= 1;
     }
-
-    private void OnDataPanelLoaded(object sender, RoutedEventArgs e)
-    {
-        //var panelWidth = (AppCore.MainWindow.ActualWidth - 180 - ((int)Width >> 1)) / 3;
-
-        //ViewModel.NameMaxWidth = panelWidth + 50;
-        //ViewModel.ArtistsNameMaxWidth = panelWidth + 50;
-        //ViewModel.AlbumNameMaxHeight = panelWidth + 80;
-
-        //ViewModel.DurationMaxHeight = e.Source is Window { WindowState: WindowState.Maximized } ? 43 : 39;
-        //ViewModel.ItemMargin = e.Source is Window { WindowState: WindowState.Maximized }
-        //    ? new Thickness(0, 0, 30, 0)
-        //    : new Thickness(0, 0, 24, 0);
-    }
 }

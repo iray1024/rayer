@@ -5,7 +5,7 @@ using Rayer.SearchEngine.Core.Business.Login;
 using Rayer.SearchEngine.Core.Domain.Authority.Login;
 using Rayer.SearchEngine.Netease.Engine;
 
-namespace Rayer.SearchEngine.Business.Login.Impl;
+namespace Rayer.SearchEngine.Netease.Business.Login;
 
 [Inject<IQrCodeService>(ServiceLifetime = ServiceLifetime.Scoped, ServiceKey = SearcherType.Netease)]
 internal class QrCodeService : SearchEngineBase, IQrCodeService
@@ -24,7 +24,7 @@ internal class QrCodeService : SearchEngineBase, IQrCodeService
                 .WithParam("qrimg", "1")
                 .Build());
 
-        var response = qrCodeResult.ToEntity<Netease.Models.Login.QrCode.QrCodeModel>();
+        var response = qrCodeResult.ToEntity<Models.Login.QrCode.QrCodeModel>();
 
         if (response is not null)
         {
@@ -43,7 +43,7 @@ internal class QrCodeService : SearchEngineBase, IQrCodeService
                 .WithParam("key", _key)
                 .Build());
 
-        var response = result.ToEntity<Netease.Models.Login.QrCode.QrCodeVerifyModel>();
+        var response = result.ToEntity<Models.Login.QrCode.QrCodeVerifyModel>();
 
         if (response is not null)
         {
@@ -55,13 +55,13 @@ internal class QrCodeService : SearchEngineBase, IQrCodeService
         return default!;
     }
 
-    private async Task<Netease.Models.Login.QrCode.QrCodeKeyModel> GetQrCodeKeyAsync(CancellationToken cancellationToken = default)
+    private async Task<Models.Login.QrCode.QrCodeKeyModel> GetQrCodeKeyAsync(CancellationToken cancellationToken = default)
     {
         var keyResult = await Searcher.GetAsync(
             LoginSelector.QrCodeKey()
                 .Build());
 
-        var response = keyResult.ToEntity<Netease.Models.Login.QrCode.QrCodeKeyModel>();
+        var response = keyResult.ToEntity<Models.Login.QrCode.QrCodeKeyModel>();
 
         return response is not null ? response : default!;
     }

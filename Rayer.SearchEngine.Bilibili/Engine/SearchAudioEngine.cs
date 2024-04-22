@@ -4,7 +4,6 @@ using Rayer.SearchEngine.Bilibili.Http;
 using Rayer.SearchEngine.Bilibili.Models.Search;
 using Rayer.SearchEngine.Core.Abstractions;
 using Rayer.SearchEngine.Core.Domain.Aduio;
-using Rayer.SearchEngine.Models.Response.Bilibili.Search;
 
 namespace Rayer.SearchEngine.Bilibili.Engine;
 

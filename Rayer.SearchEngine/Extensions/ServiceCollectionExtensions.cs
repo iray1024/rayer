@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Rayer.Core.Extensions;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.SearchEngine.Core.Options;
 using System.Reflection;

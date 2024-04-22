@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Rayer.Core.Extensions;
 
 namespace Rayer.SearchEngine.Netease.Extensions;
 

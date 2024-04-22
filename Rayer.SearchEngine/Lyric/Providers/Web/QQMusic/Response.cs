@@ -832,3 +832,4 @@ public class Volume
     public float Peak { get; set; }
     public float Lra { get; set; }
 }
+#nullable restore

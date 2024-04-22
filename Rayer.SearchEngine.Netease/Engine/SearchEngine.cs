@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using Rayer.Core.Common;
 using Rayer.Core.Framework.Injection;
-using Rayer.SearchEngine.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Abstractions;
+using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aggregation;
 using Rayer.SearchEngine.Core.Domain.Search;
 using Rayer.SearchEngine.Core.Options;
@@ -28,7 +28,7 @@ internal class SearchEngine : SearchEngineBase, ISearchEngine
     {
         _searchEngineOptions.LatestQueryText = queryText;
 
-        var model = new SearchAggregationModel();
+        var model = new SearchAggregationModel(SearcherType.Netease);
 
         var audioResult = await _audioEngineProvider.AudioEngine.SearchAsync(queryText, 0);
 

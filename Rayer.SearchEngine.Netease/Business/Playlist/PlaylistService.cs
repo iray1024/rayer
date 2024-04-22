@@ -6,7 +6,7 @@ using Rayer.SearchEngine.Netease.Engine;
 using Rayer.SearchEngine.Netease.Extensions;
 using Rayer.SearchEngine.Netease.Models.User;
 
-namespace Rayer.SearchEngine.Business.Playlist.Impl;
+namespace Rayer.SearchEngine.Netease.Business.Playlist;
 
 [Inject<IPlaylistService>(ServiceKey = SearcherType.Netease)]
 internal class PlaylistService : SearchEngineBase, IPlaylistService

@@ -7,4 +7,4 @@ public interface ISearchEngineProvider
     ISearchEngine SearchEngine { get; }
 
     ISearchEngine GetSearchEngine(SearcherType searcherType);
-} 
+}

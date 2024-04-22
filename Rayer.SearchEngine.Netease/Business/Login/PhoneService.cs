@@ -4,7 +4,7 @@ using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Business.Login;
 using Rayer.SearchEngine.Netease.Engine;
 
-namespace Rayer.SearchEngine.Business.Login.Impl;
+namespace Rayer.SearchEngine.Netease.Business.Login;
 
 [Inject<IPhoneService>(ServiceLifetime = ServiceLifetime.Transient, ServiceKey = SearcherType.Netease)]
 internal class PhoneService : SearchEngineBase, IPhoneService
