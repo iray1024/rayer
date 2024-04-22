@@ -296,7 +296,8 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
                 Album = detail.Album?.Title ?? string.Empty,
                 Cover = detail.Album?.Picture is not null ? ImageSourceUtils.Create(detail.Album.Picture) : null,
                 Duration = detail.Duration,
-                Path = audioInformation.Url ?? string.Empty
+                Path = audioInformation.Url ?? string.Empty,
+                IsVirualWebSource = true
             };
 
             audioManager.Playback.Queue.Add(audio);

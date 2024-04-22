@@ -5,6 +5,7 @@ using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.FileSystem.Abstractions;
 using Rayer.Core.Framework;
+using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Core.Options;
@@ -18,6 +19,7 @@ using Wpf.Ui.Controls;
 
 namespace Rayer.ViewModels;
 
+[Inject]
 public sealed partial class SettingsViewModel : ObservableObject, INavigationAware
 {
     private bool _isInitialized = false;
@@ -162,6 +164,15 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         CloudServerPortNumber = bootloader.Port != -1
             ? bootloader.Port.ToString()
             : "N/A";
+
+        _settings.SettingsChanged += OnSettingsChanged;
+    }
+
+    private void OnSettingsChanged(object? sender, EventArgs e)
+    {
+        _lyricSearcher = _settings.Settings.LyricSearcher;
+
+        OnPropertyChanged(nameof(LyricSearcher));
     }
 
     public void UpdateConfigFile()

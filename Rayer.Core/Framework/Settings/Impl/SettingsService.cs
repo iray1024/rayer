@@ -16,9 +16,13 @@ internal class SettingsService : ISettingsService
 
     public ISettings Settings { get; private set; } = null!;
 
+    public event EventHandler? SettingsChanged;
+
     public void Save()
     {
         Json<ISettings>.StoreData(_settingsPath, Settings);
+
+        SettingsChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public void Load()

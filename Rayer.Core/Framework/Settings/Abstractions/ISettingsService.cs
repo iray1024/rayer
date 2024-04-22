@@ -7,4 +7,6 @@ public interface ISettingsService
     void Save();
 
     void Load();
+
+    event EventHandler SettingsChanged;
 }

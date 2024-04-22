@@ -1,12 +1,15 @@
 ﻿using Microsoft.Extensions.Options;
 using Rayer.Core;
 using Rayer.Core.Framework.Injection;
+using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Http;
 using Rayer.Core.PInvoke;
+using Rayer.Core.Utils;
 using Rayer.SearchEngine.Core.Options;
 using Rayer.SearchEngine.ViewModels;
 using System.Net.Http;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media.Animation;
 using Wpf.Ui.Appearance;
@@ -155,6 +158,24 @@ public partial class DynamicIsland : Window
         catch (HttpRequestException)
         {
             searchEngineOptions.HttpEndpoint = "https://netease-cloud-music-api-rayer.vercel.app";
+        }
+
+        if (ViewModel.ContextMenu.Items.Count > 0)
+        {
+            var settings = AppCore.GetRequiredService<ISettingsService>().Settings;
+
+            var currentSearcherHeader = EnumHelper.GetDescription(settings.LyricSearcher);
+
+            if (ViewModel.ContextMenu.Items[0] is MenuItem menuItem)
+            {
+                foreach (var subItem in menuItem.Items.Cast<MenuItem>())
+                {
+                    if (subItem.Header.ToString() == currentSearcherHeader)
+                    {
+                        subItem.Icon = ImageIconFactory.Create("Play", 18);
+                    }
+                }
+            }
         }
     }
 

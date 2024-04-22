@@ -2,19 +2,23 @@
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Framework.Injection;
+using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Menu;
 using Rayer.Core.PlayControl.Abstractions;
+using Rayer.SearchEngine.Abstractions;
 using System.Windows.Input;
 
 namespace Rayer.Command;
 
 [Inject<ICommandBinding>]
-internal class CommandBindingService : ICommandBinding
+internal partial class CommandBindingService : ICommandBinding
 {
     private readonly IAudioManager _audioManager;
     private readonly IPlaylistService _playlistService;
 
-    public CommandBindingService(IAudioManager audioManager, IPlaylistService playlistService)
+    public CommandBindingService(
+        IAudioManager audioManager,
+        IPlaylistService playlistService)
     {
         _audioManager = audioManager;
         _playlistService = playlistService;
@@ -105,5 +109,23 @@ internal class CommandBindingService : ICommandBinding
                 _audioManager.Playback.Queue.Remove(parameter.Audio);
             }
         }
+    }
+
+    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    private async Task SwitchLyricSearcher(LyricSearcher searcher)
+    {
+        var settingsService = App.GetRequiredService<ISettingsService>();
+
+        settingsService.Settings.LyricSearcher = searcher;
+        settingsService.Save();
+
+        await System.Windows.Application.Current.Dispatcher.InvokeAsync(async () =>
+        {
+            if (_audioManager.Playback.Playing)
+            {
+                var provider = App.GetRequiredService<ILyricProvider>();
+                await provider.SwitchSearcherAsync();
+            }
+        });
     }
 }

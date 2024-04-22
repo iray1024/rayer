@@ -9,4 +9,6 @@ public enum ContextMenuScope
     PlaylistPanel,
 
     PlayQueue,
+
+    DynamicIsland
 }

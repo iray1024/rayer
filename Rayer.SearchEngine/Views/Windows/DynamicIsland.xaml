@@ -52,6 +52,7 @@
         Background="#202020"
         BorderBrush="Transparent"
         BorderThickness="0"
+        ContextMenu="{Binding ViewModel.ContextMenu}"
         CornerRadius="30"
         Cursor="Hand"
         RenderOptions.BitmapScalingMode="Fant">

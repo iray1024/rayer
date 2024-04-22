@@ -1,6 +1,7 @@
 ﻿using Rayer.Core.Common;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Menu;
+using Rayer.Core.Utils;
 using System.Windows.Controls;
 
 namespace Rayer.Services;
@@ -23,6 +24,7 @@ internal class ContextMenuFactory : IContextMenuFactory
             ContextMenuScope.Playlist => CreatePlaylistContextMenu(),
             ContextMenuScope.PlaylistPanel => CreatePlaylistPanelContextMenu(),
             ContextMenuScope.PlayQueue => CreatePlayQueueContextMenu(),
+            ContextMenuScope.DynamicIsland => CreateDynamicIslandContextMenu(),
             _ => throw new NotImplementedException(),
         };
     }
@@ -115,5 +117,61 @@ internal class ContextMenuFactory : IContextMenuFactory
         });
 
         return menu;
+    }
+
+    private ContextMenu CreateDynamicIslandContextMenu()
+    {
+        var menu = new ContextMenu();
+
+        var switchLyricSearcherItem = new MenuItem()
+        {
+            Header = "切换歌词搜索器"
+        };
+
+        var neteaseSearcher = new MenuItem()
+        {
+            Header = "网易云音乐",
+            Command = _commandBinding.SwitchLyricSearcherCommand,
+            CommandParameter = LyricSearcher.Netease
+        };
+        var qqSearcher = new MenuItem()
+        {
+            Header = "QQ音乐",
+            Command = _commandBinding.SwitchLyricSearcherCommand,
+            CommandParameter = LyricSearcher.QQMusic
+        };
+        var kugouSearcher = new MenuItem()
+        {
+            Header = "酷狗音乐",
+            Command = _commandBinding.SwitchLyricSearcherCommand,
+            CommandParameter = LyricSearcher.Kugou
+        };
+
+        neteaseSearcher.Click += OnSearcherChecked;
+        qqSearcher.Click += OnSearcherChecked;
+        kugouSearcher.Click += OnSearcherChecked;
+
+        switchLyricSearcherItem.Items.Add(neteaseSearcher);
+        switchLyricSearcherItem.Items.Add(qqSearcher);
+        switchLyricSearcherItem.Items.Add(kugouSearcher);
+
+        menu.Items.Add(switchLyricSearcherItem);
+
+        return menu;
+    }
+
+    private void OnSearcherChecked(object sender, System.Windows.RoutedEventArgs e)
+    {
+        if (sender is MenuItem menuItem)
+        {
+            var parent = (MenuItem)menuItem.Parent;
+
+            foreach (var item in parent.Items.Cast<MenuItem>())
+            {
+                item.Icon = null;
+            }
+
+            menuItem.Icon = ImageIconFactory.Create("Play", 18);
+        }
     }
 }

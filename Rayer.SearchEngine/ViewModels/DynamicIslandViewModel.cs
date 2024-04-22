@@ -1,12 +1,16 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Rayer.Core;
 using Rayer.Core.Abstractions;
+using Rayer.Core.Common;
 using Rayer.Core.Events;
 using Rayer.Core.Lyric.Abstractions;
 using Rayer.Core.Lyric.Impl;
+using Rayer.Core.Menu;
 using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Events;
 using Rayer.SearchEngine.Views.Windows;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 
@@ -49,11 +53,14 @@ public partial class DynamicIslandViewModel : ObservableObject
         {
             Interval = TimeSpan.FromMilliseconds(50)
         };
-
         _timer.Tick += OnTick;
+
+        ContextMenu = AppCore.GetRequiredService<IContextMenuFactory>().CreateContextMenu(ContextMenuScope.DynamicIsland);
     }
 
     public DynamicIsland DynamicIsland { get; set; } = default!;
+
+    public ContextMenu ContextMenu { get; }
 
     private void OnAudioPlaying(object? sender, AudioPlayingArgs e)
     {
@@ -85,7 +92,15 @@ public partial class DynamicIslandViewModel : ObservableObject
             }
             else
             {
+                _totalLines.Clear();
                 CurrentLine = _noneLyricInfo;
+
+                Application.Current.Dispatcher.BeginInvoke(async () =>
+                {
+                    await Task.Delay(2000);
+
+                    CurrentLine = _stopInfo;
+                });
             }
         }, DispatcherPriority.Background);
     }

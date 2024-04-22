@@ -63,7 +63,8 @@ public partial class SearchAudioPresenterViewModel : ObservableObject, IPresente
                 Album = item.Album?.Title ?? string.Empty,
                 Cover = item.Album?.Picture is not null ? ImageSourceUtils.Create(item.Album.Picture) : null,
                 Duration = item.Duration,
-                Path = webAudio.Url ?? string.Empty
+                Path = webAudio.Url ?? string.Empty,
+                IsVirualWebSource = true
             };
 
             // 后续需要实现同时加入所有搜索项进入播放队列时，去除true

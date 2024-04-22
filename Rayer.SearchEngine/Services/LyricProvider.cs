@@ -58,7 +58,7 @@ internal class LyricProvider : ILyricProvider
 
     protected virtual async void OnAudioChanged(object? sender, Rayer.Core.Events.AudioChangedArgs e)
     {
-        if (_searchEngineOptions.SearcherType is SearcherType.Netease)
+        if (!e.New.IsVirualWebSource || _searchEngineOptions.SearcherType is SearcherType.Netease)
         {
             var metadata = new TrackMultiArtistMetadata()
             {

@@ -62,8 +62,9 @@
                         Text="{Binding ViewModel.QueueCount, Mode=OneWay}" />
                 </Grid>
                 <Grid
+                    x:Name="ContentPanel"
                     Grid.Row="1"
-                    MinWidth="250"
+                    Width="250"
                     MaxHeight="888"
                     Margin="0,0,0,0">
                     <Grid.RowDefinitions>
@@ -74,7 +75,8 @@
                         Name="LibListView"
                         Grid.Row="1"
                         d:ItemsSource="{d:SampleData ItemCount=2}"
-                        ItemsSource="{Binding ViewModel.Items, Mode=OneWay}">
+                        ItemsSource="{Binding ViewModel.Items, Mode=OneWay}"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                         <ui:ListView.ItemTemplate>
                             <DataTemplate DataType="{x:Type models:Audio}">
                                 <Grid ContextMenu="{Binding ViewModel.ContextMenu, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RightPlaybarPanel}}" PreviewMouseRightButtonUp="OnListViewItemRightButtonUp">
@@ -97,20 +99,31 @@
                                         VerticalAlignment="Center"
                                         CornerRadius="6"
                                         RenderOptions.BitmapScalingMode="Fant"
-                                        Source="{Binding Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}" />
+                                        Source="{Binding Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}"
+                                        Stretch="UniformToFill">
+                                        <ui:Image.Clip>
+                                            <RectangleGeometry
+                                                RadiusX="6"
+                                                RadiusY="6"
+                                                Rect="0,0,40,40" />
+                                        </ui:Image.Clip>
+                                    </ui:Image>
                                     <TextBlock
                                         Grid.Row="0"
                                         Grid.Column="1"
                                         Margin="6,8,0,0"
                                         FontSize="14"
                                         FontWeight="Normal"
-                                        Text="{Binding Title, Mode=OneWay}" />
+                                        Text="{Binding Title, Mode=OneWay}"
+                                        TextTrimming="WordEllipsis"
+                                        ToolTip="{Binding Title, Mode=OneWay}" />
                                     <TextBlock
                                         Grid.Row="1"
                                         Grid.Column="1"
                                         Margin="6,0,0,6"
                                         Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                                        Text="{Binding Artists, Mode=OneWay, Converter={StaticResource ArtistsConverter}}" />
+                                        Text="{Binding Artists, Mode=OneWay, Converter={StaticResource ArtistsConverter}}"
+                                        ToolTip="{Binding Artists, Mode=OneWay, Converter={StaticResource ArtistsConverter}}" />
                                 </Grid>
                             </DataTemplate>
                         </ui:ListView.ItemTemplate>
