@@ -1,19 +1,20 @@
-﻿using Rayer.Core.Framework.Injection;
+﻿using Microsoft.Extensions.Options;
+using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Http.Abstractions;
 using Rayer.SearchEngine.Core.Options;
 
 namespace Rayer.SearchEngine.Netease.Http.Selector;
 
 [Inject]
-internal class LyricApiSelector(SearchEngineOptions options) : ApiSelector
+internal class LyricApiSelector(IOptionsSnapshot<SearchEngineOptions> snapshot) : ApiSelector(snapshot)
 {
     public IParamBuilder GetLyric()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Lyric.GetLyric);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Lyric.GetLyric);
     }
 
     public IParamBuilder GetLyricEx()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Lyric.GetLyricEx);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Lyric.GetLyricEx);
     }
 }

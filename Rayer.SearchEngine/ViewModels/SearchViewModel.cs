@@ -38,9 +38,7 @@ public partial class SearchViewModel : ObservableObject
         {
             if (Model.Audio.Details.Length > 0)
             {
-                var ids = string.Join(',', Model.Audio.Details.Select(x => x.Id));
-
-                var newResponse = await _audioEngineProvider.AudioEngine.SearchDetailAsync(ids);
+                var newResponse = await _audioEngineProvider.AudioEngine.SearchDetailAsync(Model.Audio.Details);
 
                 Model.Audio.Details = newResponse;
 

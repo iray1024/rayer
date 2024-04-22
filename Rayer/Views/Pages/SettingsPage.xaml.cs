@@ -33,6 +33,13 @@ public partial class SettingsPage : INavigableView<SettingsViewModel>
             Width = 24,
             Height = 24
         };
+
+        SearcherSetting.Icon = new ImageIcon
+        {
+            Source = (ImageSource)StaticThemeResources.GetDynamicResource("Search"),
+            Width = 24,
+            Height = 24
+        };
     }
 
     public SettingsViewModel ViewModel { get; }

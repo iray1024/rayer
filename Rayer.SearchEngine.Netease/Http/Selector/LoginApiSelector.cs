@@ -1,54 +1,55 @@
-﻿using Rayer.Core.Framework.Injection;
+﻿using Microsoft.Extensions.Options;
+using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Http.Abstractions;
 using Rayer.SearchEngine.Core.Options;
 
 namespace Rayer.SearchEngine.Netease.Http.Selector;
 
 [Inject]
-internal class LoginApiSelector(SearchEngineOptions options) : ApiSelector
+internal class LoginApiSelector(IOptionsSnapshot<SearchEngineOptions> snapshot) : ApiSelector(snapshot)
 {
     public IParamBuilder Captcha()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Login.Captcha);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Login.Captcha);
     }
 
     public IParamBuilder CaptchaVerify()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Login.CaptchaVerify);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Login.CaptchaVerify);
     }
 
     public IParamBuilder PhoneLogin()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Login.PhoneLogin);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Login.PhoneLogin);
     }
 
     public IParamBuilder QrCodeKey()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Login.QrCodeKey);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Login.QrCodeKey);
     }
 
     public IParamBuilder QrCodeCreate()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Login.QrCodeCreate);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Login.QrCodeCreate);
     }
 
     public IParamBuilder QrCodeVerify()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Login.QrCodeVerify);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Login.QrCodeVerify);
     }
 
     public IParamBuilder AnonymousLogin()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Login.AnonymousLogin);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Login.AnonymousLogin);
     }
 
     public IParamBuilder RefreshLogin()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Login.RefreshLogin);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Login.RefreshLogin);
     }
 
     public IParamBuilder LoginStatus()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Login.LoginStatus);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Login.LoginStatus);
     }
 }

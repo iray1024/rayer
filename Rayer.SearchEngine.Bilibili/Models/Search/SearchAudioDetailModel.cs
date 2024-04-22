@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Models.Response.Bilibili.Search;
 
-public class SearchAudioDetail
+public class SearchAudioDetailModel
 {
     public string Seid { get; set; } = string.Empty;
 
@@ -21,5 +21,5 @@ public class SearchAudioDetail
     [JsonPropertyName("egg_hit")]
     public int EggHit { get; set; }
 
-    public SearchAudioDetailInformation[] Result { get; set; } = [];
+    public SearchAudioDetailInformationModel[] Result { get; set; } = [];
 }

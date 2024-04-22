@@ -33,7 +33,10 @@
             VirtualizingPanel.VirtualizationMode="Recycling">
             <ui:ListView.ItemTemplate>
                 <DataTemplate DataType="{x:Type model:SearchAudioDetail}">
-                    <Grid PreviewMouseRightButtonUp="OnListViewItemRightButtonUp">
+                    <Grid
+                        Loaded="OnDataPanelLoaded"
+                        PreviewMouseRightButtonUp="OnListViewItemRightButtonUp"
+                        ToolTip="{Binding Title, Mode=OneWay}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
@@ -44,18 +47,27 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <ui:Image
-                            x:Name="Image"
+                        <Grid
                             Grid.RowSpan="2"
                             Grid.Column="0"
                             Width="40"
                             Height="40"
                             Margin="6"
                             HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            CornerRadius="6"
-                            RenderOptions.BitmapScalingMode="Fant"
-                            Source="{Binding Album.Picture, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}" />
+                            VerticalAlignment="Center">
+                            <ui:Image
+                                x:Name="Image"
+                                CornerRadius="6"
+                                RenderOptions.BitmapScalingMode="Fant"
+                                Source="{Binding Album.Picture, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}"
+                                Stretch="UniformToFill" />
+                            <Grid.Clip>
+                                <RectangleGeometry
+                                    RadiusX="6"
+                                    RadiusY="6"
+                                    Rect="0,0,40,40" />
+                            </Grid.Clip>
+                        </Grid>
                         <TextBlock
                             Grid.Row="0"
                             Grid.Column="1"

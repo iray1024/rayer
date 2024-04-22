@@ -1,4 +1,5 @@
-﻿using Rayer.Abstractions;
+﻿using Microsoft.Extensions.Options;
+using Rayer.Abstractions;
 using Rayer.Core;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
@@ -206,7 +207,7 @@ public partial class MainWindow : IWindow
 #else
         var uri = await bootloader.RunAsync();
 #endif
-        var searchEngineOptions = App.GetRequiredService<SearchEngineOptions>();
+        var searchEngineOptions = App.GetRequiredService<IOptionsSnapshot<SearchEngineOptions>>().Value;
 
         searchEngineOptions.HttpEndpoint = uri.OriginalString;
 

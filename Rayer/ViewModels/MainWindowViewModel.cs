@@ -7,6 +7,7 @@ using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Views.Pages;
 using Rayer.Views.Pages;
 using System.Collections.ObjectModel;
+using System.Windows;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 
@@ -15,14 +16,16 @@ namespace Rayer.ViewModels;
 [Inject]
 public partial class MainWindowViewModel : ObservableObject
 {
+    private readonly ILoaderProvider _loaderProvider;
     private readonly ISearchEngineProvider _searchEngineProvider;
     private readonly INavigationService _navigationService;
 
     private string _currentSuggestText = string.Empty;
     private bool _userRaiseClickSuggestItem = false;
+    private readonly string[] _defaultEmptySuggest = ["当前引擎暂无建议"];
 
     public MainWindowViewModel(
-        INavigationService navigationService)
+            INavigationService navigationService)
     {
         var plugins = App.GetServices<INavigationMenuPlugin>();
 
@@ -34,6 +37,7 @@ public partial class MainWindowViewModel : ObservableObject
             }
         }
 
+        _loaderProvider = App.GetRequiredService<ILoaderProvider>();
         _searchEngineProvider = App.GetRequiredService<ISearchEngineProvider>();
         _navigationService = navigationService;
     }
@@ -72,14 +76,18 @@ public partial class MainWindowViewModel : ObservableObject
                 {
                     args.Handled = true;
 
-                    var model = await _searchEngineProvider.SearchEngine.SuggestAsync(args.Text);
-
-                    if (model is not null && model.Code == 200)
+                    await Application.Current.Dispatcher.InvokeAsync(async () =>
                     {
-                        box.ItemsSource = model.Audios.Length > 0
-                            ? model.Audios.Select(x => x.Name).ToList()
-                            : null;
-                    }
+                        var model = await _searchEngineProvider
+                        .GetSearchEngine(Core.Common.SearcherType.Netease)
+                        .SuggestAsync(args.Text);
+
+                        box.ItemsSource = model is not null && model.Code == 200
+                            ? model.Audios.Length > 0
+                                ? model.Audios.Select(x => x.Name).ToList()
+                                : null
+                            : _defaultEmptySuggest;
+                    });
                 }
                 else
                 {
@@ -100,18 +108,23 @@ public partial class MainWindowViewModel : ObservableObject
     {
         args.Handled = true;
 
-        var model = await _searchEngineProvider.SearchEngine.SearchAsync(args.QueryText, AppCore.StoppingToken);
-
-        model.QueryText = args.QueryText;
-
-        if (_navigationService.GetNavigationControl().SelectedItem?.TargetPageType != typeof(SearchPage))
+        await Application.Current.Dispatcher.InvokeAsync(async () =>
         {
-            _navigationService.Navigate(typeof(SearchPage), model);
-        }
+            _loaderProvider.Loading();
+            var model = await _searchEngineProvider.SearchEngine.SearchAsync(args.QueryText, AppCore.StoppingToken);
+            _loaderProvider.Loaded();
 
-        var searchAware = App.GetRequiredService<ISearchAware>();
+            model.QueryText = args.QueryText;
 
-        searchAware.OnSearch(model);
+            if (_navigationService.GetNavigationControl().SelectedItem?.TargetPageType != typeof(SearchPage))
+            {
+                _navigationService.Navigate(typeof(SearchPage), model);
+            }
+
+            var searchAware = App.GetRequiredService<ISearchAware>();
+
+            searchAware.OnSearch(model);
+        });
     }
 
     public void OnAutoSuggestChosen(AutoSuggestBoxSuggestionChosenEventArgs args)
@@ -138,7 +151,10 @@ public partial class MainWindowViewModel : ObservableObject
         {
             source.Text = _currentSuggestText;
 
+            _loaderProvider.Loading();
             var model = await _searchEngineProvider.SearchEngine.SearchAsync(_currentSuggestText, AppCore.StoppingToken);
+            _loaderProvider.Loaded();
+
             model.QueryText = _currentSuggestText;
             _ = Interlocked.Exchange(ref _currentSuggestText, string.Empty);
 

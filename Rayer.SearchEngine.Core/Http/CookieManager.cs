@@ -1,4 +1,5 @@
-﻿using Rayer.Core;
+﻿using Microsoft.Extensions.Options;
+using Rayer.Core;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Http;
 using Rayer.SearchEngine.Core.Options;
@@ -20,7 +21,7 @@ internal partial class CookieManager : ICookieManager
         _handler = new HttpClientHandler
         {
             Proxy = new WebProxy(new Uri("http://127.0.0.1:10809"), true),
-            UseProxy = true,
+            UseProxy = false,
             CookieContainer = _cookieContainer
         };
     }
@@ -35,9 +36,6 @@ internal partial class CookieManager : ICookieManager
 
         if (slices.Count > 0)
         {
-            // var currentHttpEndpoint = AppCore.GetRequiredService<SearchEngineOptions>().HttpEndpoint;
-            //var domain = currentHttpEndpoint.Split("//")[1].Split(':')[0];
-
             foreach (var match in slices.Cast<Match>())
             {
                 var name = match.Groups["Name"].Value.Trim().Replace("/;", "");
@@ -61,7 +59,7 @@ internal partial class CookieManager : ICookieManager
 
             if (sampleSlices.Count > 0)
             {
-                foreach (var match in slices.Cast<Match>())
+                foreach (var match in sampleSlices.Cast<Match>())
                 {
                     var name = match.Groups["Name"].Value.Trim().Replace("/;", "");
                     var value = match.Groups["Value"].Value.Trim();
@@ -76,7 +74,7 @@ internal partial class CookieManager : ICookieManager
 
     public void StoreCookie()
     {
-        var currentHttpEndpoint = AppCore.GetRequiredService<SearchEngineOptions>().HttpEndpoint;
+        var currentHttpEndpoint = AppCore.GetRequiredService<IOptionsSnapshot<SearchEngineOptions>>().Value.HttpEndpoint;
 
         var cookies = CookieContainer.GetCookies(new Uri(currentHttpEndpoint));
 

@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.Options;
+using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.FileSystem.Abstractions;
@@ -106,10 +108,27 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
             {
                 await System.Windows.Application.Current.Dispatcher.InvokeAsync(async () =>
                 {
-                    var provider = App.GetRequiredService<ILyricProvider>();
-                    await provider.SwitchSearcherAsync();
+                    if (AppCore.GetRequiredService<IAudioManager>().Playback.Playing)
+                    {
+                        var provider = App.GetRequiredService<ILyricProvider>();
+                        await provider.SwitchSearcherAsync();
+                    }
                 });
             });
+        }
+    }
+
+    private SearcherType _defaultSearcher;
+    public SearcherType DefaultSearcher
+    {
+        get => _defaultSearcher;
+        set
+        {
+            SetProperty(ref _defaultSearcher, value);
+            _settings.Settings.DefaultSearcher = _defaultSearcher;
+            AppCore.GetRequiredService<IOptionsSnapshot<SearchEngineOptions>>().Value.SearcherType = _defaultSearcher;
+            OnPropertyChanged();
+            UpdateConfigFile();
         }
     }
 
@@ -127,12 +146,13 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         _navigationService = navigationService;
         _settings = settings;
 
-        _audioLibrary = _settings.Settings.AudioLibrary;
-        _currentApplicationTheme = _settings.Settings.Theme;
-        _playSingleAudioStrategy = _settings.Settings.PlaySingleAudioStrategy;
-        _immersiveMode = _settings.Settings.ImmersiveMode;
+        AudioLibrary = _settings.Settings.AudioLibrary;
+        CurrentApplicationTheme = _settings.Settings.Theme;
+        PlaySingleAudioStrategy = _settings.Settings.PlaySingleAudioStrategy;
+        ImmersiveMode = _settings.Settings.ImmersiveMode;
         _pitchProvider = _settings.Settings.PitchProvider;
         _lyricSearcher = _settings.Settings.LyricSearcher;
+        DefaultSearcher = _settings.Settings.DefaultSearcher;
 
         AudioLibrary.CollectionChanged += OnCollectionChanged;
 
@@ -220,7 +240,7 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
 
         var uri = await bootloader.Restart();
 
-        var searchEngineOptions = App.GetRequiredService<SearchEngineOptions>();
+        var searchEngineOptions = App.GetRequiredService<IOptionsSnapshot<SearchEngineOptions>>().Value;
 
         searchEngineOptions.HttpEndpoint = uri.OriginalString;
 

@@ -36,7 +36,6 @@ internal static partial class Win32
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static partial bool ShowWindow(IntPtr hWnd, SHOW_WINDOW_CMD nCmdShow);
 
-
     [LibraryImport("kernel32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static partial bool SetProcessWorkingSetSize(IntPtr proc, int min, int max);

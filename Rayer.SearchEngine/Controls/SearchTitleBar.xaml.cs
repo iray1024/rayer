@@ -1,5 +1,6 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Framework.Injection;
+using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.SearchEngine.ViewModels.Explore;
 using System.Collections.Concurrent;
 using System.Windows;
@@ -145,5 +146,10 @@ public partial class SearchTitleBar : UserControl
     private async void OnSearcherSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         await ViewModel.OnSearcherChanged();
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        ViewModel.Searcher = AppCore.GetRequiredService<ISettingsService>().Settings.DefaultSearcher;
     }
 }

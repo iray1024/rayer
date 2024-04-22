@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Rayer.Core.Common;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Business.Login;
 using Rayer.SearchEngine.Core.Domain.Authority;
-using Rayer.SearchEngine.Core.Enums;
 using Rayer.SearchEngine.Netease.Engine;
 using Rayer.SearchEngine.Netease.Models.Login;
 

@@ -80,9 +80,12 @@ public partial class App : Application
 
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
+        _host.Services.UseBilibili();
+
         AppCore.UseServiceProvider(_host.Services);
 
         await Preload();
+        CrossThreadAccessor.Initialize();
 
         _host.Start();
     }
@@ -123,6 +126,11 @@ public partial class App : Application
         if (loader.IsLoading)
         {
             loader.Loaded();
+        }
+
+        if (ex?.Source is "Wpf.Ui")
+        {
+            return;
         }
 
         var dialogService = GetService<IContentDialogService>();

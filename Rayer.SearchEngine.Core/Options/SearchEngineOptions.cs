@@ -1,4 +1,4 @@
-﻿using Rayer.SearchEngine.Core.Enums;
+﻿using Rayer.Core.Common;
 
 namespace Rayer.SearchEngine.Core.Options;
 

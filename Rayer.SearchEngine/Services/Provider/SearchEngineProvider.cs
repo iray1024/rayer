@@ -1,4 +1,6 @@
-﻿using Rayer.Core;
+﻿using Microsoft.Extensions.Options;
+using Rayer.Core;
+using Rayer.Core.Common;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Abstractions;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
@@ -7,16 +9,16 @@ using Rayer.SearchEngine.Core.Options;
 namespace Rayer.SearchEngine.Services.Provider;
 
 [Inject<ISearchEngineProvider>]
-internal class SearchEngineProvider : ISearchEngineProvider
+internal class SearchEngineProvider(IOptionsSnapshot<SearchEngineOptions> snapshot) : ISearchEngineProvider
 {
-    private readonly SearchEngineOptions _searchEngineOptions;
-
-    public SearchEngineProvider(SearchEngineOptions searchEngineOptions)
-    {
-        _searchEngineOptions = searchEngineOptions;
-    }
+    private readonly SearchEngineOptions _searchEngineOptions = snapshot.Value;
 
     public ISearchEngine SearchEngine => GetSearchEngine();
+
+    public ISearchEngine GetSearchEngine(SearcherType searcherType)
+    {
+        return AppCore.GetRequiredKeyedService<ISearchEngine>(searcherType);
+    }
 
     private ISearchEngine GetSearchEngine()
     {

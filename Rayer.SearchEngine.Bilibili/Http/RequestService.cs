@@ -3,11 +3,13 @@ using Rayer.Core.Framework.Injection;
 using Rayer.Core.Http;
 using Rayer.SearchEngine.Core.Http.Abstractions;
 
-namespace Rayer.SearchEngine.Netease.Http;
+namespace Rayer.SearchEngine.Bilibili.Http;
 
-[Inject<IRequestService>(ServiceKey = SearcherType.Netease)]
+[Inject<IRequestService>(ServiceKey = SearcherType.Bilibili)]
 internal class RequestService(IHttpClientProvider httpClientProvider) : RequestBase(httpClientProvider), IRequestService
 {
+    protected override string? HttpRefer { get; } = "https://www.bilibili.com/";
+
     protected override Dictionary<string, string> GetAdditionalHeaders()
     {
         return base.GetAdditionalHeaders();

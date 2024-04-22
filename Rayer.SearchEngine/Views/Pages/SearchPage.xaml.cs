@@ -63,6 +63,23 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
 
             DataContext = this;
         }
+
+        if (Presenter.Children.Count > 0 &&
+            Presenter.Children[0] is FrameworkElement element)
+        {
+            element.Width = ActualWidth;
+            element.Height = ActualWidth;
+
+            var navView = AppCore.GetRequiredService<INavigationService>().GetNavigationControl() as NavigationView;
+
+            if (navView?.Template.FindName("PART_NavigationViewContentPresenter", navView) is NavigationViewContentPresenter navPresenter)
+            {
+                ScrollViewer.SetCanContentScroll(navPresenter, false);
+                ScrollViewer.SetHorizontalScrollBarVisibility(navPresenter, ScrollBarVisibility.Disabled);
+                ScrollViewer.SetVerticalScrollBarVisibility(navPresenter, ScrollBarVisibility.Disabled);
+                ScrollViewer.SetIsDeferredScrollingEnabled(navPresenter, false);
+            }
+        }
     }
 
     private async void OnCheckedChanged(object sender, RoutedEventArgs e)
@@ -230,7 +247,8 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
 
     private void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        if (Presenter.Children.Count > 0 && Presenter.Children[0] is FrameworkElement element)
+        if (Presenter.Children.Count > 0 &&
+            Presenter.Children[0] is FrameworkElement element)
         {
             if (e.Source is Window window)
             {

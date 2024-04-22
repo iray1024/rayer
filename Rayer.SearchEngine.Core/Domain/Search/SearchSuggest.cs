@@ -2,6 +2,8 @@
 
 public class SearchSuggest
 {
+    public static readonly SearchSuggest Empty = new() { Code = -1 };
+
     public int Code { get; set; }
 
     public SearchSuggestDetail[] Albums { get; set; } = [];

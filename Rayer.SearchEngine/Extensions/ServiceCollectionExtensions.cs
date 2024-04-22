@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.SearchEngine.Core.Options;
 using System.Reflection;
 
@@ -8,18 +9,18 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddSearchEngine(this IServiceCollection services, Action<SearchEngineOptionsBuilder> builder)
     {
-        var builderInstacne = new SearchEngineOptionsBuilder();
+        var builderInstance = new SearchEngineOptionsBuilder(new SearchEngineOptions());
+        builder(builderInstance);
 
-        builder(builderInstacne);
+        services.AddOptions<SearchEngineOptions>()
+            .Configure<ISettingsService, IServiceProvider>((options, settings, provider) =>
+            {
+                var instanceOptions = builderInstance.Build();
 
-        var options = builderInstacne.Build();
-
-        services.AddSingleton(sp =>
-        {
-            options.ServiceProvider = sp;
-
-            return options;
-        });
+                options.HttpEndpoint = instanceOptions.HttpEndpoint;
+                options.SearcherType = settings.Settings.DefaultSearcher;
+                options.ServiceProvider = provider;
+            });
 
         var assembly = Assembly.GetAssembly(typeof(ServiceCollectionExtensions));
 

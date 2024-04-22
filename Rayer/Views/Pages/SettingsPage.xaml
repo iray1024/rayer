@@ -63,6 +63,8 @@
             Margin="0,0,0,8"
             Padding="14,16,14,16"
             Background="{DynamicResource CardBackground}"
+            BorderBrush="{DynamicResource CardBorderBrush}"
+            BorderThickness="1"
             CornerRadius="6">
             <Grid>
                 <Grid.RowDefinitions>
@@ -358,6 +360,39 @@
                 <ComboBoxItem Content="网易云音乐" />
                 <ComboBoxItem Content="QQ音乐" />
                 <ComboBoxItem Content="酷狗音乐" />
+            </ComboBox>
+        </ui:CardControl>
+
+        <ui:CardControl
+            x:Name="SearcherSetting"
+            Margin="0,0,0,12"
+            CornerRadius="6"
+            Icon="{ui:ImageIcon {markup:ThemeSymbol Search},
+                                Width=24,
+                                Height=24}"
+            RenderOptions.BitmapScalingMode="Fant">
+            <ui:CardControl.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ui:TextBlock
+                        Grid.Row="0"
+                        FontTypography="Body"
+                        Text="搜索引擎" />
+                    <ui:TextBlock
+                        Grid.Row="1"
+                        Foreground="Gray"
+                        Text="设置使用默认搜索引擎" />
+                </Grid>
+            </ui:CardControl.Header>
+            <ComboBox
+                Grid.Column="1"
+                MinWidth="200"
+                SelectedIndex="{Binding ViewModel.DefaultSearcher, Converter={StaticResource SearcherTypeConverter}, Mode=TwoWay}">
+                <ComboBoxItem Content="网易云" />
+                <ComboBoxItem Content="哔哩哔哩" />
             </ComboBox>
         </ui:CardControl>
 

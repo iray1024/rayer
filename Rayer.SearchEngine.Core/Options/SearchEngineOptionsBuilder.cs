@@ -1,18 +1,16 @@
 ﻿namespace Rayer.SearchEngine.Core.Options;
 
-public class SearchEngineOptionsBuilder
+public class SearchEngineOptionsBuilder(SearchEngineOptions options)
 {
-    private readonly SearchEngineOptions _options = new();
-
     public SearchEngineOptionsBuilder SetHttpEndpoint(string httpEndpoint)
     {
-        _options.HttpEndpoint = httpEndpoint;
+        options.HttpEndpoint = httpEndpoint;
 
         return this;
     }
 
     public SearchEngineOptions Build()
     {
-        return _options;
+        return options;
     }
 }

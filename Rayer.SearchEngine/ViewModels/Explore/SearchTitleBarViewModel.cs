@@ -1,24 +1,33 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.Options;
 using Rayer.Core;
+using Rayer.Core.Common;
+using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
-using Rayer.SearchEngine.Core.Enums;
 using Rayer.SearchEngine.Core.Options;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace Rayer.SearchEngine.ViewModels.Explore;
 
 [Inject]
 public partial class SearchTitleBarViewModel : ObservableObject
 {
+    private readonly SearchEngineOptions _searchEngineOptions;
+
     [ObservableProperty]
     private SearcherType _searcher = 0;
 
     private bool _isInitialized = false;
+    private CancellationTokenSource _requestToken = new();
 
     public SearchTitleBarViewModel()
     {
+        _searchEngineOptions = AppCore.GetRequiredService<IOptionsSnapshot<SearchEngineOptions>>().Value;
 
+        _searcher = _searchEngineOptions.SearcherType;
     }
 
     public async Task OnSearcherChanged()
@@ -30,18 +39,29 @@ public partial class SearchTitleBarViewModel : ObservableObject
             return;
         }
 
-        var searchEngineOptions = AppCore.GetRequiredService<SearchEngineOptions>();
-
-        searchEngineOptions.SearcherType = Searcher;
+        _searchEngineOptions.SearcherType = Searcher;
 
         var provider = AppCore.GetRequiredService<ISearchEngineProvider>();
+        var loader = AppCore.GetRequiredService<ILoaderProvider>();
 
-        var model = await provider.SearchEngine.SearchAsync(searchEngineOptions.LatestQueryText, AppCore.StoppingToken);
+        loader.Loading();
 
-        model.QueryText = searchEngineOptions.LatestQueryText;
+        await _requestToken.CancelAsync();
+        _requestToken = new CancellationTokenSource();
 
-        var searchAware = AppCore.GetRequiredService<ISearchAware>();
+        var dispatcherTask = Application.Current.Dispatcher.InvokeAsync(async () =>
+        {
+            var model = await provider.SearchEngine.SearchAsync(_searchEngineOptions.LatestQueryText, AppCore.StoppingToken);
 
-        searchAware.OnSearch(model);
+            model.QueryText = _searchEngineOptions.LatestQueryText;
+
+            var searchAware = AppCore.GetRequiredService<ISearchAware>();
+
+            searchAware.OnSearch(model);
+
+            loader.Loaded();
+        },
+        DispatcherPriority.Normal,
+        _requestToken.Token);
     }
 }

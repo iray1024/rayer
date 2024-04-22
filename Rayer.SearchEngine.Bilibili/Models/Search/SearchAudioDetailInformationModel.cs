@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Models.Response.Bilibili.Search;
 
-public class SearchAudioDetailInformation
+public class SearchAudioDetailInformationModel
 {
     public long Id { get; set; }
 

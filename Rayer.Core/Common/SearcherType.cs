@@ -1,4 +1,4 @@
-﻿namespace Rayer.SearchEngine.Core.Enums;
+﻿namespace Rayer.Core.Common;
 
 public enum SearcherType
 {

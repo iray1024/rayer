@@ -19,6 +19,7 @@ public class Settings : ISettings
     public EqualizerMode EqualizerMode { get; set; } = EqualizerMode.Close;
     public PitchProvider PitchProvider { get; set; } = PitchProvider.NAudio;
     public LyricSearcher LyricSearcher { get; set; } = LyricSearcher.Netease;
+    public SearcherType DefaultSearcher { get; set; } = SearcherType.Netease;
     public float Volume { get; set; } = 1.0f;
     public float Pitch { get; set; } = 1.0f;
 

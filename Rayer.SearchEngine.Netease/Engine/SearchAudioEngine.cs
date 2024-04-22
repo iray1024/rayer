@@ -1,7 +1,7 @@
-﻿using Rayer.Core.Framework.Injection;
+﻿using Rayer.Core.Common;
+using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Abstractions;
 using Rayer.SearchEngine.Core.Domain.Aduio;
-using Rayer.SearchEngine.Core.Enums;
 using Rayer.SearchEngine.Netease.Extensions;
 using Rayer.SearchEngine.Netease.Models.Search;
 
@@ -36,8 +36,10 @@ internal class SearchAudioEngine : SearchEngineBase, ISearchAudioEngine
         return default!;
     }
 
-    public async Task<SearchAudioDetail[]> SearchDetailAsync(string ids)
+    public async Task<SearchAudioDetail[]> SearchDetailAsync(SearchAudioDetail[] details)
     {
+        var ids = string.Join(',', details.Select(x => x.Id));
+
         var result = await Searcher.GetAsync(
             TrackSelector.TrackDetail()
                 .WithParam("ids", ids)
@@ -74,11 +76,11 @@ internal class SearchAudioEngine : SearchEngineBase, ISearchAudioEngine
         return default!;
     }
 
-    public async Task<WebAudio> GetAudioAsync(long id)
+    public async Task<WebAudio> GetAudioAsync(SearchAudioDetail detail)
     {
         var result = await Searcher.GetAsync(
             TrackSelector.GetTrack()
-                .WithParam("id", id.ToString())
+                .WithParam("id", detail.Id.ToString())
                 .Build());
 
         var response = result.ToEntity<WebAudioModel>();

@@ -1,6 +1,4 @@
-﻿using System.Configuration;
-
-namespace Rayer.FFmpegCore;
+﻿namespace Rayer.FFmpegCore;
 
 //public class FFmpegConfigurationSection : ConfigurationSection
 //{

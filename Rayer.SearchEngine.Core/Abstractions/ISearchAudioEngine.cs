@@ -8,7 +8,7 @@ public interface ISearchAudioEngine
 {
     Task<SearchAudio> SearchAsync(string keywords, int offset);
 
-    Task<SearchAudioDetail[]> SearchDetailAsync(string ids);
+    Task<SearchAudioDetail[]> SearchDetailAsync(SearchAudioDetail[] details);
 
-    Task<WebAudio> GetAudioAsync(long id);
+    Task<WebAudio> GetAudioAsync(SearchAudioDetail detail);
 }

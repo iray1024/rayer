@@ -19,4 +19,6 @@ public class SearchAudioDetail
     public float Rank { get; set; }
 
     public Copyright Copyright { get; set; } = Copyright.Default;
+
+    public IDictionary<string, string> Tags { get; set; } = new Dictionary<string, string>();
 }

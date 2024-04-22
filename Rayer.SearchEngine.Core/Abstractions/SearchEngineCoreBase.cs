@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Rayer.Core;
-using Rayer.SearchEngine.Core.Enums;
+using Rayer.Core.Common;
 using Rayer.SearchEngine.Core.Http.Abstractions;
 
 namespace Rayer.SearchEngine.Core.Abstractions;

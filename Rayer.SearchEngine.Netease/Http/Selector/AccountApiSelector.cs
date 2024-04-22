@@ -1,24 +1,25 @@
-﻿using Rayer.Core.Framework.Injection;
+﻿using Microsoft.Extensions.Options;
+using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Http.Abstractions;
 using Rayer.SearchEngine.Core.Options;
 
 namespace Rayer.SearchEngine.Netease.Http.Selector;
 
 [Inject]
-internal class AccountApiSelector(SearchEngineOptions options) : ApiSelector
+internal class AccountApiSelector(IOptionsSnapshot<SearchEngineOptions> snapshot) : ApiSelector(snapshot)
 {
     public IParamBuilder UserDetail()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Account.UserDetail);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Account.UserDetail);
     }
 
     public IParamBuilder UserInfo()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Account.UserInfo);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Account.UserInfo);
     }
 
     public IParamBuilder AccountInfo()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Account.AccountInfo);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Account.AccountInfo);
     }
 }

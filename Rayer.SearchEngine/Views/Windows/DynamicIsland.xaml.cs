@@ -1,4 +1,5 @@
-﻿using Rayer.Core;
+﻿using Microsoft.Extensions.Options;
+using Rayer.Core;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Http;
 using Rayer.Core.PInvoke;
@@ -144,7 +145,7 @@ public partial class DynamicIsland : Window
 
         _ = Win32.User32.SetWindowLong(hwnd, Win32.User32.GWL_EXSTYLE, exStyle | Win32.User32.WS_EX_TOOLWINDOW);
 
-        var searchEngineOptions = AppCore.GetRequiredService<SearchEngineOptions>();
+        var searchEngineOptions = AppCore.GetRequiredService<IOptionsSnapshot<SearchEngineOptions>>().Value;
         var httpClient = AppCore.GetRequiredService<IHttpClientProvider>();
 
         try

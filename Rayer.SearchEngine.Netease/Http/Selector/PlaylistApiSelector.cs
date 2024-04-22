@@ -1,14 +1,15 @@
-﻿using Rayer.Core.Framework.Injection;
+﻿using Microsoft.Extensions.Options;
+using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Http.Abstractions;
 using Rayer.SearchEngine.Core.Options;
 
 namespace Rayer.SearchEngine.Netease.Http.Selector;
 
 [Inject]
-internal class PlaylistApiSelector(SearchEngineOptions options) : ApiSelector
+internal class PlaylistApiSelector(IOptionsSnapshot<SearchEngineOptions> snapshot) : ApiSelector(snapshot)
 {
     public IParamBuilder GetPlaylistDetail()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Playlist.GetPlaylistDetail);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Playlist.GetPlaylistDetail);
     }
 }

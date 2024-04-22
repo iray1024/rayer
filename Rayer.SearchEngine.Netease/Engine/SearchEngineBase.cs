@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Rayer.Core.Common;
 using Rayer.SearchEngine.Core.Abstractions;
-using Rayer.SearchEngine.Core.Enums;
 using Rayer.SearchEngine.Netease.Http.Selector;
 
 namespace Rayer.SearchEngine.Netease.Engine;

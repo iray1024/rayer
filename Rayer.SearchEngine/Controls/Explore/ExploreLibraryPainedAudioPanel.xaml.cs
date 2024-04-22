@@ -284,7 +284,7 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
         var provider = AppCore.GetRequiredService<IAggregationServiceProvider>();
         var audioManager = AppCore.GetRequiredService<IAudioManager>();
 
-        var audioInformation = await provider.AudioEngine.GetAudioAsync(detail.Id);
+        var audioInformation = await provider.AudioEngine.GetAudioAsync(detail);
 
         if (!audioManager.Playback.TryGetAudio(detail.Id, out var existsAudio))
         {

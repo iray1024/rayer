@@ -13,6 +13,7 @@ public class SearchAggregationModel
         return HashCode.Combine(
             QueryText,
             Audio.Page,
-            Audio.PageSize);
+            Audio.PageSize,
+            Audio.Details.Length);
     }
 }

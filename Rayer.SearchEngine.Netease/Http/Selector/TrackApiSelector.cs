@@ -1,24 +1,25 @@
-﻿using Rayer.Core.Framework.Injection;
+﻿using Microsoft.Extensions.Options;
+using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Http.Abstractions;
 using Rayer.SearchEngine.Core.Options;
 
 namespace Rayer.SearchEngine.Netease.Http.Selector;
 
 [Inject]
-internal class TrackApiSelector(SearchEngineOptions options) : ApiSelector
+internal class TrackApiSelector(IOptionsSnapshot<SearchEngineOptions> snapshot) : ApiSelector(snapshot)
 {
     public IParamBuilder TrackDetail()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Track.TrackDetail);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Track.TrackDetail);
     }
 
     public IParamBuilder TrackQualityDetail()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Track.TrackQualityDetail);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Track.TrackQualityDetail);
     }
 
     public IParamBuilder GetTrack()
     {
-        return CreateBuilder(options.HttpEndpoint, ApiEndpoints.Track.GetTrack);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Track.GetTrack);
     }
 }

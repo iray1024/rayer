@@ -1,4 +1,5 @@
-﻿using Rayer.Core;
+﻿using Microsoft.Extensions.Options;
+using Rayer.Core;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Http;
 using Rayer.SearchEngine.Core.Options;
@@ -25,10 +26,10 @@ internal class HttpClientProvider : IHttpClientProvider
     {
         try
         {
-            var httpEndpoint = AppCore.GetRequiredService<SearchEngineOptions>();
+            var searchEngineOptions = AppCore.GetRequiredService<IOptionsSnapshot<SearchEngineOptions>>().Value;
             var cookies = File.ReadAllText(Constants.Paths.CookiePath, Encoding.UTF8);
 
-            cookieManager.SetCookies("localhost", new Uri(httpEndpoint.HttpEndpoint), cookies);
+            cookieManager.SetCookies("localhost", new Uri(searchEngineOptions.HttpEndpoint), cookies);
         }
         catch
         { }

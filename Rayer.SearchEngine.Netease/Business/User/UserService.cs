@@ -1,7 +1,7 @@
-﻿using Rayer.Core.Framework.Injection;
+﻿using Rayer.Core.Common;
+using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Business.User;
 using Rayer.SearchEngine.Core.Domain.Playlist;
-using Rayer.SearchEngine.Core.Enums;
 using Rayer.SearchEngine.Netease.Engine;
 using Rayer.SearchEngine.Netease.Models.User;
 

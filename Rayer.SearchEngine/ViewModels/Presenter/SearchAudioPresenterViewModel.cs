@@ -47,9 +47,11 @@ public partial class SearchAudioPresenterViewModel : ObservableObject, IPresente
         _settingsService = settingsService;
     }
 
+    public event EventHandler? DataChanged;
+
     public async Task PlayWebAudio(SearchAudioDetail item)
     {
-        var webAudio = await _audioEngineProvider.AudioEngine.GetAudioAsync(item.Id);
+        var webAudio = await _audioEngineProvider.AudioEngine.GetAudioAsync(item);
 
         if (!_audioManager.Playback.TryGetAudio(item.Id, out var existsAudio))
         {
@@ -76,5 +78,10 @@ public partial class SearchAudioPresenterViewModel : ObservableObject, IPresente
         {
             await _audioManager.Playback.Play(existsAudio);
         }
+    }
+
+    partial void OnPresenterDataContextChanged(SearchAudio value)
+    {
+        DataChanged?.Invoke(this, EventArgs.Empty);
     }
 }

@@ -29,7 +29,7 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="75" />
-                        <ColumnDefinition Width="125" />
+                        <ColumnDefinition Width="*" MaxWidth="280" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Border
@@ -68,7 +68,15 @@
                                 HorizontalAlignment="Right"
                                 CornerRadius="6"
                                 RenderOptions.BitmapScalingMode="Fant"
-                                Source="{Binding ViewModel.Current.Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}" />
+                                Source="{Binding ViewModel.Current.Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}"
+                                Stretch="UniformToFill">
+                                <ui:Image.Clip>
+                                    <RectangleGeometry
+                                        RadiusX="6"
+                                        RadiusY="6"
+                                        Rect="0,0,50,50" />
+                                </ui:Image.Clip>
+                            </ui:Image>
                         </Grid>
                     </Border>
                     <Grid
@@ -86,14 +94,18 @@
                             Margin="6,8,0,0"
                             FontSize="14"
                             FontWeight="Normal"
-                            Text="{Binding ViewModel.Current.Title, Mode=OneWay}" />
+                            Text="{Binding ViewModel.Current.Title, Mode=OneWay}"
+                            TextTrimming="WordEllipsis"
+                            ToolTip="{Binding ViewModel.Current.Title, Mode=OneWay}" />
                         <TextBlock
                             x:Name="Artists"
                             Grid.Row="1"
                             Grid.Column="1"
                             Margin="6,0,0,6"
                             Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                            Text="{Binding ViewModel.Current.Artists, Mode=OneWay, Converter={StaticResource ArtistsConverter}}" />
+                            Text="{Binding ViewModel.Current.Artists, Mode=OneWay, Converter={StaticResource ArtistsConverter}}"
+                            TextTrimming="WordEllipsis"
+                            ToolTip="{Binding ViewModel.Current.Artists, Mode=OneWay, Converter={StaticResource ArtistsConverter}}" />
                     </Grid>
                     <local:RightPlaybarPanel
                         x:Name="PlayQueue"

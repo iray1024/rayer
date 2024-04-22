@@ -24,6 +24,8 @@ public interface ISettings
 
     public LyricSearcher LyricSearcher { get; set; }
 
+    public SearcherType DefaultSearcher { get; set; }
+
     public float Volume { get; set; }
 
     public float Pitch { get; set; }

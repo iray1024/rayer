@@ -8,6 +8,7 @@ internal class AlbumProfile : Profile
 {
     public AlbumProfile()
     {
-        CreateMap<AlbumModel, AlbumDefinition>();
+        CreateMap<AlbumModel, AlbumDefinition>()
+            .ForMember(d => d.Title, o => o.MapFrom(s => s.Name));
     }
 }
