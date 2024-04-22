@@ -2,7 +2,7 @@
 
 namespace Rayer.SearchEngine.Core.Abstractions.Provider;
 
-public interface ISearchEngineProvider
+public interface ISearchEngineProvider : ISearchProvider
 {
     ISearchEngine SearchEngine { get; }
 

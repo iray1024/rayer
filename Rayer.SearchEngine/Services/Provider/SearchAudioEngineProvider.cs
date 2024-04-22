@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Rayer.Core;
+using Rayer.Core.Common;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Abstractions;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
@@ -18,6 +19,13 @@ internal class SearchAudioEngineProvider : ISearchAudioEngineProvider
     }
 
     public ISearchAudioEngine AudioEngine => GetAudioEngine();
+
+    SearcherType ISearchProvider.CurrentSearcher => _searchEngineOptions.SearcherType;
+
+    ISearchAudioEngine ISearchAudioEngineProvider.GetAudioEngine(SearcherType searcherType)
+    {
+        return AppCore.GetRequiredKeyedService<ISearchAudioEngine>(searcherType);
+    }
 
     private ISearchAudioEngine GetAudioEngine()
     {

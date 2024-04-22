@@ -2,6 +2,7 @@
 
 public enum SearcherType
 {
+    Local = -1,
     Netease = 0,
-    Bilibili
+    Bilibili = 1,
 }

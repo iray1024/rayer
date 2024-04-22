@@ -8,8 +8,9 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance local:SearchTitleBar,
                                      IsDesignTimeCreatable=False}"
-    d:DesignHeight="450" Loaded="OnLoaded"
+    d:DesignHeight="450"
     d:DesignWidth="800"
+    Loaded="OnLoaded"
     mc:Ignorable="d">
     <Grid>
         <Grid
@@ -109,7 +110,7 @@
                 Grid.Column="5"
                 Margin="0,0,24,0"
                 HorizontalAlignment="Right"
-                SelectedIndex="{Binding ViewModel.Searcher, FallbackValue=0, Mode=TwoWay, Converter={StaticResource SearcherTypeConverter}}"
+                SelectedIndex="{Binding ViewModel.Searcher, FallbackValue=1, Mode=TwoWay, Converter={StaticResource SearcherTypeConverter}}"
                 SelectionChanged="OnSearcherSelectionChanged">
                 <ComboBoxItem Content="网易云" />
                 <ComboBoxItem Content="哔哩哔哩" />

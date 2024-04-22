@@ -13,7 +13,7 @@ internal class SearcherTypeConverter : IValueConverter
             {
                 SearcherType.Netease => 0,
                 SearcherType.Bilibili => 1,
-                _ => 0,
+                _ => 0
             }
             : 0;
     }

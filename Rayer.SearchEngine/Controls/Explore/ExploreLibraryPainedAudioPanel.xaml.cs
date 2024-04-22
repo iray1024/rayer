@@ -1,5 +1,6 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Abstractions;
+using Rayer.Core.Common;
 using Rayer.Core.Events;
 using Rayer.Core.Models;
 using Rayer.Core.Utils;
@@ -281,10 +282,10 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
 
     private static async Task Play(SearchAudioDetail detail)
     {
-        var provider = AppCore.GetRequiredService<IAggregationServiceProvider>();
+        var provider = AppCore.GetRequiredService<ISearchAudioEngineProvider>();
         var audioManager = AppCore.GetRequiredService<IAudioManager>();
 
-        var audioInformation = await provider.AudioEngine.GetAudioAsync(detail);
+        var audioInformation = await provider.GetAudioEngine(SearcherType.Netease).GetAudioAsync(detail);
 
         if (!audioManager.Playback.TryGetAudio(detail.Id, out var existsAudio))
         {
@@ -297,7 +298,8 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
                 Cover = detail.Album?.Picture is not null ? ImageSourceUtils.Create(detail.Album.Picture) : null,
                 Duration = detail.Duration,
                 Path = audioInformation.Url ?? string.Empty,
-                IsVirualWebSource = true
+                IsVirualWebSource = true,
+                SearcherType = SearcherType.Netease
             };
 
             audioManager.Playback.Queue.Add(audio);

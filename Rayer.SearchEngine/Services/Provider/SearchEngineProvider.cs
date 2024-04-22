@@ -15,7 +15,9 @@ internal class SearchEngineProvider(IOptionsSnapshot<SearchEngineOptions> snapsh
 
     public ISearchEngine SearchEngine => GetSearchEngine();
 
-    public ISearchEngine GetSearchEngine(SearcherType searcherType)
+    SearcherType ISearchProvider.CurrentSearcher => _searchEngineOptions.SearcherType;
+
+    ISearchEngine ISearchEngineProvider.GetSearchEngine(SearcherType searcherType)
     {
         return AppCore.GetRequiredKeyedService<ISearchEngine>(searcherType);
     }

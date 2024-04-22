@@ -1,4 +1,5 @@
-﻿using System.Windows.Media;
+﻿using Rayer.Core.Common;
+using System.Windows.Media;
 
 namespace Rayer.Core.Models;
 
@@ -20,6 +21,8 @@ public class Audio
 
     // 后续如果需要同时加入所有搜索项时（Web音源需要进一步调用API才能获取真实播放地址），实现该属性功能
     public bool IsVirualWebSource { get; set; } = false;
+
+    public SearcherType SearcherType { get; set; } = SearcherType.Local;
 }
 
 public class AudioSortComparer : IComparer<Audio>

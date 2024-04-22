@@ -1,6 +1,10 @@
-﻿namespace Rayer.SearchEngine.Core.Abstractions.Provider;
+﻿using Rayer.Core.Common;
 
-public interface ISearchAudioEngineProvider
+namespace Rayer.SearchEngine.Core.Abstractions.Provider;
+
+public interface ISearchAudioEngineProvider : ISearchProvider
 {
     ISearchAudioEngine AudioEngine { get; }
+
+    ISearchAudioEngine GetAudioEngine(SearcherType searcherType);
 }
