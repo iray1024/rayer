@@ -15,4 +15,8 @@ public interface ICommandBinding
     ICommand DeleteCommand { get; }
 
     IAsyncRelayCommand<LyricSearcher> SwitchLyricSearcherCommand { get; }
+
+    IRelayCommand FastForwardCommand { get; }
+
+    IRelayCommand FastBackwardCommand { get; }
 }

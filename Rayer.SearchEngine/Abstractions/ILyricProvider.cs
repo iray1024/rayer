@@ -12,6 +12,10 @@ public interface ILyricProvider
 
     Task SwitchSearcherAsync();
 
+    void FastForward();
+
+    void FastBackward();
+
     event EventHandler<Rayer.Core.Events.AudioPlayingArgs> AudioPlaying;
     event EventHandler<Rayer.Core.Events.AudioChangedArgs> AudioChanged;
     event EventHandler AudioPaused;

@@ -7,8 +7,6 @@ namespace Rayer.Core.Lyric.Impl;
 public class SyllableLineInfo(IEnumerable<ISyllableInfo> syllables) : ILineInfo
 {
     private string? _text = null;
-    private int? _startTime = null;
-    private int? _endTime = null;
 
     public SyllableLineInfo()
         : this([])
@@ -18,9 +16,9 @@ public class SyllableLineInfo(IEnumerable<ISyllableInfo> syllables) : ILineInfo
 
     public string Text => _text ??= SyllableUtils.GetTextFromSyllableList(Syllables);
 
-    public int? StartTime => _startTime ??= Syllables.First().StartTime;
+    public int? StartTime { get; set; } = syllables.First().StartTime;
 
-    public int? EndTime => _endTime ??= Syllables.Last().EndTime;
+    public int? EndTime { get; set; } = syllables.Last().EndTime;
 
     public LyricAlignment LyricsAlignment { get; set; } = LyricAlignment.Unspecified;
 

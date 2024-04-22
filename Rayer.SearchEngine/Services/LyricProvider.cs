@@ -131,4 +131,36 @@ internal class LyricProvider : ILyricProvider
         LyricData = null;
         return false;
     }
+
+    void ILyricProvider.FastForward()
+    {
+        if (LyricData is not null && LyricData.Lines is { Count: > 0 })
+        {
+            foreach (var line in LyricData.Lines)
+            {
+                line.StartTime += 500;
+                line.EndTime += 500;
+            }
+
+            LyricChanged?.Invoke(this, SwitchLyricSearcherArgs.False);
+        }
+    }
+
+    void ILyricProvider.FastBackward()
+    {
+        if (LyricData is not null && LyricData.Lines is { Count: > 0 })
+        {
+            foreach (var line in LyricData.Lines)
+            {
+                if (line.StartTime is int startTime)
+                {
+                    line.StartTime = Math.Max(startTime - 500, 0);
+                }
+
+                line.EndTime -= 500;
+            }
+
+            LyricChanged?.Invoke(this, SwitchLyricSearcherArgs.False);
+        }
+    }
 }

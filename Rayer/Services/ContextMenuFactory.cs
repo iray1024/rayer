@@ -157,6 +157,25 @@ internal class ContextMenuFactory : IContextMenuFactory
 
         menu.Items.Add(switchLyricSearcherItem);
 
+        menu.Items.Add(new Separator());
+
+        var fastbackward = new MenuItem()
+        {
+            Header = "快退0.5秒",
+            Command = _commandBinding.FastBackwardCommand,
+            StaysOpenOnClick = true
+        };
+
+        var fastforward = new MenuItem()
+        {
+            Header = "快进0.5秒",
+            Command = _commandBinding.FastForwardCommand,
+            StaysOpenOnClick = true
+        };
+
+        menu.Items.Add(fastbackward);
+        menu.Items.Add(fastforward);
+
         return menu;
     }
 

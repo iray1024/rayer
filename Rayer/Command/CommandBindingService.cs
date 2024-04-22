@@ -128,4 +128,20 @@ internal partial class CommandBindingService : ICommandBinding
             }
         });
     }
+
+    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    private static void FastForward()
+    {
+        var provider = App.GetRequiredService<ILyricProvider>();
+
+        provider.FastForward();
+    }
+
+    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    private static void FastBackward()
+    {
+        var provider = App.GetRequiredService<ILyricProvider>();
+
+        provider.FastBackward();
+    }
 }
