@@ -1,9 +1,11 @@
 ﻿using NAudio.Wave;
 using Rayer.Abstractions;
 using Rayer.Controls.Adorners;
+using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Framework;
 using Rayer.Core.PlayControl.Abstractions;
+using Rayer.Core.Utils;
 using Rayer.Markup;
 using Rayer.Services;
 using Rayer.ViewModels;
@@ -13,6 +15,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shell;
 using Wpf.Ui.Appearance;
 
 namespace Rayer.Controls;
@@ -22,12 +25,20 @@ public partial class Playbar : UserControl
     private static PlaybarResource _resource;
 
     private readonly IThemeResourceProvider _themeResourceProvider;
+    private readonly IAudioManager _audioManager;
     private readonly IPlaybarService _playbarService;
     private readonly IImmersivePlayerService _immersivePlayerService;
 
     private static Rect _bounds;
-
     private bool _isAdornerVisible = false;
+
+    private readonly SlidingWindowRateLimiter _limiter = new(new SlidingWindowRateLimiterOptions
+    {
+        PermitLimit = 1,
+        QueueLimit = 0,
+        SegmentsPerWindow = 1,
+        Window = TimeSpan.FromSeconds(1)
+    });
 
     public Playbar()
     {
@@ -36,15 +47,17 @@ public partial class Playbar : UserControl
         ViewModel = vm;
         DataContext = this;
 
-        _playbarService = App.GetRequiredService<IPlaybarService>();
         _themeResourceProvider = App.GetRequiredService<IThemeResourceProvider>();
+        _audioManager = App.GetRequiredService<IAudioManager>();
+        _playbarService = App.GetRequiredService<IPlaybarService>();
         _immersivePlayerService = App.GetRequiredService<IImmersivePlayerService>();
-        var audioManager = App.GetRequiredService<IAudioManager>();
 
         ApplicationThemeManager.Changed += OnThemeChanged;
 
         _playbarService.PlayOrPauseTriggered += OnPlayOrPauseTriggered;
-        audioManager.AudioStopped += OnAudioStopped;
+        _audioManager.AudioPlaying += OnAudioPlaying;
+        _audioManager.AudioPaused += OnAudioPaused;
+        _audioManager.AudioStopped += OnAudioStopped;
 
         _immersivePlayerService.Show += OnImmersivePlayerShow;
         _immersivePlayerService.Hidden += OnImmersivePlayerHidden;
@@ -56,11 +69,44 @@ public partial class Playbar : UserControl
         _bounds = new Rect(0, 0, ActualWidth, ActualHeight);
     }
 
+    private void OnAudioPlaying(object? sender, Core.Events.AudioPlayingArgs e)
+    {
+        var taskbar = AppCore.MainWindow.TaskbarItemInfo;
+
+        taskbar.ThumbButtonInfos[1].Description = "暂停";
+        taskbar.ThumbButtonInfos[1].ImageSource = ImageSourceUtils.Create("pack://application:,,,/assets/dark/pause.png");
+
+        foreach (var item in taskbar.ThumbButtonInfos)
+        {
+            item.IsEnabled = true;
+        }
+    }
+
+    private void OnAudioPaused(object? sender, EventArgs e)
+    {
+        var item = AppCore.MainWindow.TaskbarItemInfo.ThumbButtonInfos[1];
+
+        item.Description = "播放";
+        item.ImageSource = ImageSourceUtils.Create("pack://application:,,,/assets/dark/play.png");
+    }
+
     private void OnAudioStopped(object? sender, EventArgs e)
     {
         ToggleControlsState(false);
 
         PlayOrPause.Source = _resource.Play;
+
+        if (AppCore.MainWindow is not null &&
+            AppCore.MainWindow.TaskbarItemInfo is TaskbarItemInfo taskbar)
+        {
+            foreach (var item in taskbar.ThumbButtonInfos)
+            {
+                item.IsEnabled = false;
+            }
+
+            taskbar.ThumbButtonInfos[1].Description = "播放";
+            taskbar.ThumbButtonInfos[1].ImageSource = ImageSourceUtils.Create("pack://application:,,,/assets/dark/play.png");
+        }
     }
 
     private void OnPlayOrPauseTriggered(object? sender, EventArgs e)
@@ -271,14 +317,6 @@ public partial class Playbar : UserControl
             }
         }
     }
-
-    private readonly SlidingWindowRateLimiter _limiter = new(new SlidingWindowRateLimiterOptions
-    {
-        PermitLimit = 1,
-        QueueLimit = 0,
-        SegmentsPerWindow = 1,
-        Window = TimeSpan.FromSeconds(1)
-    });
 
     private async void OnAlbumMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {

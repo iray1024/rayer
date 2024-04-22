@@ -4,6 +4,8 @@ using Rayer.Core;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
+using Rayer.Core.Menu;
+using Rayer.Core.Utils;
 using Rayer.SearchEngine.Core.Options;
 using Rayer.SearchEngine.Views.Windows;
 using Rayer.Services;
@@ -12,7 +14,9 @@ using Rayer.Views.Pages;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Shell;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
@@ -51,6 +55,8 @@ public partial class MainWindow : IWindow
         NavigationView.SetServiceProvider(serviceProvider);
 
         ApplicationThemeManager.Changed += OnThemeChanged;
+
+        RenderOptions.ProcessRenderMode = RenderMode.Default;
     }
 
     public MainWindowViewModel ViewModel { get; set; } = null!;
@@ -135,6 +141,8 @@ public partial class MainWindow : IWindow
         AutoSuggest.QuerySubmitted += OnAutoSuggestQuerySubmitted;
 
         await OnBootloaderInjectingAsync();
+
+        InitializeTaskbarInfo();
     }
 
     private async void OnAutoSuggestTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -215,5 +223,51 @@ public partial class MainWindow : IWindow
             "Cloud Server",
             $"Cloud Server注入成功",
             TimeSpan.FromSeconds(3));
+    }
+
+    private void InitializeTaskbarInfo()
+    {
+        var commandBinding = App.GetRequiredService<ICommandBinding>();
+
+        TaskbarItemInfo = new TaskbarItemInfo
+        {
+            Description = "喵蛙王子丶的音乐播放器"
+        };
+
+        var previous = new ThumbButtonInfo
+        {
+            Command = commandBinding.PreviousCommand,
+            ImageSource = ImageSourceUtils.Create("pack://application:,,,/assets/dark/previous.png"),
+            Description = "上一首",
+            IsEnabled = false,
+        };
+
+        var playOrPause = new ThumbButtonInfo
+        {
+            Command = commandBinding.PlayOrPauseCommand,
+            ImageSource = ImageSourceUtils.Create("pack://application:,,,/assets/dark/play.png"),
+            Description = "播放",
+            IsEnabled = false
+        };
+
+        var next = new ThumbButtonInfo
+        {
+            Command = commandBinding.NextCommand,
+            ImageSource = ImageSourceUtils.Create("pack://application:,,,/assets/dark/next.png"),
+            Description = "下一首",
+            IsEnabled = false
+        };
+
+        RenderOptions.SetBitmapScalingMode(TaskbarItemInfo, BitmapScalingMode.HighQuality);
+        RenderOptions.SetBitmapScalingMode(previous, BitmapScalingMode.HighQuality);
+        RenderOptions.SetBitmapScalingMode(playOrPause, BitmapScalingMode.HighQuality);
+        RenderOptions.SetBitmapScalingMode(next, BitmapScalingMode.HighQuality);
+        RenderOptions.SetBitmapScalingMode(previous.ImageSource, BitmapScalingMode.HighQuality);
+        RenderOptions.SetBitmapScalingMode(playOrPause.ImageSource, BitmapScalingMode.HighQuality);
+        RenderOptions.SetBitmapScalingMode(next.ImageSource, BitmapScalingMode.HighQuality);
+
+        TaskbarItemInfo.ThumbButtonInfos.Add(previous);
+        TaskbarItemInfo.ThumbButtonInfos.Add(playOrPause);
+        TaskbarItemInfo.ThumbButtonInfos.Add(next);
     }
 }

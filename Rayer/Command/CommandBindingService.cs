@@ -14,13 +14,16 @@ namespace Rayer.Command;
 internal partial class CommandBindingService : ICommandBinding
 {
     private readonly IAudioManager _audioManager;
+    private readonly IPlaybarService _playbarService;
     private readonly IPlaylistService _playlistService;
 
     public CommandBindingService(
         IAudioManager audioManager,
+        IPlaybarService playbarService,
         IPlaylistService playlistService)
     {
         _audioManager = audioManager;
+        _playbarService = playbarService;
         _playlistService = playlistService;
     }
 
@@ -67,6 +70,24 @@ internal partial class CommandBindingService : ICommandBinding
 
             return _deleteCommand;
         }
+    }
+
+    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    private async Task Previous()
+    {
+        await _playbarService.Previous();
+    }
+
+    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    private void PlayOrPause()
+    {
+        _playbarService.PlayOrPause();
+    }
+
+    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    private async Task Next()
+    {
+        await _playbarService.Next();
     }
 
     private async void Play(object? sender)
