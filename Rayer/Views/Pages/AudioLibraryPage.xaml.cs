@@ -1,6 +1,8 @@
 ﻿using Rayer.Command.Parameter;
+using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
+using Rayer.Core.Controls;
 using Rayer.Core.Events;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
@@ -8,13 +10,14 @@ using Rayer.Core.Utils;
 using Rayer.ViewModels;
 using System.Collections.Specialized;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using Wpf.Ui.Controls;
 
 namespace Rayer.Views.Pages;
 
 [Inject]
-public partial class AudioLibraryPage : INavigableView<AudioLibraryViewModel>
+public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibraryViewModel>
 {
     private readonly IAudioManager _audioManager;
     private readonly ISettingsService _settingsService;
@@ -23,6 +26,7 @@ public partial class AudioLibraryPage : INavigableView<AudioLibraryViewModel>
         AudioLibraryViewModel viewModel,
         IAudioManager audioManager,
         ISettingsService settingsService)
+        : base(viewModel)
     {
         _audioManager = audioManager;
         _settingsService = settingsService;
@@ -37,6 +41,27 @@ public partial class AudioLibraryPage : INavigableView<AudioLibraryViewModel>
         ViewModel.Items.AddRange(_audioManager.Audios);
 
         InitializeComponent();
+    }
+
+    public new AudioLibraryViewModel ViewModel { get; private set; }
+
+    protected override void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        ViewModel ??= AppCore.GetRequiredService<AudioLibraryViewModel>();
+        base.ViewModel = ViewModel;
+
+        base.OnLoaded(sender, e);
+    }
+
+    protected override void OnUnLoaded(object sender, RoutedEventArgs e)
+    {
+        base.OnUnLoaded(sender, e);
+
+        ViewModel = default!;
+
+        BindingOperations.ClearAllBindings(this);
+
+        GC.Collect();
     }
 
     private void OnAudioChanged(object? sender, AudioChangedArgs e)
@@ -73,8 +98,6 @@ public partial class AudioLibraryPage : INavigableView<AudioLibraryViewModel>
             }
         });
     }
-
-    public AudioLibraryViewModel ViewModel { get; }
 
     private async void OnListViewItemDoubleClick(object sender, MouseButtonEventArgs e)
     {

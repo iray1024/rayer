@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Rayer.Core;
+using Rayer.Core.Controls;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
-using Rayer.SearchEngine.Controls.Explore.Abstractions;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.Core.Domain.Playlist;
@@ -65,9 +65,9 @@ public partial class ExploreAlbumPanel : AdaptiveUserControl
         base.OnLoaded(sender, e);
     }
 
-    protected override void OnUnloaded(object sender, RoutedEventArgs e)
+    protected override void OnUnLoaded(object sender, RoutedEventArgs e)
     {
-        base.OnUnloaded(sender, e);
+        base.OnUnLoaded(sender, e);
 
         ViewModel = default!;
 

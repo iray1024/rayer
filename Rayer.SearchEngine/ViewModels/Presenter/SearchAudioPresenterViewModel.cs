@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
+using Rayer.Core.Controls;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Models;
@@ -8,12 +9,11 @@ using Rayer.Core.Utils;
 using Rayer.SearchEngine.Controls;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aduio;
-using Rayer.SearchEngine.ViewModels.Explore.Abstractions;
 
 namespace Rayer.SearchEngine.ViewModels.Presenter;
 
 [Inject]
-public partial class SearchAudioPresenterViewModel : AdaptiveAudioListViewModelBase, IPresenterViewModel<SearchAudio>
+public partial class SearchAudioPresenterViewModel : AdaptiveViewModelBase, IPresenterViewModel<SearchAudio>
 {
     private readonly ISearchAudioEngineProvider _audioEngineProvider;
     private readonly IAudioManager _audioManager;

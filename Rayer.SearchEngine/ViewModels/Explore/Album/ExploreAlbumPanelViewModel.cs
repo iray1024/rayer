@@ -1,17 +1,17 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
+using Rayer.Core.Controls;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Models;
 using Rayer.Core.Utils;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.Core.Domain.Playlist;
-using Rayer.SearchEngine.ViewModels.Explore.Abstractions;
 
 namespace Rayer.SearchEngine.ViewModels.Explore.Album;
 
-public partial class ExploreAlbumPanelViewModel : AdaptiveAudioListViewModelBase
+public partial class ExploreAlbumPanelViewModel : AdaptiveViewModelBase
 {
     private readonly ISearchAudioEngineProvider _audioEngineProvider;
     private readonly IAudioManager _audioManager;

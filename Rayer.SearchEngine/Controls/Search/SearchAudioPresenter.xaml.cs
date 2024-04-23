@@ -1,5 +1,5 @@
 ﻿using Rayer.Core;
-using Rayer.SearchEngine.Controls.Explore.Abstractions;
+using Rayer.Core.Controls;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.ViewModels.Presenter;
 using System.Windows;
@@ -31,9 +31,9 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
         base.OnLoaded(sender, e);
     }
 
-    protected override void OnUnloaded(object sender, RoutedEventArgs e)
+    protected override void OnUnLoaded(object sender, RoutedEventArgs e)
     {
-        base.OnUnloaded(sender, e);
+        base.OnUnLoaded(sender, e);
 
         ViewModel = default!;
 

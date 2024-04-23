@@ -1,11 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Rayer.Core.Common;
+using Rayer.Core.Controls;
 using Rayer.Core.Menu;
 using System.Windows.Controls;
 
 namespace Rayer.ViewModels;
 
-public partial class AudioLibraryViewModel : ObservableObject
+public partial class AudioLibraryViewModel : AdaptiveViewModelBase
 {
     [ObservableProperty]
     private SortableObservableCollection<Audio> _items = default!;

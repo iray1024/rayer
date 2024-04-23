@@ -1,13 +1,11 @@
-﻿using Rayer.Core;
-using Rayer.SearchEngine.ViewModels.Explore.Abstractions;
+﻿using Rayer.Core.Framework;
 using System.Windows;
-using System.Windows.Controls;
 
-namespace Rayer.SearchEngine.Controls.Explore.Abstractions;
+namespace Rayer.Core.Controls;
 
-public abstract class AdaptiveUserControl(AdaptiveAudioListViewModelBase viewModel) : UserControl
+public abstract class AdaptivePage(AdaptiveViewModelBase viewModel) : NoneFocusablePage
 {
-    protected AdaptiveAudioListViewModelBase ViewModel { get; set; } = viewModel;
+    protected AdaptiveViewModelBase ViewModel { get; set; } = viewModel;
 
     protected virtual void OnLoaded(object sender, RoutedEventArgs e)
     {
@@ -15,11 +13,11 @@ public abstract class AdaptiveUserControl(AdaptiveAudioListViewModelBase viewMod
 
         var panelWidth = (AppCore.MainWindow.ActualWidth - 180 - ((int)ActualWidth >> 1)) / 3;
 
-        ViewModel.NameMaxWidth = panelWidth + 50;
+        ViewModel.TitleMaxWidth = panelWidth + 50;
         ViewModel.ArtistsNameMaxWidth = panelWidth + 50;
-        ViewModel.AlbumNameMaxHeight = panelWidth + 80;
+        ViewModel.AlbumNameMaxWidth = panelWidth + 80;
 
-        ViewModel.DurationMaxHeight = e.Source is Window { WindowState: WindowState.Maximized } ? 43 : 39;
+        ViewModel.DurationMaxWidth = e.Source is Window { WindowState: WindowState.Maximized } ? 43 : 39;
         ViewModel.ItemMargin = e.Source is Window { WindowState: WindowState.Maximized }
             ? new Thickness(0, 0, 30, 0)
             : new Thickness(0, 0, 24, 0);
@@ -28,7 +26,7 @@ public abstract class AdaptiveUserControl(AdaptiveAudioListViewModelBase viewMod
         AppCore.MainWindow.Width -= 1;
     }
 
-    protected virtual void OnUnloaded(object sender, RoutedEventArgs e)
+    protected virtual void OnUnLoaded(object sender, RoutedEventArgs e)
     {
         AppCore.MainWindow.SizeChanged -= OnSizeChanged;
 
@@ -39,11 +37,11 @@ public abstract class AdaptiveUserControl(AdaptiveAudioListViewModelBase viewMod
     {
         var panelWidth = (e.NewSize.Width - 180 - ((int)ActualWidth >> 1)) / 3;
 
-        ViewModel.NameMaxWidth = panelWidth + 50;
+        ViewModel.TitleMaxWidth = panelWidth + 50;
         ViewModel.ArtistsNameMaxWidth = panelWidth + 50;
-        ViewModel.AlbumNameMaxHeight = panelWidth + 80;
+        ViewModel.AlbumNameMaxWidth = panelWidth + 80;
 
-        ViewModel.DurationMaxHeight = e.Source is Window { WindowState: WindowState.Maximized } ? 43 : 39;
+        ViewModel.DurationMaxWidth = e.Source is Window { WindowState: WindowState.Maximized } ? 43 : 39;
         ViewModel.ItemMargin = e.Source is Window { WindowState: WindowState.Maximized }
             ? new Thickness(0, 0, 30, 0)
             : new Thickness(0, 0, 24, 0);
