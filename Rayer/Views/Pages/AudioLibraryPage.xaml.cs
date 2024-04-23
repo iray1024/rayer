@@ -10,7 +10,6 @@ using Rayer.Core.Utils;
 using Rayer.ViewModels;
 using System.Collections.Specialized;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
 using Wpf.Ui.Controls;
 
@@ -53,15 +52,9 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
         base.OnLoaded(sender, e);
     }
 
-    protected override void OnUnLoaded(object sender, RoutedEventArgs e)
+    protected override void OnUnloaded(object sender, RoutedEventArgs e)
     {
-        base.OnUnLoaded(sender, e);
-
-        ViewModel = default!;
-
-        BindingOperations.ClearAllBindings(this);
-
-        GC.Collect();
+        base.OnUnloaded(sender, e);
     }
 
     private void OnAudioChanged(object? sender, AudioChangedArgs e)

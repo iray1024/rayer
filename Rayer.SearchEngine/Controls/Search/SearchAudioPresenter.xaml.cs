@@ -31,9 +31,9 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
         base.OnLoaded(sender, e);
     }
 
-    protected override void OnUnLoaded(object sender, RoutedEventArgs e)
+    protected override void OnUnloaded(object sender, RoutedEventArgs e)
     {
-        base.OnUnLoaded(sender, e);
+        base.OnUnloaded(sender, e);
 
         ViewModel = default!;
 

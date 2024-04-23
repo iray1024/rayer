@@ -26,7 +26,7 @@ public abstract class AdaptivePage(AdaptiveViewModelBase viewModel) : NoneFocusa
         AppCore.MainWindow.Width -= 1;
     }
 
-    protected virtual void OnUnLoaded(object sender, RoutedEventArgs e)
+    protected virtual void OnUnloaded(object sender, RoutedEventArgs e)
     {
         AppCore.MainWindow.SizeChanged -= OnSizeChanged;
 
