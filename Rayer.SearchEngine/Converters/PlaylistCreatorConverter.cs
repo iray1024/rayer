@@ -7,9 +7,7 @@ public class PlaylistCreatorConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return value is string val
-            ? $"by {val}"
-            : value;
+        return $"by {value}";
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -6,19 +6,25 @@ namespace Rayer.Converters;
 
 internal sealed class LyricSearcherConverter : IValueConverter
 {
+    private static readonly object _neteaseEnumValueBox = LyricSearcher.Netease;
+    private static readonly object _qqEnumValueBox = LyricSearcher.QQMusic;
+    private static readonly object _kugouEnumValueBox = LyricSearcher.Kugou;
+
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is LyricSearcher.Netease
-            ? 0
-            : value is LyricSearcher.QQMusic
-                ? 1
-                : 2;
+        return value?.Equals(_neteaseEnumValueBox) == true
+            ? Int32Boxes.ZeroValueBox
+            : value?.Equals(_qqEnumValueBox) == true
+                ? Int32Boxes.OneValueBox
+                : Int32Boxes.TwoValueBox;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is 0
-            ? LyricSearcher.Netease
-            : value is 1 ? LyricSearcher.QQMusic : LyricSearcher.Kugou;
+        return value?.Equals(Int32Boxes.ZeroValueBox) == true
+            ? _neteaseEnumValueBox
+            : value?.Equals(Int32Boxes.OneValueBox) == true
+                ? _qqEnumValueBox
+                : _kugouEnumValueBox;
     }
 }

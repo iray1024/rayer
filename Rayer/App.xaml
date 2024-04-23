@@ -15,7 +15,6 @@
                 <ResourceDictionary Source="pack://application:,,,/Themes/Symbols.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Themes/ListBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Themes/ListBoxItem.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Themes/NoFocusableButtonStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Themes/EqualizerButton.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Themes/DotInfoBadgeStype.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Rayer.SearchEngine;component/Themes/Application.xaml" />

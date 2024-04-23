@@ -63,7 +63,7 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
 
     public async Task LoadAsync(WaveMetadata metadata)
     {
-        await _semaphore.WaitAsync();
+        await _semaphore.WaitAsync().ConfigureAwait(false);
         Stop();
 
         await EnsureDeviceCreatedAsync(metadata);
@@ -129,7 +129,7 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
             Debug.WriteLine($"等待设备创建，正在等待同步锁");
 #endif
 
-            await _semaphore.WaitAsync(cancellationToken);
+            await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 #if DEBUG
             Debug.WriteLine($"等待设备创建，已获取同步锁");
 #endif
@@ -149,22 +149,29 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
 
         _device.PlaybackStopped += async (s, a) =>
         {
-            await Task.Run(async () =>
+            try
             {
-                await Application.Current.Dispatcher.InvokeAsync(() =>
+                await Task.Run(async () =>
                 {
-                    _semaphore.Release();
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                        _semaphore.Release();
 
-                    if (!IsReOpen)
-                    {
-                        PlaybackStopped?.Invoke(s, a);
-                    }
-                    else
-                    {
-                        IsReOpen = false;
-                    }
+                        if (!IsReOpen)
+                        {
+                            PlaybackStopped?.Invoke(s, a);
+                        }
+                        else
+                        {
+                            IsReOpen = false;
+                        }
+                    });
                 });
-            });
+            }
+            catch (TaskCanceledException) when (AppCore.MainWindow.IsActive)
+            {
+                throw;
+            }
         };
     }
 

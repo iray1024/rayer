@@ -6,17 +6,20 @@ namespace Rayer.Converters;
 
 internal sealed class ImmersiveModeConverter : IValueConverter
 {
+    private static readonly object _audioVisualizerEnumValueBox = ImmersiveMode.AudioVisualizer;
+    private static readonly object _vinylEnumValueBox = ImmersiveMode.Vinyl;
+
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is ImmersiveMode.Vinyl
-            ? 0
-            : 1;
+        return value?.Equals(_vinylEnumValueBox) == true
+            ? Int32Boxes.ZeroValueBox
+            : Int32Boxes.OneValueBox;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is 1
-            ? ImmersiveMode.AudioVisualizer
-            : ImmersiveMode.Vinyl;
+        return value?.Equals(Int32Boxes.OneValueBox) == true
+            ? _audioVisualizerEnumValueBox
+            : _vinylEnumValueBox;
     }
 }

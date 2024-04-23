@@ -6,16 +6,19 @@ namespace Rayer.SearchEngine.Converters;
 
 internal class SearcherTypeConverter : IValueConverter
 {
+    private static readonly object _neteaseEnumValueBox = SearcherType.Netease;
+    private static readonly object _bilibiliEnumValueBox = SearcherType.Bilibili;
+
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         return value is SearcherType searcherType
             ? searcherType switch
             {
-                SearcherType.Netease => 0,
-                SearcherType.Bilibili => 1,
-                _ => 0
+                SearcherType.Netease => Int32Boxes.ZeroValueBox,
+                SearcherType.Bilibili => Int32Boxes.OneValueBox,
+                _ => Int32Boxes.ZeroValueBox
             }
-            : 0;
+            : Int32Boxes.ZeroValueBox;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -23,10 +26,10 @@ internal class SearcherTypeConverter : IValueConverter
         return value is int val
             ? val switch
             {
-                0 => SearcherType.Netease,
-                1 => SearcherType.Bilibili,
-                _ => SearcherType.Netease
+                0 => _neteaseEnumValueBox,
+                1 => _bilibiliEnumValueBox,
+                _ => _neteaseEnumValueBox
             }
-            : SearcherType.Netease;
+            : _neteaseEnumValueBox;
     }
 }

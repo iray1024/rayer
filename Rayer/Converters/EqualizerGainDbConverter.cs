@@ -7,8 +7,8 @@ internal sealed class EqualizerGainDbConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is float db
-            ? $"{db}db"
+        return value is not null
+            ? $"{value}db"
             : string.Empty;
     }
 

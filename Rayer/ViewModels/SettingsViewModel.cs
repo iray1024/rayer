@@ -170,8 +170,10 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
 
     private void OnSettingsChanged(object? sender, EventArgs e)
     {
+        _immersiveMode = _settings.Settings.ImmersiveMode;
         _lyricSearcher = _settings.Settings.LyricSearcher;
 
+        OnPropertyChanged(nameof(ImmersiveMode));
         OnPropertyChanged(nameof(LyricSearcher));
     }
 

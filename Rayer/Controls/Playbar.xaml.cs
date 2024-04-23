@@ -82,7 +82,7 @@ public partial class Playbar : UserControl
             {
                 item.IsEnabled = true;
             }
-        }        
+        }
     }
 
     private void OnAudioPaused(object? sender, EventArgs e)
@@ -95,7 +95,7 @@ public partial class Playbar : UserControl
 
             item.Description = "播放";
             item.ImageSource = ImageSourceUtils.Create("pack://application:,,,/assets/dark/play.png");
-        }        
+        }
     }
 
     private void OnAudioStopped(object? sender, EventArgs e)
