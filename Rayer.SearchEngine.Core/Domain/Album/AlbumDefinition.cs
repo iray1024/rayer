@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Core.Domain.Album;
 
-public class AlbumDefinition
+public record AlbumDefinition
 {
     public long Id { get; set; }
 

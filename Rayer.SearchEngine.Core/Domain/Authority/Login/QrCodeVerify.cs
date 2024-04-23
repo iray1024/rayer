@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Core.Domain.Authority.Login;
 
-public class QrCodeVerify
+public record QrCodeVerify
 {
     public int Code { get; set; }
 

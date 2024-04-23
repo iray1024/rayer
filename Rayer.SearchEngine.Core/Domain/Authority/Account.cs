@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Core.Domain.Authority;
 
-public class Account
+public record Account
 {
     public long Id { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Core.Domain.Authority.Login;
 
-public class QrCode
+public record QrCode
 {
     public long Id { get; set; }
 

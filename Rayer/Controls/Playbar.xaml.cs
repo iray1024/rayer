@@ -73,21 +73,29 @@ public partial class Playbar : UserControl
     {
         var taskbar = AppCore.MainWindow.TaskbarItemInfo;
 
-        taskbar.ThumbButtonInfos[1].Description = "暂停";
-        taskbar.ThumbButtonInfos[1].ImageSource = ImageSourceUtils.Create("pack://application:,,,/assets/dark/pause.png");
-
-        foreach (var item in taskbar.ThumbButtonInfos)
+        if (taskbar is not null)
         {
-            item.IsEnabled = true;
-        }
+            taskbar.ThumbButtonInfos[1].Description = "暂停";
+            taskbar.ThumbButtonInfos[1].ImageSource = ImageSourceUtils.Create("pack://application:,,,/assets/dark/pause.png");
+
+            foreach (var item in taskbar.ThumbButtonInfos)
+            {
+                item.IsEnabled = true;
+            }
+        }        
     }
 
     private void OnAudioPaused(object? sender, EventArgs e)
     {
-        var item = AppCore.MainWindow.TaskbarItemInfo.ThumbButtonInfos[1];
+        var taskbar = AppCore.MainWindow.TaskbarItemInfo;
 
-        item.Description = "播放";
-        item.ImageSource = ImageSourceUtils.Create("pack://application:,,,/assets/dark/play.png");
+        if (taskbar is not null)
+        {
+            var item = AppCore.MainWindow.TaskbarItemInfo.ThumbButtonInfos[1];
+
+            item.Description = "播放";
+            item.ImageSource = ImageSourceUtils.Create("pack://application:,,,/assets/dark/play.png");
+        }        
     }
 
     private void OnAudioStopped(object? sender, EventArgs e)

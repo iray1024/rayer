@@ -2,7 +2,7 @@
 
 namespace Rayer.SearchEngine.Core.Domain.Authority;
 
-public class Profile
+public record Profile
 {
     public string Name { get; set; } = string.Empty;
 

@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Core.Domain.Artist;
 
-public class ArtistDefinition
+public record ArtistDefinition
 {
     public long Id { get; set; }
 

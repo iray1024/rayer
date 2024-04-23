@@ -64,7 +64,7 @@ public partial class DynamicIslandViewModel : ObservableObject
 
     private void OnAudioPlaying(object? sender, AudioPlayingArgs e)
     {
-        if (e.PlaybackState is NAudio.Wave.PlaybackState.Paused)
+        if (e.PlaybackState is NAudio.Wave.PlaybackState.Paused && _totalLines.Count > 0)
         {
             CurrentLine = _totalLines[_currentLineIndex];
 
@@ -75,6 +75,8 @@ public partial class DynamicIslandViewModel : ObservableObject
     private async void OnAudioChanged(object? sender, AudioChangedArgs e)
     {
         _timer.Stop();
+
+        CurrentLine = new LineInfo(e.New.Title);
 
         Cover = e.New.Cover;
 

@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Core.Domain.Search;
 
-public class SearchSuggestDetail
+public record SearchSuggestDetail
 {
     public long Id { get; set; }
 

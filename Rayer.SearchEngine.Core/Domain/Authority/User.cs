@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Core.Domain.Authority;
 
-public class User
+public record User
 {
     public Account Account { get; set; } = new();
 

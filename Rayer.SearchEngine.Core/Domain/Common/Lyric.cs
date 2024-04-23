@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Core.Domain.Common;
 
-public class Lyric
+public record Lyric
 {
     public LyricDetailModel Klyric { get; set; } = null!;
 
@@ -10,7 +10,7 @@ public class Lyric
 
     public LyricDetailModel Tlyric { get; set; } = null!;
 
-    public class LyricDetailModel
+    public record LyricDetailModel
     {
         public string Lyric { get; set; } = string.Empty;
 

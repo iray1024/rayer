@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Core.Domain.Authority;
 
-public class AnonymousUser
+public record AnonymousUser
 {
     public long UserId { get; set; }
 

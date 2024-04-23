@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Core.Domain.Search;
 
-public class SearchSuggest
+public record SearchSuggest
 {
     public static readonly SearchSuggest Empty = new() { Code = -1 };
 
