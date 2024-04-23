@@ -54,7 +54,9 @@
                 <Border
                     Padding="12"
                     Background="#bbcdff"
-                    CornerRadius="6">
+                    CornerRadius="6"
+                    Cursor="Hand"
+                    MouseLeftButtonUp="OnMyFavoriteMouseLeftButtonUp">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />

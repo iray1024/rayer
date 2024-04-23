@@ -1,17 +1,18 @@
 ﻿using Rayer.Core;
+using Rayer.SearchEngine.Controls.Explore.Abstractions;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.ViewModels.Presenter;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace Rayer.SearchEngine.Controls.Search;
 
-public partial class SearchAudioPresenter : UserControl, IPresenterControl<SearchAudioPresenterViewModel, SearchAudio>
+public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterControl<SearchAudioPresenterViewModel, SearchAudio>
 {
-    public SearchAudioPresenter()
+    public SearchAudioPresenter(SearchAudioPresenterViewModel vm)
+        : base(vm)
     {
-        var vm = AppCore.GetRequiredService<SearchAudioPresenterViewModel>();
-
         ViewModel = vm;
         DataContext = this;
 
@@ -20,7 +21,26 @@ public partial class SearchAudioPresenter : UserControl, IPresenterControl<Searc
         InitializeComponent();
     }
 
-    public SearchAudioPresenterViewModel ViewModel { get; set; } = null!;
+    public new SearchAudioPresenterViewModel ViewModel { get; set; }
+
+    protected override void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        ViewModel ??= AppCore.GetRequiredService<SearchAudioPresenterViewModel>();
+        base.ViewModel = ViewModel;
+
+        base.OnLoaded(sender, e);
+    }
+
+    protected override void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        base.OnUnloaded(sender, e);
+
+        ViewModel = default!;
+
+        BindingOperations.ClearAllBindings(this);
+
+        GC.Collect();
+    }
 
     private void OnListViewItemRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
@@ -34,45 +54,6 @@ public partial class SearchAudioPresenter : UserControl, IPresenterControl<Searc
         {
             await ViewModel.PlayWebAudio(item);
         }
-    }
-
-    private void OnLoaded(object sender, RoutedEventArgs e)
-    {
-        AppCore.MainWindow.SizeChanged += OnSizeChanged;
-
-        var panelWidth = (AppCore.MainWindow.ActualWidth - 180 - ((int)Width >> 1)) / 3;
-
-        ViewModel.NameMaxWidth = panelWidth + 50;
-        ViewModel.ArtistsNameMaxWidth = panelWidth + 50;
-        ViewModel.AlbumNameMaxHeight = panelWidth + 80;
-
-        ViewModel.DurationMaxHeight = e.Source is Window { WindowState: WindowState.Maximized } ? 43 : 39;
-        ViewModel.ItemMargin = e.Source is Window { WindowState: WindowState.Maximized }
-            ? new Thickness(0, 0, 30, 0)
-            : new Thickness(0, 0, 24, 0);
-
-        // 很奇怪的问题，只有MainWindow的Size变化后，内部的ScrollViewer的滚动事件才不会强制冒泡到SearchPage
-        AppCore.MainWindow.Width += 1;
-        AppCore.MainWindow.Width -= 1;
-    }
-
-    private void OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        AppCore.MainWindow.SizeChanged -= OnSizeChanged;
-    }
-
-    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
-    {
-        var panelWidth = (e.NewSize.Width - 180 - ((int)Width >> 1)) / 3;
-
-        ViewModel.NameMaxWidth = panelWidth + 50;
-        ViewModel.ArtistsNameMaxWidth = panelWidth + 50;
-        ViewModel.AlbumNameMaxHeight = panelWidth + 80;
-
-        ViewModel.DurationMaxHeight = e.Source is Window { WindowState: WindowState.Maximized } ? 43 : 39;
-        ViewModel.ItemMargin = e.Source is Window { WindowState: WindowState.Maximized }
-            ? new Thickness(0, 0, 30, 0)
-            : new Thickness(0, 0, 24, 0);
     }
 
     private void OnDataChanged(object? sender, EventArgs e)

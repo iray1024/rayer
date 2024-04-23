@@ -1,8 +1,10 @@
-﻿using Rayer.Core.Framework.Injection;
+﻿using Rayer.Core;
+using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Controls;
 using Rayer.SearchEngine.Controls.Search;
 using Rayer.SearchEngine.Core.Enums;
 using Rayer.SearchEngine.Internal.Abstractions;
+using Rayer.SearchEngine.ViewModels.Presenter;
 using System.Windows;
 
 namespace Rayer.SearchEngine.Internal.Impl;
@@ -18,7 +20,7 @@ internal class SearchPresenterProvider : ISearchPresenterProvider
 
     static SearchPresenterProvider()
     {
-        _audioPresenter = new Lazy<SearchAudioPresenter>(() => new SearchAudioPresenter()
+        _audioPresenter = new Lazy<SearchAudioPresenter>(() => new SearchAudioPresenter(AppCore.GetRequiredService<SearchAudioPresenterViewModel>())
         {
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top,

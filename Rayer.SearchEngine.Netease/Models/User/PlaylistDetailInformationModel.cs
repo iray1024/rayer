@@ -13,10 +13,16 @@ public class PlaylistDetailInformationModel
 
     public ProfileModel Creator { get; set; } = null!;
 
+    public long CreateTime { get; set; }
+
+    public long UpdateTime { get; set; }
+
     [JsonPropertyName("coverImgUrl")]
     public string Cover { get; set; } = string.Empty;
 
     public int TrackCount { get; set; }
+
+    public long PlayCount { get; set; }
 
     public SearchAudioDetailInformationModel[] Tracks { get; set; } = [];
 }

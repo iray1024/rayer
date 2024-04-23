@@ -26,8 +26,11 @@ internal class PlaylistProfile : Profile
             OwnerId = x.Creator.UserId,
             Title = x.Name,
             Creator = ctx.Mapper.Map<Core.Domain.Authority.User>(x.Creator),
+            CreateTime = DateTimeOffset.FromUnixTimeMilliseconds(x.CreateTime).DateTime,
+            UpdateTime = DateTimeOffset.FromUnixTimeMilliseconds(x.UpdateTime).DateTime,
             Cover = x.Cover,
             AudioCount = x.TrackCount,
+            PlayCount = x.PlayCount,
             Audios = ctx.Mapper.Map<SearchAudioDetail[]>(x.Tracks)
         }).ToArray();
 
@@ -38,8 +41,11 @@ internal class PlaylistProfile : Profile
             OwnerId = souce.Playlist.Creator.UserId,
             Title = souce.Playlist.Name,
             Creator = ctx.Mapper.Map<Core.Domain.Authority.User>(souce.Playlist.Creator),
+            CreateTime = DateTimeOffset.FromUnixTimeMilliseconds(souce.Playlist.CreateTime).DateTime,
+            UpdateTime = DateTimeOffset.FromUnixTimeMilliseconds(souce.Playlist.UpdateTime).DateTime,
             Cover = souce.Playlist.Cover,
             AudioCount = souce.Playlist.TrackCount,
+            PlayCount = souce.Playlist.PlayCount,
             Audios = ctx.Mapper.Map<SearchAudioDetail[]>(souce.Playlist.Tracks)
         };
 }

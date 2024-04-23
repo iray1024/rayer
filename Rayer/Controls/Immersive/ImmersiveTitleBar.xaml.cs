@@ -1,7 +1,7 @@
 ﻿using Rayer.Abstractions;
+using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
-using Rayer.Core.Framework;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -49,47 +49,19 @@ public partial class ImmersiveTitleBar : UserControl
         _mainWindow.WindowState = WindowState.Minimized;
     }
 
-    private static Rect _lastWindowPostion;
-    private static readonly WindowState _lastWindowState;
-    private static WindowState _currentWindowState;
-    private static Size _beforeMaximizedSize;
-
-    private readonly bool _isNowProgramControl = false;
     private void OnMaximumMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        _mainWindow.WindowState = _mainWindow.WindowState is WindowState.Normal ? WindowState.Maximized : WindowState.Normal;
-        /*
-        var hwnd = new WindowInteropHelper(_mainWindow).Handle;
-
-        var lStyle = Win32.User32.GetWindowLong(hwnd, (int)Win32.WINDOW_LONG_PTR_INDEX.GWL_STYLE);
-
-        if (lStyle != 386334720)
+        if (_mainWindow.WindowState is WindowState.Normal)
         {
-            _lastWindowPostion.Size = new Size(_mainWindow.ActualWidth, _mainWindow.ActualHeight);
-            _lastWindowPostion.Location = new Point(_mainWindow.Left, _mainWindow.Top);
+            _mainWindow.ResizeMode = ResizeMode.NoResize;
+            _mainWindow.WindowState = WindowState.Maximized;
 
-            ElementHelper.FullScreen(_mainWindow);
         }
         else
         {
-            _isNowProgramControl = true;
-            ElementHelper.EndFullScreen(_mainWindow);
-            _isNowProgramControl = false;
-
-            if (_currentWindowState is WindowState.Maximized)
-            {
-                _mainWindow.Opacity = 0;
-                _mainWindow.Width = _beforeMaximizedSize.Width;
-                _mainWindow.Height = _beforeMaximizedSize.Height;
-
-                var currentScreen = System.Windows.Forms.Screen.FromHandle(new WindowInteropHelper(_mainWindow).Handle);
-
-                _mainWindow.Left = ((currentScreen.Bounds.Width - _mainWindow.ActualWidth) / 2) + currentScreen.Bounds.Left;
-                _mainWindow.Top = ((currentScreen.Bounds.Height - _mainWindow.ActualHeight) / 2) + currentScreen.Bounds.Top;
-
-                //_mainWindow.WindowState = WindowState.Normal;
-            }
-        }*/
+            _mainWindow.WindowState = WindowState.Normal;
+            _mainWindow.ResizeMode = ResizeMode.CanResize;
+        }
     }
 
     private void OnCloseMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -99,21 +71,6 @@ public partial class ImmersiveTitleBar : UserControl
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        _mainWindow = (MainWindow)App.GetRequiredService<IWindow>();
-
-        _mainWindow.StateChanged += OnStateChanged;
-    }
-
-    private void OnStateChanged(object? sender, EventArgs e)
-    {
-        if (!_isNowProgramControl)
-        {
-            _currentWindowState = _mainWindow.WindowState;
-
-            if (_currentWindowState is WindowState.Maximized)
-            {
-                _beforeMaximizedSize = new Size(_mainWindow.ActualWidth, _mainWindow.ActualHeight);
-            }
-        }
+        _mainWindow = AppCore.GetRequiredService<MainWindow>();
     }
 }

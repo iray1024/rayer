@@ -9,9 +9,9 @@ public class ExploreLibraryModel
 
     public string[] RandomLyrics { get; set; } = [];
 
-    public SearchAudioDetail[] PainedLikeAudios { get; set; } = [];
+    public PlaylistDetail FavoriteList { get; set; } = null!;
 
-    public SearchAudioDetail[] TotalLikeAudios { get; set; } = [];
+    public SearchAudioDetail[] PainedLikeAudios { get; set; } = [];
 
     public ExploreLibraryDetailModel Detail { get; set; } = new();
 

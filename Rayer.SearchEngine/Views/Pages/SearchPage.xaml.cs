@@ -16,6 +16,7 @@ using Rayer.SearchEngine.ViewModels;
 using Rayer.SearchEngine.ViewModels.Presenter;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Threading;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
@@ -64,6 +65,8 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
             DataContext = this;
         }
 
+        ViewModel ??= AppCore.GetRequiredService<SearchViewModel>();
+
         if (Presenter.Children.Count > 0 &&
             Presenter.Children[0] is FrameworkElement element)
         {
@@ -80,6 +83,15 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
                 ScrollViewer.SetIsDeferredScrollingEnabled(navPresenter, false);
             }
         }
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        ViewModel = default!;
+
+        BindingOperations.ClearAllBindings(this);
+
+        GC.Collect();
     }
 
     private async void OnCheckedChanged(object sender, RoutedEventArgs e)

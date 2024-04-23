@@ -33,7 +33,7 @@ internal class PlaylistService : SearchEngineBase, IPlaylistService
         {
             var domain = Mapper.Map<PlaylistDetail>(response);
 
-            for (var i = 0; i < domain.AudioCount; i++)
+            for (var i = 0; i < domain.Audios.Length; i++)
             {
                 var detail = response.Playlist.Tracks[i];
                 var privilege = response.Privileges[i];

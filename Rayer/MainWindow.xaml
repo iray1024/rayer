@@ -27,6 +27,7 @@
     UseLayoutRounding="True"
     WindowCornerPreference="Default"
     WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>

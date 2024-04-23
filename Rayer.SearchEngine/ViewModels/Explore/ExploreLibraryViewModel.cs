@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.Caching.Memory;
 using Rayer.Core;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
@@ -8,6 +9,7 @@ using Rayer.SearchEngine.Core.Business.Data;
 using Rayer.SearchEngine.Core.Business.Lyric;
 using Rayer.SearchEngine.Core.Domain.Aggregation;
 using Rayer.SearchEngine.Core.Domain.Authority;
+using Rayer.SearchEngine.Core.Domain.Playlist;
 using Rayer.SearchEngine.Views.Windows;
 using System.Windows;
 using System.Windows.Threading;
@@ -15,10 +17,11 @@ using Wpf.Ui;
 
 namespace Rayer.SearchEngine.ViewModels.Explore;
 
-[Inject<IExploreLibraryDataProvider>]
+[Inject<IExploreLibraryDataProvider>(ResolveServiceType = true)]
 public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibraryDataProvider
 {
     private readonly IAggregationServiceProvider _provider;
+    private readonly IMemoryCache _cache;
 
     [ObservableProperty]
     private User _user = default!;
@@ -29,9 +32,11 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
     private string _title = string.Empty;
 
     public ExploreLibraryViewModel(
-        IAggregationServiceProvider provider)
+        IAggregationServiceProvider provider,
+        IMemoryCache cache)
     {
         _provider = provider;
+        _cache = cache;
 
         Model = new();
 
@@ -131,13 +136,20 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
 
         if (userPlaylists.Length > 0)
         {
-            var playlistDetail = await _provider.PlaylistService.GetPlaylistDetailAsync(userPlaylists[0].Id);
+            var cacheKey = userPlaylists[0].GetHashCode();
+
+            if (!_cache.TryGetValue<PlaylistDetail>(cacheKey, out var userLikelistDetail) || userLikelistDetail is null)
+            {
+                userLikelistDetail = await _provider.PlaylistService.GetPlaylistDetailAsync(userPlaylists[0].Id);
+
+                _cache.Set(cacheKey, userLikelistDetail, TimeSpan.FromMinutes(1));
+            }
 
             Model.LikeCount = userPlaylists[0].AudioCount;
-            Model.TotalLikeAudios = playlistDetail.Audios;
-            Model.PainedLikeAudios = Model.TotalLikeAudios[..12];
+            Model.FavoriteList = userLikelistDetail;
+            Model.PainedLikeAudios = Model.FavoriteList.Audios[..12];
 
-            var randomAudio = playlistDetail.Audios[Random.Shared.Next(0, Model.LikeCount - 1)];
+            var randomAudio = userLikelistDetail.Audios[Random.Shared.Next(0, Model.LikeCount - 1)];
             Model.RandomLyrics = await GetRandomLyricsAsync(randomAudio.Id, randomAudio.Title);
 
             Model.Detail.Playlist = userPlaylists;
@@ -153,7 +165,7 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
 
     private async void OnTick(object? sender, EventArgs e)
     {
-        var randomAudio = Model.TotalLikeAudios[Random.Shared.Next(0, Model.LikeCount - 1)];
+        var randomAudio = Model.FavoriteList.Audios[Random.Shared.Next(0, Model.LikeCount - 1)];
         Model.RandomLyrics = await GetRandomLyricsAsync(randomAudio.Id, randomAudio.Title);
 
         OnPropertyChanged(nameof(Model));

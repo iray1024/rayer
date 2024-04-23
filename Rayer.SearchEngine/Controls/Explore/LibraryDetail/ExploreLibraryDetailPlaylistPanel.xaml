@@ -52,7 +52,8 @@
                                 Grid.ColumnSpan="2"
                                 Margin="0,0,12,2"
                                 Clip="{Binding ViewModel.CoverRectClip, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailPlaylistPanel}}"
-                                ClipToBounds="True">
+                                ClipToBounds="True"
+                                MouseLeftButtonUp="OnPlaylistMouseLeftButtonUp">
                                 <ui:Image
                                     x:Name="Cover"
                                     Width="{Binding ViewModel.CoverMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailPlaylistPanel}}"

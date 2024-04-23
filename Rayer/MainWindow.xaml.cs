@@ -23,7 +23,7 @@ using Wpf.Ui.Controls;
 
 namespace Rayer;
 
-[Inject<IWindow>]
+[Inject<IWindow>(ResolveServiceType = true)]
 public partial class MainWindow : IWindow
 {
     private bool _isUserClosedPane;
@@ -258,13 +258,13 @@ public partial class MainWindow : IWindow
             IsEnabled = false
         };
 
-        RenderOptions.SetBitmapScalingMode(TaskbarItemInfo, BitmapScalingMode.HighQuality);
-        RenderOptions.SetBitmapScalingMode(previous, BitmapScalingMode.HighQuality);
-        RenderOptions.SetBitmapScalingMode(playOrPause, BitmapScalingMode.HighQuality);
-        RenderOptions.SetBitmapScalingMode(next, BitmapScalingMode.HighQuality);
-        RenderOptions.SetBitmapScalingMode(previous.ImageSource, BitmapScalingMode.HighQuality);
-        RenderOptions.SetBitmapScalingMode(playOrPause.ImageSource, BitmapScalingMode.HighQuality);
-        RenderOptions.SetBitmapScalingMode(next.ImageSource, BitmapScalingMode.HighQuality);
+        RenderOptions.SetBitmapScalingMode(TaskbarItemInfo, BitmapScalingMode.Fant);
+        RenderOptions.SetBitmapScalingMode(previous, BitmapScalingMode.Fant);
+        RenderOptions.SetBitmapScalingMode(playOrPause, BitmapScalingMode.Fant);
+        RenderOptions.SetBitmapScalingMode(next, BitmapScalingMode.Fant);
+        RenderOptions.SetBitmapScalingMode(previous.ImageSource, BitmapScalingMode.Fant);
+        RenderOptions.SetBitmapScalingMode(playOrPause.ImageSource, BitmapScalingMode.Fant);
+        RenderOptions.SetBitmapScalingMode(next.ImageSource, BitmapScalingMode.Fant);
 
         TaskbarItemInfo.ThumbButtonInfos.Add(previous);
         TaskbarItemInfo.ThumbButtonInfos.Add(playOrPause);

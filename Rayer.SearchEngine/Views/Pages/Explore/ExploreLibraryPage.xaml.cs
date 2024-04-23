@@ -1,10 +1,13 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
+using Rayer.SearchEngine.Controls.Explore.Album;
 using Rayer.SearchEngine.Core.Business.Data;
 using Rayer.SearchEngine.Core.Business.Login;
 using Rayer.SearchEngine.ViewModels.Explore;
 using System.Windows;
+using System.Windows.Data;
+using Wpf.Ui;
 using Wpf.Ui.Controls;
 
 namespace Rayer.SearchEngine.Views.Pages.Explore;
@@ -26,6 +29,8 @@ public partial class ExploreLibraryPage : INavigableView<ExploreLibraryViewModel
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {
+        ViewModel ??= (ExploreLibraryViewModel)AppCore.GetRequiredService<IExploreLibraryDataProvider>();
+
         ViewModel.LoginSucceed += OnLoginSucceed;
 
         var loader = AppCore.GetRequiredService<ILoaderProvider>();
@@ -41,10 +46,26 @@ public partial class ExploreLibraryPage : INavigableView<ExploreLibraryViewModel
     {
         ViewModel.LoginSucceed -= OnLoginSucceed;
         ViewModel.Unload();
+
+        ViewModel = default!;
+
+        BindingOperations.ClearAllBindings(this);
+
+        GC.Collect();
     }
 
     private void OnLoginSucceed(object? sender, EventArgs e)
     {
         ViewPanel.Visibility = Visibility.Visible;
+    }
+
+    private void OnMyFavoriteMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        var nav = AppCore.GetRequiredService<INavigationService>();
+
+        var loader = AppCore.GetRequiredService<ILoaderProvider>();
+        loader.Loading();
+
+        nav.Navigate(typeof(ExploreAlbumPanel), ViewModel.Model.FavoriteList);
     }
 }

@@ -1,4 +1,7 @@
 ﻿using Rayer.Core;
+using Rayer.Core.Framework;
+using Rayer.SearchEngine.Controls.Explore.Album;
+using Rayer.SearchEngine.Core.Domain.Playlist;
 using Rayer.SearchEngine.ViewModels.Explore.LibraryDetail;
 using System.Windows;
 using System.Windows.Controls;
@@ -62,6 +65,7 @@ public partial class ExploreLibraryDetailPlaylistPanel : UserControl
         Resize(AppCore.MainWindow.ActualWidth);
     }
 
+    #region Effect    
     private void OnMouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
         if (sender is Wpf.Ui.Controls.Image cover)
@@ -128,7 +132,7 @@ public partial class ExploreLibraryDetailPlaylistPanel : UserControl
             transform.BeginAnimation(ScaleTransform.ScaleYProperty, animationY);
         }
     }
-
+    #endregion
     private void Resize(double newWidth)
     {
         var factor = (newWidth + 500) / SystemParameters.PrimaryScreenWidth;
@@ -137,5 +141,21 @@ public partial class ExploreLibraryDetailPlaylistPanel : UserControl
 
         ViewModel.CoverMaxWidth = panelWidth + 60;
         ViewModel.CoverRectClip = new RectangleGeometry(new Rect(0, 0, ViewModel.CoverMaxWidth, ViewModel.CoverMaxWidth), 6, 6);
+    }
+
+    private void OnPlaylistMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        var nav = AppCore.GetRequiredService<Wpf.Ui.INavigationService>();
+
+        var loader = AppCore.GetRequiredService<ILoaderProvider>();
+        loader.Loading();
+
+        if (sender is Grid grid)
+        {
+            if (grid.DataContext is PlaylistDetail detail)
+            {
+                nav.Navigate(typeof(ExploreAlbumPanel), detail);
+            }
+        }
     }
 }

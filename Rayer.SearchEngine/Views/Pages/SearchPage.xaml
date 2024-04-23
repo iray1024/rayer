@@ -13,6 +13,7 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     Loaded="OnLoaded"
+    Unloaded="OnUnloaded"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>

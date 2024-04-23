@@ -13,9 +13,24 @@ public class PlaylistDetail
 
     public User Creator { get; set; } = null!;
 
+    public DateTime CreateTime { get; set; }
+
+    public DateTime UpdateTime { get; set; }
+
     public string Cover { get; set; } = string.Empty;
 
     public int AudioCount { get; set; }
 
+    public long PlayCount { get; set; }
+
     public SearchAudioDetail[] Audios { get; set; } = [];
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(
+            Id,
+            Title,
+            UpdateTime,
+            AudioCount);
+    }
 }

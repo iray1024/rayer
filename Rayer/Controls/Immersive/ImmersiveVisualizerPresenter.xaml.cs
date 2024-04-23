@@ -622,7 +622,7 @@ public partial class ImmersiveVisualizerPresenter : UserControl
                                 SampleCircleThird, allColors[colorIndex % allColors.Count], allColors[(colorIndex + 200) % allColors.Count],
                                 spectrumData, spectrumData.Count,
                                 SampleDrawingPanel.ActualWidth / 2, SampleDrawingPanel.ActualHeight / 2,
-                                136 + (Math.Min(SampleDrawingPanel.ActualHeight, SampleDrawingPanel.ActualHeight) / 6 * (spectrumData.Average() * 120)),//大小
+                                136 + (Math.Min(SampleDrawingPanel.ActualHeight, SampleDrawingPanel.ActualHeight) / 6 * (spectrumData.Average() * 120)),
                                 2, -rotation, 1600
                                 );
                         }
