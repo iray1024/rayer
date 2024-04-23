@@ -33,17 +33,25 @@ internal class PlaylistService : SearchEngineBase, IPlaylistService
         {
             var domain = Mapper.Map<PlaylistDetail>(response);
 
+            domain.Cover += "?param=512y512";
+
             for (var i = 0; i < domain.Audios.Length; i++)
             {
                 var detail = response.Playlist.Tracks[i];
                 var privilege = response.Privileges[i];
+                var audio = domain.Audios[i];
 
                 if (!detail.Playable(privilege, out var reason))
                 {
                     if (!string.IsNullOrEmpty(reason))
                     {
-                        domain.Audios[i].Copyright = new Core.Domain.Common.Copyright { Reason = reason };
+                        audio.Copyright = new Core.Domain.Common.Copyright { Reason = reason };
                     }
+                }
+
+                if (audio.Album is not null)
+                {
+                    audio.Album.Picture += "?param=512y512";
                 }
             }
 
