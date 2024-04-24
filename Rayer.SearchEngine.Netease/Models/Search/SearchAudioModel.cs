@@ -6,7 +6,7 @@ public class SearchAudioModel : ResponseBase
 {
     public SearchAudioResult Result { get; set; } = null!;
 
-    public class SearchAudioResult
+    public record SearchAudioResult
     {
         public SearchAudioDetailInformationModel[] Songs { get; set; } = [];
 

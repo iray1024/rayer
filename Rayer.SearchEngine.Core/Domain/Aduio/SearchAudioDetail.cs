@@ -4,7 +4,7 @@ using Rayer.SearchEngine.Core.Domain.Common;
 
 namespace Rayer.SearchEngine.Core.Domain.Aduio;
 
-public class SearchAudioDetail
+public record SearchAudioDetail
 {
     public long Id { get; set; }
 

@@ -3,7 +3,7 @@ using Rayer.SearchEngine.Core.Domain.Aduio;
 
 namespace Rayer.SearchEngine.Core.Domain.Aggregation;
 
-public class SearchAggregationModel(SearcherType searcherType)
+public record SearchAggregationModel(SearcherType searcherType)
 {
     public string QueryText { get; set; } = string.Empty;
 

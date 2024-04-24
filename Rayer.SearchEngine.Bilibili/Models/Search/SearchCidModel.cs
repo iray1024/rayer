@@ -10,7 +10,7 @@ internal class SearchCidModel : ResponseBase
 
     public SearchCidDetailModel Data { get; set; } = null!;
 
-    public class SearchCidDetailModel
+    public record SearchCidDetailModel
     {
         public string BvId { get; set; } = string.Empty;
 

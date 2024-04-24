@@ -27,7 +27,7 @@ public class SearchAudioDetailInformationModel
     [JsonPropertyName("noCopyrightRcmd")]
     public NoCopyrightDetail? NoCopyright { get; set; }
 
-    public class NoCopyrightDetail
+    public record NoCopyrightDetail
     {
         public int Type { get; set; }
 

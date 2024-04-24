@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Core.Domain.Aduio;
 
-public class SearchAudio
+public record SearchAudio
 {
     public SearchAudioDetail[] Details { get; set; } = null!;
 

@@ -3,7 +3,7 @@ using Rayer.SearchEngine.Core.Domain.Playlist;
 
 namespace Rayer.SearchEngine.Core.Domain.Aggregation;
 
-public class ExploreLibraryModel
+public record ExploreLibraryModel
 {
     public int LikeCount { get; set; }
 

@@ -10,19 +10,19 @@ internal class WebAudioModel : ResponseBase
 
     public WebAudioDetailModel Data { get; set; } = null!;
 
-    public class WebAudioDetailModel
+    public record WebAudioDetailModel
     {
         public string Format { get; set; } = string.Empty;
 
         public WebAudioDashModel Dash { get; set; } = null!;
 
-        public class WebAudioDashModel
+        public record WebAudioDashModel
         {
             public int Duration { get; set; }
 
             public WebAudioDashAudioModel[] Audio { get; set; } = [];
 
-            public class WebAudioDashAudioModel
+            public record WebAudioDashAudioModel
             {
                 public long Id { get; set; }
 

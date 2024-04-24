@@ -10,7 +10,7 @@ public class LyricModel
 
     public LyricDetailModel Tlyric { get; set; } = null!;
 
-    public class LyricDetailModel
+    public record LyricDetailModel
     {
         public string Lyric { get; set; } = string.Empty;
 

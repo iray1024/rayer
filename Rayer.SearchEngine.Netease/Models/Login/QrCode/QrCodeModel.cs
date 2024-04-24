@@ -4,9 +4,9 @@ namespace Rayer.SearchEngine.Netease.Models.Login.QrCode;
 
 public class QrCodeModel : ResponseBase
 {
-    public QrCodeResponseDetail Data { get; set; } = default!;
+    public QrCodeDetailModel Data { get; set; } = default!;
 
-    public class QrCodeResponseDetail
+    public record QrCodeDetailModel
     {
         [JsonPropertyName("qrurl")]
         public string Url { get; set; } = string.Empty;

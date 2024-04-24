@@ -58,14 +58,14 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
+        ViewModel ??= AppCore.GetRequiredService<SearchViewModel>();
+
         if (DataContext is SearchAggregationModel model)
         {
             ViewModel.Model = model;
 
             DataContext = this;
         }
-
-        ViewModel ??= AppCore.GetRequiredService<SearchViewModel>();
 
         if (Presenter.Children.Count > 0 &&
             Presenter.Children[0] is FrameworkElement element)
@@ -192,6 +192,8 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
 
             if (DataContext is SearchAggregationModel model)
             {
+                ViewModel ??= AppCore.GetRequiredService<SearchViewModel>();
+
                 ViewModel.Model = model;
 
                 DataContext = this;

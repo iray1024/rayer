@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Netease.Models;
 
-public class PrivilegesModel
+public record PrivilegesModel
 {
     public long Id { get; set; }
 

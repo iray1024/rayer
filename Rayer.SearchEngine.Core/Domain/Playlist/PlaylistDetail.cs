@@ -3,7 +3,7 @@ using Rayer.SearchEngine.Core.Domain.Authority;
 
 namespace Rayer.SearchEngine.Core.Domain.Playlist;
 
-public class PlaylistDetail
+public record PlaylistDetail
 {
     public long Id { get; set; }
 

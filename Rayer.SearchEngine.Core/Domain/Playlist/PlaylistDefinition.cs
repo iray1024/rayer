@@ -2,7 +2,7 @@
 
 namespace Rayer.SearchEngine.Core.Domain.Playlist;
 
-public class PlaylistDefinition
+public record PlaylistDefinition
 {
     public PlaylistDetail Details { get; set; } = null!;
 

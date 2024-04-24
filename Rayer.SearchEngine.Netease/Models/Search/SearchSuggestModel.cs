@@ -4,9 +4,9 @@ namespace Rayer.SearchEngine.Netease.Models.Search;
 
 public class SearchSuggestModel : ResponseBase
 {
-    public SearchSuggectDetail Result { get; set; } = null!;
+    public SearchSuggectDetailModel Result { get; set; } = null!;
 
-    public class SearchSuggectDetail
+    public record SearchSuggectDetailModel
     {
         public SearchAlbumDetailInformationModel[] Albums { get; set; } = [];
 

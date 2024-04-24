@@ -1,6 +1,6 @@
 ﻿namespace Rayer.SearchEngine.Netease.Models;
 
-public class AlbumModel
+public record AlbumModel
 {
     public long Id { get; set; }
 
