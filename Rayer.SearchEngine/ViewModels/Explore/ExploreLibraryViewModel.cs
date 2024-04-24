@@ -133,6 +133,7 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
         var likelist = await _provider.UserService.GetLikelistAsync(User.Account.Id);
 
         var userPlaylists = await _provider.UserService.GetPlaylistAsync(User.Account.Id);
+        var userFavAlbums = await _provider.UserService.GetFavAlbumsAsync(User.Account.Id);
 
         if (userPlaylists.Length > 0)
         {
@@ -151,16 +152,21 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
 
             var randomAudio = userLikelistDetail.Audios[Random.Shared.Next(0, Model.LikeCount - 1)];
             Model.RandomLyrics = await GetRandomLyricsAsync(randomAudio.Id, randomAudio.Title);
-
-            Model.Detail.Playlist = userPlaylists;
-
-            OnPropertyChanged(nameof(Model));
-
-            Loaded?.Invoke(this, EventArgs.Empty);
-
-            Timer.Tick += OnTick;
-            Timer.Start();
         }
+
+        if (userFavAlbums.Length > 0)
+        {
+            Model.Detail.FavAlbum = userFavAlbums;
+        }
+
+        Model.Detail.Playlist = userPlaylists;
+
+        OnPropertyChanged(nameof(Model));
+
+        Loaded?.Invoke(this, EventArgs.Empty);
+
+        Timer.Tick += OnTick;
+        Timer.Start();
     }
 
     private async void OnTick(object? sender, EventArgs e)

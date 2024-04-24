@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Rayer.SearchEngine.Core.Domain.Aduio;
+using Rayer.SearchEngine.Core.Domain.Album;
 using Rayer.SearchEngine.Core.Domain.Playlist;
+using Rayer.SearchEngine.Netease.Models.Search.Playlist;
 using Rayer.SearchEngine.Netease.Models.User;
 
 namespace Rayer.SearchEngine.Netease.Profiles;
@@ -17,6 +19,10 @@ internal class PlaylistProfile : Profile
 
         CreateMap<PlaylistDetailModel, PlaylistDetail>()
             .ConvertUsing(DetailConverter);
+
+        CreateMap<Album, PlaylistDetail>()
+            .ForMember(d => d.Creator, o => o.MapFrom(s => s.Artist))
+            .ForMember(d => d.CreateTime, o => o.MapFrom(s => s.PublishTime));
     }
 
     private readonly Func<UserPlaylistModel, PlaylistDetail[], ResolutionContext, PlaylistDetail[]> DetailsConverter =

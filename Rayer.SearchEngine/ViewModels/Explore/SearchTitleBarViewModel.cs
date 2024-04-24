@@ -6,6 +6,7 @@ using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
+using Rayer.SearchEngine.Core.Enums;
 using Rayer.SearchEngine.Core.Options;
 using System.Windows;
 using System.Windows.Threading;
@@ -30,6 +31,8 @@ public partial class SearchTitleBarViewModel : ObservableObject
         _searcher = _searchEngineOptions.SearcherType;
     }
 
+    public SearchType SearchType { get; set; }
+
     public async Task OnSearcherChanged()
     {
         if (!_isInitialized)
@@ -51,7 +54,7 @@ public partial class SearchTitleBarViewModel : ObservableObject
 
         var dispatcherTask = Application.Current.Dispatcher.InvokeAsync(async () =>
         {
-            var model = await provider.SearchEngine.SearchAsync(_searchEngineOptions.LatestQueryText, AppCore.StoppingToken);
+            var model = await provider.SearchEngine.SearchAsync(_searchEngineOptions.LatestQueryText, SearchType, AppCore.StoppingToken);
 
             model.QueryText = _searchEngineOptions.LatestQueryText;
 

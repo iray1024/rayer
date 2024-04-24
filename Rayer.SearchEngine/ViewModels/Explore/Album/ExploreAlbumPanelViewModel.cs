@@ -42,7 +42,7 @@ public partial class ExploreAlbumPanelViewModel : AdaptiveViewModelBase
                 Title = item.Title,
                 Artists = item.Artists.Select(x => x.Name).ToArray(),
                 Album = item.Album?.Title ?? string.Empty,
-                Cover = item.Album?.Picture is not null ? ImageSourceUtils.Create(item.Album.Picture) : null,
+                Cover = item.Album?.Cover is not null ? ImageSourceUtils.Create(item.Album.Cover) : null,
                 Duration = item.Duration,
                 Path = webAudio.Url ?? string.Empty,
                 IsVirualWebSource = true,

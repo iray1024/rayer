@@ -4,6 +4,7 @@ using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
+using Rayer.SearchEngine.Core.Enums;
 using Rayer.SearchEngine.Views.Pages;
 using Rayer.Views.Pages;
 using System.Collections.ObjectModel;
@@ -111,7 +112,7 @@ public partial class MainWindowViewModel : ObservableObject
         await Application.Current.Dispatcher.InvokeAsync(async () =>
         {
             _loaderProvider.Loading();
-            var model = await _searchEngineProvider.SearchEngine.SearchAsync(args.QueryText, AppCore.StoppingToken);
+            var model = await _searchEngineProvider.SearchEngine.SearchAsync(args.QueryText, SearchType.Audio, AppCore.StoppingToken);
             _loaderProvider.Loaded();
 
             model.QueryText = args.QueryText;
@@ -152,7 +153,7 @@ public partial class MainWindowViewModel : ObservableObject
             source.Text = _currentSuggestText;
 
             _loaderProvider.Loading();
-            var model = await _searchEngineProvider.SearchEngine.SearchAsync(_currentSuggestText, AppCore.StoppingToken);
+            var model = await _searchEngineProvider.SearchEngine.SearchAsync(_currentSuggestText, SearchType.Audio, AppCore.StoppingToken);
             _loaderProvider.Loaded();
 
             model.QueryText = _currentSuggestText;

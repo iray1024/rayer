@@ -7,5 +7,5 @@ public record AlbumModel
     public string Name { get; set; } = string.Empty;
 
     [JsonPropertyName("picUrl")]
-    public string Picture { get; set; } = string.Empty;
+    public string Cover { get; set; } = string.Empty;
 }

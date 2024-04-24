@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using AutoMapper;
+using Microsoft.Extensions.Caching.Memory;
 using Rayer.Core;
 using Rayer.Core.Controls;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aduio;
+using Rayer.SearchEngine.Core.Domain.Album;
 using Rayer.SearchEngine.Core.Domain.Playlist;
 using Rayer.SearchEngine.ViewModels.Explore.Album;
 using System.Windows;
@@ -13,14 +15,14 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
-namespace Rayer.SearchEngine.Controls.Explore.Album;
+namespace Rayer.SearchEngine.Controls.Explore;
 
 [Inject]
-public partial class ExploreAlbumPanel : AdaptiveUserControl
+public partial class ExplorePlaylistPanel : AdaptiveUserControl
 {
     private readonly IMemoryCache _cache;
 
-    public ExploreAlbumPanel(ExploreAlbumPanelViewModel vm)
+    public ExplorePlaylistPanel(ExploreAlbumPanelViewModel vm)
         : base(vm)
     {
         ViewModel = vm;
@@ -58,15 +60,43 @@ public partial class ExploreAlbumPanel : AdaptiveUserControl
             }
 
             ViewModel.Detail = playlistDetail ?? detail;
-
-            DataContext = this;
         }
+        else if (DataContext is Album album)
+        {
+            var cacheKey = album.GetHashCode();
+
+            if (!_cache.TryGetValue<Album>(cacheKey, out var albumDetail) || albumDetail is { AudioCount: > 0, Audios.Length: 0 })
+            {
+                await Task.Run(async () =>
+                {
+                    if (album.AudioCount > 0 && album.Audios.Length == 0)
+                    {
+                        var provider = AppCore.GetRequiredService<IAggregationServiceProvider>();
+
+                        albumDetail = await provider.AlbumEngine.SearchFavoriteAlbumListAsync(album.Id);
+
+                        _cache.Set(cacheKey, albumDetail, TimeSpan.FromMinutes(1));
+                    }
+                });
+            }
+
+            var mapper = AppCore.GetRequiredService<IMapper>();
+
+            var mapDetail = mapper.Map<PlaylistDetail>(albumDetail);
+            ViewModel.Detail = mapDetail;
+        }
+
+        DataContext = this;
+
+        AlbumHeader.Visibility = Visibility.Visible;
 
         base.OnLoaded(sender, e);
     }
 
     protected override void OnUnloaded(object sender, RoutedEventArgs e)
     {
+        AlbumHeader.Visibility = Visibility.Collapsed;
+
         base.OnUnloaded(sender, e);
 
         ViewModel = default!;
@@ -163,5 +193,5 @@ public partial class ExploreAlbumPanel : AdaptiveUserControl
             transform.BeginAnimation(ScaleTransform.ScaleYProperty, animationY);
         }
     }
-    #endregion    
+    #endregion
 }

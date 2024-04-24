@@ -8,7 +8,7 @@ namespace Rayer.SearchEngine.Netease.Http.Selector;
 [Inject]
 internal class SearchApiSelector(IOptionsSnapshot<SearchEngineOptions> snapshot) : ApiSelector(snapshot)
 {
-    public IParamBuilder SearchAudio()
+    public IParamBuilder SampleSearch()
     {
         return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.Search.SampleSearch);
     }

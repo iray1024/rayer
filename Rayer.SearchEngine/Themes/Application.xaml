@@ -11,6 +11,7 @@
     <converters:WebDurationConverter x:Key="WebDurationConverter" />
     <converters:PresenterHeightConverter x:Key="PresenterHeightConverter" />
     <converters:SearchTypeConverter x:Key="SearchTypeConverter" />
+    <converters:SearchTypeDisplayConverter x:Key="SearchTypeDisplayConverter" />
     <converters:PainedLyricConverter x:Key="PainedLyricConverter" />
     <converters:AdjustPanelRowConverter x:Key="AdjustPanelRowConverter" />
     <converters:PlaylistCreatorConverter x:Key="PlaylistCreatorConverter" />

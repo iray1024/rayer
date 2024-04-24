@@ -20,13 +20,13 @@ internal partial class SearchProfile : Profile
             {
                 Id = s.Aid,
                 Name = s.Author,
-                Picture = s.AuthorPicture
+                Cover = s.AuthorPicture
             }}))
             .ForMember(d => d.Album, o => o.MapFrom(s => new AlbumDefinition()
             {
                 Id = s.Id,
                 Title = s.TypeName,
-                Picture = !s.Pic.StartsWith("http") ? $"https:{s.Pic}" : s.Pic
+                Cover = !s.Pic.StartsWith("http") ? $"https:{s.Pic}" : s.Pic
             }))
             .AfterMap((s, d) =>
             {

@@ -49,27 +49,27 @@ internal static class ApiEndpoints
         /// <summary>
         /// 获取已收藏歌单列表
         /// </summary>
-        internal static string GetPlaylist = "/user/playlist";
+        internal static string GetFavPlaylist = "/user/playlist";
 
         /// <summary>
         /// 获取已收藏专辑列表
         /// </summary>
-        internal static string GetFavAlbumlist = "album/sublist";
+        internal static string GetFavAlbumlist = "/album/sublist";
 
         /// <summary>
         /// 获取已关注艺人列表
         /// </summary>
-        internal static string GetFavArtistlist = "artist/sublist";
+        internal static string GetFavArtistlist = "/artist/sublist";
 
         /// <summary>
         /// 获取已收藏MV列表
         /// </summary>
-        internal static string GetFavMvlist = "mv/sublist";
+        internal static string GetFavMvlist = "/mv/sublist";
 
         /// <summary>
         /// 获取云盘列表
         /// </summary>
-        internal static string GetCloudlist = "user/cloud";
+        internal static string GetCloudlist = "/user/cloud";
     }
 
     internal static class Track
@@ -108,6 +108,13 @@ internal static class ApiEndpoints
         internal static string GetPlaylistDetail = "/playlist/detail";
 
         internal static string GetPlaylistAllAudio = "/playlist/track/all";
+    }
+
+    internal static class Album
+    {
+        internal static string GetAlbum = "/album";
+
+        internal static string GetArtistAlbum = "/artist/album";
     }
 
     internal static class Lyric

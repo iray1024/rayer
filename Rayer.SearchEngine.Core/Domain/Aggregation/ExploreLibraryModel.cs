@@ -1,4 +1,5 @@
 ﻿using Rayer.SearchEngine.Core.Domain.Aduio;
+using Rayer.SearchEngine.Core.Domain.Album;
 using Rayer.SearchEngine.Core.Domain.Playlist;
 
 namespace Rayer.SearchEngine.Core.Domain.Aggregation;
@@ -18,6 +19,8 @@ public record ExploreLibraryModel
     public record ExploreLibraryDetailModel
     {
         public PlaylistDetail[] Playlist { get; set; } = [];
+
+        public Album.Album[] FavAlbum { get; set; } = [];
 
     }
 }

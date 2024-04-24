@@ -1,6 +1,6 @@
 ﻿using Rayer.SearchEngine.Core.Http.Abstractions;
 
-namespace Rayer.SearchEngine.Netease.Models.Search;
+namespace Rayer.SearchEngine.Netease.Models.Search.Audio;
 
 public class SearchAudioDetailModel : ResponseBase
 {

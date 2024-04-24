@@ -15,4 +15,6 @@ public interface IAggregationServiceProvider
     ISearchEngine SearchEngine { get; }
 
     ISearchAudioEngine AudioEngine { get; }
+
+    ISearchAlbumEngine AlbumEngine { get; }
 }

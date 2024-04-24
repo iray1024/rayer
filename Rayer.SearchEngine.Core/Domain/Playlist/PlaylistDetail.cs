@@ -1,5 +1,6 @@
 ﻿using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.Core.Domain.Authority;
+using Rayer.SearchEngine.Core.Enums;
 
 namespace Rayer.SearchEngine.Core.Domain.Playlist;
 
@@ -19,9 +20,17 @@ public record PlaylistDetail
 
     public string Cover { get; set; } = string.Empty;
 
+    public string? Description { get; set; }
+
+    public int TotalMinutes { get; set; }
+
+    public string? Company { get; set; }
+
     public int AudioCount { get; set; }
 
     public long PlayCount { get; set; }
+
+    public SearchType Type { get; set; } = SearchType.Playlist;
 
     public SearchAudioDetail[] Audios { get; set; } = [];
 

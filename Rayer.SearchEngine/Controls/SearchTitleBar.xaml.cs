@@ -1,6 +1,8 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Framework.Injection;
-using Rayer.Core.Framework.Settings.Abstractions;
+using Rayer.Core.Utils;
+using Rayer.SearchEngine.Core.Enums;
+using Rayer.SearchEngine.Events;
 using Rayer.SearchEngine.ViewModels.Explore;
 using System.Collections.Concurrent;
 using System.Windows;
@@ -30,10 +32,10 @@ public partial class SearchTitleBar : UserControl
     public static readonly RoutedEvent Checked = EventManager.RegisterRoutedEvent(
         "Checked",
         RoutingStrategy.Bubble,
-        typeof(RoutedEventHandler),
+        typeof(EventHandler<SwitchSearchTypeArgs>),
         typeof(SearchTitleBar));
 
-    public event RoutedEventHandler CheckedChanged
+    public event EventHandler<SwitchSearchTypeArgs> CheckedChanged
     {
         add { TryAddHandler(value); }
         remove { TryRemoveHandler(value); }
@@ -111,17 +113,24 @@ public partial class SearchTitleBar : UserControl
 
     private void OnChecked(object sender, RoutedEventArgs e)
     {
-        if (sender is RadioButton { IsChecked: true })
+        if (sender is RadioButton { IsChecked: true } radio)
         {
-            var agrs = new RoutedEventArgs(Checked, e.Source);
+            if (radio.Content is TextBlock textBlock)
+            {
+                var searchType = EnumHelper.ParseEnum<SearchType>(textBlock.Text);
 
-            RaiseEvent(agrs);
+                ViewModel.SearchType = searchType;
+
+                var agrs = new SwitchSearchTypeArgs(Checked, e.Source) { New = searchType };
+
+                RaiseEvent(agrs);
+            }
         }
     }
 
-    private readonly ConcurrentDictionary<Type, RoutedEventHandler> _singletoneSubscribeHandlers = [];
+    private readonly ConcurrentDictionary<Type, EventHandler<SwitchSearchTypeArgs>> _singletoneSubscribeHandlers = [];
 
-    private void TryAddHandler(RoutedEventHandler handler)
+    private void TryAddHandler(EventHandler<SwitchSearchTypeArgs> handler)
     {
         if (handler.Target is not null)
         {
@@ -132,7 +141,7 @@ public partial class SearchTitleBar : UserControl
         }
     }
 
-    private void TryRemoveHandler(RoutedEventHandler handler)
+    private void TryRemoveHandler(EventHandler<SwitchSearchTypeArgs> handler)
     {
         if (handler.Target is not null)
         {
@@ -150,6 +159,6 @@ public partial class SearchTitleBar : UserControl
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        
+
     }
 }

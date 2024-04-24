@@ -2,9 +2,10 @@
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Business.Playlist;
 using Rayer.SearchEngine.Core.Domain.Playlist;
+using Rayer.SearchEngine.Core.Enums;
 using Rayer.SearchEngine.Netease.Engine;
 using Rayer.SearchEngine.Netease.Extensions;
-using Rayer.SearchEngine.Netease.Models.User;
+using Rayer.SearchEngine.Netease.Models.Search.Playlist;
 
 namespace Rayer.SearchEngine.Netease.Business.Playlist;
 
@@ -33,6 +34,7 @@ internal class PlaylistService : SearchEngineBase, IPlaylistService
         {
             var domain = Mapper.Map<PlaylistDetail>(response);
 
+            domain.Type = SearchType.Playlist;
             domain.Cover += "?param=512y512";
 
             for (var i = 0; i < domain.Audios.Length; i++)
@@ -51,7 +53,7 @@ internal class PlaylistService : SearchEngineBase, IPlaylistService
 
                 if (audio.Album is not null)
                 {
-                    audio.Album.Picture += "?param=512y512";
+                    audio.Album.Cover += "?param=512y512";
                 }
             }
 

@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:detail="clr-namespace:Rayer.SearchEngine.Controls.Explore.LibraryDetail"
+    xmlns:detail="clr-namespace:Rayer.SearchEngine.Controls.Explore.DetailPanel"
     xmlns:local="clr-namespace:Rayer.SearchEngine.Controls.Explore"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -115,7 +115,8 @@
         </Grid>
 
         <Grid Grid.Row="1">
-            <detail:ExploreLibraryDetailPlaylistPanel />
+            <detail:ExploreLibraryDetailPlaylistPanel x:Name="PlaylistPanel" />
+            <detail:ExploreLibraryDetailAlbumPanel x:Name="AlbumPanel" Visibility="Collapsed" />
         </Grid>
     </Grid>
 </UserControl>

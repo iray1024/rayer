@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Caching.Memory;
+using Rayer.Core;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aduio;
@@ -8,6 +9,7 @@ using Rayer.SearchEngine.Core.Domain.Album;
 using Rayer.SearchEngine.Core.Domain.Artist;
 using Rayer.SearchEngine.Core.Domain.Playlist;
 using Rayer.SearchEngine.Core.Domain.Video;
+using Rayer.SearchEngine.Core.Enums;
 using System.Net.Http;
 
 namespace Rayer.SearchEngine.ViewModels;
@@ -15,12 +17,12 @@ namespace Rayer.SearchEngine.ViewModels;
 [Inject]
 public partial class SearchViewModel : ObservableObject
 {
-    private readonly ISearchAudioEngineProvider _audioEngineProvider;
+    private readonly IAggregationServiceProvider _engineProvider;
     private readonly IMemoryCache _cache;
 
-    public SearchViewModel(ISearchAudioEngineProvider audioEngineProvider, IMemoryCache cache)
+    public SearchViewModel(IAggregationServiceProvider engineProvider, IMemoryCache cache)
     {
-        _audioEngineProvider = audioEngineProvider;
+        _engineProvider = engineProvider;
         _cache = cache;
     }
 
@@ -28,7 +30,7 @@ public partial class SearchViewModel : ObservableObject
 
     public async Task<SearchAudio> LoadAudioAsync()
     {
-        var cacheKey = Model.GetHashCode();
+        var cacheKey = Model.Audio.GetHashCode();
 
         if (_cache.TryGetValue<SearchAudio>(cacheKey, out var response) && response is not null)
         {
@@ -38,7 +40,7 @@ public partial class SearchViewModel : ObservableObject
         {
             if (Model.Audio.Details.Length > 0)
             {
-                var newResponse = await _audioEngineProvider.AudioEngine.SearchDetailAsync(Model.Audio.Details);
+                var newResponse = await _engineProvider.AudioEngine.SearchDetailAsync(Model.Audio.Details);
 
                 Model.Audio.Details = newResponse;
 
@@ -61,7 +63,21 @@ public partial class SearchViewModel : ObservableObject
 
     public async Task<SearchAlbum> LoadAlbumAsync()
     {
-        return default!;
+        if (Model.Album is not null)
+        {
+            var cacheKey = Model.Album.GetHashCode();
+
+            if (_cache.TryGetValue<SearchAlbum>(cacheKey, out var response) && response is not null)
+            {
+                return response;
+            }
+        }
+
+        var model = await _engineProvider.SearchEngine.SearchAsync(Model.QueryText, SearchType.Album, AppCore.StoppingToken);
+
+        Model.Album = model.Album;
+
+        return Model.Album;
     }
 
     public async Task<SearchVideo> LoadVideoAsync()

@@ -1,22 +1,21 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Framework;
-using Rayer.SearchEngine.Controls.Explore.Album;
-using Rayer.SearchEngine.Core.Domain.Playlist;
-using Rayer.SearchEngine.ViewModels.Explore.LibraryDetail;
+using Rayer.SearchEngine.Core.Domain.Album;
+using Rayer.SearchEngine.ViewModels.Explore.DetailPanel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
-namespace Rayer.SearchEngine.Controls.Explore.LibraryDetail;
+namespace Rayer.SearchEngine.Controls.Explore.DetailPanel;
 
-public partial class ExploreLibraryDetailPlaylistPanel : UserControl
+public partial class ExploreLibraryDetailAlbumPanel : UserControl
 {
     private readonly Wpf.Ui.Controls.INavigationView _navigationView;
 
-    public ExploreLibraryDetailPlaylistPanel()
+    public ExploreLibraryDetailAlbumPanel()
     {
-        var vm = AppCore.GetRequiredService<ExploreLibraryDetailPlaylistViewModel>();
+        var vm = AppCore.GetRequiredService<ExploreLibraryDetailAlbumViewModel>();
 
         ViewModel = vm;
         DataContext = this;
@@ -29,7 +28,7 @@ public partial class ExploreLibraryDetailPlaylistPanel : UserControl
         _navigationView.PaneClosed += OnPaneClosed;
     }
 
-    public ExploreLibraryDetailPlaylistViewModel ViewModel { get; set; }
+    public ExploreLibraryDetailAlbumViewModel ViewModel { get; set; }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
@@ -152,9 +151,9 @@ public partial class ExploreLibraryDetailPlaylistPanel : UserControl
 
         if (sender is Grid grid)
         {
-            if (grid.DataContext is PlaylistDetail detail)
+            if (grid.DataContext is Album album)
             {
-                nav.Navigate(typeof(ExploreAlbumPanel), detail);
+                nav.Navigate(typeof(ExplorePlaylistPanel), album);
             }
         }
     }

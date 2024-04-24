@@ -1,7 +1,7 @@
 ﻿using Rayer.SearchEngine.Netease.Models.Login.Authority;
-using Rayer.SearchEngine.Netease.Models.Search;
+using Rayer.SearchEngine.Netease.Models.Search.Audio;
 
-namespace Rayer.SearchEngine.Netease.Models.User;
+namespace Rayer.SearchEngine.Netease.Models.Search.Playlist;
 
 public class PlaylistDetailInformationModel
 {

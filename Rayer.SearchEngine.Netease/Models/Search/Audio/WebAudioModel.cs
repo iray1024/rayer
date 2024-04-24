@@ -1,4 +1,4 @@
-﻿namespace Rayer.SearchEngine.Netease.Models.Search;
+﻿namespace Rayer.SearchEngine.Netease.Models.Search.Audio;
 
 public record WebAudioModel
 {

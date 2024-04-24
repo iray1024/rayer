@@ -295,7 +295,7 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
                 Title = detail.Title,
                 Artists = detail.Artists.Select(x => x.Name).ToArray(),
                 Album = detail.Album?.Title ?? string.Empty,
-                Cover = detail.Album?.Picture is not null ? ImageSourceUtils.Create(detail.Album.Picture) : null,
+                Cover = detail.Album?.Cover is not null ? ImageSourceUtils.Create(detail.Album.Cover) : null,
                 Duration = detail.Duration,
                 Path = audioInformation.Url ?? string.Empty,
                 IsVirualWebSource = true,

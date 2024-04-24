@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Rayer.SearchEngine.Netease.Models.Search;
+namespace Rayer.SearchEngine.Netease.Models.Search.Audio;
 
 public class SearchAudioDetailInformationModel
 {

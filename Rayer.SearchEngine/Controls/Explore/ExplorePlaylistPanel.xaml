@@ -1,20 +1,117 @@
 ﻿<layout:AdaptiveUserControl
-    x:Class="Rayer.SearchEngine.Controls.Explore.Album.ExploreAlbumPanel"
+    x:Class="Rayer.SearchEngine.Controls.Explore.ExplorePlaylistPanel"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:layout="clr-namespace:Rayer.Core.Controls;assembly=Rayer.Core"
-    xmlns:local="clr-namespace:Rayer.SearchEngine.Controls.Explore.Album"
+    xmlns:local="clr-namespace:Rayer.SearchEngine.Controls.Explore"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:Rayer.SearchEngine.Core.Domain.Aduio;assembly=Rayer.SearchEngine.Core"
+    xmlns:template="clr-namespace:Rayer.SearchEngine.Controls.TemplateSelector"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    d:DataContext="{d:DesignInstance local:ExploreAlbumPanel,
+    d:DataContext="{d:DesignInstance local:ExplorePlaylistPanel,
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     Loaded="OnLoaded"
     Unloaded="OnUnloaded"
     mc:Ignorable="d">
+    <layout:AdaptiveUserControl.Resources>
+        <DataTemplate x:Key="PlaylistTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <ui:TextBlock
+                    Grid.Column="0"
+                    FontSize="15"
+                    FontTypography="Subtitle"
+                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Text="最后更新于 " />
+                <ui:TextBlock
+                    Grid.Column="1"
+                    FontSize="15"
+                    FontTypography="Subtitle"
+                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{Binding UpdateTime, FallbackValue='2022年12月25日', Converter={StaticResource WebDateTimeConverter}}" />
+                <ui:TextBlock
+                    Grid.Column="2"
+                    FontSize="15"
+                    FontTypography="Subtitle"
+                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Text=" · " />
+                <ui:TextBlock
+                    Grid.Column="3"
+                    FontSize="15"
+                    FontTypography="Subtitle"
+                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{Binding AudioCount, FallbackValue=38}" />
+                <ui:TextBlock
+                    Grid.Column="4"
+                    FontSize="15"
+                    FontTypography="Subtitle"
+                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Text=" 首歌" />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="AlbumTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <ui:TextBlock
+                    Grid.Column="0"
+                    d:Text="2022年12月25日"
+                    FontSize="15"
+                    FontTypography="Subtitle"
+                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{Binding CreateTime, Converter={StaticResource WebDateTimeConverter}}" />
+                <ui:TextBlock
+                    Grid.Column="1"
+                    FontSize="15"
+                    FontTypography="Subtitle"
+                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Text=" · " />
+                <ui:TextBlock
+                    Grid.Column="2"
+                    FontSize="15"
+                    FontTypography="Subtitle"
+                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{Binding AudioCount, FallbackValue=38}" />
+                <ui:TextBlock
+                    Grid.Column="3"
+                    FontSize="15"
+                    FontTypography="Subtitle"
+                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Text=" 首歌，" />
+                <ui:TextBlock
+                    Grid.Column="4"
+                    FontSize="15"
+                    FontTypography="Subtitle"
+                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{Binding TotalMinutes}" />
+                <ui:TextBlock
+                    Grid.Column="5"
+                    FontSize="15"
+                    FontTypography="Subtitle"
+                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Text="分钟" />
+            </Grid>
+        </DataTemplate>
+        <template:ExploreAlbumTemplateSelector
+            x:Key="HeaderTemplateSelector"
+            AlbumTemplate="{StaticResource AlbumTemplate}"
+            PlaylistTemplate="{StaticResource PlaylistTemplate}" />
+    </layout:AdaptiveUserControl.Resources>
     <Grid
         x:Name="ContainerPanel"
         d:Visibility="Visible"
@@ -28,7 +125,9 @@
         <Grid
             x:Name="AlbumHeader"
             Grid.Row="0"
-            Margin="32,32,0,0">
+            Margin="32,32,0,0"
+            d:Visibility="Visible"
+            Visibility="Hidden">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
@@ -48,6 +147,7 @@
                     MouseEnter="OnMouseEnter"
                     MouseLeave="OnMouseLeave"
                     RenderOptions.BitmapScalingMode="Fant"
+                    RenderOptions.CachingHint="Unspecified"
                     Source="{Binding ViewModel.Detail.Cover, FallbackValue={StaticResource AlbumFallback}, IsAsync=True}" />
                 <Grid.Clip>
                     <RectangleGeometry
@@ -71,12 +171,14 @@
                 <ui:TextBlock
                     Grid.Row="0"
                     Margin="0,40,0,24"
+                    d:Text="OST"
                     FontFamily="Barlow,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Microsoft YaHei,Source Han Sans SC,Noto Sans CJK SC,WenQuanYi Micro Hei,sans-serif,microsoft uighur"
                     FontTypography="Title"
                     FontWeight="Bold"
                     Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                    Text="{Binding ViewModel.Detail.Title, FallbackValue='OST'}"
-                    TextOptions.TextRenderingMode="Auto" />
+                    Text="{Binding ViewModel.Detail.Title}"
+                    TextOptions.TextRenderingMode="Auto"
+                    TextTrimming="WordEllipsis" />
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
@@ -85,66 +187,34 @@
                     </Grid.ColumnDefinitions>
                     <ui:TextBlock
                         Grid.Column="0"
+                        d:Text="Playlist"
                         FontSize="18"
                         FontTypography="Subtitle"
                         Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                        Text="Playlist "
+                        Text="{Binding ViewModel.Detail.Type, Converter={StaticResource SearchTypeDisplayConverter}}"
                         TextOptions.TextRenderingMode="Auto" />
                     <ui:TextBlock
                         Grid.Column="1"
                         FontSize="18"
                         FontTypography="Subtitle"
                         Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                        Text="by "
+                        Text=" by "
                         TextOptions.TextRenderingMode="Auto" />
                     <ui:TextBlock
                         Grid.Column="2"
+                        d:Text="子墨_丶"
                         FontSize="18"
                         FontTypography="Subtitle"
                         Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                        Text="{Binding ViewModel.Detail.Creator.Profile.Name, FallbackValue='子墨_丶'}"
+                        Text="{Binding ViewModel.Detail.Creator.Profile.Name}"
                         TextOptions.TextRenderingMode="Auto" />
                 </Grid>
                 <Grid Grid.Row="2" TextOptions.TextRenderingMode="Auto">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto" />
-                        <ColumnDefinition Width="auto" />
-                        <ColumnDefinition Width="auto" />
-                        <ColumnDefinition Width="auto" />
-                        <ColumnDefinition Width="auto" />
-                    </Grid.ColumnDefinitions>
-                    <ui:TextBlock
-                        Grid.Column="0"
-                        FontSize="15"
-                        FontTypography="Subtitle"
-                        Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                        Text="最后更新于 " />
-                    <ui:TextBlock
-                        Grid.Column="1"
-                        FontSize="15"
-                        FontTypography="Subtitle"
-                        Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                        Text="{Binding ViewModel.Detail.UpdateTime, FallbackValue='2022年12月25日', Converter={StaticResource WebDateTimeConverter}}" />
-                    <ui:TextBlock
-                        Grid.Column="2"
-                        FontSize="15"
-                        FontTypography="Subtitle"
-                        Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                        Text=" · " />
-                    <ui:TextBlock
-                        Grid.Column="3"
-                        FontSize="15"
-                        FontTypography="Subtitle"
-                        Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                        Text="{Binding ViewModel.Detail.AudioCount, FallbackValue=38}" />
-                    <ui:TextBlock
-                        Grid.Column="4"
-                        FontSize="15"
-                        FontTypography="Subtitle"
-                        Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                        Text=" 首歌" />
+                    <ContentControl
+                        d:ContentTemplate="{StaticResource PlaylistTemplate}"
+                        Content="{Binding ViewModel.Detail}"
+                        ContentTemplateSelector="{StaticResource HeaderTemplateSelector}" />
                 </Grid>
-
                 <Grid Grid.Row="3">
                     <ui:Button
                         Width="70"
@@ -189,8 +259,9 @@
                             <ui:Image
                                 x:Name="Image"
                                 CornerRadius="6"
-                                RenderOptions.BitmapScalingMode="Fant"
-                                Source="{Binding Album.Picture, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}"
+                                RenderOptions.BitmapScalingMode="HighQuality"
+                                RenderOptions.CachingHint="Unspecified"
+                                Source="{Binding Album.Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}"
                                 Stretch="UniformToFill" />
                             <Grid.Clip>
                                 <RectangleGeometry
@@ -202,7 +273,7 @@
                         <TextBlock
                             Grid.Row="0"
                             Grid.Column="1"
-                            MaxWidth="{Binding ViewModel.TitleMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreAlbumPanel}}"
+                            MaxWidth="{Binding ViewModel.TitleMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExplorePlaylistPanel}}"
                             Margin="6,8,0,0"
                             HorizontalAlignment="Left"
                             FontSize="14"
@@ -212,7 +283,7 @@
                         <TextBlock
                             Grid.Row="1"
                             Grid.Column="1"
-                            MaxWidth="{Binding ViewModel.ArtistsNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreAlbumPanel}}"
+                            MaxWidth="{Binding ViewModel.ArtistsNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExplorePlaylistPanel}}"
                             Margin="6,0,0,6"
                             HorizontalAlignment="Left"
                             Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
@@ -221,7 +292,7 @@
                         <TextBlock
                             Grid.RowSpan="2"
                             Grid.Column="2"
-                            MaxWidth="{Binding ViewModel.AlbumNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreAlbumPanel}}"
+                            MaxWidth="{Binding ViewModel.AlbumNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExplorePlaylistPanel}}"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
@@ -242,7 +313,7 @@
                 <Style BasedOn="{StaticResource {x:Type ui:ListViewItem}}" TargetType="ui:ListViewItem">
                     <Style.Setters>
                         <EventSetter Event="MouseDoubleClick" Handler="OnListViewItemDoubleClick" />
-                        <Setter Property="Margin" Value="{Binding ViewModel.ItemMargin, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreAlbumPanel}}" />
+                        <Setter Property="Margin" Value="{Binding ViewModel.ItemMargin, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExplorePlaylistPanel}}" />
                     </Style.Setters>
                 </Style>
             </ListView.ItemContainerStyle>

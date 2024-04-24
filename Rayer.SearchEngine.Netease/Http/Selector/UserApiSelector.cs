@@ -13,8 +13,13 @@ internal class UserApiSelector(IOptionsSnapshot<SearchEngineOptions> snapshot) :
         return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.User.GetLikelist);
     }
 
-    public IParamBuilder GetPlaylist()
+    public IParamBuilder GetFavPlaylist()
     {
-        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.User.GetPlaylist);
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.User.GetFavPlaylist);
+    }
+
+    public IParamBuilder GetFavAlbumlist()
+    {
+        return CreateBuilder(_searchEngineOptions.HttpEndpoint, ApiEndpoints.User.GetFavAlbumlist);
     }
 }

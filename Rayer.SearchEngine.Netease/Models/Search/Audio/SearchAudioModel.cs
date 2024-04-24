@@ -1,12 +1,12 @@
 ﻿using Rayer.SearchEngine.Core.Http.Abstractions;
 
-namespace Rayer.SearchEngine.Netease.Models.Search;
+namespace Rayer.SearchEngine.Netease.Models.Search.Audio;
 
 public class SearchAudioModel : ResponseBase
 {
-    public SearchAudioResult Result { get; set; } = null!;
+    public SearchAudioResultModel Result { get; set; } = null!;
 
-    public record SearchAudioResult
+    public record SearchAudioResultModel
     {
         public SearchAudioDetailInformationModel[] Songs { get; set; } = [];
 

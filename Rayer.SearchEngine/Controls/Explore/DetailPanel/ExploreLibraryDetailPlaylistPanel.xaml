@@ -1,0 +1,95 @@
+﻿<UserControl
+    x:Class="Rayer.SearchEngine.Controls.Explore.DetailPanel.ExploreLibraryDetailPlaylistPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Rayer.SearchEngine.Controls.Explore.DetailPanel"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DataContext="{d:DesignInstance local:ExploreLibraryDetailPlaylistPanel,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Loaded="OnLoaded"
+    Unloaded="OnUnloaded"
+    mc:Ignorable="d">
+    <Grid>
+        <ItemsControl
+            x:Name="ItemGroup"
+            d:ItemsSource="{d:SampleData ItemCount=12}"
+            ItemsSource="{Binding ViewModel.Playlist}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top"
+                        Columns="5"
+                        IsItemsHost="True"
+                        Rows="{Binding ViewModel.Playlist.Length, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailPlaylistPanel}, Converter={StaticResource AdjustPanelRowConverter}, ConverterParameter=5}" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border
+                        x:Name="PART_Border"
+                        Width="{Binding ViewModel.CoverMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailPlaylistPanel}}"
+                        Margin="6,0,0,12"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid
+                                Name="CoverGrid"
+                                Grid.Row="0"
+                                Grid.ColumnSpan="2"
+                                Margin="0,0,12,2"
+                                Clip="{Binding ViewModel.CoverRectClip, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailPlaylistPanel}}"
+                                ClipToBounds="True"
+                                MouseLeftButtonUp="OnPlaylistMouseLeftButtonUp">
+                                <ui:Image
+                                    x:Name="Cover"
+                                    Width="{Binding ViewModel.CoverMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailPlaylistPanel}}"
+                                    Height="{Binding ViewModel.CoverMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailPlaylistPanel}}"
+                                    CornerRadius="6"
+                                    Cursor="Hand"
+                                    MouseEnter="OnMouseEnter"
+                                    MouseLeave="OnMouseLeave"
+                                    RenderOptions.BitmapScalingMode="Fant"
+                                    RenderOptions.CachingHint="Unspecified"
+                                    Source="{Binding Cover, IsAsync=True}" />
+                            </Grid>
+                            <ui:TextBlock
+                                Grid.Row="1"
+                                Grid.ColumnSpan="2"
+                                MaxWidth="{Binding ViewModel.CoverMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailPlaylistPanel}}"
+                                HorizontalAlignment="Left"
+                                FontSize="16"
+                                FontTypography="BodyStrong"
+                                Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
+                                Text="{Binding Title}"
+                                TextTrimming="WordEllipsis"
+                                TextWrapping="WrapWithOverflow" />
+                            <ui:TextBlock
+                                Grid.Row="2"
+                                Grid.ColumnSpan="2"
+                                MaxWidth="{Binding ViewModel.CoverMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailPlaylistPanel}}"
+                                HorizontalAlignment="Left"
+                                Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                                Text="{Binding Creator.Profile.Name, Converter={StaticResource PlaylistCreatorConverter}}"
+                                TextTrimming="WordEllipsis"
+                                TextWrapping="WrapWithOverflow" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</UserControl>

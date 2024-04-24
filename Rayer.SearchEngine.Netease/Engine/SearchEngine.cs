@@ -5,34 +5,44 @@ using Rayer.SearchEngine.Core.Abstractions;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aggregation;
 using Rayer.SearchEngine.Core.Domain.Search;
+using Rayer.SearchEngine.Core.Enums;
 using Rayer.SearchEngine.Core.Options;
-using Rayer.SearchEngine.Netease.Models.Search;
+using Rayer.SearchEngine.Netease.Models.Search.Suggest;
 
 namespace Rayer.SearchEngine.Netease.Engine;
 
 [Inject<ISearchEngine>(ServiceKey = SearcherType.Netease)]
 internal class SearchEngine : SearchEngineBase, ISearchEngine
 {
-    private readonly ISearchAudioEngineProvider _audioEngineProvider;
+    private readonly IAggregationServiceProvider _provider;
     private readonly SearchEngineOptions _searchEngineOptions;
 
     public SearchEngine(
         IOptionsSnapshot<SearchEngineOptions> snapshot,
-        ISearchAudioEngineProvider audioEngineProvider)
+        IAggregationServiceProvider provider)
     {
-        _audioEngineProvider = audioEngineProvider;
+        _provider = provider;
         _searchEngineOptions = snapshot.Value;
     }
 
-    public async Task<SearchAggregationModel> SearchAsync(string queryText, CancellationToken cancellationToken = default)
+    public async Task<SearchAggregationModel> SearchAsync(string queryText, SearchType searchType, CancellationToken cancellationToken = default)
     {
         _searchEngineOptions.LatestQueryText = queryText;
 
         var model = new SearchAggregationModel(SearcherType.Netease);
 
-        var audioResult = await _audioEngineProvider.AudioEngine.SearchAsync(queryText, 0);
+        if (searchType is SearchType.Audio)
+        {
+            var audioResult = await _provider.AudioEngine.SearchAsync(queryText, 0);
 
-        model.Audio = audioResult;
+            model.Audio = audioResult;
+        }
+        else if (searchType is SearchType.Album)
+        {
+            var albumResult = await _provider.AlbumEngine.SearchAsync(queryText, 0);
+
+            model.Album = albumResult;
+        }
 
         return model;
     }

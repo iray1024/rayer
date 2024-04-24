@@ -1,8 +1,8 @@
 ﻿using Rayer.SearchEngine.Core.Http.Abstractions;
 
-namespace Rayer.SearchEngine.Netease.Models.Search;
+namespace Rayer.SearchEngine.Netease.Models.Search.Album;
 
-public class SearchAlbumDetailInformationModel : ResponseBase
+public class SearchAlbumSuggestInformationModel : ResponseBase
 {
     public long Id { get; set; }
 

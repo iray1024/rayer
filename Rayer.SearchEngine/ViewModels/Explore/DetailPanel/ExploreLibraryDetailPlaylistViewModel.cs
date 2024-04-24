@@ -5,7 +5,7 @@ using Rayer.SearchEngine.Core.Business.Data;
 using Rayer.SearchEngine.Core.Domain.Playlist;
 using System.Windows.Media;
 
-namespace Rayer.SearchEngine.ViewModels.Explore.LibraryDetail;
+namespace Rayer.SearchEngine.ViewModels.Explore.DetailPanel;
 
 [Inject]
 public partial class ExploreLibraryDetailPlaylistViewModel : ObservableObject

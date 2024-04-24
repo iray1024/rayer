@@ -5,6 +5,7 @@ using Rayer.SearchEngine.Core.Abstractions;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aggregation;
 using Rayer.SearchEngine.Core.Domain.Search;
+using Rayer.SearchEngine.Core.Enums;
 using Rayer.SearchEngine.Core.Options;
 
 namespace Rayer.SearchEngine.Bilibili.Engine;
@@ -23,7 +24,7 @@ internal class SearchEngine : SearchEngineBase, ISearchEngine
         _searchEngineOptions = snapshot.Value;
     }
 
-    public async Task<SearchAggregationModel> SearchAsync(string queryText, CancellationToken cancellationToken = default)
+    public async Task<SearchAggregationModel> SearchAsync(string queryText, SearchType searchType, CancellationToken cancellationToken = default)
     {
         _searchEngineOptions.LatestQueryText = queryText;
 

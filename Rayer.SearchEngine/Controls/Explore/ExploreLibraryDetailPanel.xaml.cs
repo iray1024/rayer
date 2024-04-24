@@ -1,4 +1,6 @@
 ﻿using Rayer.Core.Framework.Injection;
+using Rayer.Core.Utils;
+using Rayer.SearchEngine.Core.Enums;
 using System.Collections.Concurrent;
 using System.Windows;
 using System.Windows.Controls;
@@ -107,6 +109,22 @@ public partial class ExploreLibraryDetailPanel : UserControl
             var agrs = new RoutedEventArgs(Checked, e.Source);
 
             RaiseEvent(agrs);
+
+            if (radio.Content is TextBlock textBlock)
+            {
+                var searchType = EnumHelper.ParseEnum<SearchType>(textBlock.Text);
+
+                if (searchType is SearchType.Album)
+                {
+                    AlbumPanel.Visibility = Visibility.Visible;
+                    PlaylistPanel.Visibility = Visibility.Collapsed;
+                }                
+                else
+                {
+                    AlbumPanel.Visibility = Visibility.Collapsed;
+                    PlaylistPanel.Visibility = Visibility.Visible;
+                }
+            }
         }
     }
 

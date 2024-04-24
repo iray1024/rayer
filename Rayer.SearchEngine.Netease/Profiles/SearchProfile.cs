@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Rayer.SearchEngine.Core.Domain.Aduio;
+using Rayer.SearchEngine.Core.Domain.Album;
 using Rayer.SearchEngine.Core.Domain.Search;
-using Rayer.SearchEngine.Netease.Models.Search;
+using Rayer.SearchEngine.Netease.Models.Search.Album;
+using Rayer.SearchEngine.Netease.Models.Search.Audio;
+using Rayer.SearchEngine.Netease.Models.Search.Suggest;
 
 namespace Rayer.SearchEngine.Netease.Profiles;
 
@@ -10,7 +13,7 @@ internal class SearchProfile : Profile
     public SearchProfile()
     {
         CreateMap<SearchAudioDetailInformationModel, SearchSuggestDetail>();
-        CreateMap<SearchAlbumDetailInformationModel, SearchSuggestDetail>();
+        CreateMap<SearchAlbumSuggestInformationModel, SearchSuggestDetail>();
 
         CreateMap<SearchSuggestModel, SearchSuggest>()
             .ForMember(d => d.Audios, o => o.MapFrom(s => s.Result.Audios))
@@ -23,6 +26,13 @@ internal class SearchProfile : Profile
 
         CreateMap<SearchAudioModel, SearchAudio>()
             .ForMember(d => d.Details, o => o.MapFrom(s => s.Result.Songs))
+            .ForMember(d => d.Total, o => o.MapFrom(s => s.Result.Count));
+
+        CreateMap<SearchAlbumDetailInformationModel, SearchAlbumDetail>()
+            .ForMember(d => d.Title, o => o.MapFrom(s => s.Name));
+
+        CreateMap<SearchAlbumModel, SearchAlbum>()
+            .ForMember(d => d.Details, o => o.MapFrom(s => s.Result.Albums))
             .ForMember(d => d.Total, o => o.MapFrom(s => s.Result.Count));
     }
 }

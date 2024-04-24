@@ -25,4 +25,6 @@ internal class AggregationServiceProvider(IOptionsSnapshot<SearchEngineOptions> 
     public ISearchEngine SearchEngine => AppCore.GetRequiredKeyedService<ISearchEngine>(_searchEngineOptions.SearcherType);
 
     public ISearchAudioEngine AudioEngine => AppCore.GetRequiredKeyedService<ISearchAudioEngine>(_searchEngineOptions.SearcherType);
+
+    public ISearchAlbumEngine AlbumEngine => AppCore.GetRequiredKeyedService<ISearchAlbumEngine>(_searchEngineOptions.SearcherType);
 }

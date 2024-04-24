@@ -3,7 +3,7 @@ using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Abstractions;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.Netease.Extensions;
-using Rayer.SearchEngine.Netease.Models.Search;
+using Rayer.SearchEngine.Netease.Models.Search.Audio;
 
 namespace Rayer.SearchEngine.Netease.Engine;
 
@@ -18,7 +18,7 @@ internal class SearchAudioEngine : SearchEngineBase, ISearchAudioEngine
     public async Task<SearchAudio> SearchAsync(string keywords, int offset)
     {
         var result = await Searcher.GetAsync(
-            SearchSelector.SearchAudio()
+            SearchSelector.SampleSearch()
                 .WithParam("keywords", keywords)
                 .WithParam("type", "1")
                 .WithParam("offset", offset.ToString())
@@ -53,7 +53,7 @@ internal class SearchAudioEngine : SearchEngineBase, ISearchAudioEngine
             {
                 if (detail.Album is not null)
                 {
-                    detail.Album.Picture += "?param=512y512";
+                    detail.Album.Cover += "?param=512y512";
                 }
             }
 

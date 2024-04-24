@@ -1,7 +1,7 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
-using Rayer.SearchEngine.Controls.Explore.Album;
+using Rayer.SearchEngine.Controls.Explore;
 using Rayer.SearchEngine.Core.Business.Data;
 using Rayer.SearchEngine.Core.Business.Login;
 using Rayer.SearchEngine.ViewModels.Explore;
@@ -66,6 +66,6 @@ public partial class ExploreLibraryPage : INavigableView<ExploreLibraryViewModel
         var loader = AppCore.GetRequiredService<ILoaderProvider>();
         loader.Loading();
 
-        nav.Navigate(typeof(ExploreAlbumPanel), ViewModel.Model.FavoriteList);
+        nav.Navigate(typeof(ExplorePlaylistPanel), ViewModel.Model.FavoriteList);
     }
 }

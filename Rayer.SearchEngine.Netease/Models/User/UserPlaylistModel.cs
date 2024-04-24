@@ -1,4 +1,5 @@
 ﻿using Rayer.SearchEngine.Core.Http.Abstractions;
+using Rayer.SearchEngine.Netease.Models.Search.Playlist;
 
 namespace Rayer.SearchEngine.Netease.Models.User;
 

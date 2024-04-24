@@ -11,6 +11,7 @@ using Rayer.SearchEngine.Core.Domain.Artist;
 using Rayer.SearchEngine.Core.Domain.Playlist;
 using Rayer.SearchEngine.Core.Domain.Video;
 using Rayer.SearchEngine.Core.Enums;
+using Rayer.SearchEngine.Events;
 using Rayer.SearchEngine.Internal.Abstractions;
 using Rayer.SearchEngine.ViewModels;
 using Rayer.SearchEngine.ViewModels.Presenter;
@@ -94,7 +95,7 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
         GC.Collect();
     }
 
-    private async void OnCheckedChanged(object sender, RoutedEventArgs e)
+    private async void OnCheckedChanged(object sender, SwitchSearchTypeArgs e)
     {
         if (e.OriginalSource is RadioButton radioButton && radioButton.IsChecked == true)
         {
@@ -105,53 +106,53 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
 
             var dispatcherTask = Application.Current.Dispatcher.InvokeAsync(async () =>
             {
-                await SearchProcess(radioButton, _requestToken.Token);
-
-                _loaderProvider.Loaded();
+                try
+                {
+                    await SearchProcess(e.New, _requestToken.Token);
+                }
+                finally
+                {
+                    _loaderProvider.Loaded();
+                }
             },
             DispatcherPriority.Normal,
             _requestToken.Token);
         }
     }
 
-    private async Task SearchProcess(RadioButton radio, CancellationToken cancellationToken = default)
+    private async Task SearchProcess(SearchType searchType, CancellationToken cancellationToken = default)
     {
-        if (radio.Content is System.Windows.Controls.TextBlock textBlock)
+        if (searchType is SearchType.Audio)
         {
-            var searchType = EnumHelper.ParseEnum<SearchType>(textBlock.Text);
+            var dataContext = await ViewModel.LoadAudioAsync();
 
-            if (searchType is SearchType.Audio)
-            {
-                var dataContext = await ViewModel.LoadAudioAsync();
+            ApplyPresenter<SearchAudioPresenterViewModel, SearchAudio>(searchType, dataContext);
+        }
+        else if (searchType is SearchType.Artist)
+        {
+            var dataContext = await ViewModel.LoadArtistAsync();
 
-                ApplyPresenter<SearchAudioPresenterViewModel, SearchAudio>(searchType, dataContext);
-            }
-            else if (searchType is SearchType.Artist)
-            {
-                var dataContext = await ViewModel.LoadArtistAsync();
+            await Task.Delay(1000, cancellationToken);
 
-                await Task.Delay(1000, cancellationToken);
+            ApplyPresenter<SearchArtistPresenterViewModel, SearchArtist>(searchType, dataContext);
+        }
+        else if (searchType is SearchType.Album)
+        {
+            var dataContext = await ViewModel.LoadAlbumAsync();
 
-                ApplyPresenter<SearchArtistPresenterViewModel, SearchArtist>(searchType, dataContext);
-            }
-            else if (searchType is SearchType.Album)
-            {
-                var dataContext = await ViewModel.LoadAlbumAsync();
+            ApplyPresenter<SearchAlbumPresenterViewModel, SearchAlbum>(searchType, dataContext);
+        }
+        else if (searchType is SearchType.Video)
+        {
+            var dataContext = await ViewModel.LoadVideoAsync();
 
-                ApplyPresenter<SearchAlbumPresenterViewModel, SearchAlbum>(searchType, dataContext);
-            }
-            else if (searchType is SearchType.Video)
-            {
-                var dataContext = await ViewModel.LoadVideoAsync();
+            ApplyPresenter<SearchVideoPresenterViewModel, SearchVideo>(searchType, dataContext);
+        }
+        else if (searchType is SearchType.Playlist)
+        {
+            var dataContext = await ViewModel.LoadPlaylistAsync();
 
-                ApplyPresenter<SearchVideoPresenterViewModel, SearchVideo>(searchType, dataContext);
-            }
-            else if (searchType is SearchType.Playlist)
-            {
-                var dataContext = await ViewModel.LoadPlaylistAsync();
-
-                ApplyPresenter<SearchPlaylistPresenterViewModel, SearchPlaylist>(searchType, dataContext);
-            }
+            ApplyPresenter<SearchPlaylistPresenterViewModel, SearchPlaylist>(searchType, dataContext);
         }
     }
 
@@ -172,6 +173,8 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
 
             control.Width = ActualWidth;
             control.Height = ActualHeight;
+
+            presenter.ViewModel ??= AppCore.GetRequiredService<TViewModel>();
 
             if (presenter.ViewModel.PresenterDataContext is null ||
                 !presenter.ViewModel.PresenterDataContext.Equals(dataContext))

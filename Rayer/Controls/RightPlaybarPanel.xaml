@@ -98,7 +98,8 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         CornerRadius="6"
-                                        RenderOptions.BitmapScalingMode="Fant"
+                                        RenderOptions.BitmapScalingMode="HighQuality"
+                                        RenderOptions.CachingHint="Unspecified"
                                         Source="{Binding Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}"
                                         Stretch="UniformToFill">
                                         <ui:Image.Clip>

@@ -57,8 +57,9 @@
                             <ui:Image
                                 x:Name="Image"
                                 CornerRadius="6"
-                                RenderOptions.BitmapScalingMode="Fant"
-                                Source="{Binding Album.Picture, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}"
+                                RenderOptions.BitmapScalingMode="HighQuality"
+                                RenderOptions.CachingHint="Unspecified"
+                                Source="{Binding Album.Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}"
                                 Stretch="UniformToFill" />
                             <Grid.Clip>
                                 <RectangleGeometry

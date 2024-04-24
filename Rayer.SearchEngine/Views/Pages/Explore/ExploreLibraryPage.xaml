@@ -28,6 +28,8 @@
                 Height="48"
                 HorizontalAlignment="Left"
                 ClipToBounds="True"
+                RenderOptions.BitmapScalingMode="HighQuality"
+                RenderOptions.CachingHint="Unspecified"
                 Source="{Binding ViewModel.User.Profile.Avatar}">
                 <Image.Clip>
                     <RectangleGeometry

@@ -6,5 +6,5 @@ public record AlbumDefinition
 
     public string Title { get; set; } = string.Empty;
 
-    public string Picture { get; set; } = string.Empty;
+    public string Cover { get; set; } = string.Empty;
 }

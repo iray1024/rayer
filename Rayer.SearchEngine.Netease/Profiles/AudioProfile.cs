@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Rayer.SearchEngine.Core.Domain.Aduio;
-using Rayer.SearchEngine.Netease.Models.Search;
+using Rayer.SearchEngine.Netease.Models.Search.Audio;
 
 namespace Rayer.SearchEngine.Netease.Profiles;
 

@@ -1,8 +1,10 @@
 ﻿using Rayer.Core.Common;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Business.User;
+using Rayer.SearchEngine.Core.Domain.Album;
 using Rayer.SearchEngine.Core.Domain.Playlist;
 using Rayer.SearchEngine.Netease.Engine;
+using Rayer.SearchEngine.Netease.Models.Search.Album;
 using Rayer.SearchEngine.Netease.Models.User;
 
 namespace Rayer.SearchEngine.Netease.Business.User;
@@ -36,7 +38,7 @@ internal class UserService : SearchEngineBase, IUserService
     public async Task<PlaylistDetail[]> GetPlaylistAsync(long uid, int limit = 30, int offset = 0)
     {
         var result = await Searcher.GetAsync(
-            UserSelector.GetPlaylist()
+            UserSelector.GetFavPlaylist()
                 .WithParam("uid", uid.ToString())
                 .WithParam("limit", limit.ToString())
                 .WithParam("offset", offset.ToString())
@@ -52,6 +54,25 @@ internal class UserService : SearchEngineBase, IUserService
             }
 
             var domain = Mapper.Map<PlaylistDetail[]>(response);
+
+            return domain;
+        }
+
+        return default!;
+    }
+
+    public async Task<Album[]> GetFavAlbumsAsync(long uid, int limit = 2000)
+    {
+        var result = await Searcher.GetAsync(
+            UserSelector.GetFavAlbumlist()
+                .WithParam("limit", limit.ToString())
+                .Build());
+
+        var response = result.ToEntity<FavAlbumModel>();
+
+        if (response is not null)
+        {
+            var domain = Mapper.Map<Album[]>(response);
 
             return domain;
         }
