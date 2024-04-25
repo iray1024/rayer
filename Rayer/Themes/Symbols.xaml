@@ -3,6 +3,7 @@
     <BitmapImage x:Key="Logo" UriSource="pack://application:,,,/assets/logo.png" />
     <!--<BitmapImage x:Key="AlbumFallback" UriSource="pack://application:,,,/assets/fallback.png" />-->
     <BitmapImage x:Key="AlbumFallback" UriSource="pack://application:,,,/assets/fallback_mm.jpg" />
+    <BitmapImage x:Key="Loading" UriSource="pack://application:,,,/assets/loading.png" />
 
     <BitmapImage x:Key="Previous" UriSource="pack://application:,,,/assets/light/previous.png" />
     <BitmapImage x:Key="Next" UriSource="pack://application:,,,/assets/light/next.png" />

@@ -11,9 +11,11 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     Loaded="OnLoaded"
+    Unloaded="OnUnloaded"
     mc:Ignorable="d">
     <Grid>
         <Grid
+            x:Name="TitleBarPanel"
             Margin="22,0,0,16"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top">

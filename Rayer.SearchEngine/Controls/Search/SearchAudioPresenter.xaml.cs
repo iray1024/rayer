@@ -2,9 +2,7 @@
 using Rayer.Core.Controls;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.ViewModels.Presenter;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace Rayer.SearchEngine.Controls.Search;
 
@@ -22,25 +20,6 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
     }
 
     public new SearchAudioPresenterViewModel ViewModel { get; set; }
-
-    protected override void OnLoaded(object sender, RoutedEventArgs e)
-    {
-        ViewModel ??= AppCore.GetRequiredService<SearchAudioPresenterViewModel>();
-        base.ViewModel = ViewModel;
-
-        base.OnLoaded(sender, e);
-    }
-
-    protected override void OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        base.OnUnloaded(sender, e);
-
-        ViewModel = default!;
-
-        BindingOperations.ClearAllBindings(this);
-
-        GC.Collect();
-    }
 
     private void OnListViewItemRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {

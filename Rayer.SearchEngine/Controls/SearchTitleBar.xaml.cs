@@ -157,8 +157,69 @@ public partial class SearchTitleBar : UserControl
         await ViewModel.OnSearcherChanged();
     }
 
-    private void OnLoaded(object sender, RoutedEventArgs e)
+    private async void OnLoaded(object sender, RoutedEventArgs e)
     {
+        await Application.Current.Dispatcher.InvokeAsync(() =>
+        {
+            _titlebarControlStoryboard.Stop();
+            _titlebarControlStoryboard.Children.Clear();
 
+            var animation = new DoubleAnimation()
+            {
+                From = 0,
+                To = 1,
+                Duration = TimeSpan.FromMilliseconds(1)
+            };
+
+            foreach (var item in TitleBarPanel.Children)
+            {
+                if (item is RadioButton { IsChecked: true } radio)
+                {
+                    var innerBorder = radio.Template.FindName("CheckBorder", radio);
+
+                    Storyboard.SetTarget(animation, innerBorder as DependencyObject);
+                    Storyboard.SetTargetProperty(animation, new PropertyPath(OpacityProperty));
+
+                    _titlebarControlStoryboard.Children.Add(animation);
+
+                    Timeline.SetDesiredFrameRate(_titlebarControlStoryboard, 60);
+
+                    _titlebarControlStoryboard.Begin();
+                }
+            }
+        });
+    }
+
+    private async void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        await Application.Current.Dispatcher.InvokeAsync(() =>
+        {
+            _titlebarControlStoryboard.Stop();
+            _titlebarControlStoryboard.Children.Clear();
+
+            var animation = new DoubleAnimation()
+            {
+                From = 1,
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(1)
+            };
+
+            foreach (var item in TitleBarPanel.Children)
+            {
+                if (item is RadioButton radio)
+                {
+                    var innerBorder = radio.Template.FindName("CheckBorder", radio);
+
+                    Storyboard.SetTarget(animation, innerBorder as DependencyObject);
+                    Storyboard.SetTargetProperty(animation, new PropertyPath(OpacityProperty));
+
+                    _titlebarControlStoryboard.Children.Add(animation);
+
+                    Timeline.SetDesiredFrameRate(_titlebarControlStoryboard, 60);
+
+                    _titlebarControlStoryboard.Begin();
+                }
+            }
+        });
     }
 }

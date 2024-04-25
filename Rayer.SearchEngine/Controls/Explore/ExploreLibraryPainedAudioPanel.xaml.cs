@@ -1,6 +1,7 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
+using Rayer.Core.Controls;
 using Rayer.Core.Events;
 using Rayer.Core.Models;
 using Rayer.Core.Utils;
@@ -295,7 +296,7 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
                 Title = detail.Title,
                 Artists = detail.Artists.Select(x => x.Name).ToArray(),
                 Album = detail.Album?.Title ?? string.Empty,
-                Cover = detail.Album?.Cover is not null ? ImageSourceUtils.Create(detail.Album.Cover) : null,
+                Cover = detail.Album?.Cover is not null ? ImageSourceFactory.Create(detail.Album.Cover) : null,
                 Duration = detail.Duration,
                 Path = audioInformation.Url ?? string.Empty,
                 IsVirualWebSource = true,
@@ -338,7 +339,7 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
 
                         if (vBorder.Child is Grid innerGrid)
                         {
-                            ((Image)innerGrid.Children[0]).Effect = new GrayscaleBitmapEffect();
+                            ((AsyncImage)innerGrid.Children[0]).Effect = new GrayscaleBitmapEffect();
                             ((Wpf.Ui.Controls.TextBlock)innerGrid.Children[1]).Foreground = new SolidColorBrush(Color.FromRgb(96, 96, 96));
                             ((Wpf.Ui.Controls.TextBlock)innerGrid.Children[2]).Foreground = new SolidColorBrush(Color.FromRgb(96, 96, 96));
                         }

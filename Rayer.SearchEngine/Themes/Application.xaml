@@ -17,6 +17,7 @@
     <converters:PlaylistCreatorConverter x:Key="PlaylistCreatorConverter" />
     <converters:SearcherTypeConverter x:Key="SearcherTypeConverter" />
     <converters:WebDateTimeConverter x:Key="WebDateTimeConverter" />
+    <converters:PlaylistDescriptionConverter x:Key="PlaylistDescriptionConverter" />
 
     <Style x:Key="DefaultWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="Background" Value="Transparent" />

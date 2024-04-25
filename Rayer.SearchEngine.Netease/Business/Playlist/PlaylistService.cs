@@ -32,10 +32,19 @@ internal class PlaylistService : SearchEngineBase, IPlaylistService
 
         if (response is not null)
         {
+            response.Playlist.Cover += "?param=512y512";
+
+            foreach (var item in response.Playlist.Tracks)
+            {
+                if (item.Album is not null && !string.IsNullOrEmpty(item.Album.Cover))
+                {
+                    item.Album.Cover += "?param=512y512";
+                }
+            }
+
             var domain = Mapper.Map<PlaylistDetail>(response);
 
             domain.Type = SearchType.Playlist;
-            domain.Cover += "?param=512y512";
 
             for (var i = 0; i < domain.Audios.Length; i++)
             {
@@ -49,11 +58,6 @@ internal class PlaylistService : SearchEngineBase, IPlaylistService
                     {
                         audio.Copyright = new Core.Domain.Common.Copyright { Reason = reason };
                     }
-                }
-
-                if (audio.Album is not null)
-                {
-                    audio.Album.Cover += "?param=512y512";
                 }
             }
 

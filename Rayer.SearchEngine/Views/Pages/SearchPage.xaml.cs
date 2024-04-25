@@ -95,7 +95,7 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
         GC.Collect();
     }
 
-    private async void OnCheckedChanged(object sender, SwitchSearchTypeArgs e)
+    private async void OnCheckedChanged(object? sender, SwitchSearchTypeArgs e)
     {
         if (e.OriginalSource is RadioButton radioButton && radioButton.IsChecked == true)
         {
@@ -156,11 +156,11 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
         }
     }
 
-    private void ApplyPresenter<TViewModel, TResponse>(SearchType searchType, TResponse dataContext)
-        where TViewModel : class, IPresenterViewModel<TResponse>
-        where TResponse : class
+    private void ApplyPresenter<TViewModel, TContext>(SearchType searchType, TContext dataContext)
+        where TViewModel : class, IPresenterViewModel<TContext>
+        where TContext : class
     {
-        var presenter = _searchPresenterProvider.GetPresenter<TViewModel, TResponse>(searchType);
+        var presenter = _searchPresenterProvider.GetPresenter<TViewModel, TContext>(searchType);
 
         if (presenter is UserControl control)
         {

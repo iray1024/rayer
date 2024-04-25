@@ -237,7 +237,7 @@ public partial class MainWindow : IWindow
         var previous = new ThumbButtonInfo
         {
             Command = commandBinding.PreviousCommand,
-            ImageSource = ImageSourceUtils.Create("pack://application:,,,/assets/dark/previous.png"),
+            ImageSource = ImageSourceFactory.Create("pack://application:,,,/assets/dark/previous.png"),
             Description = "上一首",
             IsEnabled = false,
         };
@@ -245,7 +245,7 @@ public partial class MainWindow : IWindow
         var playOrPause = new ThumbButtonInfo
         {
             Command = commandBinding.PlayOrPauseCommand,
-            ImageSource = ImageSourceUtils.Create("pack://application:,,,/assets/dark/play.png"),
+            ImageSource = ImageSourceFactory.Create("pack://application:,,,/assets/dark/play.png"),
             Description = "播放",
             IsEnabled = false
         };
@@ -253,7 +253,7 @@ public partial class MainWindow : IWindow
         var next = new ThumbButtonInfo
         {
             Command = commandBinding.NextCommand,
-            ImageSource = ImageSourceUtils.Create("pack://application:,,,/assets/dark/next.png"),
+            ImageSource = ImageSourceFactory.Create("pack://application:,,,/assets/dark/next.png"),
             Description = "下一首",
             IsEnabled = false
         };

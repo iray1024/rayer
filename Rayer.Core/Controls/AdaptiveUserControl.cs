@@ -29,8 +29,6 @@ public abstract class AdaptiveUserControl(AdaptiveViewModelBase viewModel) : Use
     protected virtual void OnUnloaded(object sender, RoutedEventArgs e)
     {
         AppCore.MainWindow.SizeChanged -= OnSizeChanged;
-
-        ViewModel = default!;
     }
 
     protected virtual void OnSizeChanged(object sender, SizeChangedEventArgs e)

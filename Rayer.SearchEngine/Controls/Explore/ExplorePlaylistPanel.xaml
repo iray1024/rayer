@@ -30,31 +30,31 @@
                     Grid.Column="0"
                     FontSize="15"
                     FontTypography="Subtitle"
-                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
                     Text="最后更新于 " />
                 <ui:TextBlock
                     Grid.Column="1"
                     FontSize="15"
                     FontTypography="Subtitle"
-                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
                     Text="{Binding UpdateTime, FallbackValue='2022年12月25日', Converter={StaticResource WebDateTimeConverter}}" />
                 <ui:TextBlock
                     Grid.Column="2"
                     FontSize="15"
                     FontTypography="Subtitle"
-                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
                     Text=" · " />
                 <ui:TextBlock
                     Grid.Column="3"
                     FontSize="15"
                     FontTypography="Subtitle"
-                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
                     Text="{Binding AudioCount, FallbackValue=38}" />
                 <ui:TextBlock
                     Grid.Column="4"
                     FontSize="15"
                     FontTypography="Subtitle"
-                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
                     Text=" 首歌" />
             </Grid>
         </DataTemplate>
@@ -73,7 +73,7 @@
                     d:Text="2022年12月25日"
                     FontSize="15"
                     FontTypography="Subtitle"
-                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
                     Text="{Binding CreateTime, Converter={StaticResource WebDateTimeConverter}}" />
                 <ui:TextBlock
                     Grid.Column="1"
@@ -85,7 +85,7 @@
                     Grid.Column="2"
                     FontSize="15"
                     FontTypography="Subtitle"
-                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
                     Text="{Binding AudioCount, FallbackValue=38}" />
                 <ui:TextBlock
                     Grid.Column="3"
@@ -97,13 +97,13 @@
                     Grid.Column="4"
                     FontSize="15"
                     FontTypography="Subtitle"
-                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
                     Text="{Binding TotalMinutes}" />
                 <ui:TextBlock
                     Grid.Column="5"
                     FontSize="15"
                     FontTypography="Subtitle"
-                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
                     Text="分钟" />
             </Grid>
         </DataTemplate>
@@ -138,17 +138,17 @@
                 Grid.Column="0"
                 Margin="0,0,12,0"
                 ClipToBounds="True">
-                <ui:Image
+                <layout:AsyncImage
                     x:Name="Cover"
                     Width="256"
                     Height="256"
-                    CornerRadius="6"
                     Cursor="Hand"
+                    Fallback="{StaticResource AlbumFallback}"
                     MouseEnter="OnMouseEnter"
                     MouseLeave="OnMouseLeave"
                     RenderOptions.BitmapScalingMode="Fant"
                     RenderOptions.CachingHint="Unspecified"
-                    Source="{Binding ViewModel.Detail.Cover, FallbackValue={StaticResource AlbumFallback}, IsAsync=True}" />
+                    UriSource="{Binding ViewModel.Detail.Cover, IsAsync=True, Mode=OneTime}" />
                 <Grid.Clip>
                     <RectangleGeometry
                         RadiusX="6"
@@ -166,20 +166,22 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <ui:TextBlock
                     Grid.Row="0"
-                    Margin="0,40,0,24"
+                    Margin="0,6,0,24"
                     d:Text="OST"
                     FontFamily="Barlow,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Microsoft YaHei,Source Han Sans SC,Noto Sans CJK SC,WenQuanYi Micro Hei,sans-serif,microsoft uighur"
-                    FontTypography="Title"
+                    FontSize="48"
+                    FontTypography="TitleLarge"
                     FontWeight="Bold"
                     Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
                     Text="{Binding ViewModel.Detail.Title}"
                     TextOptions.TextRenderingMode="Auto"
                     TextTrimming="WordEllipsis" />
-                <Grid Grid.Row="1">
+                <Grid Grid.Row="1" Opacity="0.88">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
@@ -215,7 +217,46 @@
                         Content="{Binding ViewModel.Detail}"
                         ContentTemplateSelector="{StaticResource HeaderTemplateSelector}" />
                 </Grid>
-                <Grid Grid.Row="3">
+                <Grid
+                    x:Name="DescriptionPanel"
+                    Grid.Row="3"
+                    Margin="0,6,0,0"
+                    Cursor="Hand"
+                    MouseEnter="OnDescriptionMouseEnter"
+                    MouseLeave="OnDescriptionMouseLeave"
+                    MouseLeftButtonUp="OnDescriptionMouseLeftButtonUp"
+                    Opacity="0.8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        MaxWidth="{Binding ViewModel.DescriptionMaxWidth}"
+                        HorizontalAlignment="Left"
+                        Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                        Text="{Binding ViewModel.Detail.Description, Converter={StaticResource PlaylistDescriptionConverter}, ConverterParameter=0, Mode=OneTime}"
+                        TextTrimming="WordEllipsis" />
+                    <TextBlock
+                        Grid.Row="1"
+                        MaxWidth="{Binding ViewModel.DescriptionMaxWidth}"
+                        HorizontalAlignment="Left"
+                        Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                        Text="{Binding ViewModel.Detail.Description, Converter={StaticResource PlaylistDescriptionConverter}, ConverterParameter=1, Mode=OneTime}"
+                        TextTrimming="WordEllipsis" />
+                    <TextBlock
+                        Grid.Row="2"
+                        MaxWidth="{Binding ViewModel.DescriptionMaxWidth}"
+                        HorizontalAlignment="Left"
+                        Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                        Text="{Binding ViewModel.Detail.Description, Converter={StaticResource PlaylistDescriptionConverter}, ConverterParameter=2, Mode=OneTime}"
+                        TextTrimming="WordEllipsis" />
+                </Grid>
+                <Grid
+                    Grid.Row="4"
+                    Margin="0,0,0,6"
+                    VerticalAlignment="Bottom">
                     <ui:Button
                         Width="70"
                         Height="35"

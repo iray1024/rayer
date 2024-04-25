@@ -54,13 +54,12 @@
                             Margin="6"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
-                            <ui:Image
+                            <layout:AsyncImage
                                 x:Name="Image"
-                                CornerRadius="6"
                                 RenderOptions.BitmapScalingMode="HighQuality"
                                 RenderOptions.CachingHint="Unspecified"
-                                Source="{Binding Album.Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}"
-                                Stretch="UniformToFill" />
+                                Stretch="UniformToFill"
+                                UriSource="{Binding Album.Cover, Mode=OneTime, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}" />
                             <Grid.Clip>
                                 <RectangleGeometry
                                     RadiusX="6"

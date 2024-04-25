@@ -31,7 +31,7 @@ internal class SearchAlbumEngine : SearchEngineBase, ISearchAlbumEngine
         return default!;
     }
 
-    public async Task<Album> SearchFavoriteAlbumListAsync(long id)
+    public async Task<Album> SearchAlbumDetailAsync(long id)
     {
         var result = await Searcher.GetAsync(
             AlbumSelector.GetAlbum()
@@ -42,10 +42,26 @@ internal class SearchAlbumEngine : SearchEngineBase, ISearchAlbumEngine
 
         if (response is not null)
         {
+            response.Album.Cover += "?param=512y512";
+
+            foreach (var item in response.Audios)
+            {
+                if (item.Album is not null)
+                {
+                    if (!string.IsNullOrEmpty(item.Album.Cover))
+                    {
+                        item.Album.Cover += "?param=512y512";
+                    }
+                    else
+                    {
+                        item.Album.Cover = response.Album.Cover;
+                    }
+                }
+            }
+
             var domain = Mapper.Map<Album>(response);
 
             domain.Type = SearchType.Album;
-            domain.Cover += "?param=512y512";
 
             for (var i = 0; i < domain.Audios.Length; i++)
             {
@@ -53,13 +69,9 @@ internal class SearchAlbumEngine : SearchEngineBase, ISearchAlbumEngine
 
                 if (audio.Album is not null)
                 {
-                    if (string.IsNullOrEmpty(audio.Album.Cover))
+                    if (audio.Album.Cover is null)
                     {
                         audio.Album.Cover = domain.Cover;
-                    }
-                    else
-                    {
-                        audio.Album.Cover += "?param=512y512";
                     }
                 }
             }

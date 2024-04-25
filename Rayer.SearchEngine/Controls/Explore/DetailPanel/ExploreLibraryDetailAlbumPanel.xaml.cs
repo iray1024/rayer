@@ -1,4 +1,5 @@
 ﻿using Rayer.Core;
+using Rayer.Core.Controls;
 using Rayer.Core.Framework;
 using Rayer.SearchEngine.Core.Domain.Album;
 using Rayer.SearchEngine.ViewModels.Explore.DetailPanel;
@@ -67,7 +68,7 @@ public partial class ExploreLibraryDetailAlbumPanel : UserControl
     #region Effect    
     private void OnMouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        if (sender is Wpf.Ui.Controls.Image cover)
+        if (sender is AsyncImage cover)
         {
             var center = (int)ViewModel.CoverMaxWidth >> 1;
 
@@ -100,7 +101,7 @@ public partial class ExploreLibraryDetailAlbumPanel : UserControl
 
     private void OnMouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        if (sender is Wpf.Ui.Controls.Image cover)
+        if (sender is AsyncImage cover)
         {
             var center = (int)ViewModel.CoverMaxWidth >> 1;
 
@@ -132,6 +133,7 @@ public partial class ExploreLibraryDetailAlbumPanel : UserControl
         }
     }
     #endregion
+
     private void Resize(double newWidth)
     {
         var factor = (newWidth + 500) / SystemParameters.PrimaryScreenWidth;

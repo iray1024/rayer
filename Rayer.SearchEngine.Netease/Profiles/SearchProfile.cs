@@ -29,7 +29,8 @@ internal class SearchProfile : Profile
             .ForMember(d => d.Total, o => o.MapFrom(s => s.Result.Count));
 
         CreateMap<SearchAlbumDetailInformationModel, SearchAlbumDetail>()
-            .ForMember(d => d.Title, o => o.MapFrom(s => s.Name));
+            .ForMember(d => d.Title, o => o.MapFrom(s => s.Name))
+            .ForMember(d => d.AudioCount, o => o.MapFrom(s => s.Size));
 
         CreateMap<SearchAlbumModel, SearchAlbum>()
             .ForMember(d => d.Details, o => o.MapFrom(s => s.Result.Albums))

@@ -9,9 +9,9 @@ using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.Core.Domain.Playlist;
 
-namespace Rayer.SearchEngine.ViewModels.Explore.Album;
+namespace Rayer.SearchEngine.ViewModels.Explore.Playlist;
 
-public partial class ExploreAlbumPanelViewModel : AdaptiveViewModelBase
+public partial class ExplorePlaylistPancelViewModel : AdaptiveViewModelBase
 {
     private readonly ISearchAudioEngineProvider _audioEngineProvider;
     private readonly IAudioManager _audioManager;
@@ -20,7 +20,10 @@ public partial class ExploreAlbumPanelViewModel : AdaptiveViewModelBase
     [ObservableProperty]
     private PlaylistDetail _detail = null!;
 
-    public ExploreAlbumPanelViewModel(
+    [ObservableProperty]
+    private double _descriptionMaxWidth = 300;
+
+    public ExplorePlaylistPancelViewModel(
         ISearchAudioEngineProvider audioEngineProvider,
         IAudioManager audioManager,
         ISettingsService settingsService)
@@ -42,7 +45,7 @@ public partial class ExploreAlbumPanelViewModel : AdaptiveViewModelBase
                 Title = item.Title,
                 Artists = item.Artists.Select(x => x.Name).ToArray(),
                 Album = item.Album?.Title ?? string.Empty,
-                Cover = item.Album?.Cover is not null ? ImageSourceUtils.Create(item.Album.Cover) : null,
+                Cover = item.Album?.Cover is not null ? ImageSourceFactory.Create(item.Album.Cover) : null,
                 Duration = item.Duration,
                 Path = webAudio.Url ?? string.Empty,
                 IsVirualWebSource = true,

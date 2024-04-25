@@ -8,12 +8,13 @@ using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.Core.Domain.Album;
 using Rayer.SearchEngine.Core.Domain.Playlist;
-using Rayer.SearchEngine.ViewModels.Explore.Album;
+using Rayer.SearchEngine.Core.Enums;
+using Rayer.SearchEngine.ViewModels.Explore.Playlist;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Wpf.Ui;
 
 namespace Rayer.SearchEngine.Controls.Explore;
 
@@ -21,25 +22,24 @@ namespace Rayer.SearchEngine.Controls.Explore;
 public partial class ExplorePlaylistPanel : AdaptiveUserControl
 {
     private readonly IMemoryCache _cache;
+    private readonly IContentDialogService _contentDialogService;
 
-    public ExplorePlaylistPanel(ExploreAlbumPanelViewModel vm)
+    public ExplorePlaylistPanel(ExplorePlaylistPancelViewModel vm)
         : base(vm)
     {
         ViewModel = vm;
         DataContext = this;
 
         _cache = AppCore.GetRequiredService<IMemoryCache>();
+        _contentDialogService = AppCore.GetRequiredService<IContentDialogService>();
 
         InitializeComponent();
     }
 
-    public new ExploreAlbumPanelViewModel ViewModel { get; set; }
+    public new ExplorePlaylistPancelViewModel ViewModel { get; set; }
 
     protected override async void OnLoaded(object sender, RoutedEventArgs e)
     {
-        ViewModel ??= AppCore.GetRequiredService<ExploreAlbumPanelViewModel>();
-        base.ViewModel = ViewModel;
-
         if (DataContext is PlaylistDetail detail)
         {
             var cacheKey = detail.GetHashCode();
@@ -73,7 +73,7 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
                     {
                         var provider = AppCore.GetRequiredService<IAggregationServiceProvider>();
 
-                        albumDetail = await provider.AlbumEngine.SearchFavoriteAlbumListAsync(album.Id);
+                        albumDetail = await provider.AlbumEngine.SearchAlbumDetailAsync(album.Id);
 
                         _cache.Set(cacheKey, albumDetail, TimeSpan.FromMinutes(1));
                     }
@@ -83,6 +83,30 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
             var mapper = AppCore.GetRequiredService<IMapper>();
 
             var mapDetail = mapper.Map<PlaylistDetail>(albumDetail);
+            ViewModel.Detail = mapDetail;
+        }
+        else if (DataContext is SearchAlbumDetail searchAlbum)
+        {
+            var cacheKey = searchAlbum.GetHashCode();
+
+            if (!_cache.TryGetValue<Album>(cacheKey, out var searchAlbumDetail) || searchAlbumDetail is { AudioCount: > 0, Audios.Length: 0 })
+            {
+                await Task.Run(async () =>
+                {
+                    if (searchAlbum.AudioCount > 0 && searchAlbum.Audios.Length == 0)
+                    {
+                        var provider = AppCore.GetRequiredService<IAggregationServiceProvider>();
+
+                        searchAlbumDetail = await provider.AlbumEngine.SearchAlbumDetailAsync(searchAlbum.Id);
+
+                        _cache.Set(cacheKey, searchAlbumDetail, TimeSpan.FromMinutes(1));
+                    }
+                });
+            }
+
+            var mapper = AppCore.GetRequiredService<IMapper>();
+
+            var mapDetail = mapper.Map<PlaylistDetail>(searchAlbumDetail);
             ViewModel.Detail = mapDetail;
         }
 
@@ -98,12 +122,15 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
         AlbumHeader.Visibility = Visibility.Collapsed;
 
         base.OnUnloaded(sender, e);
+    }
 
-        ViewModel = default!;
+    protected override void OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        base.OnSizeChanged(sender, e);
 
-        BindingOperations.ClearAllBindings(this);
+        var panelWidth = (int)AppCore.MainWindow.ActualWidth - 666;
 
-        GC.Collect();
+        ViewModel.DescriptionMaxWidth = panelWidth;
     }
 
     private void OnListViewItemRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -129,7 +156,7 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
     #region Effect
     private void OnMouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        if (sender is Wpf.Ui.Controls.Image cover)
+        if (sender is AsyncImage cover)
         {
             var center = 256 >> 1;
 
@@ -162,7 +189,7 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
 
     private void OnMouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        if (sender is Wpf.Ui.Controls.Image cover)
+        if (sender is AsyncImage cover)
         {
             var center = 256 >> 1;
 
@@ -194,4 +221,71 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
         }
     }
     #endregion
+
+    #region DescriptionStoryboard
+    private static readonly Storyboard _descriptionStoryboard = new();
+
+    private void OnDescriptionMouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        _descriptionStoryboard.Stop();
+        _descriptionStoryboard.Children.Clear();
+
+        var animation = new DoubleAnimation()
+        {
+            From = 0.8,
+            To = 1,
+            Duration = TimeSpan.FromMilliseconds(200),
+            EasingFunction = new CubicEase()
+        };
+
+        Storyboard.SetTarget(animation, DescriptionPanel);
+        Storyboard.SetTargetProperty(animation, new PropertyPath(OpacityProperty));
+
+        _descriptionStoryboard.Children.Add(animation);
+
+        _descriptionStoryboard.Begin();
+    }
+
+    private void OnDescriptionMouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        _descriptionStoryboard.Stop();
+        _descriptionStoryboard.Children.Clear();
+
+        var animation = new DoubleAnimation()
+        {
+            From = 1,
+            To = 0.8,
+            Duration = TimeSpan.FromMilliseconds(200),
+            EasingFunction = new CubicEase()
+        };
+
+        Storyboard.SetTarget(animation, DescriptionPanel);
+        Storyboard.SetTargetProperty(animation, new PropertyPath(OpacityProperty));
+
+        _descriptionStoryboard.Children.Add(animation);
+
+        _descriptionStoryboard.Begin();
+    }
+    #endregion
+
+    private async void OnDescriptionMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        var type = ViewModel.Detail.Type is SearchType.Audio
+            ? "单曲"
+            : ViewModel.Detail.Type is SearchType.Album
+                ? "专辑"
+                : ViewModel.Detail.Type is SearchType.Playlist
+                    ? "歌单"
+                    : string.Empty;
+
+        var dialog = new SampleContentDialog(_contentDialogService.GetDialogHost())
+        {
+            Title = $"{type}介绍",
+            IsFooterVisible = false
+        };
+
+        SampleContentDialog.SetDescription(dialog, ViewModel.Detail.Description ?? string.Empty);
+
+        await dialog.ShowAsync();
+    }
 }

@@ -8,5 +8,5 @@ public interface ISearchAlbumEngine
 {
     Task<SearchAlbum> SearchAsync(string keywords, int offset);
 
-    Task<Album> SearchFavoriteAlbumListAsync(long id);
+    Task<Album> SearchAlbumDetailAsync(long id);
 }

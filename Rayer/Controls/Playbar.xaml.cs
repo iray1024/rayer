@@ -76,7 +76,7 @@ public partial class Playbar : UserControl
         if (taskbar is not null)
         {
             taskbar.ThumbButtonInfos[1].Description = "暂停";
-            taskbar.ThumbButtonInfos[1].ImageSource = ImageSourceUtils.Create("pack://application:,,,/assets/dark/pause.png");
+            taskbar.ThumbButtonInfos[1].ImageSource = ImageSourceFactory.Create("pack://application:,,,/assets/dark/pause.png");
 
             foreach (var item in taskbar.ThumbButtonInfos)
             {
@@ -94,7 +94,7 @@ public partial class Playbar : UserControl
             var item = AppCore.MainWindow.TaskbarItemInfo.ThumbButtonInfos[1];
 
             item.Description = "播放";
-            item.ImageSource = ImageSourceUtils.Create("pack://application:,,,/assets/dark/play.png");
+            item.ImageSource = ImageSourceFactory.Create("pack://application:,,,/assets/dark/play.png");
         }
     }
 
@@ -113,7 +113,7 @@ public partial class Playbar : UserControl
             }
 
             taskbar.ThumbButtonInfos[1].Description = "播放";
-            taskbar.ThumbButtonInfos[1].ImageSource = ImageSourceUtils.Create("pack://application:,,,/assets/dark/play.png");
+            taskbar.ThumbButtonInfos[1].ImageSource = ImageSourceFactory.Create("pack://application:,,,/assets/dark/play.png");
         }
     }
 
