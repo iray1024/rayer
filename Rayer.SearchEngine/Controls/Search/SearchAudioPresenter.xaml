@@ -35,7 +35,7 @@
             VirtualizingPanel.VirtualizationMode="Recycling">
             <ui:ListView.ItemTemplate>
                 <DataTemplate DataType="{x:Type model:SearchAudioDetail}">
-                    <Grid PreviewMouseRightButtonUp="OnListViewItemRightButtonUp" ToolTip="{Binding Title, Mode=OneWay}">
+                    <Grid PreviewMouseRightButtonUp="OnListViewItemRightButtonUp">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
@@ -75,8 +75,9 @@
                             HorizontalAlignment="Left"
                             FontSize="14"
                             FontWeight="Normal"
-                            Text="{Binding Title, Mode=OneWay}"
-                            TextTrimming="WordEllipsis" />
+                            Text="{Binding Title, Mode=OneTime}"
+                            TextTrimming="WordEllipsis"
+                            ToolTip="{Binding Title, Mode=OneTime}" />
                         <TextBlock
                             Grid.Row="1"
                             Grid.Column="1"
@@ -84,8 +85,9 @@
                             Margin="6,0,0,6"
                             HorizontalAlignment="Left"
                             Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                            Text="{Binding Artists, Mode=OneWay, Converter={StaticResource WebArtistsConverter}}"
-                            TextTrimming="WordEllipsis" />
+                            Text="{Binding Artists, Mode=OneTime, Converter={StaticResource WebArtistsConverter}}"
+                            TextTrimming="WordEllipsis"
+                            ToolTip="{Binding Artists, Mode=OneTime, Converter={StaticResource WebArtistsConverter}}" />
                         <TextBlock
                             Grid.RowSpan="2"
                             Grid.Column="2"
@@ -94,8 +96,9 @@
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                            Text="{Binding Album.Title, Mode=OneWay}"
-                            TextTrimming="WordEllipsis" />
+                            Text="{Binding Album.Title, Mode=OneTime}"
+                            TextTrimming="WordEllipsis"
+                            ToolTip="{Binding Album.Title, Mode=OneTime}" />
                         <TextBlock
                             Grid.RowSpan="2"
                             Grid.Column="3"

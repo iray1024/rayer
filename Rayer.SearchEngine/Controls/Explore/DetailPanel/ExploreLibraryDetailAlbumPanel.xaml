@@ -75,18 +75,20 @@
                                 FontSize="16"
                                 FontTypography="BodyStrong"
                                 Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                                Text="{Binding Title}"
+                                Text="{Binding Title, Mode=OneTime}"
                                 TextTrimming="WordEllipsis"
-                                TextWrapping="WrapWithOverflow" />
+                                TextWrapping="WrapWithOverflow"
+                                ToolTip="{Binding Title, Mode=OneTime}" />
                             <ui:TextBlock
                                 Grid.Row="2"
                                 Grid.ColumnSpan="2"
                                 MaxWidth="{Binding ViewModel.CoverMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExploreLibraryDetailAlbumPanel}}"
                                 HorizontalAlignment="Left"
                                 Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
-                                Text="{Binding Artist.Name, Converter={StaticResource PlaylistCreatorConverter}}"
+                                Text="{Binding Artist.Name, Mode=OneTime, Converter={StaticResource PlaylistCreatorConverter}}"
                                 TextTrimming="WordEllipsis"
-                                TextWrapping="WrapWithOverflow" />
+                                TextWrapping="WrapWithOverflow"
+                                ToolTip="{Binding Artist.Name, Mode=OneTime}" />
                         </Grid>
                     </Border>
                 </DataTemplate>

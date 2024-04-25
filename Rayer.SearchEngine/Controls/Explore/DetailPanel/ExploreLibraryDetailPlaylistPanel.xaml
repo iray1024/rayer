@@ -75,10 +75,10 @@
                                 FontSize="16"
                                 FontTypography="BodyStrong"
                                 Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                                Text="{Binding Title}"
+                                Text="{Binding Title, Mode=OneTime}"
                                 TextTrimming="WordEllipsis"
                                 TextWrapping="NoWrap"
-                                ToolTip="{Binding Title}" />
+                                ToolTip="{Binding Title, Mode=OneTime}" />
                             <ui:TextBlock
                                 Grid.Row="2"
                                 Grid.ColumnSpan="2"
@@ -86,10 +86,10 @@
                                 Margin="0,2,0,0"
                                 HorizontalAlignment="Left"
                                 Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
-                                Text="{Binding Creator.Profile.Name, Converter={StaticResource PlaylistCreatorConverter}}"
+                                Text="{Binding Creator.Profile.Name, Mode=OneTime, Converter={StaticResource PlaylistCreatorConverter}}"
                                 TextTrimming="WordEllipsis"
                                 TextWrapping="NoWrap"
-                                ToolTip="{Binding Creator.Profile.Name, Converter={StaticResource PlaylistCreatorConverter}}" />
+                                ToolTip="{Binding Creator.Profile.Name, Mode=OneTime}" />
                         </Grid>
                     </Border>
                 </DataTemplate>

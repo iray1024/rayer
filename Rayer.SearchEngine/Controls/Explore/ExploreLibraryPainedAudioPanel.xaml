@@ -82,14 +82,16 @@
                                 Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
                                 Text="{Binding Title}"
                                 TextOptions.TextHintingMode="Animated"
-                                TextTrimming="WordEllipsis" />
+                                TextTrimming="WordEllipsis"
+                                ToolTip="{Binding Title}" />
                             <ui:TextBlock
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
                                 Text="{Binding Artists, Converter={StaticResource WebArtistsConverter}}"
                                 TextOptions.TextHintingMode="Animated"
-                                TextTrimming="WordEllipsis" />
+                                TextTrimming="WordEllipsis"
+                                ToolTip="{Binding Artists, Converter={StaticResource WebArtistsConverter}}" />
                         </Grid>
 
                     </Border>

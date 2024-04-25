@@ -31,6 +31,7 @@ internal class AlbumProfile : Profile
             PublishTime = DateTimeOffset.FromUnixTimeMilliseconds(source.Album.PublishTime).DateTime,
             Description = source.Album.Description,
             TotalMinutes = (int)TimeSpan.FromMilliseconds(double.Parse(source.Audios.Sum(x => x.Duration).ToString())).TotalMinutes,
+            Company = source.Album.Company,
             AudioCount = source.Audios.Length,
             Audios = ctx.Mapper.Map<SearchAudioDetail[]>(source.Audios)
         };

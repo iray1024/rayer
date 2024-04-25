@@ -67,6 +67,7 @@
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
                 <ui:TextBlock
                     Grid.Column="0"
@@ -105,6 +106,16 @@
                     FontTypography="Subtitle"
                     Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
                     Text="分钟" />
+                <ui:TextBlock
+                    Grid.Column="6"
+                    Margin="6,0,0,0"
+                    FontSize="15"
+                    FontTypography="Subtitle"
+                    Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
+                    Text="{Binding Company, Converter={StaticResource CompanyConverter}}"
+                    TextTrimming="WordEllipsis"
+                    TextWrapping="NoWrap"
+                    ToolTip="{Binding Company}" />
             </Grid>
         </DataTemplate>
         <template:ExploreAlbumTemplateSelector
@@ -180,7 +191,8 @@
                     Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
                     Text="{Binding ViewModel.Detail.Title}"
                     TextOptions.TextRenderingMode="Auto"
-                    TextTrimming="WordEllipsis" />
+                    TextTrimming="WordEllipsis"
+                    ToolTip="{Binding ViewModel.Detail.Title}" />
                 <Grid Grid.Row="1" Opacity="0.88">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
@@ -213,7 +225,7 @@
                 </Grid>
                 <Grid Grid.Row="2" TextOptions.TextRenderingMode="Auto">
                     <ContentControl
-                        d:ContentTemplate="{StaticResource PlaylistTemplate}"
+                        d:ContentTemplate="{StaticResource AlbumTemplate}"
                         Content="{Binding ViewModel.Detail}"
                         ContentTemplateSelector="{StaticResource HeaderTemplateSelector}" />
                 </Grid>
@@ -278,7 +290,7 @@
             VirtualizingPanel.VirtualizationMode="Recycling">
             <ui:ListView.ItemTemplate>
                 <DataTemplate DataType="{x:Type model:SearchAudioDetail}">
-                    <Grid PreviewMouseRightButtonUp="OnListViewItemRightButtonUp" ToolTip="{Binding Title, Mode=OneWay}">
+                    <Grid PreviewMouseRightButtonUp="OnListViewItemRightButtonUp">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
@@ -319,8 +331,9 @@
                             HorizontalAlignment="Left"
                             FontSize="14"
                             FontWeight="Normal"
-                            Text="{Binding Title, Mode=OneWay}"
-                            TextTrimming="WordEllipsis" />
+                            Text="{Binding Title, Mode=OneTime}"
+                            TextTrimming="WordEllipsis"
+                            ToolTip="{Binding Title, Mode=OneTime}" />
                         <TextBlock
                             Grid.Row="1"
                             Grid.Column="1"
@@ -328,8 +341,9 @@
                             Margin="6,0,0,6"
                             HorizontalAlignment="Left"
                             Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                            Text="{Binding Artists, Mode=OneWay, Converter={StaticResource WebArtistsConverter}}"
-                            TextTrimming="WordEllipsis" />
+                            Text="{Binding Artists, Mode=OneTime, Converter={StaticResource WebArtistsConverter}}"
+                            TextTrimming="WordEllipsis"
+                            ToolTip="{Binding Artists, Mode=OneTime, Converter={StaticResource WebArtistsConverter}}" />
                         <TextBlock
                             Grid.RowSpan="2"
                             Grid.Column="2"
@@ -337,8 +351,9 @@
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                            Text="{Binding Album.Title, Mode=OneWay}"
-                            TextTrimming="WordEllipsis" />
+                            Text="{Binding Album.Title, Mode=OneTime}"
+                            TextTrimming="WordEllipsis"
+                            ToolTip="{Binding Album.Title, Mode=OneTime}" />
                         <TextBlock
                             Grid.RowSpan="2"
                             Grid.Column="3"
@@ -346,7 +361,7 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                            Text="{Binding Duration, Mode=OneWay, Converter={StaticResource WebDurationConverter}}" />
+                            Text="{Binding Duration, Mode=OneTime, Converter={StaticResource WebDurationConverter}}" />
                     </Grid>
                 </DataTemplate>
             </ui:ListView.ItemTemplate>
