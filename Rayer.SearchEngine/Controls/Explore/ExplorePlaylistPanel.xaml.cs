@@ -278,13 +278,13 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
                     ? "歌单"
                     : string.Empty;
 
-        var dialog = new SampleContentDialog(_contentDialogService.GetDialogHost())
+        var dialog = new MaskContentDialog(_contentDialogService.GetDialogHost())
         {
             Title = $"{type}介绍",
             IsFooterVisible = false
         };
 
-        SampleContentDialog.SetDescription(dialog, ViewModel.Detail.Description ?? string.Empty);
+        MaskContentDialog.SetDescription(dialog, ViewModel.Detail.Description ?? string.Empty);
 
         await dialog.ShowAsync();
     }

@@ -17,7 +17,7 @@ public partial class Loader : UserControl
     {
         PART_Loader.Foreground = currentApplicationTheme switch
         {
-            ApplicationTheme.Light => new SolidColorBrush(Colors.Red),
+            ApplicationTheme.Light => new SolidColorBrush(Color.FromRgb(44, 44, 44)),
             ApplicationTheme.Dark => new SolidColorBrush(Colors.LightGray),
             _ => new SolidColorBrush(Colors.LightSlateGray)
         };

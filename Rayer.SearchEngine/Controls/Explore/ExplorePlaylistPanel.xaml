@@ -92,7 +92,7 @@
                     Grid.Column="3"
                     FontSize="15"
                     FontTypography="Subtitle"
-                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                    Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
                     Text=" 首歌，" />
                 <ui:TextBlock
                     Grid.Column="4"
@@ -111,7 +111,7 @@
                     Margin="6,0,0,0"
                     FontSize="15"
                     FontTypography="Subtitle"
-                    Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
+                    Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
                     Text="{Binding Company, Converter={StaticResource CompanyConverter}}"
                     TextTrimming="WordEllipsis"
                     TextWrapping="NoWrap"

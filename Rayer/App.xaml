@@ -21,7 +21,9 @@
                 <ResourceDictionary Source="pack://application:,,,/Rayer.SearchEngine;component/Themes/TitleBarButton.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Rayer.SearchEngine;component/Themes/Symbols.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Rayer.Core;component/Controls/AsyncImage.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Rayer.Core;component/Controls/Dialog.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Rayer.Core;component/Controls/MaskDialog.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Rayer.Core;component/Controls/ScrollBar/DarkScrollBar.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Rayer.Core;component/Controls/ScrollViewer/DarkScrollViewer.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <converters:ArtistsConverter x:Key="ArtistsConverter" />

@@ -5,9 +5,9 @@ using Wpf.Ui.Controls;
 
 namespace Rayer.Core.Controls;
 
-public partial class SampleContentDialog : ContentDialog
+public partial class MaskContentDialog : ContentDialog
 {
-    public SampleContentDialog(ContentPresenter? contentPresenter)
+    public MaskContentDialog(ContentPresenter? contentPresenter)
         : base(contentPresenter)
     {
         InitializeComponent();
@@ -19,7 +19,7 @@ public partial class SampleContentDialog : ContentDialog
         DependencyProperty.RegisterAttached(
             "Description",
             typeof(string),
-            typeof(SampleContentDialog),
+            typeof(MaskContentDialog),
             new PropertyMetadata(null));
 
     public static string GetDescription(DependencyObject obj)
