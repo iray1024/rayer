@@ -14,6 +14,10 @@ public record SearchAlbum
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Details, Page, PageSize, Total);
+        return HashCode.Combine(
+            Details.Length,
+            Page,
+            PageSize,
+            Total);
     }
 }

@@ -77,6 +77,10 @@ public partial class SearchViewModel : ObservableObject
 
         Model.Album = model.Album;
 
+        var newCacheKey = Model.Album.GetHashCode();
+
+        _cache.Set(newCacheKey, Model.Album, TimeSpan.FromMinutes(10));
+
         return Model.Album;
     }
 
