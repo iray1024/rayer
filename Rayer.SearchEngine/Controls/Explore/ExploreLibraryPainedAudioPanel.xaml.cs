@@ -2,12 +2,12 @@
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Controls;
+using Rayer.Core.Effects;
 using Rayer.Core.Events;
 using Rayer.Core.Models;
 using Rayer.Core.Utils;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aduio;
-using Rayer.SearchEngine.Internal.Effects;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;

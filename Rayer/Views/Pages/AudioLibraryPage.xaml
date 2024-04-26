@@ -2,13 +2,11 @@
     x:Class="Rayer.Views.Pages.AudioLibraryPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:core="clr-namespace:Rayer.Core.Framework;assembly=Rayer.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:layout="clr-namespace:Rayer.Core.Controls;assembly=Rayer.Core"
     xmlns:local="clr-namespace:Rayer.Views.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:Rayer.Core.Models;assembly=Rayer.Core"
-    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="乐库"
     d:DataContext="{d:DesignInstance local:AudioLibraryPage,
                                      IsDesignTimeCreatable=False}"
@@ -18,7 +16,6 @@
     Loaded="OnLoaded"
     Unloaded="OnUnloaded"
     mc:Ignorable="d">
-
     <Grid
         Margin="0,0,0,24"
         SnapsToDevicePixels="True"
@@ -27,83 +24,35 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ui:ListView
+        <layout:ListView
             Name="LibListView"
             Grid.RowSpan="2"
             VerticalContentAlignment="Top"
             d:ItemsSource="{d:SampleData ItemCount=2}"
             ItemsSource="{Binding ViewModel.Items, Mode=OneWay}">
-            <ui:ListView.ItemTemplate>
+            <layout:ListView.ItemTemplate>
                 <DataTemplate DataType="{x:Type models:Audio}">
                     <Grid ContextMenu="{Binding ViewModel.ContextMenu, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:AudioLibraryPage}}" PreviewMouseRightButtonUp="OnListViewItemRightButtonUp">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <ui:Image
-                            x:Name="Image"
-                            Grid.RowSpan="2"
-                            Grid.Column="0"
-                            Width="40"
-                            Height="40"
-                            Margin="6"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            CornerRadius="6"
-                            RenderOptions.BitmapScalingMode="HighQuality"
-                            RenderOptions.CachingHint="Unspecified"
-                            Source="{Binding Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}" />
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            MaxWidth="{Binding ViewModel.TitleMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:AudioLibraryPage}}"
-                            Margin="6,8,0,0"
-                            HorizontalAlignment="Left"
-                            FontSize="14"
-                            FontWeight="Normal"
-                            Text="{Binding Title, Mode=OneWay}"
-                            TextTrimming="WordEllipsis" />
-                        <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            MaxWidth="{Binding ViewModel.ArtistsNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:AudioLibraryPage}}"
-                            Margin="6,0,0,6"
-                            HorizontalAlignment="Left"
-                            Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                            Text="{Binding Artists, Mode=OneWay, Converter={StaticResource ArtistsConverter}}"
-                            TextTrimming="WordEllipsis" />
-                        <TextBlock
-                            Grid.RowSpan="2"
-                            Grid.Column="2"
-                            MaxWidth="{Binding ViewModel.AlbumNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:AudioLibraryPage}}"
-                            Margin="80,0,0,0"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                            Text="{Binding Album, Mode=OneWay}"
-                            TextTrimming="WordEllipsis" />
-                        <TextBlock
-                            Grid.RowSpan="2"
-                            Grid.Column="3"
-                            Margin="0,0,6,0"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                            Text="{Binding Duration, Mode=OneWay, Converter={StaticResource TimeSpanConverter}}" />
+                        <layout:AudioPresenter
+                            Title="{Binding Title, Mode=OneWay}"
+                            AlbumSource="{Binding Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}"
+                            AlbumTitle="{Binding Album, Mode=OneWay}"
+                            AlbumTitleMaxWidth="{Binding ViewModel.AlbumNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:AudioLibraryPage}}"
+                            AlbumWidth="40"
+                            Artists="{Binding Artists, Mode=OneWay, Converter={StaticResource ArtistsConverter}}"
+                            ArtistsMaxWidth="{Binding ViewModel.ArtistsNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:AudioLibraryPage}}"
+                            IsAvailable="True"
+                            Style="{x:Null}"
+                            TitleMaxWidth="{Binding ViewModel.TitleMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:AudioLibraryPage}}"
+                            Duration="{Binding Duration, Mode=OneWay, Converter={StaticResource TimeSpanConverter}}" />
                     </Grid>
                 </DataTemplate>
-            </ui:ListView.ItemTemplate>
+            </layout:ListView.ItemTemplate>
             <ListView.ItemContainerStyle>
-                <Style BasedOn="{StaticResource {x:Type ui:ListViewItem}}" TargetType="ui:ListViewItem">
+                <Style BasedOn="{StaticResource {x:Type layout:ListViewItem}}" TargetType="layout:ListViewItem">
                     <EventSetter Event="MouseDoubleClick" Handler="OnListViewItemDoubleClick" />
                 </Style>
             </ListView.ItemContainerStyle>
-        </ui:ListView>
+        </layout:ListView>
     </Grid>
 </layout:AdaptivePage>

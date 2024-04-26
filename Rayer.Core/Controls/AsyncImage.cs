@@ -1,4 +1,5 @@
 ﻿using Rayer.Core.Utils;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -100,7 +101,7 @@ public class AsyncImage : Control
         get => (ImageSource?)GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
     }
-
+    
     public Uri UriSource
     {
         get => (Uri)GetValue(UriSourceProperty);
@@ -118,6 +119,32 @@ public class AsyncImage : Control
         get => (Stretch)GetValue(StretchProperty);
         set => SetValue(StretchProperty, value);
     }
+
+    public CornerRadius CornerRadius
+    {
+        get => (CornerRadius)GetValue(CornerRadiusProperty);
+        set => SetValue(CornerRadiusProperty, value);
+    }
+
+    internal CornerRadius InnerCornerRadius => (CornerRadius)GetValue(InnerCornerRadiusProperty);
+
+    public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
+        nameof(CornerRadius),
+        typeof(CornerRadius),
+        typeof(AsyncImage),
+        new PropertyMetadata(new CornerRadius(0), new PropertyChangedCallback(OnCornerRadiusChanged))
+    );
+
+    public static readonly DependencyPropertyKey InnerCornerRadiusPropertyKey =
+        DependencyProperty.RegisterReadOnly(
+            nameof(InnerCornerRadius),
+            typeof(CornerRadius),
+            typeof(AsyncImage),
+            new PropertyMetadata(new CornerRadius(0))
+        );
+
+    public static readonly DependencyProperty InnerCornerRadiusProperty =
+        InnerCornerRadiusPropertyKey.DependencyProperty;
 
     private static async void OnUriSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -140,6 +167,22 @@ public class AsyncImage : Control
 
             SetSource(d, image);
         }
+    }
+
+    private static void OnCornerRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var thickness = (Thickness)d.GetValue(BorderThicknessProperty);
+        var outerRarius = (CornerRadius)e.NewValue;
+
+        d.SetValue(
+            InnerCornerRadiusPropertyKey,
+            new CornerRadius(
+                topLeft: Math.Max(0, (int)Math.Round(outerRarius.TopLeft - (thickness.Left / 2), 0)),
+                topRight: Math.Max(0, (int)Math.Round(outerRarius.TopRight - (thickness.Top / 2), 0)),
+                bottomRight: Math.Max(0, (int)Math.Round(outerRarius.BottomRight - (thickness.Right / 2), 0)),
+                bottomLeft: Math.Max(0, (int)Math.Round(outerRarius.BottomLeft - (thickness.Bottom / 2), 0))
+            )
+        );
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)

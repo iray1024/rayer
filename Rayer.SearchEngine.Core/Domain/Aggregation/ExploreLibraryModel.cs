@@ -1,5 +1,4 @@
 ﻿using Rayer.SearchEngine.Core.Domain.Aduio;
-using Rayer.SearchEngine.Core.Domain.Album;
 using Rayer.SearchEngine.Core.Domain.Playlist;
 
 namespace Rayer.SearchEngine.Core.Domain.Aggregation;

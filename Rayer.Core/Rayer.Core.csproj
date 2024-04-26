@@ -29,4 +29,8 @@
     <ProjectReference Include="..\Rayer.FFmpegCore\Rayer.FFmpegCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Resource Include="Effects\GrayscaleEffect.ps" />
+  </ItemGroup>
+
 </Project>

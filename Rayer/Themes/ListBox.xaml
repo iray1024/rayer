@@ -44,7 +44,4 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <Style BasedOn="{StaticResource DefaultListBoxStyle}" TargetType="{x:Type ListBox}" />
-
 </ResourceDictionary>

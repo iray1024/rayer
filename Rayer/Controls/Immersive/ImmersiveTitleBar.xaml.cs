@@ -55,7 +55,6 @@ public partial class ImmersiveTitleBar : UserControl
         {
             _mainWindow.ResizeMode = ResizeMode.NoResize;
             _mainWindow.WindowState = WindowState.Maximized;
-
         }
         else
         {

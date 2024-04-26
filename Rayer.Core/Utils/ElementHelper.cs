@@ -57,6 +57,16 @@ public static class ElementHelper
         return null!;
     }
 
+    public static T? FindParent<T>(DependencyObject reference)
+        where T : FrameworkElement
+    {
+        var target = VisualTreeHelper.GetParent(reference);
+
+        return target is not null && target.DependencyObjectType.SystemType != typeof(T)
+            ? FindParent<T>(target)
+            : target is not null ? (T)target : null;
+    }
+
     public static void FullScreen(Window window)
     {
         var hwnd = new WindowInteropHelper(window).Handle;

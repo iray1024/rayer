@@ -23,6 +23,11 @@ internal class SearchAlbumEngine : SearchEngineBase, ISearchAlbumEngine
 
         if (response is not null)
         {
+            foreach (var item in response.Result.Albums)
+            {
+                item.Cover += "?param=512y512";
+            }
+
             var domain = Mapper.Map<SearchAlbum>(response);
 
             return domain;

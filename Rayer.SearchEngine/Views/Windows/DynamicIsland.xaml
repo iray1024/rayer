@@ -77,7 +77,7 @@
             <TextBlock
                 x:Name="Lyric"
                 Grid.Column="1"
-                MinWidth="100"
+                MinWidth="70"
                 Margin="0,-1,0,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"

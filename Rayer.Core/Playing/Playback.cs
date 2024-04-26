@@ -381,6 +381,11 @@ public class Playback : IDisposable
 
     private async void OnPlaybackStopped(object? sender, StoppedEventArgs e)
     {
+        if (IsClickToPlay)
+        {
+            return;
+        }
+
 #if DEBUG
         Debug.WriteLine("播放结束事件响应");
 #endif

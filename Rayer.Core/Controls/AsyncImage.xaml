@@ -13,7 +13,8 @@
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
-                        ClipToBounds="True">
+                        ClipToBounds="True"
+                        CornerRadius="{TemplateBinding CornerRadius}">
                         <Image
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
@@ -25,7 +26,8 @@
                                         <Border
                                             Width="{TemplateBinding ActualWidth}"
                                             Height="{TemplateBinding ActualHeight}"
-                                            Background="White" />
+                                            Background="White"
+                                            CornerRadius="{TemplateBinding InnerCornerRadius}" />
                                     </VisualBrush.Visual>
                                 </VisualBrush>
                             </Image.OpacityMask>

@@ -23,7 +23,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ui:ListView
+        <layout:ListView
             Name="LibListView"
             Grid.RowSpan="2"
             VerticalContentAlignment="Top"
@@ -33,91 +33,32 @@
             ScrollViewer.CanContentScroll="False"
             VirtualizingPanel.IsVirtualizing="True"
             VirtualizingPanel.VirtualizationMode="Recycling">
-            <ui:ListView.ItemTemplate>
+            <layout:ListView.ItemTemplate>
                 <DataTemplate DataType="{x:Type model:SearchAudioDetail}">
                     <Grid PreviewMouseRightButtonUp="OnListViewItemRightButtonUp">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid
-                            Grid.RowSpan="2"
-                            Grid.Column="0"
-                            Width="40"
-                            Height="40"
-                            Margin="6"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                            <layout:AsyncImage
-                                x:Name="Image"
-                                RenderOptions.BitmapScalingMode="HighQuality"
-                                RenderOptions.CachingHint="Unspecified"
-                                Stretch="UniformToFill"
-                                UriSource="{Binding Album.Cover, Mode=OneTime, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}" />
-                            <Grid.Clip>
-                                <RectangleGeometry
-                                    RadiusX="6"
-                                    RadiusY="6"
-                                    Rect="0,0,40,40" />
-                            </Grid.Clip>
-                        </Grid>
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            MaxWidth="{Binding ViewModel.TitleMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAudioPresenter}}"
-                            Margin="6,8,0,0"
-                            HorizontalAlignment="Left"
-                            FontSize="14"
-                            FontWeight="Normal"
-                            Text="{Binding Title, Mode=OneTime}"
-                            TextTrimming="WordEllipsis"
-                            ToolTip="{Binding Title, Mode=OneTime}" />
-                        <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            MaxWidth="{Binding ViewModel.ArtistsNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAudioPresenter}}"
-                            Margin="6,0,0,6"
-                            HorizontalAlignment="Left"
-                            Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                            Text="{Binding Artists, Mode=OneTime, Converter={StaticResource WebArtistsConverter}}"
-                            TextTrimming="WordEllipsis"
-                            ToolTip="{Binding Artists, Mode=OneTime, Converter={StaticResource WebArtistsConverter}}" />
-                        <TextBlock
-                            Grid.RowSpan="2"
-                            Grid.Column="2"
-                            MaxWidth="{Binding ViewModel.AlbumNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAudioPresenter}}"
-                            Margin="00,0,0,0"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                            Text="{Binding Album.Title, Mode=OneTime}"
-                            TextTrimming="WordEllipsis"
-                            ToolTip="{Binding Album.Title, Mode=OneTime}" />
-                        <TextBlock
-                            Grid.RowSpan="2"
-                            Grid.Column="3"
-                            Margin="0,0,6,0"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                            Text="{Binding Duration, Mode=OneWay, Converter={StaticResource WebDurationConverter}}" />
+                        <layout:AudioPresenter
+                            Title="{Binding Title, Mode=OneTime}"
+                            Album="{Binding Album.Cover, Mode=OneTime, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}"
+                            AlbumTitle="{Binding Album.Title, Mode=OneTime}"
+                            AlbumTitleMaxWidth="{Binding ViewModel.AlbumNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAudioPresenter}}"
+                            AlbumWidth="40"
+                            Artists="{Binding Artists, Mode=OneTime, Converter={StaticResource WebArtistsConverter}}"
+                            ArtistsMaxWidth="{Binding ViewModel.ArtistsNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAudioPresenter}}"
+                            IsAvailable="True"
+                            Style="{x:Null}"
+                            TitleMaxWidth="{Binding ViewModel.TitleMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAudioPresenter}}"
+                            Duration="{Binding Duration, Mode=OneWay, Converter={StaticResource WebDurationConverter}}" />
                     </Grid>
                 </DataTemplate>
-            </ui:ListView.ItemTemplate>
+            </layout:ListView.ItemTemplate>
             <ListView.ItemContainerStyle>
-                <Style BasedOn="{StaticResource {x:Type ui:ListViewItem}}" TargetType="ui:ListViewItem">
+                <Style BasedOn="{StaticResource {x:Type layout:ListViewItem}}" TargetType="layout:ListViewItem">
                     <Style.Setters>
                         <EventSetter Event="MouseDoubleClick" Handler="OnListViewItemDoubleClick" />
                         <Setter Property="Margin" Value="{Binding ViewModel.ItemMargin, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAudioPresenter}}" />
                     </Style.Setters>
                 </Style>
             </ListView.ItemContainerStyle>
-        </ui:ListView>
+        </layout:ListView>
     </Grid>
 </layout:AdaptiveUserControl>

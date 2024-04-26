@@ -168,7 +168,7 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
                     });
                 });
             }
-            catch (TaskCanceledException) when (AppCore.MainWindow.IsActive)
+            catch (TaskCanceledException) when (AppCore.MainWindow is not null && AppCore.MainWindow.IsActive)
             {
                 throw;
             }

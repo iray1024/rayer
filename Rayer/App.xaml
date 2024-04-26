@@ -24,6 +24,9 @@
                 <ResourceDictionary Source="pack://application:,,,/Rayer.Core;component/Controls/MaskDialog.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Rayer.Core;component/Controls/ScrollBar/DarkScrollBar.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Rayer.Core;component/Controls/ScrollViewer/DarkScrollViewer.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Rayer.Core;component/Controls/AudioPresenter/AudioPresenterDefaultStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Rayer.Core;component/Controls/ListView/ListView.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Rayer.Core;component/Controls/ListView/ListViewItem.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <converters:ArtistsConverter x:Key="ArtistsConverter" />

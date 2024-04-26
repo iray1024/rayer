@@ -1,0 +1,107 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Rayer.Core.Controls"
+    xmlns:effects="clr-namespace:Rayer.Core.Effects">
+
+    <SolidColorBrush x:Key="SelectedDefaultBrush" Color="#BBCDFF" />
+    <SolidColorBrush x:Key="SelectedTextDefaultBrush" Color="#335EEA" />
+    <SolidColorBrush x:Key="NotAvaliableTextDefaultBrush" Color="#606060" />
+
+    <Style x:Key="AudioPresenterDefaultStyle" TargetType="controls:AudioPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource ListViewItemForeground}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Border.CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+        <Setter Property="Margin" Value="0,0,0,0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:AudioPresenter">
+                    <Border x:Name="ContentBorder" CornerRadius="6">
+                        <Border.Background>
+                            <SolidColorBrush
+                                x:Name="ContentBorderBrush"
+                                Opacity="0"
+                                Color="{DynamicResource ControlStrokeColorDefault}" />
+                        </Border.Background>
+                        <Border
+                            x:Name="HoverBorder"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            CornerRadius="6">
+                            <Border.Background>
+                                <SolidColorBrush
+                                    x:Name="BorderBrush"
+                                    Opacity="0"
+                                    Color="{DynamicResource ControlStrokeColorDefault}" />
+                            </Border.Background>
+                            <Grid>
+                                <ContentPresenter
+                                    Margin="{TemplateBinding Padding}"
+                                    TextOptions.TextHintingMode="Animated"
+                                    TextOptions.TextRenderingMode="ClearType" />
+                            </Grid>
+                        </Border>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsEnabled" Value="True" />
+                                <Condition Property="IsAvailable" Value="True" />
+                                <Condition Property="IsMouseOver" Value="True" />
+                                <Condition Property="IsSelected" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="HoverBorder"
+                                            Storyboard.TargetProperty="(Background).(Brush.Opacity)"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:0.2" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                            <MultiTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="HoverBorder"
+                                            Storyboard.TargetProperty="(Background).(Brush.Opacity)"
+                                            From="1"
+                                            To="0"
+                                            Duration="0:0:0.2" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.ExitActions>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="True" />
+                                <Condition Property="IsAvailable" Value="True" />
+                                <Condition Property="IsEnabled" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="ContentBorder" Property="Opacity" Value="1" />
+                            <Setter TargetName="ContentBorder" Property="Background" Value="{StaticResource SelectedDefaultBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource SelectedTextDefaultBrush}" />
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsAvailable" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Foreground" Value="{StaticResource NotAvaliableTextDefaultBrush}" />
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <effects:GrayscaleBitmapEffect />
+                                </Setter.Value>
+                            </Setter>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style BasedOn="{StaticResource AudioPresenterDefaultStyle}" TargetType="controls:AudioPresenter" />
+</ResourceDictionary>

@@ -2,7 +2,7 @@
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 
-namespace Rayer.SearchEngine.Internal.Effects;
+namespace Rayer.Core.Effects;
 
 internal class GrayscaleBitmapEffect : ShaderEffect
 {
@@ -16,7 +16,7 @@ internal class GrayscaleBitmapEffect : ShaderEffect
     {
         PixelShader = new PixelShader
         {
-            UriSource = new Uri("pack://application:,,,/Rayer.SearchEngine;component/Internal/Effects/GrayscaleEffect.ps")
+            UriSource = new Uri("pack://application:,,,/Rayer.Core;component/Effects/GrayscaleEffect.ps")
         };
 
         UpdateShaderValue(InputProperty);

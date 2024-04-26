@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
 using Rayer.Core;
+using Rayer.Core.Abstractions;
 using Rayer.Core.Controls;
+using Rayer.Core.Events;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
@@ -11,16 +13,17 @@ using Rayer.SearchEngine.Core.Domain.Playlist;
 using Rayer.SearchEngine.Core.Enums;
 using Rayer.SearchEngine.ViewModels.Explore.Playlist;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Wpf.Ui;
+using ListViewItem = Rayer.Core.Controls.ListViewItem;
 
 namespace Rayer.SearchEngine.Controls.Explore;
 
 [Inject]
 public partial class ExplorePlaylistPanel : AdaptiveUserControl
 {
+    private readonly IAudioManager _audioManager;
     private readonly IMemoryCache _cache;
     private readonly IContentDialogService _contentDialogService;
 
@@ -32,6 +35,11 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
 
         _cache = AppCore.GetRequiredService<IMemoryCache>();
         _contentDialogService = AppCore.GetRequiredService<IContentDialogService>();
+
+        _audioManager = AppCore.GetRequiredService<IAudioManager>();
+
+        _audioManager.AudioChanged += OnAudioChanged;
+        _audioManager.AudioStopped += OnAudioStopped;
 
         InitializeComponent();
     }
@@ -133,6 +141,46 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
         ViewModel.DescriptionMaxWidth = panelWidth;
     }
 
+    private void OnAudioChanged(object? sender, AudioChangedArgs e)
+    {
+        foreach (var listviewItem in LibListView.Items)
+        {
+            var vContainer = LibListView.ItemContainerGenerator.ContainerFromItem(listviewItem);
+
+            if (vContainer is ListViewItem vItem)
+            {
+                if (vItem.DataContext is SearchAudioDetail detail)
+                {
+                    if (detail.Id == e.New.Id)
+                    {
+                        var index = LibListView.Items.IndexOf(vItem.DataContext);
+                        LibListView.SelectedIndex = index;
+                        LibListView.ScrollIntoView(vItem.DataContext);
+                        vItem.IsSelected = true;
+                    }
+                    else
+                    {
+                        vItem.IsSelected = false;
+                    }
+                }
+            }
+        }
+    }
+
+    private void OnAudioStopped(object? sender, EventArgs e)
+    {
+        LibListView.SelectedIndex = -1;
+        foreach (var listviewItem in LibListView.Items)
+        {
+            var vContainer = LibListView.ItemContainerGenerator.ContainerFromItem(listviewItem);
+
+            if (vContainer is ListViewItem vItem)
+            {
+                vItem.IsSelected = false;
+            }
+        }
+    }
+
     private void OnListViewItemRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
 
@@ -143,7 +191,22 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
         if (e.Source is ListViewItem listViewItem &&
             listViewItem.DataContext is SearchAudioDetail item)
         {
-            await ViewModel.PlayWebAudio(item);
+            if (item.Copyright.HasCopyright)
+            {
+                foreach (var listviewItem in LibListView.Items)
+                {
+                    var vContainer = LibListView.ItemContainerGenerator.ContainerFromItem(listviewItem);
+
+                    if (vContainer is ListViewItem vItem)
+                    {
+                        vItem.IsSelected = false;
+                    }
+                }
+
+                listViewItem.IsSelected = true;
+
+                await ViewModel.PlayWebAudio(item);
+            }            
         }
     }
 
@@ -287,5 +350,27 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
         MaskContentDialog.SetDescription(dialog, ViewModel.Detail.Description ?? string.Empty);
 
         await dialog.ShowAsync();
+    }
+
+    private void OnAudioPresenterItemLoaded(object sender, RoutedEventArgs e)
+    {
+        if (_audioManager.Playback.Playing)
+        {
+            if (sender is AudioPresenter presenter &&
+                presenter.DataContext is SearchAudioDetail detail)
+            {
+                if (detail.Id == _audioManager.Playback.Audio.Id)
+                {
+                    var index = LibListView.Items.IndexOf(presenter.DataContext);
+                    LibListView.SelectedIndex = index;
+                    LibListView.ScrollIntoView(presenter.DataContext);
+                    presenter.IsSelected = true;
+                }
+                else
+                {
+                    presenter.IsSelected = false;
+                }
+            }
+        }
     }
 }

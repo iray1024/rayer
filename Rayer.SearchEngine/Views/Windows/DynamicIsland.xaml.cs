@@ -60,7 +60,7 @@ public partial class DynamicIsland : Window
 
                 var restoreWidth = currentWith - 100 < 80 ? 120 : currentWith - 100;
                 var stretchWidth = currentWith + 111;
-                var finalWidth = currentWith + 71;
+                var finalWidth = currentWith + 72;
 
                 var restoreAnimation = new DoubleAnimation
                 {
@@ -242,6 +242,9 @@ public partial class DynamicIsland : Window
             Timeline.SetDesiredFrameRate(_windowStateChangedStoryboard, 120);
 
             _windowStateChangedStoryboard.Begin();
+
+            AppCore.MainWindow.Width += 1;
+            AppCore.MainWindow.Width -= 1;
         }
 
         _lastWindowState = AppCore.MainWindow.WindowState;

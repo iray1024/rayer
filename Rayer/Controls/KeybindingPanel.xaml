@@ -41,8 +41,8 @@
                         Text="控制程序行为的一组快捷键" />
                 </Grid>
             </ui:CardExpander.Header>
-            <ListBox Margin="0">
-                <ListBoxItem>
+            <ListBox Margin="0" Style="{StaticResource DefaultListBoxStyle}">
+                <ListBoxItem Style="{StaticResource DefaultListBoxItemStyle}">
                     <ui:CardControl Icon="{ui:SymbolIcon Play24}">
                         <ui:CardControl.Header>
                             <Grid>
@@ -66,7 +66,7 @@
                             Content="空格键" />
                     </ui:CardControl>
                 </ListBoxItem>
-                <ListBoxItem>
+                <ListBoxItem Style="{StaticResource DefaultListBoxItemStyle}">
                     <ui:CardControl Icon="{ui:SymbolIcon Previous24}">
                         <ui:CardControl.Header>
                             <Grid>
@@ -90,7 +90,7 @@
                             Content="Z" />
                     </ui:CardControl>
                 </ListBoxItem>
-                <ListBoxItem>
+                <ListBoxItem Style="{StaticResource DefaultListBoxItemStyle}">
                     <ui:CardControl Icon="{ui:SymbolIcon Next24}">
                         <ui:CardControl.Header>
                             <Grid>
@@ -114,7 +114,7 @@
                             Content="C" />
                     </ui:CardControl>
                 </ListBoxItem>
-                <ListBoxItem>
+                <ListBoxItem Style="{StaticResource DefaultListBoxItemStyle}">
                     <ui:CardControl x:Name="PitchUp" Icon="{ui:ImageIcon {markup:ThemeSymbol Pitch}}">
                         <ui:CardControl.Header>
                             <Grid>
@@ -138,7 +138,7 @@
                             Content="↑" />
                     </ui:CardControl>
                 </ListBoxItem>
-                <ListBoxItem>
+                <ListBoxItem Style="{StaticResource DefaultListBoxItemStyle}">
                     <ui:CardControl x:Name="PitchDown" Icon="{ui:ImageIcon {markup:ThemeSymbol Pitch}}">
                         <ui:CardControl.Header>
                             <Grid>
@@ -162,7 +162,7 @@
                             Content="↓" />
                     </ui:CardControl>
                 </ListBoxItem>
-                <ListBoxItem>
+                <ListBoxItem Style="{StaticResource DefaultListBoxItemStyle}">
                     <ui:CardControl Icon="{ui:SymbolIcon Rewind24}">
                         <ui:CardControl.Header>
                             <Grid>
@@ -186,7 +186,7 @@
                             Content="←" />
                     </ui:CardControl>
                 </ListBoxItem>
-                <ListBoxItem>
+                <ListBoxItem Style="{StaticResource DefaultListBoxItemStyle}">
                     <ui:CardControl Icon="{ui:SymbolIcon FastForward24}">
                         <ui:CardControl.Header>
                             <Grid>

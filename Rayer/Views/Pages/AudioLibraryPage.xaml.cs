@@ -12,6 +12,7 @@ using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
 using Wpf.Ui.Controls;
+using ListViewItem = Rayer.Core.Controls.ListViewItem;
 
 namespace Rayer.Views.Pages;
 
@@ -62,11 +63,30 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
         var index = ViewModel.Items.IndexOf(e.New);
         LibListView.SelectedIndex = index;
         LibListView.ScrollIntoView(e.New);
+
+        foreach (var listviewItem in LibListView.Items)
+        {
+            var vContainer = LibListView.ItemContainerGenerator.ContainerFromItem(listviewItem);
+
+            if (vContainer is ListViewItem vItem)
+            {
+                vItem.IsSelected = vItem.DataContext.Equals(e.New);
+            }
+        }
     }
 
     private void OnAudioStopped(object? sender, EventArgs e)
     {
         LibListView.SelectedIndex = -1;
+        foreach (var listviewItem in LibListView.Items)
+        {
+            var vContainer = LibListView.ItemContainerGenerator.ContainerFromItem(listviewItem);
+
+            if (vContainer is ListViewItem vItem)
+            {
+                vItem.IsSelected = false;
+            }
+        }
     }
 
     private void AudioCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -97,6 +117,18 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
         if (e.Source is ListViewItem listViewItem &&
             listViewItem.DataContext is Audio item)
         {
+            foreach (var listviewItem in LibListView.Items)
+            {
+                var vContainer = LibListView.ItemContainerGenerator.ContainerFromItem(listviewItem);
+
+                if (vContainer is ListViewItem vItem)
+                {
+                    vItem.IsSelected = false;
+                }
+            }
+
+            listViewItem.IsSelected = true;
+
             if (_settingsService.Settings.PlaySingleAudioStrategy is PlaySingleAudioStrategy.AddToQueue)
             {
                 var index = _audioManager.Playback.Queue.IndexOf(item);

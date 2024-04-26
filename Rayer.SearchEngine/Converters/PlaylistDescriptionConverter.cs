@@ -25,13 +25,13 @@ internal class PlaylistDescriptionConverter : IValueConverter
                     ? slices[0]
                     : parameter?.Equals("1") == true
                         ? slices[1]
-                        : value;
+                        : string.Empty;
             }
             else if (slices.Length == 1)
             {
                 return parameter?.Equals("0") == true
                     ? slices[0]
-                    : value;
+                    : string.Empty;
             }
         }
 
