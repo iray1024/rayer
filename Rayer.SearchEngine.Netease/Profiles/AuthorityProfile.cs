@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Rayer.SearchEngine.Core.Domain.Authority.Login;
 using Rayer.SearchEngine.Core.Enums;
 using Rayer.SearchEngine.Netease.Models.Login.Authority;
+using Rayer.SearchEngine.Netease.Models.Login.QrCode;
 
 namespace Rayer.SearchEngine.Netease.Profiles;
 
@@ -23,5 +25,10 @@ internal class AuthorityProfile : Profile
             .ForMember(d => d.Profile, o => o.MapFrom((s, _, _, ctx) => ctx.Mapper.Map<Core.Domain.Authority.Profile>(s)));
 
         CreateMap<UserModel, Core.Domain.Authority.User>();
+
+        CreateMap<QrCodeModel, QrCode>()
+            .ForMember(d => d.Image, o => o.MapFrom(s => s.Data.Image));
+
+        CreateMap<QrCodeVerifyModel, QrCodeVerify>();
     }
 }
