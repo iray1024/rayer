@@ -32,20 +32,23 @@ internal class WaveMetadataFactory : IWaveMetadataFactory
         _httpClientProvider = httpClientProvider;
     }
 
-    WaveMetadata? IWaveMetadataFactory.Create(string filepath)
+    async Task<WaveMetadata?> IWaveMetadataFactory.CreateAsync(string filepath)
     {
         Stream baseStream;
         WaveStream waveStream;
+        var isWebStreaming = false;
 
         try
         {
             if (filepath.StartsWith("http"))
             {
-                using var stream = _httpClientProvider.HttpClient.GetStreamAsync(filepath).Result;
+                isWebStreaming = true;
+
+                using var stream = await _httpClientProvider.HttpClient.GetStreamAsync(filepath, AppCore.StoppingToken);
 
                 var buffer = new MemoryStream();
 
-                stream.CopyTo(buffer);
+                await stream.CopyToAsync(buffer, AppCore.StoppingToken);
                 buffer.Position = 0;
 
                 baseStream = buffer;
@@ -84,7 +87,8 @@ internal class WaveMetadataFactory : IWaveMetadataFactory
                 Reader = waveStream,
                 PitchShiftingSampleProvider = pitchProvider,
                 Equalizer = equalizer,
-                FadeInOutSampleProvider = fadeInOutProvider
+                FadeInOutSampleProvider = fadeInOutProvider,
+                IsWebStreaming = isWebStreaming
             };
         }
         catch

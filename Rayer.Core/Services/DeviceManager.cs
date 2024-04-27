@@ -13,7 +13,6 @@ namespace Rayer.Core.Services;
 [Inject<IDeviceManager>]
 internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
 {
-    private WaveOutEvent? _device;
     private readonly SemaphoreSlim _semaphore = new(2, 2);
 
     private WaveMetadata? _metadata;
@@ -23,7 +22,7 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
 
     private int _isReOpen = 0;
 
-    public WaveOutEvent? Device => _device;
+    public WaveOutEvent? Device { get; private set; }
 
     public float Volume
     {
@@ -45,17 +44,14 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
         }
     }
 
-    public PlaybackState PlaybackState => _device is not null
-        ? _device.PlaybackState
+    public PlaybackState PlaybackState => Device is not null
+        ? Device.PlaybackState
         : PlaybackState.Stopped;
 
     public bool IsReOpen
     {
         get => _isReOpen != 0;
-        set
-        {
-            _ = Interlocked.Exchange(ref _isReOpen, value ? 1 : 0);
-        }
+        set => _ = Interlocked.Exchange(ref _isReOpen, value ? 1 : 0);
     }
 
     public event EventHandler<StoppedEventArgs>? PlaybackStopped;
@@ -76,22 +72,22 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
             throw new InvalidOperationException("请先加载WaveMetadata");
         }
 
-        _device?.Init(_metadata);
+        Device?.Init(_metadata);
     }
 
     public void Stop()
     {
-        _device?.Stop();
+        Device?.Stop();
 
-        _device?.Dispose();
-        _device = null;
+        Device?.Dispose();
+        Device = null;
     }
 
     public async Task SwitchPitchProvider()
     {
         if (_metadata?.Reader is not null)
         {
-            _device?.Pause();
+            Device?.Pause();
 
             var currentTime = _metadata.Reader.CurrentTime;
 
@@ -99,7 +95,7 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
 
             var factory = serviceProvider.GetRequiredService<IWaveMetadataFactory>();
 
-            var metadata = factory.Create(filePath);
+            var metadata = await factory.CreateAsync(filePath);
 
             if (metadata is not null)
             {
@@ -122,7 +118,7 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
 
     private async Task EnsureDeviceCreatedAsync(WaveMetadata metadata, CancellationToken cancellationToken = default)
     {
-        if (_device is null)
+        if (Device is null)
         {
             _metadata = metadata;
 #if DEBUG
@@ -145,9 +141,9 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
             throw new InvalidOperationException("请先加载WaveMetadata");
         }
 
-        _device = new WaveOutEvent() { Volume = _volume, DesiredLatency = 200 };
+        Device = new WaveOutEvent() { Volume = _volume, DesiredLatency = 200 };
 
-        _device.PlaybackStopped += async (s, a) =>
+        Device.PlaybackStopped += async (s, a) =>
         {
             try
             {
@@ -177,9 +173,9 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
 
     private void SetVolume()
     {
-        if (_device is not null)
+        if (Device is not null)
         {
-            _device.Volume = _volume;
+            Device.Volume = _volume;
         }
     }
 

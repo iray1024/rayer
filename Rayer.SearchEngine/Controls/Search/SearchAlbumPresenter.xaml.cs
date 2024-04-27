@@ -63,11 +63,6 @@ public partial class SearchAlbumPresenter : UserControl, IPresenterControl<Searc
         GC.Collect();
     }
 
-    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
-    {
-        Resize(e.NewSize.Width);
-    }
-
     #region Effect    
     private void OnMouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
@@ -142,13 +137,18 @@ public partial class SearchAlbumPresenter : UserControl, IPresenterControl<Searc
     }
     #endregion
 
+    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        Resize(e.NewSize.Width);
+    }
+
     private void Resize(double newWidth)
     {
         var factor = (newWidth + 500) / SystemParameters.PrimaryScreenWidth;
 
         var panelWidth = ((newWidth - (_navigationView.IsPaneOpen ? 160 : 90)) / 5) - (100 * Math.Min(factor, 1));
 
-        ViewModel.CoverMaxWidth = _navigationView.IsPaneOpen ? panelWidth + 68 : panelWidth + 75;
+        ViewModel.CoverMaxWidth = _navigationView.IsPaneOpen ? panelWidth + (65 * Math.Min(1, factor)) : panelWidth + (75 * Math.Min(1, factor));
         ViewModel.CoverRectClip = new RectangleGeometry(new Rect(0, 0, ViewModel.CoverMaxWidth, ViewModel.CoverMaxWidth), 6, 6);
 
         if (ViewModel.PresenterDataContext is not null)
@@ -164,7 +164,7 @@ public partial class SearchAlbumPresenter : UserControl, IPresenterControl<Searc
         Resize(AppCore.MainWindow.ActualWidth);
     }
 
-    private void OnAlbumMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void OnAlbumMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         var nav = AppCore.GetRequiredService<Wpf.Ui.INavigationService>();
 

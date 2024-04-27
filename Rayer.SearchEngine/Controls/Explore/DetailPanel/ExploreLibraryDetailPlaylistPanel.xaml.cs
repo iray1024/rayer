@@ -39,9 +39,9 @@ public partial class ExploreLibraryDetailPlaylistPanel : UserControl
 
         var factor = (currentWindowWidth + 500) / SystemParameters.PrimaryScreenWidth;
 
-        var panelWidth = ((currentWindowWidth - 180) / 5) - (100 * Math.Min(factor, 1));
+        var panelWidth = ((currentWindowWidth - (_navigationView.IsPaneOpen ? 160 : 90)) / 5) - (100 * Math.Min(factor, 1));
 
-        ViewModel.CoverMaxWidth = panelWidth + 60;
+        ViewModel.CoverMaxWidth = _navigationView.IsPaneOpen ? panelWidth + (65 * Math.Min(1, factor)) : panelWidth + (75 * Math.Min(1, factor));
         ViewModel.CoverRectClip = new RectangleGeometry(new(0, 0, ViewModel.CoverMaxWidth, ViewModel.CoverMaxWidth), 6, 6);
     }
 
@@ -140,7 +140,7 @@ public partial class ExploreLibraryDetailPlaylistPanel : UserControl
 
         var panelWidth = ((newWidth - (_navigationView.IsPaneOpen ? 160 : 90)) / 5) - (100 * Math.Min(factor, 1));
 
-        ViewModel.CoverMaxWidth = _navigationView.IsPaneOpen ? panelWidth + 60 : panelWidth + 70;
+        ViewModel.CoverMaxWidth = _navigationView.IsPaneOpen ? panelWidth + (65 * Math.Min(1, factor)) : panelWidth + (75 * Math.Min(1, factor));
         ViewModel.CoverRectClip = new RectangleGeometry(new Rect(0, 0, ViewModel.CoverMaxWidth, ViewModel.CoverMaxWidth), 6, 6);
     }
 

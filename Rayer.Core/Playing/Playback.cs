@@ -22,8 +22,6 @@ public class Playback : IDisposable
     private readonly IWaveMetadataFactory _metadataFactory;
 
     private readonly IAudioManager _audioManager = null!;
-    private readonly IDeviceManager _deviceManager = null!;
-
     private static readonly Audio _fallbackAudio = new();
 
     private static readonly TimeSpan _jumpThreshold = TimeSpan.FromSeconds(5);
@@ -38,17 +36,17 @@ public class Playback : IDisposable
 
         _playQueueProvider = serviceProvider.GetRequiredService<IPlayQueueProvider>();
         _metadataFactory = serviceProvider.GetRequiredService<IWaveMetadataFactory>();
-        _deviceManager = serviceProvider.GetRequiredService<IDeviceManager>();
+        Device = serviceProvider.GetRequiredService<IDeviceManager>();
 
-        _deviceManager.PlaybackStopped += OnPlaybackStopped;
-        _deviceManager.MetadataChanged += OnMetadataChanged;
+        Device.PlaybackStopped += OnPlaybackStopped;
+        Device.MetadataChanged += OnMetadataChanged;
 
         Queue.AddRange(_audioManager.Audios);
 
         DispatcherTimer.Tick += OnTick;
     }
 
-    public IDeviceManager Device => _deviceManager;
+    public IDeviceManager Device { get; } = null!;
 
     public SortableObservableCollection<Audio> Queue => _playQueueProvider.Queue;
 
@@ -61,10 +59,7 @@ public class Playback : IDisposable
     public bool IsClickToPlay
     {
         get => _isClickToPlay != 0;
-        set
-        {
-            _ = Interlocked.Exchange(ref _isClickToPlay, value ? 1 : 0);
-        }
+        set => _ = Interlocked.Exchange(ref _isClickToPlay, value ? 1 : 0);
     }
 
     public TimeSpan CurrentTime
@@ -111,8 +106,8 @@ public class Playback : IDisposable
 
     public void Initialize(float volume, float pitch, PlayloopMode playloopMode)
     {
-        _deviceManager.Volume = volume;
-        _deviceManager.Pitch = pitch;
+        Device.Volume = volume;
+        Device.Pitch = pitch;
 
         if (playloopMode is PlayloopMode.List)
         {
@@ -223,13 +218,13 @@ public class Playback : IDisposable
     {
         ForceStopCurrentDevice();
 
-        var metadata = _metadataFactory.Create(Audio.Path);
+        var metadata = await _metadataFactory.CreateAsync(Audio.Path);
 
         if (metadata is not null)
         {
             _metadata = metadata;
 
-            await _deviceManager.LoadAsync(_metadata);
+            await Device.LoadAsync(_metadata);
 
             OpenFile();
         }
@@ -254,15 +249,15 @@ public class Playback : IDisposable
 
     public void Resume(bool fadeIn = true)
     {
-        if (_deviceManager.Device is not null && _metadata.Reader is not null && _deviceManager.PlaybackState is not PlaybackState.Playing)
+        if (Device.Device is not null && _metadata.Reader is not null && Device.PlaybackState is not PlaybackState.Playing)
         {
             DispatcherTimer.Start();
 
-            var oldState = _deviceManager.PlaybackState;
+            var oldState = Device.PlaybackState;
 #if DEBUG
             Console.WriteLine("开始播放\n");
 #endif
-            _deviceManager.Device.Play();
+            Device.Device.Play();
             if (fadeIn)
             {
                 _metadata.FadeInOutSampleProvider?.BeginFadeIn(1000);
@@ -278,7 +273,7 @@ public class Playback : IDisposable
     {
         DispatcherTimer.Stop();
 
-        _deviceManager.Device?.Pause();
+        Device.Device?.Pause();
 
         AudioPaused?.Invoke(this, EventArgs.Empty);
     }
@@ -287,7 +282,7 @@ public class Playback : IDisposable
     {
         DispatcherTimer.Stop();
 
-        _deviceManager.Stop();
+        Device.Stop();
 
         if (_metadata.Reader is not null)
         {
@@ -301,7 +296,7 @@ public class Playback : IDisposable
 
         Playing = false;
 
-        _deviceManager.Stop();
+        Device.Stop();
 
         if (_metadata.Reader is not null)
         {
@@ -358,10 +353,10 @@ public class Playback : IDisposable
         {
             if (_metadata.PitchShiftingSampleProvider is not null)
             {
-                _metadata.PitchShiftingSampleProvider.Pitch = _deviceManager.Pitch;
+                _metadata.PitchShiftingSampleProvider.Pitch = Device.Pitch;
             }
 
-            _deviceManager.Init();
+            Device.Init();
 
             AudioChanged?.Invoke(this, new AudioChangedArgs() { New = Audio });
         }
@@ -389,7 +384,7 @@ public class Playback : IDisposable
 #if DEBUG
         Debug.WriteLine("播放结束事件响应");
 #endif
-        _deviceManager.Stop();
+        Device.Stop();
 
         if (Repeat && Playing)
         {
@@ -407,10 +402,10 @@ public class Playback : IDisposable
 
         if (_metadata.PitchShiftingSampleProvider is not null)
         {
-            _metadata.PitchShiftingSampleProvider.Pitch = _deviceManager.Pitch;
+            _metadata.PitchShiftingSampleProvider.Pitch = Device.Pitch;
         }
 
-        _deviceManager.Device?.Play();
+        Device.Device?.Play();
 
         _metadata.FadeInOutSampleProvider?.BeginFadeIn(1000);
     }
@@ -446,7 +441,7 @@ public class Playback : IDisposable
     {
         DispatcherTimer.Stop();
 
-        _deviceManager.Stop();
+        Device.Stop();
     }
 
     private int GetExcludeRandomIndex(int exclude)

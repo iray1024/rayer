@@ -54,7 +54,7 @@
                                 Margin="0,0,12,2"
                                 Clip="{Binding ViewModel.CoverRectClip, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAlbumPresenter}}"
                                 ClipToBounds="True"
-                                MouseLeftButtonUp="OnAlbumMouseLeftButtonUp">
+                                MouseLeftButtonDown="OnAlbumMouseLeftButtonDown">
                                 <controls:AsyncImage
                                     Width="{Binding ViewModel.CoverMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAlbumPresenter}}"
                                     Height="{Binding ViewModel.CoverMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAlbumPresenter}}"

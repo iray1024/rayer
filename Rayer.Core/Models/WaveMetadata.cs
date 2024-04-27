@@ -18,6 +18,8 @@ public class WaveMetadata : ISampleProvider, IDisposable
 
     public Equalizer? Equalizer { get; set; }
 
+    public bool IsWebStreaming { get; set; } = false;
+
     public WaveFormat WaveFormat => FadeInOutSampleProvider?.WaveFormat
         ?? throw new ObjectDisposedException("FadeInOutSampleProvider已被释放，无法读取WaveFormat");
 
