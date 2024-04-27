@@ -3,6 +3,7 @@ using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.Core.Abstractions;
 using Rayer.SearchEngine.Core.Domain.Album;
 using Rayer.SearchEngine.Core.Enums;
+using Rayer.SearchEngine.Netease.Extensions;
 using Rayer.SearchEngine.Netease.Models.Search.Album;
 
 namespace Rayer.SearchEngine.Netease.Engine;
@@ -71,6 +72,7 @@ internal class SearchAlbumEngine : SearchEngineBase, ISearchAlbumEngine
             for (var i = 0; i < domain.Audios.Length; i++)
             {
                 var audio = domain.Audios[i];
+                var responseAudio = response.Audios[i];
 
                 if (audio.Album is not null)
                 {
@@ -78,6 +80,11 @@ internal class SearchAlbumEngine : SearchEngineBase, ISearchAlbumEngine
                     {
                         audio.Album.Cover = domain.Cover;
                     }
+                }
+
+                if (!responseAudio.Playable(out var reason) && !string.IsNullOrEmpty(reason))
+                {
+                    audio.Copyright = new Core.Domain.Common.Copyright { Reason = reason };
                 }
             }
 

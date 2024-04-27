@@ -36,6 +36,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <local:AsyncImage
+                x:Name="PART_Album"
                 Grid.RowSpan="2"
                 Grid.Column="0"
                 Width="{Binding Path=(local:AudioPresenter.AlbumWidth), ElementName=root, FallbackValue=36}"

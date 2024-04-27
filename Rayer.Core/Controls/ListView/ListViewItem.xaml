@@ -15,9 +15,8 @@
             CornerRadius="6">
             <Border.Background>
                 <SolidColorBrush
-                    x:Name="ContentBorderBrush"
-                    Opacity="0"
-                    Color="{DynamicResource ControlStrokeColorDefault}" />
+                    x:Name="ContentBorderBrush"                   
+                    Color="Transparent" />
             </Border.Background>
             <Border
                 x:Name="HoverBorder"
@@ -77,7 +76,6 @@
                     <Condition Property="IsAvailable" Value="True" />
                     <Condition Property="IsEnabled" Value="True" />
                 </MultiTrigger.Conditions>
-                <Setter TargetName="ContentBorder" Property="Opacity" Value="1" />
                 <Setter TargetName="ContentBorder" Property="Background" Value="{StaticResource SelectedDefaultBrush}" />
                 <Setter Property="Foreground" Value="{StaticResource SelectedTextDefaultBrush}" />
             </MultiTrigger>

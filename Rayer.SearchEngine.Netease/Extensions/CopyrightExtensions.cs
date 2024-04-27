@@ -54,4 +54,41 @@ internal static class CopyrightExtensions
 
         return false;
     }
+
+    public static bool Playable(this SearchAudioDetailInformationModel detail, out string reason)
+    {
+        var loginManager = AppCore.GetRequiredService<IAggregationServiceProvider>().LoginManager;
+
+        reason = string.Empty;
+
+        if (detail.Fee == 1)
+        {
+            if (loginManager.Account.Profile is not null &&
+                loginManager.Account.Account.VipType == 11)
+            {
+                return true;
+            }
+            else
+            {
+                reason = "仅限VIP";
+
+                return false;
+            }
+        }
+
+        else if (detail.Fee == 4)
+        {
+            reason = "付费专辑";
+
+            return false;
+        }
+        else if (detail.NoCopyright is not null)
+        {
+            reason = "无版权";
+
+            return false;
+        }
+
+        return false;
+    }
 }

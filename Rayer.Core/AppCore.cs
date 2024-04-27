@@ -13,7 +13,9 @@ public static class AppCore
 
     public static CancellationToken StoppingToken => _cancellationTokenSource.Token;
 
-    public static Window MainWindow => Application.Current.MainWindow;
+    public static Window MainWindow => Application.Current is not null
+        ? Application.Current.MainWindow
+        : null!;
 
     public static T GetRequiredService<T>()
         where T : class

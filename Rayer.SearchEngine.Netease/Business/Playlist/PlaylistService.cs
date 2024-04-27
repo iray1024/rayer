@@ -52,12 +52,9 @@ internal class PlaylistService : SearchEngineBase, IPlaylistService
                 var privilege = response.Privileges[i];
                 var audio = domain.Audios[i];
 
-                if (!detail.Playable(privilege, out var reason))
+                if (!detail.Playable(privilege, out var reason) && !string.IsNullOrEmpty(reason))
                 {
-                    if (!string.IsNullOrEmpty(reason))
-                    {
-                        audio.Copyright = new Core.Domain.Common.Copyright { Reason = reason };
-                    }
+                    audio.Copyright = new Core.Domain.Common.Copyright { Reason = reason };
                 }
             }
 

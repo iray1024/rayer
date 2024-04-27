@@ -36,6 +36,19 @@ public partial class AudioPresenter : System.Windows.Controls.UserControl
         set => SetValue(IsAvailableProperty, value);
     }
 
+    public static readonly DependencyProperty AlbumWidthProperty =
+            DependencyProperty.Register(
+                "AlbumWidth",
+                typeof(double),
+                typeof(AudioPresenter),
+                new PropertyMetadata(36d));
+
+    public double AlbumWidth
+    {
+        get => (double)GetValue(AlbumWidthProperty);
+        set => SetValue(AlbumWidthProperty, value);
+    }
+
     public static readonly DependencyProperty TitleMaxWidthProperty =
         DependencyProperty.Register(
             "TitleMaxWidth",
@@ -60,19 +73,6 @@ public partial class AudioPresenter : System.Windows.Controls.UserControl
     {
         get => (double)GetValue(ArtistsMaxWidthProperty);
         set => SetValue(ArtistsMaxWidthProperty, value);
-    }
-
-    public static readonly DependencyProperty AlbumWidthProperty =
-        DependencyProperty.Register(
-            "AlbumWidth",
-            typeof(double),
-            typeof(AudioPresenter),
-            new PropertyMetadata(36d));
-
-    public double AlbumWidth
-    {
-        get => (double)GetValue(AlbumWidthProperty);
-        set => SetValue(AlbumWidthProperty, value);
     }
 
     public static readonly DependencyProperty AlbumTitleMaxWidthProperty =
@@ -184,6 +184,20 @@ public partial class AudioPresenter : System.Windows.Controls.UserControl
         get => (string)GetValue(DurationProperty);
         set => SetValue(DurationProperty, value);
     }
+
+    public static readonly DependencyProperty CopyrightProperty =
+        DependencyProperty.Register(
+            "Copyright",
+            typeof(string),
+            typeof(AudioPresenter),
+            new PropertyMetadata(null, OnCopyrightPropertyChanged));
+
+    [Bindable(true)]
+    public string Copyright
+    {
+        get => (string)GetValue(CopyrightProperty);
+        set => SetValue(CopyrightProperty, value);
+    }
     #endregion
 
     public AudioPresenter()
@@ -217,5 +231,15 @@ public partial class AudioPresenter : System.Windows.Controls.UserControl
         var instance = (AudioPresenter)d;
 
         instance.PART_Duration.Visibility = e.NewValue is not null ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private static void OnCopyrightPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var instance = (AudioPresenter)d;
+
+        if (e.NewValue is string { Length: > 0 })
+        {
+            System.Windows.Controls.ToolTipService.SetToolTip(instance.PART_Album, e.NewValue);
+        }
     }
 }

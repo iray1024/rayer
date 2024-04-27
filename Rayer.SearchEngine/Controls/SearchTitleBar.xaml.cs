@@ -37,8 +37,8 @@ public partial class SearchTitleBar : UserControl
 
     public event EventHandler<SwitchSearchTypeArgs> CheckedChanged
     {
-        add { TryAddHandler(value); }
-        remove { TryRemoveHandler(value); }
+        add => TryAddHandler(value);
+        remove => TryRemoveHandler(value);
     }
 
     private async void OnTitleBarControlMouseEnter(object sender, MouseEventArgs e)
@@ -111,8 +111,10 @@ public partial class SearchTitleBar : UserControl
         });
     }
 
-    private void OnChecked(object sender, RoutedEventArgs e)
+    private async void OnChecked(object sender, RoutedEventArgs e)
     {
+        await RefreshState();
+
         if (sender is RadioButton { IsChecked: true } radio)
         {
             if (radio.Content is TextBlock textBlock)
@@ -159,35 +161,7 @@ public partial class SearchTitleBar : UserControl
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {
-        await Application.Current.Dispatcher.InvokeAsync(() =>
-        {
-            _titlebarControlStoryboard.Stop();
-            _titlebarControlStoryboard.Children.Clear();
-
-            var animation = new DoubleAnimation()
-            {
-                From = 0,
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(1)
-            };
-
-            foreach (var item in TitleBarPanel.Children)
-            {
-                if (item is RadioButton { IsChecked: true } radio)
-                {
-                    var innerBorder = radio.Template.FindName("CheckBorder", radio);
-
-                    Storyboard.SetTarget(animation, innerBorder as DependencyObject);
-                    Storyboard.SetTargetProperty(animation, new PropertyPath(OpacityProperty));
-
-                    _titlebarControlStoryboard.Children.Add(animation);
-
-                    Timeline.SetDesiredFrameRate(_titlebarControlStoryboard, 60);
-
-                    _titlebarControlStoryboard.Begin();
-                }
-            }
-        });
+        await RefreshState();
     }
 
     private async void OnUnloaded(object sender, RoutedEventArgs e)
@@ -218,6 +192,42 @@ public partial class SearchTitleBar : UserControl
                     Timeline.SetDesiredFrameRate(_titlebarControlStoryboard, 60);
 
                     _titlebarControlStoryboard.Begin();
+                }
+            }
+        });
+    }
+
+    private async Task RefreshState()
+    {
+        await Application.Current.Dispatcher.InvokeAsync(() =>
+        {
+            _titlebarControlStoryboard.Stop();
+            _titlebarControlStoryboard.Children.Clear();
+
+            var animation = new DoubleAnimation()
+            {
+                From = 0,
+                To = 1,
+                Duration = TimeSpan.FromMilliseconds(1)
+            };
+
+            foreach (var item in TitleBarPanel.Children)
+            {
+                if (item is RadioButton { IsChecked: true } radio)
+                {
+                    var innerBorder = radio.Template.FindName("CheckBorder", radio);
+
+                    if (innerBorder is not null)
+                    {
+                        Storyboard.SetTarget(animation, innerBorder as DependencyObject);
+                        Storyboard.SetTargetProperty(animation, new PropertyPath(OpacityProperty));
+
+                        _titlebarControlStoryboard.Children.Add(animation);
+
+                        Timeline.SetDesiredFrameRate(_titlebarControlStoryboard, 60);
+
+                        _titlebarControlStoryboard.Begin();
+                    }
                 }
             }
         });

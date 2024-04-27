@@ -30,7 +30,7 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
     public new SearchAudioPresenterViewModel ViewModel { get; set; }
 
     private void OnAudioChanged(object? sender, AudioChangedArgs e)
-    {        
+    {
         foreach (var listviewItem in LibListView.Items)
         {
             var vContainer = LibListView.ItemContainerGenerator.ContainerFromItem(listviewItem);
@@ -50,7 +50,7 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
                     {
                         vItem.IsSelected = false;
                     }
-                }                
+                }
             }
         }
     }
@@ -79,19 +79,22 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
         if (e.Source is ListViewItem listViewItem &&
             listViewItem.DataContext is SearchAudioDetail item)
         {
-            foreach (var listviewItem in LibListView.Items)
+            if (item.Copyright.HasCopyright)
             {
-                var vContainer = LibListView.ItemContainerGenerator.ContainerFromItem(listviewItem);
-
-                if (vContainer is ListViewItem vItem)
+                foreach (var listviewItem in LibListView.Items)
                 {
-                    vItem.IsSelected = false;
+                    var vContainer = LibListView.ItemContainerGenerator.ContainerFromItem(listviewItem);
+
+                    if (vContainer is ListViewItem vItem)
+                    {
+                        vItem.IsSelected = false;
+                    }
                 }
+
+                listViewItem.IsSelected = true;
+
+                await ViewModel.PlayWebAudio(item);
             }
-
-            listViewItem.IsSelected = true;
-
-            await ViewModel.PlayWebAudio(item);
         }
     }
 

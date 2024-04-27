@@ -44,10 +44,11 @@
                             AlbumWidth="40"
                             Artists="{Binding Artists, Mode=OneTime, Converter={StaticResource WebArtistsConverter}}"
                             ArtistsMaxWidth="{Binding ViewModel.ArtistsNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAudioPresenter}}"
-                            IsAvailable="True"
+                            Copyright="{Binding Copyright.Reason, Mode=OneTime}"
+                            IsAvailable="{Binding Copyright.HasCopyright, Mode=OneTime}"
                             Style="{x:Null}"
                             TitleMaxWidth="{Binding ViewModel.TitleMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAudioPresenter}}"
-                            Duration="{Binding Duration, Mode=OneWay, Converter={StaticResource WebDurationConverter}}" />
+                            Duration="{Binding Duration, Mode=OneTime, Converter={StaticResource WebDurationConverter}}" />
                     </Grid>
                 </DataTemplate>
             </layout:ListView.ItemTemplate>
