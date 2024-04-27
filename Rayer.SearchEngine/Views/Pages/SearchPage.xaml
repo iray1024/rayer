@@ -21,7 +21,10 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid x:Name="Presenter" Grid.RowSpan="2" />
+        <Grid
+            x:Name="Presenter"
+            Grid.RowSpan="2"
+            HorizontalAlignment="Stretch" />
 
     </Grid>
 </framework:NoneFocusablePage>

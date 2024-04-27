@@ -16,6 +16,8 @@ public partial class SearchAlbumPresenter : UserControl, IPresenterControl<Searc
 {
     private readonly Wpf.Ui.Controls.INavigationView _navigationView;
 
+    private bool _isLoaded = false;
+
     public SearchAlbumPresenter()
     {
         var vm = AppCore.GetRequiredService<SearchAlbumPresenterViewModel>();
@@ -26,9 +28,6 @@ public partial class SearchAlbumPresenter : UserControl, IPresenterControl<Searc
         InitializeComponent();
 
         _navigationView = AppCore.GetRequiredService<Wpf.Ui.INavigationService>().GetNavigationControl();
-
-        _navigationView.PaneOpened += OnPaneOpened;
-        _navigationView.PaneClosed += OnPaneClosed;
     }
 
     public SearchAlbumPresenterViewModel ViewModel { get; set; }
@@ -36,6 +35,12 @@ public partial class SearchAlbumPresenter : UserControl, IPresenterControl<Searc
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         AppCore.MainWindow.SizeChanged += OnSizeChanged;
+
+        if (!_isLoaded)
+        {
+            ((Grid)Parent).SizeChanged += OnParentSizeChanged;
+            _isLoaded = true;
+        }
 
         BindingOperations.SetBinding(ItemGroup, ItemsControl.ItemsSourceProperty, new Binding()
         {
@@ -61,16 +66,6 @@ public partial class SearchAlbumPresenter : UserControl, IPresenterControl<Searc
     private void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
         Resize(e.NewSize.Width);
-    }
-
-    private void OnPaneOpened(Wpf.Ui.Controls.NavigationView sender, RoutedEventArgs args)
-    {
-        Resize(AppCore.MainWindow.ActualWidth);
-    }
-
-    private void OnPaneClosed(Wpf.Ui.Controls.NavigationView sender, RoutedEventArgs args)
-    {
-        Resize(AppCore.MainWindow.ActualWidth);
     }
 
     #region Effect    
@@ -153,13 +148,20 @@ public partial class SearchAlbumPresenter : UserControl, IPresenterControl<Searc
 
         var panelWidth = ((newWidth - (_navigationView.IsPaneOpen ? 160 : 90)) / 5) - (100 * Math.Min(factor, 1));
 
-        ViewModel.CoverMaxWidth = panelWidth + 60;
+        ViewModel.CoverMaxWidth = _navigationView.IsPaneOpen ? panelWidth + 68 : panelWidth + 75;
         ViewModel.CoverRectClip = new RectangleGeometry(new Rect(0, 0, ViewModel.CoverMaxWidth, ViewModel.CoverMaxWidth), 6, 6);
 
         if (ViewModel.PresenterDataContext is not null)
         {
             Height = (ViewModel.CoverMaxWidth + 50) * Math.Ceiling(1.0 * ViewModel.PresenterDataContext.Details.Length / 5);
         }
+    }
+
+    private void OnParentSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        Width = e.NewSize.Width;
+
+        Resize(AppCore.MainWindow.ActualWidth);
     }
 
     private void OnAlbumMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)

@@ -206,7 +206,7 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
                 listViewItem.IsSelected = true;
 
                 await ViewModel.PlayWebAudio(item);
-            }            
+            }
         }
     }
 

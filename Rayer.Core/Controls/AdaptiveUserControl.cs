@@ -11,16 +11,7 @@ public abstract class AdaptiveUserControl(AdaptiveViewModelBase viewModel) : Use
     {
         AppCore.MainWindow.SizeChanged += OnSizeChanged;
 
-        var panelWidth = (AppCore.MainWindow.ActualWidth - 180 - ((int)ActualWidth >> 1)) / 3;
-
-        ViewModel.TitleMaxWidth = panelWidth + 50;
-        ViewModel.ArtistsNameMaxWidth = panelWidth + 50;
-        ViewModel.AlbumNameMaxWidth = panelWidth + 80;
-
-        ViewModel.DurationMaxWidth = e.Source is Window { WindowState: WindowState.Maximized } ? 43 : 39;
-        ViewModel.ItemMargin = e.Source is Window { WindowState: WindowState.Maximized }
-            ? new Thickness(0, 0, 30, 0)
-            : new Thickness(0, 0, 24, 0);
+        Resize(AppCore.MainWindow.ActualWidth, e);
 
         AppCore.MainWindow.Width += 1;
         AppCore.MainWindow.Width -= 1;
@@ -33,7 +24,12 @@ public abstract class AdaptiveUserControl(AdaptiveViewModelBase viewModel) : Use
 
     protected virtual void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        var panelWidth = (e.NewSize.Width - 180 - ((int)ActualWidth >> 1)) / 3;
+        Resize(e.NewSize.Width, e);
+    }
+
+    protected void Resize(double newWidth, RoutedEventArgs e)
+    {
+        var panelWidth = (newWidth - 180 - ((int)ActualWidth >> 1)) / 3;
 
         ViewModel.TitleMaxWidth = panelWidth + 50;
         ViewModel.ArtistsNameMaxWidth = panelWidth + 50;

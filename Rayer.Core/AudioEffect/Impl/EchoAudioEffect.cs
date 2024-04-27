@@ -1,4 +1,6 @@
-﻿namespace Rayer.Core.Effects.Impl;
+﻿using Rayer.Core.AudioEffect.Abstractions;
+
+namespace Rayer.Core.AudioEffect.Impl;
 
 /// <summary>
 /// 不支持 Flac 格式的音乐
@@ -15,6 +17,6 @@ internal class EchoAudioEffect(int length = 20000, float factor = 0.5f) : IAudio
     {
         _samples.Enqueue(sample);
 
-        return Math.Min(1, Math.Max(-1, sample + (EchoFactor * _samples.Dequeue())));
+        return Math.Min(1, Math.Max(-1, sample + EchoFactor * _samples.Dequeue()));
     }
 }

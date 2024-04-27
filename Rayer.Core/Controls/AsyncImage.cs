@@ -1,5 +1,4 @@
 ﻿using Rayer.Core.Utils;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -59,6 +58,24 @@ public class AsyncImage : Control
         null
     );
 
+    public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
+        nameof(CornerRadius),
+        typeof(CornerRadius),
+        typeof(AsyncImage),
+        new PropertyMetadata(new CornerRadius(0), new PropertyChangedCallback(OnCornerRadiusChanged))
+    );
+
+    public static readonly DependencyPropertyKey InnerCornerRadiusPropertyKey =
+        DependencyProperty.RegisterReadOnly(
+            nameof(InnerCornerRadius),
+            typeof(CornerRadius),
+            typeof(AsyncImage),
+            new PropertyMetadata(new CornerRadius(0))
+        );
+
+    public static readonly DependencyProperty InnerCornerRadiusProperty =
+        InnerCornerRadiusPropertyKey.DependencyProperty;
+
     public static ImageSource GetSource(DependencyObject obj)
     {
         return (ImageSource)obj.GetValue(SourceProperty);
@@ -101,7 +118,7 @@ public class AsyncImage : Control
         get => (ImageSource?)GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
     }
-    
+
     public Uri UriSource
     {
         get => (Uri)GetValue(UriSourceProperty);
@@ -127,24 +144,6 @@ public class AsyncImage : Control
     }
 
     internal CornerRadius InnerCornerRadius => (CornerRadius)GetValue(InnerCornerRadiusProperty);
-
-    public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
-        nameof(CornerRadius),
-        typeof(CornerRadius),
-        typeof(AsyncImage),
-        new PropertyMetadata(new CornerRadius(0), new PropertyChangedCallback(OnCornerRadiusChanged))
-    );
-
-    public static readonly DependencyPropertyKey InnerCornerRadiusPropertyKey =
-        DependencyProperty.RegisterReadOnly(
-            nameof(InnerCornerRadius),
-            typeof(CornerRadius),
-            typeof(AsyncImage),
-            new PropertyMetadata(new CornerRadius(0))
-        );
-
-    public static readonly DependencyProperty InnerCornerRadiusProperty =
-        InnerCornerRadiusPropertyKey.DependencyProperty;
 
     private static async void OnUriSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {

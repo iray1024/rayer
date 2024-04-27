@@ -1,6 +1,7 @@
 ﻿using NAudio.Wave;
+using Rayer.Core.AudioEffect.Abstractions;
 
-namespace Rayer.Core.Effects;
+namespace Rayer.Core.AudioEffect;
 
 internal sealed class EffectStream(WaveStream sourceStream) : WaveStream
 {

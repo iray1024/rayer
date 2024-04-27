@@ -1,4 +1,4 @@
-﻿namespace Rayer.Core.Effects;
+﻿namespace Rayer.Core.AudioEffect.Abstractions;
 
 internal interface IAudioEffect
 {

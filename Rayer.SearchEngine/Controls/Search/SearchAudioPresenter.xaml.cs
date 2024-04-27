@@ -4,12 +4,16 @@ using Rayer.Core.Controls;
 using Rayer.Core.Events;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.ViewModels.Presenter;
+using System.Windows;
+using System.Windows.Controls;
 using ListViewItem = Rayer.Core.Controls.ListViewItem;
 
 namespace Rayer.SearchEngine.Controls.Search;
 
 public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterControl<SearchAudioPresenterViewModel, SearchAudio>
 {
+    private bool _isLoaded = false;
+
     public SearchAudioPresenter(
         SearchAudioPresenterViewModel vm)
         : base(vm)
@@ -28,6 +32,16 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
     }
 
     public new SearchAudioPresenterViewModel ViewModel { get; set; }
+
+    protected override void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (!_isLoaded)
+        {
+            ((Grid)Parent).SizeChanged += OnParentSizeChanged;
+
+            _isLoaded = true;
+        }
+    }
 
     private void OnAudioChanged(object? sender, AudioChangedArgs e)
     {
@@ -102,5 +116,12 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
     {
         AppCore.MainWindow.Width += 1;
         AppCore.MainWindow.Width -= 1;
+    }
+
+    private void OnParentSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        Width = e.NewSize.Width;
+
+        Resize(AppCore.MainWindow.ActualWidth, e);
     }
 }
