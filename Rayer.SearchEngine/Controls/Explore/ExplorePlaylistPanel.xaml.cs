@@ -232,7 +232,7 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
 
                             foreach (var playlist in _playlistService.Playlists)
                             {
-                                var vMenuItme = new Wpf.Ui.Controls.MenuItem
+                                var vMenuItme = new System.Windows.Controls.MenuItem
                                 {
                                     Header = playlist.Name,
                                     Command = _commandBinding.AddToCommand,
@@ -243,7 +243,7 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
                                     }
                                 };
 
-                                if (playlist.Audios.Contains(audio))
+                                if (playlist.Audios.FirstOrDefault(x => x.Id == audio.Id) is not null)
                                 {
                                     vMenuItme.IsEnabled = false;
                                 }
