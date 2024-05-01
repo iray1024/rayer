@@ -18,11 +18,11 @@ internal class PlaylistProvider : IPlaylistProvider
         return Playlists.Max(x => x.Sort) + 1;
     }
 
-    public void Initialize()
+    public void Initialize(IAudioManager audioManager)
     {
         if (!_isInitialized)
         {
-            InitializePlaylist();
+            InitializePlaylist(audioManager);
 
             _isInitialized = true;
         }
@@ -37,7 +37,7 @@ internal class PlaylistProvider : IPlaylistProvider
         Playlists.Add(playlist);
     }
 
-    private void InitializePlaylist()
+    private void InitializePlaylist(IAudioManager audioManager)
     {
         if (!Directory.Exists(Constants.Paths.PlaylistPath))
         {
@@ -50,6 +50,16 @@ internal class PlaylistProvider : IPlaylistProvider
             foreach (var file in playlistFiles)
             {
                 var model = Json<Playlist>.LoadData(file);
+
+                for (var i = 0; i < model.Audios.Count; i++)
+                {
+                    var instance = audioManager.Audios.FirstOrDefault(x => x.Path == model.Audios[i].Path);
+
+                    if (instance is not null)
+                    {
+                        model.Audios[i] = instance;
+                    }
+                }
 
                 Playlists.Add(model);
             }

@@ -3,11 +3,13 @@ using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Controls;
 using Rayer.Core.Framework.Settings.Abstractions;
+using Rayer.Core.Menu;
 using Rayer.Core.Models;
 using Rayer.Core.Utils;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.Core.Domain.Playlist;
+using System.Windows.Controls;
 
 namespace Rayer.SearchEngine.ViewModels.Explore.Playlist;
 
@@ -26,12 +28,17 @@ public partial class ExplorePlaylistPancelViewModel : AdaptiveViewModelBase
     public ExplorePlaylistPancelViewModel(
         ISearchAudioEngineProvider audioEngineProvider,
         IAudioManager audioManager,
-        ISettingsService settingsService)
+        ISettingsService settingsService,
+        IContextMenuFactory contextMenuFactory)
     {
         _audioEngineProvider = audioEngineProvider;
         _audioManager = audioManager;
         _settingsService = settingsService;
+
+        ContextMenu = contextMenuFactory.CreateContextMenu(ContextMenuScope.Library);
     }
+
+    public ContextMenu ContextMenu { get; }
 
     public async Task PlayWebAudio(SearchAudioDetail item)
     {

@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using Rayer.Command.Parameter;
 using Rayer.Controls;
 using Rayer.Core;
 using Rayer.Core.Abstractions;
@@ -8,7 +7,9 @@ using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Menu;
 using Rayer.Core.PlayControl.Abstractions;
+using Rayer.Core.Utils;
 using Rayer.SearchEngine.Abstractions;
+using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.Views.Pages;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
@@ -94,20 +95,67 @@ internal partial class CommandBindingService : ICommandBinding
     {
         if (sender is AudioCommandParameter parameter)
         {
-            await _audioManager.Playback.Play(parameter.Audio);
+            if (!parameter.Audio.IsVirualWebSource)
+            {
+                await _audioManager.Playback.Play(parameter.Audio);
+            }
+            else
+            {
+                if (!_audioManager.Playback.TryGetAudio(parameter.Audio.Id, out var existsAudio))
+                {
+                    var provider = App.GetRequiredService<ISearchAudioEngineProvider>();
+                    var engine = provider.GetAudioEngine(parameter.Audio.SearcherType);
+
+                    var audio = await engine.GetAudioAsync(new SearchEngine.Core.Domain.Aduio.SearchAudioDetail
+                    {
+                        Id = parameter.Audio.Id,
+                        Tags = parameter.Audio.Tags
+                    });
+
+                    parameter.Audio.Path = audio.Url;
+
+                    if (parameter.Audio.Cover is null && parameter.Audio.CoverUri is not null)
+                    {
+                        parameter.Audio.Cover = await ImageSourceFactory.CreateWebSourceAsync(new Uri(parameter.Audio.CoverUri));
+                    }
+
+                    _audioManager.Playback.Queue.Add(parameter.Audio);
+
+                    await _audioManager.Playback.Play(parameter.Audio);
+                }
+                else
+                {
+                    await _audioManager.Playback.Play(existsAudio);
+                }
+            }
         }
     }
 
     [RelayCommand]
-    private void AddTo(object? sender)
+    private void AddTo(PlaylistUpdate model)
     {
-
+        _playlistService.AddTo(model.Id, model.Target);
     }
 
     [RelayCommand]
-    private void MoveTo(object? sender)
+    private void MoveTo(PlaylistUpdate model)
     {
+        if (model.To.HasValue)
+        {
+            _playlistService.Migrate(model.Id, model.To.Value, model.Target);
 
+            var host = App.GetRequiredService<PlaylistPage>();
+            host.ViewModel.Items.Remove(model.Target);
+        }
+    }
+
+    [RelayCommand]
+    private void DeleteFrom(PlaylistUpdate model)
+    {
+        _playlistService.RemoveFrom(model.Id, model.Target);
+
+        var host = App.GetRequiredService<PlaylistPage>();
+        host.ViewModel.Items.Remove(model.Target);
     }
 
     [RelayCommand]

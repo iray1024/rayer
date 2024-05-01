@@ -1,11 +1,11 @@
-﻿using Rayer.Command.Parameter;
-using Rayer.Core;
+﻿using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Controls;
 using Rayer.Core.Events;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
+using Rayer.Core.Menu;
 using Rayer.Core.Utils;
 using Rayer.ViewModels;
 using System.Collections.Specialized;
@@ -21,15 +21,21 @@ namespace Rayer.Views.Pages;
 public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibraryViewModel>
 {
     private readonly IAudioManager _audioManager;
+    private readonly IPlaylistService _playlistService;
+    private readonly ICommandBinding _commandBinding;
     private readonly ISettingsService _settingsService;
 
     public AudioLibraryPage(
         AudioLibraryViewModel viewModel,
         IAudioManager audioManager,
+        IPlaylistService playlistService,
+        ICommandBinding commandBinding,
         ISettingsService settingsService)
         : base(viewModel)
     {
         _audioManager = audioManager;
+        _playlistService = playlistService;
+        _commandBinding = commandBinding;
         _settingsService = settingsService;
 
         _audioManager.AudioChanged += OnAudioChanged;
@@ -180,22 +186,45 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
             {
                 if (sender is FrameworkElement { DataContext: Audio audio })
                 {
-                    menuItem.CommandParameter = new AudioCommandParameter()
+                    if (menuItem.Header is string header)
                     {
-                        Audio = audio,
-                        Scope = ContextMenuScope.Library
-                    };
-                }
+                        if (header == "播放")
+                        {
+                            menuItem.Icon = ImageIconFactory.Create("Play", 18);
 
-                if (menuItem.Header is string header)
-                {
-                    if (header == "播放")
-                    {
-                        menuItem.Icon = ImageIconFactory.Create("Play", 18);
-                    }
-                    else if (header == "添加到")
-                    {
-                        menuItem.Icon = ImageIconFactory.Create("AddTo", 18);
+                            menuItem.CommandParameter = new AudioCommandParameter()
+                            {
+                                Audio = audio,
+                                Scope = ContextMenuScope.Library
+                            };
+                        }
+                        else if (header == "添加到")
+                        {
+                            menuItem.Icon = ImageIconFactory.Create("AddTo", 18);
+
+                            menuItem.Items.Clear();
+
+                            foreach (var playlist in _playlistService.Playlists)
+                            {
+                                var vMenuItme = new MenuItem
+                                {
+                                    Header = playlist.Name,
+                                    Command = _commandBinding.AddToCommand,
+                                    CommandParameter = new PlaylistUpdate
+                                    {
+                                        Id = playlist.Id,
+                                        Target = audio
+                                    }
+                                };
+
+                                if (playlist.Audios.Contains(audio))
+                                {
+                                    vMenuItme.IsEnabled = false;
+                                }
+
+                                menuItem.Items.Add(vMenuItme);
+                            }
+                        }
                     }
                 }
             }

@@ -45,7 +45,7 @@ public partial class MainWindowViewModel : ObservableObject
         var commandBindings = App.GetRequiredService<ICommandBinding>();
         var playlistProvider = App.GetRequiredService<IPlaylistProvider>();
 
-        playlistProvider.Initialize();
+        playlistProvider.Initialize(App.GetRequiredService<IAudioManager>());
 
         var newPlaylistMenuItem = new NavigationViewItem()
         {

@@ -10,5 +10,5 @@ internal interface IPlaylistProvider
 
     int GetFinallySort();
 
-    void Initialize();
+    void Initialize(IAudioManager audioManager);
 }

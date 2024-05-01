@@ -30,6 +30,7 @@
                     <Grid ContextMenu="{Binding ViewModel.ContextMenu, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PlaylistPage}}" PreviewMouseRightButtonUp="OnListViewItemRightButtonUp">
                         <layout:AudioPresenter
                             Title="{Binding Title, Mode=OneWay}"
+                            Album="{Binding CoverUri, Mode=OneWay}"
                             AlbumSource="{Binding Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}"
                             AlbumTitle="{Binding Album, Mode=OneWay}"
                             AlbumTitleMaxWidth="{Binding ViewModel.AlbumNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:AudioLibraryPage}}"
@@ -37,7 +38,7 @@
                             Artists="{Binding Artists, Mode=OneWay, Converter={StaticResource ArtistsConverter}}"
                             ArtistsMaxWidth="{Binding ViewModel.ArtistsNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:AudioLibraryPage}}"
                             IsAvailable="True"
-                            Style="{x:Null}"
+                            Style="{x:Null}" Loaded="OnAudioPresenterItemLoaded"
                             TitleMaxWidth="{Binding ViewModel.TitleMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:AudioLibraryPage}}"
                             Duration="{Binding Duration, Mode=OneWay, Converter={StaticResource TimeSpanConverter}}" />
                     </Grid>

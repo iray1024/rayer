@@ -1,8 +1,8 @@
 ﻿using Rayer.Core.Common;
 
-namespace Rayer.Command.Parameter;
+namespace Rayer.Core.Models;
 
-internal record struct AudioCommandParameter
+public record struct AudioCommandParameter
 {
     public Audio Audio { get; set; }
 

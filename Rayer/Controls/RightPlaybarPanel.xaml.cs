@@ -1,7 +1,7 @@
-﻿using Rayer.Command.Parameter;
-using Rayer.Core.Abstractions;
+﻿using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Events;
+using Rayer.Core.Menu;
 using Rayer.Core.Utils;
 using Rayer.ViewModels;
 using System.Collections.Specialized;
@@ -18,6 +18,8 @@ namespace Rayer.Controls;
 public partial class RightPlaybarPanel : UserControl
 {
     private readonly IAudioManager _audioManager;
+    private readonly IPlaylistService _playlistService;
+    private readonly ICommandBinding _commandBinding;
 
     public RightPlaybarPanel()
     {
@@ -27,6 +29,8 @@ public partial class RightPlaybarPanel : UserControl
         DataContext = this;
 
         _audioManager = App.GetRequiredService<IAudioManager>();
+        _playlistService = App.GetRequiredService<IPlaylistService>();
+        _commandBinding = App.GetRequiredService<ICommandBinding>();
 
         _audioManager.AudioChanged += AudioChanged;
         _audioManager.Audios.CollectionChanged += OnAudiosCollectionChanged;
@@ -85,6 +89,7 @@ public partial class RightPlaybarPanel : UserControl
                     }
                 }
             }
+
             if (e.Action is NotifyCollectionChangedAction.Remove)
             {
                 if (ViewModel.Items.Count > e.OldStartingIndex)
@@ -112,6 +117,7 @@ public partial class RightPlaybarPanel : UserControl
                     }
                 }
             }
+
             if (e.Action is NotifyCollectionChangedAction.Remove)
             {
                 ViewModel.Items.RemoveAt(e.OldStartingIndex);
@@ -153,21 +159,44 @@ public partial class RightPlaybarPanel : UserControl
                         Audio = audio,
                         Scope = ContextMenuScope.PlayQueue
                     };
-                }
 
-                if (menuItem.Header is string header)
-                {
-                    if (header == "播放")
+                    if (menuItem.Header is string header)
                     {
-                        menuItem.Icon = ImageIconFactory.Create("Play", 18);
-                    }
-                    else if (header == "添加到")
-                    {
-                        menuItem.Icon = ImageIconFactory.Create("AddTo", 18);
-                    }
-                    else if (header == "删除")
-                    {
-                        menuItem.Icon = ImageIconFactory.Create("Recycle", 18);
+                        if (header == "播放")
+                        {
+                            menuItem.Icon = ImageIconFactory.Create("Play", 18);
+                        }
+                        else if (header == "添加到")
+                        {
+                            menuItem.Icon = ImageIconFactory.Create("AddTo", 18);
+
+                            menuItem.Items.Clear();
+
+                            foreach (var playlist in _playlistService.Playlists)
+                            {
+                                var vMenuItme = new MenuItem
+                                {
+                                    Header = playlist.Name,
+                                    Command = _commandBinding.AddToCommand,
+                                    CommandParameter = new PlaylistUpdate
+                                    {
+                                        Id = playlist.Id,
+                                        Target = audio
+                                    }
+                                };
+
+                                if (playlist.Audios.Contains(audio))
+                                {
+                                    vMenuItme.IsEnabled = false;
+                                }
+
+                                menuItem.Items.Add(vMenuItme);
+                            }
+                        }
+                        else if (header == "删除")
+                        {
+                            menuItem.Icon = ImageIconFactory.Create("Recycle", 18);
+                        }
                     }
                 }
             }

@@ -1,9 +1,12 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Abstractions;
+using Rayer.Core.Common;
 using Rayer.Core.Controls;
 using Rayer.Core.Events;
+using Rayer.Core.Menu;
 using Rayer.Core.Models;
 using Rayer.Core.Utils;
+using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.ViewModels.Presenter;
 using System.Windows;
@@ -16,6 +19,9 @@ namespace Rayer.SearchEngine.Controls.Search;
 
 public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterControl<SearchAudioPresenterViewModel, SearchAudio>
 {
+    private readonly IPlaylistService _playlistService;
+    private readonly ICommandBinding _commandBinding;
+
     private bool _isLoaded = false;
 
     public SearchAudioPresenter(
@@ -28,6 +34,9 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
         ViewModel.DataChanged += OnDataChanged;
 
         var audioManager = AppCore.GetRequiredService<IAudioManager>();
+
+        _playlistService = AppCore.GetRequiredService<IPlaylistService>();
+        _commandBinding = AppCore.GetRequiredService<ICommandBinding>();
 
         audioManager.AudioChanged += OnAudioChanged;
         audioManager.AudioStopped += OnAudioStopped;
@@ -120,7 +129,69 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
 
     private void OnListViewItemRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
+        if (sender is FrameworkElement { DataContext: SearchAudioDetail detail })
+        {
+            var provider = AppCore.GetRequiredService<ISearchAudioEngineProvider>();
 
+            var audio = new Audio
+            {
+                Id = detail.Id,
+                Title = detail.Title,
+                Artists = detail.Artists.Select(x => x.Name).ToArray(),
+                Album = detail.Album?.Title ?? string.Empty,
+                CoverUri = !string.IsNullOrEmpty(detail.Album?.Cover) ? detail.Album?.Cover : null,
+                Duration = detail.Duration,
+                IsVirualWebSource = true,
+                SearcherType = provider.CurrentSearcher
+            };
+
+            foreach (var item in ViewModel.ContextMenu.Items.SourceCollection)
+            {
+                if (item is System.Windows.Controls.MenuItem menuItem)
+                {
+                    if (menuItem.Header is string header)
+                    {
+                        if (header == "播放")
+                        {
+                            menuItem.Icon = ImageIconFactory.Create("Play", 18);
+
+                            menuItem.CommandParameter = new AudioCommandParameter()
+                            {
+                                Audio = audio,
+                                Scope = ContextMenuScope.Library
+                            };
+                        }
+                        else if (header == "添加到")
+                        {
+                            menuItem.Icon = ImageIconFactory.Create("AddTo", 18);
+
+                            menuItem.Items.Clear();
+
+                            foreach (var playlist in _playlistService.Playlists)
+                            {
+                                var vMenuItme = new Wpf.Ui.Controls.MenuItem
+                                {
+                                    Header = playlist.Name,
+                                    Command = _commandBinding.AddToCommand,
+                                    CommandParameter = new PlaylistUpdate
+                                    {
+                                        Id = playlist.Id,
+                                        Target = audio
+                                    }
+                                };
+
+                                if (playlist.Audios.Contains(audio))
+                                {
+                                    vMenuItme.IsEnabled = false;
+                                }
+
+                                menuItem.Items.Add(vMenuItme);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private async void OnListViewItemDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)

@@ -6,6 +6,8 @@ namespace Rayer.Core.Utils;
 
 public static class MediaRecognizer
 {
+    private static volatile int _id = -1;
+
     public static Audio Recognize(string path)
     {
         using var tfile = TagLib.File.Create(path);
@@ -16,6 +18,7 @@ public static class MediaRecognizer
 
         var model = new Audio()
         {
+            Id = Interlocked.Increment(ref _id),
             Artists = tag.Performers,
             Album = tag.Album,
             Path = path,

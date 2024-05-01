@@ -34,21 +34,52 @@ internal class PlaylistService : IPlaylistService
 
     public void AddTo(int id, Audio audio)
     {
-        throw new NotImplementedException();
+        var playlist = _provider.Playlists.FirstOrDefault(x => x.Id == id);
+
+        if (playlist is not null)
+        {
+            playlist.Audios.Add(audio);
+
+            Json<Playlist>.StoreData(Path.Combine(Constants.Paths.PlaylistPath, $"{playlist.Name}.json"), playlist);
+        }
     }
 
     public void Migrate(int from, int to, Audio audio)
     {
-        throw new NotImplementedException();
-    }
+        var playlist = _provider.Playlists.FirstOrDefault(x => x.Id == from);
+        var toPlaylist = _provider.Playlists.FirstOrDefault(x => x.Id == to);
 
-    public void Remove(int id)
-    {
-        throw new NotImplementedException();
+        if (playlist is not null && toPlaylist is not null)
+        {
+            playlist.Audios.Remove(audio);
+            toPlaylist.Audios.Add(audio);
+
+            Json<Playlist>.StoreData(Path.Combine(Constants.Paths.PlaylistPath, $"{playlist.Name}.json"), playlist);
+            Json<Playlist>.StoreData(Path.Combine(Constants.Paths.PlaylistPath, $"{toPlaylist.Name}.json"), toPlaylist);
+        }
     }
 
     public void RemoveFrom(int id, Audio audio)
     {
-        throw new NotImplementedException();
+        var playlist = _provider.Playlists.FirstOrDefault(x => x.Id == id);
+
+        if (playlist is not null)
+        {
+            playlist.Audios.Remove(audio);
+
+            Json<Playlist>.StoreData(Path.Combine(Constants.Paths.PlaylistPath, $"{playlist.Name}.json"), playlist);
+        }
+    }
+
+    public void Remove(int id)
+    {
+        var playlist = _provider.Playlists.FirstOrDefault(x => x.Id == id);
+
+        if (playlist is not null)
+        {
+            _provider.Playlists.Remove(playlist);
+
+            File.Delete(Path.Combine(Constants.Paths.PlaylistPath, $"{playlist.Name}.json"));
+        }
     }
 }

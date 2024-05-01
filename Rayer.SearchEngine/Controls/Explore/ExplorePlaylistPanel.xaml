@@ -290,7 +290,7 @@
             VirtualizingPanel.VirtualizationMode="Recycling">
             <layout:ListView.ItemTemplate>
                 <DataTemplate DataType="{x:Type model:SearchAudioDetail}">
-                    <Grid PreviewMouseRightButtonUp="OnListViewItemRightButtonUp">
+                    <Grid ContextMenu="{Binding ViewModel.ContextMenu, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ExplorePlaylistPanel}}" PreviewMouseRightButtonUp="OnListViewItemRightButtonUp">
                         <layout:AudioPresenter
                             Title="{Binding Title, Mode=OneTime}"
                             Album="{Binding Album.Cover, Mode=OneTime, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}"

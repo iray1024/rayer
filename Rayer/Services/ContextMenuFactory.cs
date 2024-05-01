@@ -41,8 +41,7 @@ internal class ContextMenuFactory : IContextMenuFactory
 
         menu.Items.Add(new MenuItem()
         {
-            Header = "添加到",
-            Command = _commandBinding.AddToCommand
+            Header = "添加到"
         });
 
         return menu;
@@ -55,6 +54,7 @@ internal class ContextMenuFactory : IContextMenuFactory
         menu.Items.Add(new MenuItem()
         {
             Header = "播放",
+            Command = _commandBinding.PlayCommand
         });
 
         menu.Items.Add(new MenuItem()
@@ -69,7 +69,8 @@ internal class ContextMenuFactory : IContextMenuFactory
 
         menu.Items.Add(new MenuItem()
         {
-            Header = "删除"
+            Header = "删除",
+            Command = _commandBinding.DeleteFromCommand
         });
 
         return menu;
@@ -88,7 +89,8 @@ internal class ContextMenuFactory : IContextMenuFactory
 
         menu.Items.Add(new MenuItem()
         {
-            Header = "删除"
+            Header = "删除",
+            Command = _commandBinding.DeleteCommand
         });
 
         return menu;
@@ -106,8 +108,7 @@ internal class ContextMenuFactory : IContextMenuFactory
 
         menu.Items.Add(new MenuItem()
         {
-            Header = "添加到",
-            Command = _commandBinding.AddToCommand
+            Header = "添加到"
         });
 
         menu.Items.Add(new MenuItem()

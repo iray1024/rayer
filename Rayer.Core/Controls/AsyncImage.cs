@@ -156,15 +156,21 @@ public class AsyncImage : Control
 
         if (e.NewValue is Uri uri && e.OldValue is null)
         {
-            var image = await ImageSourceFactory.CreateWebSourceAsync(uri);
+            if (!string.IsNullOrEmpty(uri.AbsoluteUri))
+            {
+                var image = await ImageSourceFactory.CreateWebSourceAsync(uri);
 
-            SetSource(d, image);
+                SetSource(d, image);
+            }
         }
         else if (e.NewValue is Uri newUri && e.OldValue is Uri oldUri && newUri.AbsoluteUri != oldUri.AbsoluteUri)
         {
-            var image = await ImageSourceFactory.CreateWebSourceAsync(newUri);
+            if (!string.IsNullOrEmpty(newUri.AbsoluteUri))
+            {
+                var image = await ImageSourceFactory.CreateWebSourceAsync(newUri);
 
-            SetSource(d, image);
+                SetSource(d, image);
+            }
         }
     }
 
