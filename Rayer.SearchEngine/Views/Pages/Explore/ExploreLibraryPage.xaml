@@ -120,6 +120,9 @@
             </Grid>
         </Grid>
 
-        <controls:ExploreLibraryDetailPanel Grid.Row="2" Margin="0,12,0,0" />
+        <controls:ExploreLibraryDetailPanel
+            x:Name="DetailPanel"
+            Grid.Row="2"
+            Margin="0,12,0,0" />
     </Grid>
 </framework:NoneFocusablePage>

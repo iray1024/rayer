@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Rayer.Core;
+using Rayer.Core.Abstractions;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
+using Rayer.Core.Menu;
 using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Enums;
@@ -38,6 +40,32 @@ public partial class MainWindowViewModel : ObservableObject
             }
         }
 
+        MenuItems.Add(new NavigationViewItemSeparator());
+
+        var commandBindings = App.GetRequiredService<ICommandBinding>();
+        var playlistProvider = App.GetRequiredService<IPlaylistProvider>();
+
+        playlistProvider.Initialize();
+
+        var newPlaylistMenuItem = new NavigationViewItem()
+        {
+            Name = "新建歌单",
+            IsMenuElement = false,
+            Content = "新建歌单+",
+            TargetPageTag = "Playlist",
+            Command = commandBindings.AddPlaylistCommand
+        };
+
+        MenuItems.Add(newPlaylistMenuItem);
+
+        foreach (var item in playlistProvider.Playlists.OrderBy(x => x.Sort))
+        {
+            MenuItems.Add(new NavigationViewItem(item.Name, typeof(PlaylistPage))
+            {
+                TargetPageTag = $"_playlist_{item.Id}",
+            });
+        }
+
         _loaderProvider = App.GetRequiredService<ILoaderProvider>();
         _searchEngineProvider = App.GetRequiredService<ISearchEngineProvider>();
         _navigationService = navigationService;
@@ -48,7 +76,7 @@ public partial class MainWindowViewModel : ObservableObject
     private string _applicationTitle = "Rayer-Music";
 
     [ObservableProperty]
-    private ICollection<object> _menuItems =
+    private ObservableCollection<object> _menuItems =
     [
         new NavigationViewItem("本地音乐", SymbolRegular.Home24, typeof(AudioLibraryPage)),
     ];

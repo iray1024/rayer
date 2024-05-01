@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 namespace Rayer.Core.Utils;
 
@@ -6,7 +8,8 @@ public static class Json<T>
 {
     private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
     {
-        WriteIndented = true
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
     };
 
     public static T LoadData(string filePath)

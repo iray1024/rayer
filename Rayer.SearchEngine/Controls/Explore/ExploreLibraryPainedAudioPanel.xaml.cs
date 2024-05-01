@@ -213,6 +213,11 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
 
             var presenter = ElementHelper.FindVisualChild<Border>(vItem);
 
+            if (presenter is null)
+            {
+                return;
+            }
+
             var vBorder = presenter.FindName("PART_Border") as Border;
 
             if (vBorder is not null &&

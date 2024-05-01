@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using Rayer.Core.Common;
-using System.Windows.Input;
 
 namespace Rayer.Core.Menu;
 
@@ -10,13 +9,15 @@ public interface ICommandBinding
     IRelayCommand PlayOrPauseCommand { get; }
     IAsyncRelayCommand NextCommand { get; }
 
-    ICommand PlayCommand { get; }
+    IAsyncRelayCommand AddPlaylistCommand { get; }
 
-    ICommand AddToCommand { get; }
+    IAsyncRelayCommand<object?> PlayCommand { get; }
 
-    ICommand MoveToCommand { get; }
+    IRelayCommand<object?> AddToCommand { get; }
 
-    ICommand DeleteCommand { get; }
+    IRelayCommand<object?> MoveToCommand { get; }
+
+    IAsyncRelayCommand<object?> DeleteCommand { get; }
 
     IAsyncRelayCommand<LyricSearcher> SwitchLyricSearcherCommand { get; }
     IRelayCommand FastForwardCommand { get; }

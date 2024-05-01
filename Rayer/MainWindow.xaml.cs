@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Rayer.Abstractions;
 using Rayer.Core;
+using Rayer.Core.Abstractions;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
@@ -67,13 +68,15 @@ public partial class MainWindow : IWindow
 
         NavigationView.HeaderVisibility =
             pageType != typeof(AudioLibraryPage) &&
-            pageType != typeof(SettingsPage)
+            pageType != typeof(SettingsPage) &&
+            pageType != typeof(PlaylistPage)
                 ? Visibility.Collapsed
                 : Visibility.Visible;
 
         PageHeaderContainer.Visibility =
             pageType != typeof(AudioLibraryPage) &&
-            pageType != typeof(SettingsPage)
+            pageType != typeof(SettingsPage) &&
+            pageType != typeof(PlaylistPage)
                 ? Visibility.Collapsed
                 : Visibility.Visible;
     }
@@ -86,6 +89,8 @@ public partial class MainWindow : IWindow
         }
 
         PageHeader.Text = navigationView.SelectedItem?.Content.ToString();
+
+        ProcessPlaylistNavigation(navigationView);
     }
 
     private void OnThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)
@@ -167,18 +172,21 @@ public partial class MainWindow : IWindow
 
     private void ApplyNavigationMenuIcons()
     {
-        foreach (var item in NavigationView.MenuItems.Cast<NavigationViewItem>())
+        foreach (var item in NavigationView.MenuItems)
         {
-            var iconSource = (ImageSource)Application.Current.Resources[item.TargetPageTag];
-
-            if (iconSource is not null)
+            if (item is NavigationViewItem vItem)
             {
-                item.Icon = new ImageIcon()
+                var iconSource = (ImageSource)Application.Current.Resources[vItem.TargetPageTag];
+
+                if (iconSource is not null)
                 {
-                    Source = iconSource,
-                    Width = 24,
-                    Height = 24,
-                };
+                    vItem.Icon = new ImageIcon()
+                    {
+                        Source = iconSource,
+                        Width = 24,
+                        Height = 24,
+                    };
+                }
             }
         }
     }
@@ -269,5 +277,30 @@ public partial class MainWindow : IWindow
         TaskbarItemInfo.ThumbButtonInfos.Add(previous);
         TaskbarItemInfo.ThumbButtonInfos.Add(playOrPause);
         TaskbarItemInfo.ThumbButtonInfos.Add(next);
+    }
+
+    private static void ProcessPlaylistNavigation(NavigationView navigationView)
+    {
+        if (navigationView.SelectedItem?.TargetPageType == typeof(PlaylistPage))
+        {
+            var playlistServer = App.GetRequiredService<IPlaylistService>();
+
+            var tag = navigationView.SelectedItem.TargetPageTag;
+
+            if (tag.StartsWith("_playlist_"))
+            {
+                var page = App.GetRequiredService<PlaylistPage>();
+                var id = long.Parse(tag[10..]);
+
+                var model = playlistServer.Playlists.FirstOrDefault(x => x.Id == id);
+
+                if (model is not null)
+                {
+                    page.ViewModel.Items = new Core.Common.SortableObservableCollection<Audio>(model.Audios, AudioSortComparer.Ascending);
+                    page.ViewModel.Id = model.Id;
+                    page.ViewModel.Name = model.Name;
+                }
+            }
+        }
     }
 }

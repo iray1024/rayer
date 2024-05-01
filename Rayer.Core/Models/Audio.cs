@@ -15,6 +15,7 @@ public class Audio
 
     public TimeSpan Duration { get; set; }
 
+    [JsonIgnore]
     public ImageSource? Cover { get; set; }
 
     public string Path { get; set; } = string.Empty;
@@ -23,6 +24,8 @@ public class Audio
     public bool IsVirualWebSource { get; set; } = false;
 
     public SearcherType SearcherType { get; set; } = SearcherType.Local;
+
+    public IDictionary<string, string> Tags { get; init; } = new Dictionary<string, string>();
 }
 
 public class AudioSortComparer : IComparer<Audio>

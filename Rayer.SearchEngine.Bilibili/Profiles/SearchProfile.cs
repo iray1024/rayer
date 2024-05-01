@@ -31,6 +31,7 @@ internal partial class SearchProfile : Profile
             .AfterMap((s, d) =>
             {
                 d.Tags.Add("BvId", s.Bvid);
+                d.Tags.Add("Id", s.Aid.ToString());
             });
 
         CreateMap<SearchAudioModel, SearchAudio>()

@@ -49,10 +49,7 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
     public bool HasNavigationTo
     {
         get => _hasNavigationTo == 1;
-        set
-        {
-            _ = Interlocked.Exchange(ref _hasNavigationTo, value ? 1 : 0);
-        }
+        set => _ = Interlocked.Exchange(ref _hasNavigationTo, value ? 1 : 0);
     }
 
     public SearchViewModel ViewModel { get; set; }

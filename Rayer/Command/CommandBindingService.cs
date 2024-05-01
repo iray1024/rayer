@@ -1,4 +1,7 @@
-﻿using Rayer.Command.Parameter;
+﻿using CommunityToolkit.Mvvm.Input;
+using Rayer.Command.Parameter;
+using Rayer.Controls;
+using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Framework.Injection;
@@ -6,7 +9,9 @@ using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Menu;
 using Rayer.Core.PlayControl.Abstractions;
 using Rayer.SearchEngine.Abstractions;
-using System.Windows.Input;
+using Rayer.Views.Pages;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
 
 namespace Rayer.Command;
 
@@ -27,70 +32,65 @@ internal partial class CommandBindingService : ICommandBinding
         _playlistService = playlistService;
     }
 
-    private ICommand _playCommand = default!;
-    public ICommand PlayCommand
+    [RelayCommand]
+    private static async Task AddPlaylist()
     {
-        get
-        {
-            _playCommand ??= new RelayCommand(Play);
+        var dialogService = App.GetRequiredService<IContentDialogService>();
 
-            return _playCommand;
+        var dialog = new NewPlaylistDialog(dialogService.GetDialogHost())
+        {
+            Title = "新建歌单",
+            PrimaryButtonText = "确认",
+            CloseButtonText = "取消"
+        };
+
+        var result = await dialog.ShowAsync(AppCore.StoppingToken);
+
+        if (result is ContentDialogResult.Primary)
+        {
+            var name = dialog.PlaylistName.Text;
+
+            var playlistService = App.GetRequiredService<IPlaylistService>();
+            var nav = App.GetRequiredService<INavigationService>().GetNavigationControl();
+
+            var playlist = new Playlist()
+            {
+                Name = name,
+            };
+
+            playlistService.Add(playlist);
+
+            var newPlaylistMenu = new NavigationViewItem(name, typeof(PlaylistPage))
+            {
+                TargetPageTag = $"_playlist_{playlist.Id}"
+            };
+
+            nav.MenuItems.Add(newPlaylistMenu);
         }
     }
 
-    private ICommand _addToCommand = default!;
-    public ICommand AddToCommand
-    {
-        get
-        {
-            _addToCommand ??= new RelayCommand(AddTo);
-
-            return _addToCommand;
-        }
-    }
-
-    private ICommand _moveToCommand = default!;
-    public ICommand MoveToCommand
-    {
-        get
-        {
-            _moveToCommand ??= new RelayCommand(MoveTo);
-
-            return _moveToCommand;
-        }
-    }
-
-    private ICommand _deleteCommand = default!;
-
-    public ICommand DeleteCommand
-    {
-        get
-        {
-            _deleteCommand ??= new RelayCommand(Delete);
-
-            return _deleteCommand;
-        }
-    }
-
-    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    #region Taskbar Control   
+    [RelayCommand]
     private async Task Previous()
     {
         await _playbarService.Previous();
     }
 
-    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    [RelayCommand]
     private void PlayOrPause()
     {
         _playbarService.PlayOrPause();
     }
 
-    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    [RelayCommand]
     private async Task Next()
     {
         await _playbarService.Next();
     }
+    #endregion
 
-    private async void Play(object? sender)
+    [RelayCommand]
+    private async Task Play(object? sender)
     {
         if (sender is AudioCommandParameter parameter)
         {
@@ -98,17 +98,20 @@ internal partial class CommandBindingService : ICommandBinding
         }
     }
 
+    [RelayCommand]
     private void AddTo(object? sender)
     {
 
     }
 
+    [RelayCommand]
     private void MoveTo(object? sender)
     {
 
     }
 
-    private async void Delete(object? sender)
+    [RelayCommand]
+    private async Task Delete(object? sender)
     {
         if (sender is AudioCommandParameter parameter)
         {
@@ -132,7 +135,8 @@ internal partial class CommandBindingService : ICommandBinding
         }
     }
 
-    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    #region DynamicIsland    
+    [RelayCommand]
     private async Task SwitchLyricSearcher(LyricSearcher searcher)
     {
         var settingsService = App.GetRequiredService<ISettingsService>();
@@ -150,7 +154,7 @@ internal partial class CommandBindingService : ICommandBinding
         });
     }
 
-    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    [RelayCommand]
     private static void FastForward()
     {
         var provider = App.GetRequiredService<ILyricProvider>();
@@ -158,11 +162,12 @@ internal partial class CommandBindingService : ICommandBinding
         provider.FastForward();
     }
 
-    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    [RelayCommand]
     private static void FastBackward()
     {
         var provider = App.GetRequiredService<ILyricProvider>();
 
         provider.FastBackward();
     }
+    #endregion
 }

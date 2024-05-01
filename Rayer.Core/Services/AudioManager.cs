@@ -13,30 +13,31 @@ namespace Rayer.Core.Services;
 [Inject<IAudioManager>]
 internal class AudioManager : IAudioManager, IDisposable
 {
-    private readonly Playback _playback;
     private readonly IAudioFileWatcher _audioFileWatcher;
+    private readonly IPlaylistProvider _playlistProvider;
 
     public AudioManager(IServiceProvider serviceProvider)
     {
         _audioFileWatcher = serviceProvider.GetRequiredService<IAudioFileWatcher>();
+        _playlistProvider = serviceProvider.GetRequiredService<IPlaylistProvider>();
 
         var settings = serviceProvider.GetRequiredService<ISettingsService>().Settings;
 
-        _playback = new Playback(this, serviceProvider);
+        Playback = new Playback(this, serviceProvider);
 
-        _playback.Initialize(settings.Volume, settings.Pitch, settings.PlayloopMode);
+        Playback.Initialize(settings.Volume, settings.Pitch, settings.PlayloopMode);
 
-        _playback.AudioPlaying += OnAudioPlaying;
-        _playback.AudioPaused += OnAudioPaused;
-        _playback.AudioChanged += OnAudioChanged;
-        _playback.AudioStopped += OnAudioStopped;
+        Playback.AudioPlaying += OnAudioPlaying;
+        Playback.AudioPaused += OnAudioPaused;
+        Playback.AudioChanged += OnAudioChanged;
+        Playback.AudioStopped += OnAudioStopped;
     }
 
     public ObservableCollection<Audio> Audios => _audioFileWatcher.Audios;
 
-    public Playback Playback => _playback;
+    public Playback Playback { get; }
 
-    public ICollection<Playlist> Playlists { get; } = [];
+    public IEnumerable<Playlist> Playlists => _playlistProvider.Playlists;
 
     public event EventHandler<AudioPlayingArgs>? AudioPlaying;
     public event EventHandler? AudioPaused;
@@ -65,7 +66,7 @@ internal class AudioManager : IAudioManager, IDisposable
 
     public void Dispose()
     {
-        ((IDisposable)_playback).Dispose();
+        ((IDisposable)Playback).Dispose();
 
         GC.SuppressFinalize(this);
     }

@@ -11,6 +11,7 @@ using Rayer.ViewModels;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
+using Wpf.Ui;
 using Wpf.Ui.Controls;
 using ListViewItem = Rayer.Core.Controls.ListViewItem;
 
@@ -51,6 +52,25 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
         base.ViewModel = ViewModel;
 
         base.OnLoaded(sender, e);
+
+        if (_audioManager.Playback.Audio is Audio audio && _audioManager.Playback.Playing)
+        {
+            var navView = AppCore.GetRequiredService<INavigationService>().GetNavigationControl() as NavigationView;
+
+            if (navView?.Template.FindName("PART_NavigationViewContentPresenter", navView) is NavigationViewContentPresenter navPresenter)
+            {
+                var scrollViewer = ElementHelper.GetScrollViewer(navPresenter);
+
+                scrollViewer?.ScrollToTop();
+
+                var innerAudio = LibListView.Items.IndexOf(audio);
+
+                if (innerAudio != -1)
+                {
+                    scrollViewer?.ScrollToVerticalOffset(56 * innerAudio);
+                }
+            }
+        }
     }
 
     protected override void OnUnloaded(object sender, RoutedEventArgs e)

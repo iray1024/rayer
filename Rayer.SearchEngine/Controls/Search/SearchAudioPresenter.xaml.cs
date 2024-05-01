@@ -2,10 +2,14 @@
 using Rayer.Core.Abstractions;
 using Rayer.Core.Controls;
 using Rayer.Core.Events;
+using Rayer.Core.Models;
+using Rayer.Core.Utils;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.ViewModels.Presenter;
 using System.Windows;
 using System.Windows.Controls;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
 using ListViewItem = Rayer.Core.Controls.ListViewItem;
 
 namespace Rayer.SearchEngine.Controls.Search;
@@ -38,8 +42,39 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
         if (!_isLoaded)
         {
             ((Grid)Parent).SizeChanged += OnParentSizeChanged;
-
             _isLoaded = true;
+        }
+
+        var audioManager = AppCore.GetRequiredService<IAudioManager>();
+
+        if (audioManager.Playback.Audio is Audio audio && audioManager.Playback.Playing)
+        {
+            var navView = AppCore.GetRequiredService<INavigationService>().GetNavigationControl() as NavigationView;
+
+            if (navView?.Template.FindName("PART_NavigationViewContentPresenter", navView) is NavigationViewContentPresenter navPresenter)
+            {
+                var scrollViewer = ElementHelper.GetScrollViewer(LibListView);
+                var exScrollViewer = ElementHelper.GetScrollViewer(navPresenter);
+
+                scrollViewer?.ScrollToTop();
+
+                var index = -1;
+                for (var i = 0; i < LibListView.Items.Count; i++)
+                {
+                    if (LibListView.Items[i] is SearchAudioDetail vDetail && vDetail.Id == audio.Id)
+                    {
+                        index = i;
+
+                        break;
+                    }
+                }
+
+                if (index != -1)
+                {
+                    scrollViewer?.ScrollToVerticalOffset(56 * index);
+                    exScrollViewer?.ScrollToVerticalOffset(56 * index);
+                }
+            }
         }
     }
 

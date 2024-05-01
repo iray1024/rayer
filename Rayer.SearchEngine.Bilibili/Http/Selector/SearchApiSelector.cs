@@ -18,6 +18,11 @@ internal class SearchApiSelector : ApiSelector
         return CreateBuilder(_bilibiliHttpEndpoint, ApiEndpoints.Search.SearchCId);
     }
 
+    public IParamBuilder SearchCIdFromId()
+    {
+        return CreateBuilder(_bilibiliHttpEndpoint, ApiEndpoints.Search.SearchCIdFromId);
+    }
+
     public IParamBuilder SearchUrl()
     {
         return CreateBuilder(_bilibiliHttpEndpoint, ApiEndpoints.Search.SearchUrl);

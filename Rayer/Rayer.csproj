@@ -41,6 +41,7 @@
     <Resource Include="assets\dark\mute.png" />    
     <Resource Include="assets\dark\pitch.png" />    
     <Resource Include="assets\dark\play-queue.png" />    
+    <Resource Include="assets\dark\playlist.png" />    
     <Resource Include="assets\dark\recycle.png" />    
     <Resource Include="assets\dark\repeat.png" />    
     <Resource Include="assets\dark\shuffle.png" />    
@@ -59,6 +60,7 @@
     <Resource Include="assets\light\pitch.png" />
     <Resource Include="assets\light\play.png" />
     <Resource Include="assets\light\play-queue.png" />
+    <Resource Include="assets\light\playlist.png" />
     <Resource Include="assets\light\previous.png" />
     <Resource Include="assets\light\recycle.png" />
     <Resource Include="assets\light\repeat.png" />

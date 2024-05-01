@@ -8,6 +8,8 @@ internal static class ApiEndpoints
 
         internal const string SearchCId = "https://api.bilibili.com/x/web-interface/view?bvid={0}";
 
+        internal const string SearchCIdFromId = "https://api.bilibili.com/x/web-interface/view?aid={0}";
+
         internal const string SearchUrl = "https://api.bilibili.com/x/player/playurl?fnval=16&bvid={0}&cid={1}";
     }
 }

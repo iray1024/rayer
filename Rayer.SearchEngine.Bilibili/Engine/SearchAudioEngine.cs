@@ -64,4 +64,34 @@ internal class SearchAudioEngine : SearchEngineBase, ISearchAudioEngine
 
         return default!;
     }
+
+    public async Task<WebAudio> GetAudioFromIdAsync(SearchAudioDetail detail)
+    {
+        var bvid = detail.Tags["BvId"];
+        var id = long.Parse(detail.Tags["Id"]);
+
+        var cidResult = await Searcher.GetAsync(string.Format(ApiEndpoints.Search.SearchCIdFromId, id));
+
+        var cidResponse = cidResult.ToEntity<SearchCidModel>();
+
+        if (cidResponse is not null)
+        {
+            var cid = cidResponse.Data.Cid;
+
+            detail.Tags.TryAdd("CId", cid.ToString());
+
+            var result = await Searcher.GetAsync(string.Format(ApiEndpoints.Search.SearchUrl, bvid, cid));
+
+            var response = result.ToEntity<WebAudioModel>();
+
+            if (response is not null)
+            {
+                var domain = Mapper.Map<WebAudio>(response);
+
+                return domain;
+            }
+        }
+
+        return default!;
+    }
 }

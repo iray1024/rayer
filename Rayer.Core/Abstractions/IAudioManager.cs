@@ -9,7 +9,7 @@ public interface IAudioManager
 {
     Playback Playback { get; }
 
-    ICollection<Playlist> Playlists { get; }
+    IEnumerable<Playlist> Playlists { get; }
 
     ObservableCollection<Audio> Audios { get; }
 

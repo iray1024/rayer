@@ -1,6 +1,7 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Controls;
 using Rayer.Core.Framework;
+using Rayer.Core.Utils;
 using Rayer.SearchEngine.Controls.Explore;
 using Rayer.SearchEngine.Core.Domain.Album;
 using Rayer.SearchEngine.ViewModels.Presenter;
@@ -9,6 +10,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
 
 namespace Rayer.SearchEngine.Controls.Search;
 
@@ -50,6 +53,15 @@ public partial class SearchAlbumPresenter : UserControl, IPresenterControl<Searc
         var currentWindowWidth = AppCore.MainWindow.ActualWidth;
 
         Resize(currentWindowWidth);
+
+        var navView = AppCore.GetRequiredService<INavigationService>().GetNavigationControl() as NavigationView;
+
+        if (navView?.Template.FindName("PART_NavigationViewContentPresenter", navView) is NavigationViewContentPresenter navPresenter)
+        {
+            var scrollViewer = ElementHelper.GetScrollViewer(navPresenter);
+
+            scrollViewer?.ScrollToTop();
+        }
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)

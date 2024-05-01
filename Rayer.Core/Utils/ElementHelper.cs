@@ -67,6 +67,27 @@ public static class ElementHelper
             : target is not null ? (T)target : null;
     }
 
+    public static ScrollViewer? GetScrollViewer(DependencyObject d)
+    {
+        if (d is ScrollViewer)
+        {
+            return d as ScrollViewer;
+        }
+
+        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(d); i++)
+        {
+            var child = VisualTreeHelper.GetChild(d, i);
+            var result = GetScrollViewer(child);
+
+            if (result is not null)
+            {
+                return result;
+            }
+        }
+
+        return null;
+    }
+
     public static void FullScreen(Window window)
     {
         var hwnd = new WindowInteropHelper(window).Handle;

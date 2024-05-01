@@ -17,6 +17,7 @@
     <BitmapImage x:Key="VolumeFull" UriSource="pack://application:,,,/assets/dark/volume-full.png" />
     <BitmapImage x:Key="VolumeHalf" UriSource="pack://application:,,,/assets/dark/volume-half.png" />
     <BitmapImage x:Key="PlayQueue" UriSource="pack://application:,,,/assets/dark/play-queue.png" />
+    <BitmapImage x:Key="Playlist" UriSource="pack://application:,,,/assets/dark/playlist.png" />
     <BitmapImage x:Key="Recycle" UriSource="pack://application:,,,/assets/dark/recycle.png" />
     <BitmapImage x:Key="AddTo" UriSource="pack://application:,,,/assets/dark/add-to.png" />
     <BitmapImage x:Key="FullScreen" UriSource="pack://application:,,,/assets/dark/fullscreen.png" />
