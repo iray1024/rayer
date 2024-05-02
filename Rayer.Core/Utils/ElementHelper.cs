@@ -88,6 +88,20 @@ public static class ElementHelper
         return null;
     }
 
+    public static bool IsWindowOpen<T>()
+        where T : class
+    {
+        foreach (var window in Application.Current.Windows)
+        {
+            if (window is T and Window { IsLoaded: true, Visibility: Visibility.Visible })
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static void FullScreen(Window window)
     {
         var hwnd = new WindowInteropHelper(window).Handle;

@@ -89,12 +89,14 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <ui:SymbolIcon
+                            x:Name="Server"
                             Grid.RowSpan="2"
                             Grid.Column="0"
                             Width="24"
                             Height="24"
                             Margin="0,0,14,0"
                             FontSize="24"
+                            Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
                             Symbol="Server24" />
                         <ui:TextBlock
                             Grid.Row="0"

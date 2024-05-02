@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
+using Rayer.Core.Utils;
 using System.Windows;
 
 namespace Rayer.Services;
@@ -21,7 +22,10 @@ internal class WindowsProviderService(IServiceProvider _serviceProvider) : IWind
             throw new InvalidOperationException("Window is not registered as service.");
         }
 
-        instance.Owner = Application.Current.MainWindow;
-        instance.Show();
+        if (!ElementHelper.IsWindowOpen<T>())
+        {
+            instance.Owner = Application.Current.MainWindow;
+            instance.Show();
+        }
     }
 }
