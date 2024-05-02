@@ -60,7 +60,7 @@ public partial class DynamicIsland : Window
 
                 var restoreWidth = currentWith - 100 < 80 ? 120 : currentWith - 100;
                 var stretchWidth = currentWith + 111;
-                var finalWidth = currentWith + 72;
+                var finalWidth = currentWith + 74;
 
                 var restoreAnimation = new DoubleAnimation
                 {

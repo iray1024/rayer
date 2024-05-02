@@ -76,8 +76,8 @@ public partial class DynamicIslandViewModel : ObservableObject
     {
         _timer.Stop();
 
+        _totalLines.Clear();
         CurrentLine = new LineInfo(e.New.Title);
-
         Cover = e.New.Cover;
 
         var lyricData = _lyricProvider.LyricData;
@@ -118,6 +118,7 @@ public partial class DynamicIslandViewModel : ObservableObject
     {
         CurrentLine = _stopInfo;
         Cover = null;
+        _totalLines.Clear();
 
         _timer.Stop();
     }
@@ -152,8 +153,7 @@ public partial class DynamicIslandViewModel : ObservableObject
             if (nextLine is not null && _audioManager.Playback.CurrentTime.TotalMilliseconds >= nextLine.StartTime)
             {
                 if (_currentLineIndex + 2 < _totalLines.Count &&
-                    _totalLines[_currentLineIndex + 2].StartTime - nextLine.StartTime > 1000 &&
-                    !string.IsNullOrEmpty(CurrentLine.Text))
+                    _totalLines[_currentLineIndex + 2].StartTime - nextLine.StartTime > 1000)
                 {
                     DynamicIsland.TextBlurStroyboard.Begin();
                 }

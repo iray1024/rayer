@@ -72,7 +72,16 @@ public partial class ImmersivePlayer : UserControl
         {
             var mainwindow = AppCore.MainWindow;
 
-            mainwindow.WindowState = mainwindow.WindowState is WindowState.Normal ? WindowState.Maximized : WindowState.Normal;
+            if (mainwindow.WindowState is WindowState.Normal)
+            {
+                mainwindow.ResizeMode = ResizeMode.NoResize;
+                mainwindow.WindowState = WindowState.Maximized;
+            }
+            else
+            {
+                mainwindow.WindowState = WindowState.Normal;
+                mainwindow.ResizeMode = ResizeMode.CanResize;
+            }
         }
     }
 }
