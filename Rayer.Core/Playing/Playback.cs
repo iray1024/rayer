@@ -414,7 +414,7 @@ public class Playback : IDisposable
 
         DeviceManager.Device?.Play();
 
-        _metadata.FadeInOutSampleProvider?.BeginFadeIn(1000);
+        _metadata.FadeInOutSampleProvider?.BeginFadeIn(500);
     }
 
     private int GetNextAudioIndex()

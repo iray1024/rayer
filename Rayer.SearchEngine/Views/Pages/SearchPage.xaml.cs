@@ -19,7 +19,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Threading;
-using Wpf.Ui;
 using Wpf.Ui.Controls;
 
 namespace Rayer.SearchEngine.Views.Pages;
@@ -70,16 +69,6 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
         {
             element.Width = ActualWidth;
             element.Height = ActualWidth;
-
-            var navView = AppCore.GetRequiredService<INavigationService>().GetNavigationControl() as NavigationView;
-
-            if (navView?.Template.FindName("PART_NavigationViewContentPresenter", navView) is NavigationViewContentPresenter navPresenter)
-            {
-                ScrollViewer.SetCanContentScroll(navPresenter, false);
-                ScrollViewer.SetHorizontalScrollBarVisibility(navPresenter, ScrollBarVisibility.Disabled);
-                ScrollViewer.SetVerticalScrollBarVisibility(navPresenter, ScrollBarVisibility.Disabled);
-                ScrollViewer.SetIsDeferredScrollingEnabled(navPresenter, false);
-            }
         }
     }
 
@@ -119,11 +108,17 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
 
     private async Task SearchProcess(SearchType searchType, CancellationToken cancellationToken = default)
     {
+        ScrollViewer.SetCanContentScroll(this, true);
+        ScrollViewer.SetVerticalScrollBarVisibility(this, ScrollBarVisibility.Auto);
+
         if (searchType is SearchType.Audio)
         {
             var dataContext = await ViewModel.LoadAudioAsync();
 
             ApplyPresenter<SearchAudioPresenterViewModel, SearchAudio>(searchType, dataContext);
+
+            ScrollViewer.SetCanContentScroll(this, false);
+            ScrollViewer.SetVerticalScrollBarVisibility(this, ScrollBarVisibility.Disabled);
         }
         else if (searchType is SearchType.Artist)
         {
@@ -199,16 +194,6 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
                 DataContext = this;
             }
 
-            var navView = AppCore.GetRequiredService<INavigationService>().GetNavigationControl() as NavigationView;
-
-            if (navView?.Template.FindName("PART_NavigationViewContentPresenter", navView) is NavigationViewContentPresenter navPresenter)
-            {
-                ScrollViewer.SetCanContentScroll(navPresenter, false);
-                ScrollViewer.SetHorizontalScrollBarVisibility(navPresenter, ScrollBarVisibility.Disabled);
-                ScrollViewer.SetVerticalScrollBarVisibility(navPresenter, ScrollBarVisibility.Disabled);
-                ScrollViewer.SetIsDeferredScrollingEnabled(navPresenter, false);
-            }
-
             var navigationHeaderUpdater = AppCore.GetRequiredService<INavigationCustomHeaderController>();
             navigationHeaderUpdater.Show(titleBar);
 
@@ -272,16 +257,6 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
             }
 
             element.Height = e.NewSize.Height;
-
-            var navView = AppCore.GetRequiredService<INavigationService>().GetNavigationControl() as NavigationView;
-
-            if (navView?.Template.FindName("PART_NavigationViewContentPresenter", navView) is NavigationViewContentPresenter navPresenter)
-            {
-                ScrollViewer.SetCanContentScroll(navPresenter, false);
-                ScrollViewer.SetHorizontalScrollBarVisibility(navPresenter, ScrollBarVisibility.Disabled);
-                ScrollViewer.SetVerticalScrollBarVisibility(navPresenter, ScrollBarVisibility.Disabled);
-                ScrollViewer.SetIsDeferredScrollingEnabled(navPresenter, false);
-            }
         }
     }
 }

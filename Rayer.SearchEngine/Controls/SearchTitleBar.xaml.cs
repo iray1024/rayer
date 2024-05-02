@@ -127,6 +127,8 @@ public partial class SearchTitleBar : UserControl
 
                 RaiseEvent(agrs);
             }
+
+            SearcherSelector.IsEnabled = radio == DefaultPage;
         }
     }
 
@@ -157,6 +159,29 @@ public partial class SearchTitleBar : UserControl
     private async void OnSearcherSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         await ViewModel.OnSearcherChanged();
+
+        if (ViewModel.Searcher is Rayer.Core.Common.SearcherType.Netease)
+        {
+            foreach (var item in TitleBarPanel.Children)
+            {
+                if (item is RadioButton radio)
+                {
+                    radio.IsEnabled = true;
+                }
+            }
+        }
+        else
+        {
+            foreach (var item in TitleBarPanel.Children)
+            {
+                if (item is RadioButton radio)
+                {
+                    radio.IsEnabled = false;
+                }
+            }
+
+            DefaultPage.IsEnabled = true;
+        }
     }
 
     private async void OnLoaded(object sender, RoutedEventArgs e)

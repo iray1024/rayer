@@ -19,6 +19,7 @@ namespace Rayer.SearchEngine.Controls.Search;
 
 public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterControl<SearchAudioPresenterViewModel, SearchAudio>
 {
+    private readonly IAudioManager _audioManager;
     private readonly IPlaylistService _playlistService;
     private readonly ICommandBinding _commandBinding;
 
@@ -33,13 +34,12 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
 
         ViewModel.DataChanged += OnDataChanged;
 
-        var audioManager = AppCore.GetRequiredService<IAudioManager>();
-
+        _audioManager = AppCore.GetRequiredService<IAudioManager>();
         _playlistService = AppCore.GetRequiredService<IPlaylistService>();
         _commandBinding = AppCore.GetRequiredService<ICommandBinding>();
 
-        audioManager.AudioChanged += OnAudioChanged;
-        audioManager.AudioStopped += OnAudioStopped;
+        _audioManager.AudioChanged += OnAudioChanged;
+        _audioManager.AudioStopped += OnAudioStopped;
 
         InitializeComponent();
     }
@@ -54,36 +54,15 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
             _isLoaded = true;
         }
 
-        var audioManager = AppCore.GetRequiredService<IAudioManager>();
+        var navView = AppCore.GetRequiredService<INavigationService>().GetNavigationControl() as NavigationView;
 
-        if (audioManager.Playback.Audio is Audio audio && audioManager.Playback.Playing)
+        if (navView?.Template.FindName("PART_NavigationViewContentPresenter", navView) is NavigationViewContentPresenter navPresenter)
         {
-            var navView = AppCore.GetRequiredService<INavigationService>().GetNavigationControl() as NavigationView;
+            var scrollViewer = ElementHelper.GetScrollViewer(navPresenter);
+            var innerScrollViewer = ElementHelper.GetScrollViewer(this);
 
-            if (navView?.Template.FindName("PART_NavigationViewContentPresenter", navView) is NavigationViewContentPresenter navPresenter)
-            {
-                var scrollViewer = ElementHelper.GetScrollViewer(LibListView);
-                var exScrollViewer = ElementHelper.GetScrollViewer(navPresenter);
-
-                scrollViewer?.ScrollToTop();
-
-                var index = -1;
-                for (var i = 0; i < LibListView.Items.Count; i++)
-                {
-                    if (LibListView.Items[i] is SearchAudioDetail vDetail && vDetail.Id.ToString() == audio.Id)
-                    {
-                        index = i;
-
-                        break;
-                    }
-                }
-
-                if (index != -1)
-                {
-                    scrollViewer?.ScrollToVerticalOffset(56 * index);
-                    exScrollViewer?.ScrollToVerticalOffset(56 * index);
-                }
-            }
+            scrollViewer?.ScrollToTop();
+            innerScrollViewer?.ScrollToTop();
         }
     }
 
@@ -230,5 +209,27 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
         Width = e.NewSize.Width;
 
         Resize(AppCore.MainWindow.ActualWidth, e);
+    }
+
+    private void OnAudioPresenterItemLoaded(object sender, RoutedEventArgs e)
+    {
+        if (_audioManager.Playback.Playing)
+        {
+            if (sender is AudioPresenter presenter &&
+                presenter.DataContext is SearchAudioDetail detail)
+            {
+                if (detail.Id.ToString() == _audioManager.Playback.Audio.Id)
+                {
+                    var index = LibListView.Items.IndexOf(presenter.DataContext);
+                    LibListView.SelectedIndex = index;
+                    LibListView.ScrollIntoView(presenter.DataContext);
+                    presenter.IsSelected = true;
+                }
+                else
+                {
+                    presenter.IsSelected = false;
+                }
+            }
+        }
     }
 }

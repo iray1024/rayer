@@ -46,6 +46,7 @@
                             ArtistsMaxWidth="{Binding ViewModel.ArtistsNameMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAudioPresenter}}"
                             Copyright="{Binding Copyright.Reason, Mode=OneTime}"
                             IsAvailable="{Binding Copyright.HasCopyright, Mode=OneTime}"
+                            Loaded="OnAudioPresenterItemLoaded"
                             Style="{x:Null}"
                             TitleMaxWidth="{Binding ViewModel.TitleMaxWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SearchAudioPresenter}}"
                             Duration="{Binding Duration, Mode=OneTime, Converter={StaticResource WebDurationConverter}}" />
