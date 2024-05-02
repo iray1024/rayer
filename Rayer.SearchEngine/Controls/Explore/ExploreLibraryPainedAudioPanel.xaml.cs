@@ -223,7 +223,7 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
             if (vBorder is not null &&
                 vBorder.DataContext is SearchAudioDetail detail)
             {
-                if (GetIsChecked(vBorder) && GetIsPlayable(vBorder) && detail.Id != e.New.Id)
+                if (GetIsChecked(vBorder) && GetIsPlayable(vBorder) && detail.Id.ToString() != e.New.Id)
                 {
                     vBorder.Background = new SolidColorBrush(currentThemeBrush.Color)
                     {
@@ -238,7 +238,7 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
 
                     SetIsChecked(vBorder, false);
                 }
-                else if (!GetIsChecked(vBorder) && GetIsPlayable(vBorder) && detail.Id == e.New.Id)
+                else if (!GetIsChecked(vBorder) && GetIsPlayable(vBorder) && detail.Id.ToString() == e.New.Id)
                 {
                     vBorder.Background = new SolidColorBrush(Color.FromRgb(187, 205, 255));
 
@@ -293,11 +293,13 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
 
         var audioInformation = await provider.GetAudioEngine(SearcherType.Netease).GetAudioAsync(detail);
 
-        if (!audioManager.Playback.TryGetAudio(detail.Id, out var existsAudio))
+        var id = detail.Id.ToString();
+
+        if (!audioManager.Playback.TryGetAudio(id, out var existsAudio))
         {
             var audio = new Audio()
             {
-                Id = detail.Id,
+                Id = id,
                 Title = detail.Title,
                 Artists = detail.Artists.Select(x => x.Name).ToArray(),
                 Album = detail.Album?.Title ?? string.Empty,
@@ -350,7 +352,7 @@ public partial class ExploreLibraryPainedAudioPanel : UserControl
                         }
                     }
 
-                    if (_audioManager.Playback.Audio is not null && detail.Id == _audioManager.Playback.Audio.Id && GetIsPlayable(vBorder))
+                    if (_audioManager.Playback.Audio is not null && detail.Id.ToString() == _audioManager.Playback.Audio.Id && GetIsPlayable(vBorder))
                     {
                         vBorder.Background = new SolidColorBrush(Color.FromRgb(187, 205, 255));
 

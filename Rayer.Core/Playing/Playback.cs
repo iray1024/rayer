@@ -309,7 +309,7 @@ public class Playback : IDisposable
     }
 
     [return: MaybeNull]
-    public bool TryGetAudio(long id, out Audio audio)
+    public bool TryGetAudio(string id, out Audio audio)
     {
         audio = null!;
 
@@ -330,7 +330,14 @@ public class Playback : IDisposable
     {
         var index = GetNextAudioIndex();
 
-        await Play(Queue[index], isEventTriggered);
+        if (index != -1)
+        {
+            await Play(Queue[index], isEventTriggered);
+        }
+        else
+        {
+            EndPlay();
+        }
     }
 
     public async Task Previous(bool isEventTriggered = false)
@@ -416,7 +423,11 @@ public class Playback : IDisposable
 
         var index = Shuffle ? GetExcludeRandomIndex(currentIndex) : currentIndex + 1;
 
-        return index >= Queue.Count ? 0 : index;
+        return Queue.Count > 0
+            ? index >= Queue.Count
+                ? 0
+                : index
+            : -1;
     }
 
     private void CheckAudio(ref Audio audio)

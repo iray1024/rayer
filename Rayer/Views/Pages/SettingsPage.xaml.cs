@@ -1,6 +1,9 @@
-﻿using Rayer.Services;
+﻿using Rayer.Core;
+using Rayer.Core.Utils;
+using Rayer.Services;
 using Rayer.ViewModels;
 using System.Windows.Media;
+using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
@@ -17,6 +20,8 @@ public partial class SettingsPage : INavigableView<SettingsViewModel>
 
         ApplicationThemeManager.Changed += OnThemeChanged;
     }
+
+    public SettingsViewModel ViewModel { get; }
 
     private void OnThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)
     {
@@ -42,5 +47,15 @@ public partial class SettingsPage : INavigableView<SettingsViewModel>
         };
     }
 
-    public SettingsViewModel ViewModel { get; }
+    private void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
+    {
+        var navView = AppCore.GetRequiredService<INavigationService>().GetNavigationControl() as NavigationView;
+
+        if (navView?.Template.FindName("PART_NavigationViewContentPresenter", navView) is NavigationViewContentPresenter navPresenter)
+        {
+            var scrollViewer = ElementHelper.GetScrollViewer(navPresenter);
+
+            scrollViewer?.ScrollToTop();
+        }
+    }
 }

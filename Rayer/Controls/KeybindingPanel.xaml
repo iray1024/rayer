@@ -15,6 +15,7 @@
         <ui:TextBlock
             Margin="0,0,0,8"
             FontTypography="BodyStrong"
+            Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
             Text="快捷键" />
         <ui:CardExpander
             Margin="0,0,0,6"
@@ -37,6 +38,7 @@
                         Text="内置快捷键设置" />
                     <ui:TextBlock
                         Grid.Row="1"
+                        FontTypography="Caption"
                         Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
                         Text="控制程序行为的一组快捷键" />
                 </Grid>

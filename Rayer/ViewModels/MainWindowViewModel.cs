@@ -4,6 +4,7 @@ using Rayer.Core.Abstractions;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Menu;
+using Rayer.Core.Utils;
 using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Enums;
@@ -11,8 +12,10 @@ using Rayer.SearchEngine.Views.Pages;
 using Rayer.Views.Pages;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Media;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
+using MenuItem = Wpf.Ui.Controls.MenuItem;
 
 namespace Rayer.ViewModels;
 
@@ -27,6 +30,8 @@ public partial class MainWindowViewModel : ObservableObject
     private bool _userRaiseClickSuggestItem = false;
     private readonly string[] _defaultEmptySuggest = ["当前引擎暂无建议"];
 
+    private static readonly RectangleGeometry _defaultClipSetting = new(new Rect(0, 0, 24, 24), 4, 4);
+
     public MainWindowViewModel(
             INavigationService navigationService)
     {
@@ -40,31 +45,7 @@ public partial class MainWindowViewModel : ObservableObject
             }
         }
 
-        MenuItems.Add(new NavigationViewItemSeparator());
-
-        var commandBindings = App.GetRequiredService<ICommandBinding>();
-        var playlistProvider = App.GetRequiredService<IPlaylistProvider>();
-
-        playlistProvider.Initialize(App.GetRequiredService<IAudioManager>());
-
-        var newPlaylistMenuItem = new NavigationViewItem()
-        {
-            Name = "新建歌单",
-            IsMenuElement = false,
-            Content = "新建歌单+",
-            TargetPageTag = "Playlist",
-            Command = commandBindings.AddPlaylistCommand
-        };
-
-        MenuItems.Add(newPlaylistMenuItem);
-
-        foreach (var item in playlistProvider.Playlists.OrderBy(x => x.Sort))
-        {
-            MenuItems.Add(new NavigationViewItem(item.Name, typeof(PlaylistPage))
-            {
-                TargetPageTag = $"_playlist_{item.Id}",
-            });
-        }
+        ProcessPlaylistMenu();
 
         _loaderProvider = App.GetRequiredService<ILoaderProvider>();
         _searchEngineProvider = App.GetRequiredService<ISearchEngineProvider>();
@@ -195,6 +176,68 @@ public partial class MainWindowViewModel : ObservableObject
             var searchAware = App.GetRequiredService<ISearchAware>();
 
             searchAware.OnSearch(model);
+        }
+    }
+
+    private void ProcessPlaylistMenu()
+    {
+        var commandBindings = App.GetRequiredService<ICommandBinding>();
+        var playlistProvider = App.GetRequiredService<IPlaylistProvider>();
+
+        playlistProvider.Initialize(App.GetRequiredService<IAudioManager>());
+
+        var newPlaylistMenuItem = new NavigationViewItem()
+        {
+            Name = "新建歌单",
+            IsMenuElement = false,
+            Content = "新建歌单+",
+            TargetPageTag = "Playlist",
+            Command = commandBindings.AddPlaylistCommand
+        };
+
+        MenuItems.Add(newPlaylistMenuItem);
+
+        foreach (var item in playlistProvider.Playlists.OrderBy(x => x.Sort))
+        {
+            var navViewItem = new NavigationViewItem(item.Name, typeof(PlaylistPage))
+            {
+                TargetPageTag = $"_playlist_{item.Id}",
+            };
+
+            var coverItem = item.Audios.FirstOrDefault();
+
+            if (coverItem is not null)
+            {
+                if (coverItem.IsVirualWebSource)
+                {
+                    var cover = !string.IsNullOrEmpty(coverItem.CoverUri)
+                        ? ImageSourceFactory.CreateWebSource(coverItem.CoverUri)
+                        : (ImageSource)Application.Current.Resources["AlbumFallback"];
+
+                    navViewItem.Icon = new ImageIcon()
+                    {
+                        Source = cover,
+                        Width = 24,
+                        Height = 24,
+                    };
+                }
+                else
+                {
+                    navViewItem.Icon = new ImageIcon()
+                    {
+                        Source = coverItem.Cover,
+                        Width = 24,
+                        Height = 24
+                    };
+                }
+
+                if (navViewItem.Icon is not null)
+                {
+                    navViewItem.Icon.Clip = _defaultClipSetting;
+                }
+            }
+
+            MenuItems.Add(navViewItem);
         }
     }
 }

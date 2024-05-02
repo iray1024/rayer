@@ -160,7 +160,7 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
             {
                 if (vItem.DataContext is SearchAudioDetail detail)
                 {
-                    if (detail.Id == e.New.Id)
+                    if (detail.Id.ToString() == e.New.Id)
                     {
                         var index = LibListView.Items.IndexOf(vItem.DataContext);
                         LibListView.SelectedIndex = index;
@@ -198,7 +198,7 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
 
             var audio = new Audio
             {
-                Id = detail.Id,
+                Id = detail.Id.ToString(),
                 Title = detail.Title,
                 Artists = detail.Artists.Select(x => x.Name).ToArray(),
                 Album = detail.Album?.Title ?? string.Empty,
@@ -430,7 +430,7 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
             if (sender is AudioPresenter presenter &&
                 presenter.DataContext is SearchAudioDetail detail)
             {
-                if (detail.Id == _audioManager.Playback.Audio.Id)
+                if (detail.Id.ToString() == _audioManager.Playback.Audio.Id)
                 {
                     var index = LibListView.Items.IndexOf(presenter.DataContext);
                     LibListView.SelectedIndex = index;

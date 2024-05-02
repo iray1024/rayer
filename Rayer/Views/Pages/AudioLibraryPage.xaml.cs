@@ -126,14 +126,23 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
                 {
                     foreach (var item in e.NewItems)
                     {
-                        ViewModel.Items.Insert(startIndex++, (Audio)item);
+                        var audio = (Audio)item;
+
+                        ViewModel.Items.Insert(startIndex++, audio);
+                        _audioManager.Playback.Queue.Add(audio);
                     }
                 }
             }
 
             if (e.Action is NotifyCollectionChangedAction.Remove)
             {
-                ViewModel.Items.RemoveAt(e.OldStartingIndex);
+                if (e.OldItems is not null &&
+                    e.OldItems.Count > 0 &&
+                    e.OldItems[0] is Audio audio)
+                {
+                    ViewModel.Items.Remove(audio);
+                    _audioManager.Playback.Queue.Remove(audio);
+                }
             }
         });
     }

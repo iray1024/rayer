@@ -5,7 +5,7 @@ namespace Rayer.Core.Models;
 
 public class Audio
 {
-    public long Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
     public string[] Artists { get; set; } = [];
 

@@ -45,11 +45,13 @@ public partial class SearchAudioPresenterViewModel : AdaptiveViewModelBase, IPre
     {
         var webAudio = await _audioEngineProvider.AudioEngine.GetAudioAsync(item);
 
-        if (!_audioManager.Playback.TryGetAudio(item.Id, out var existsAudio))
+        var id = item.Id.ToString();
+
+        if (!_audioManager.Playback.TryGetAudio(id, out var existsAudio))
         {
             var audio = new Audio()
             {
-                Id = item.Id,
+                Id = id,
                 Title = item.Title,
                 Artists = item.Artists.Select(x => x.Name).ToArray(),
                 Album = item.Album?.Title ?? string.Empty,

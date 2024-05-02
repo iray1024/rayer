@@ -33,7 +33,6 @@ public partial class RightPlaybarPanel : UserControl
         _commandBinding = App.GetRequiredService<ICommandBinding>();
 
         _audioManager.AudioChanged += AudioChanged;
-        _audioManager.Audios.CollectionChanged += OnAudiosCollectionChanged;
         _audioManager.Playback.Queue.CollectionChanged += OnPlayQueueCollectionChanged;
 
         ViewModel.Items.AddRange(_audioManager.Playback.Queue);
@@ -74,34 +73,6 @@ public partial class RightPlaybarPanel : UserControl
         LibListView.ScrollIntoView(e.New);
     }
 
-    private void OnAudiosCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        Application.Current.Dispatcher.Invoke(() =>
-        {
-            if (e.Action is NotifyCollectionChangedAction.Add)
-            {
-                var startIndex = e.NewStartingIndex;
-                if (e.NewItems is not null)
-                {
-                    foreach (var item in e.NewItems)
-                    {
-                        ViewModel.Items.Insert(startIndex++, (Audio)item);
-                    }
-                }
-            }
-
-            if (e.Action is NotifyCollectionChangedAction.Remove)
-            {
-                if (ViewModel.Items.Count > e.OldStartingIndex)
-                {
-                    ViewModel.Items.RemoveAt(e.OldStartingIndex);
-                }
-            }
-
-            ViewModel.QueueCount = $"共{ViewModel.Items.Count}首歌曲";
-        });
-    }
-
     private void OnPlayQueueCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         Application.Current.Dispatcher.Invoke(() =>
@@ -120,7 +91,12 @@ public partial class RightPlaybarPanel : UserControl
 
             if (e.Action is NotifyCollectionChangedAction.Remove)
             {
-                ViewModel.Items.RemoveAt(e.OldStartingIndex);
+                if (e.OldItems is not null &&
+                    e.OldItems.Count > 0 &&
+                    e.OldItems[0] is Audio audio)
+                {
+                    ViewModel.Items.Remove(audio);
+                }
             }
             else if (e.Action is NotifyCollectionChangedAction.Reset)
             {

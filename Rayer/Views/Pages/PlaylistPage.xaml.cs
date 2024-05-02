@@ -158,7 +158,7 @@ public partial class PlaylistPage : AdaptivePage, INavigableView<PlaylistPageVie
 
                     var audio = await engine.GetAudioAsync(new SearchEngine.Core.Domain.Aduio.SearchAudioDetail
                     {
-                        Id = item.Id,
+                        Id = long.Parse(item.Id),
                         Tags = item.Tags
                     });
 

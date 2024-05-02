@@ -108,7 +108,7 @@ internal partial class CommandBindingService : ICommandBinding
 
                     var audio = await engine.GetAudioAsync(new SearchEngine.Core.Domain.Aduio.SearchAudioDetail
                     {
-                        Id = parameter.Audio.Id,
+                        Id = long.Parse(parameter.Audio.Id),
                         Tags = parameter.Audio.Tags
                     });
 

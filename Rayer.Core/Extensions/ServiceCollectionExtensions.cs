@@ -4,6 +4,7 @@ using Microsoft.Extensions.Internal;
 using Rayer.Core.Framework.Injection;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Loader;
 
 namespace Rayer.Core.Extensions;
 
@@ -72,16 +73,17 @@ public static class ServiceCollectionExtensions
 
         foreach (var path in assemblies)
         {
-            var assembly = Assembly.LoadFrom(path);
+            var injectionTypes = AssemblyLoadContext.Default.LoadFromAssemblyPath(path)
+                .DefinedTypes
+                .Where(x =>
+                    x.IsClass &&
+                    !x.IsAbstract &&
+                    x.IsDefined(typeof(InjectAttribute), true));
 
-            assembly
-                .GetTypes()
-                .Where(x => x.IsDefined(typeof(InjectAttribute), true))
-                .ToList()
-                .ForEach(x =>
+            foreach (var injectionType in injectionTypes)
+            {
+                if (injectionType.GetCustomAttributes<InjectAttribute>(true) is IEnumerable<InjectAttribute> attrs)
                 {
-                    var attrs = x.GetCustomAttributes<InjectAttribute>(true);
-
                     foreach (var attr in attrs)
                     {
                         if (attr is not null)
@@ -90,10 +92,11 @@ public static class ServiceCollectionExtensions
 
                             var interfaceType = type.IsGenericType ? type.GenericTypeArguments[0] : null;
 
-                            Inject(services, interfaceType, x, attr);
+                            Inject(services, interfaceType, injectionType, attr);
                         }
                     }
-                });
+                }
+            }
         }
 
         return services;

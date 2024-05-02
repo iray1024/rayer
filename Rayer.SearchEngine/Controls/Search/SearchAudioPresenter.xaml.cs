@@ -70,7 +70,7 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
                 var index = -1;
                 for (var i = 0; i < LibListView.Items.Count; i++)
                 {
-                    if (LibListView.Items[i] is SearchAudioDetail vDetail && vDetail.Id == audio.Id)
+                    if (LibListView.Items[i] is SearchAudioDetail vDetail && vDetail.Id.ToString() == audio.Id)
                     {
                         index = i;
 
@@ -97,7 +97,7 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
             {
                 if (vItem.DataContext is SearchAudioDetail detail)
                 {
-                    if (detail.Id == e.New.Id)
+                    if (detail.Id.ToString() == e.New.Id)
                     {
                         var index = LibListView.Items.IndexOf(vItem.DataContext);
                         LibListView.SelectedIndex = index;
@@ -135,7 +135,7 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
 
             var audio = new Audio
             {
-                Id = detail.Id,
+                Id = detail.Id.ToString(),
                 Title = detail.Title,
                 Artists = detail.Artists.Select(x => x.Name).ToArray(),
                 Album = detail.Album?.Title ?? string.Empty,

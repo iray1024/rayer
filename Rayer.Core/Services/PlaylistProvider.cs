@@ -59,6 +59,13 @@ internal class PlaylistProvider : IPlaylistProvider
                     {
                         model.Audios[i] = instance;
                     }
+                    else
+                    {
+                        if (!model.Audios[i].IsVirualWebSource)
+                        {
+                            model.Audios[i].Cover = MediaRecognizer.ExtractCover(model.Audios[i].Path);
+                        }
+                    }
                 }
 
                 Playlists.Add(model);

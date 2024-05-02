@@ -23,6 +23,8 @@ internal class AudioFileWatcher : IAudioFileWatcher
 
     public AudioFileWatcher(ISettingsService settingsService)
     {
+        MediaRecognizer.Initialize();
+
         var libs = settingsService.Settings.AudioLibrary;
 
         _watchers = new ObservableCollection<FileSystemWatcher>(libs.Select(x => new FileSystemWatcher(x)));

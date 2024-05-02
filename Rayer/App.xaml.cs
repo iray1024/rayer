@@ -75,9 +75,6 @@ public partial class App : Application
         Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture;
 
         _ = GetRequiredService<ISettingsService>();
-        var watcher = GetRequiredService<IAudioFileWatcher>();
-
-        watcher.Watch();
 
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
@@ -87,6 +84,10 @@ public partial class App : Application
 
         await Preload();
         CrossThreadAccessor.Initialize();
+
+        var watcher = GetRequiredService<IAudioFileWatcher>();
+
+        watcher.Watch();
 
         _host.Start();
     }
