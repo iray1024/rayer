@@ -142,7 +142,8 @@ public partial class SearchAudioPresenter : AdaptiveUserControl, IPresenterContr
                 CoverUri = !string.IsNullOrEmpty(detail.Album?.Cover) ? detail.Album?.Cover : null,
                 Duration = detail.Duration,
                 IsVirualWebSource = true,
-                SearcherType = provider.CurrentSearcher
+                SearcherType = provider.CurrentSearcher,
+                Tags = detail.Tags
             };
 
             foreach (var item in ViewModel.ContextMenu.Items.SourceCollection)

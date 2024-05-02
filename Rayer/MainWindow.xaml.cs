@@ -79,6 +79,11 @@ public partial class MainWindow : IWindow
             pageType != typeof(PlaylistPage)
                 ? Visibility.Collapsed
                 : Visibility.Visible;
+
+        if (pageType == typeof(PlaylistPage))
+        {
+            ProcessPlaylistUpdateWithoutNavigated();
+        }
     }
 
     private void OnNavigationSelectionChanged(object sender, RoutedEventArgs e)
@@ -283,7 +288,7 @@ public partial class MainWindow : IWindow
     {
         if (navigationView.SelectedItem?.TargetPageType == typeof(PlaylistPage))
         {
-            var playlistServer = App.GetRequiredService<IPlaylistService>();
+            var playlistService = App.GetRequiredService<IPlaylistService>();
 
             var tag = navigationView.SelectedItem.TargetPageTag;
 
@@ -292,7 +297,7 @@ public partial class MainWindow : IWindow
                 var page = App.GetRequiredService<PlaylistPage>();
                 var id = long.Parse(tag[10..]);
 
-                var model = playlistServer.Playlists.FirstOrDefault(x => x.Id == id);
+                var model = playlistService.Playlists.FirstOrDefault(x => x.Id == id);
 
                 if (model is not null)
                 {
@@ -301,6 +306,19 @@ public partial class MainWindow : IWindow
                     page.ViewModel.Name = model.Name;
                 }
             }
+        }
+    }
+
+    private static void ProcessPlaylistUpdateWithoutNavigated()
+    {
+        var playlistService = App.GetRequiredService<IPlaylistService>();
+        var page = App.GetRequiredService<PlaylistPage>();
+
+        var playlist = playlistService.Playlists.FirstOrDefault(x => x.Id == page.ViewModel.Id);
+
+        if (playlist is not null)
+        {
+            page.ViewModel.Items = new Core.Common.SortableObservableCollection<Audio>(playlist.Audios, AudioSortComparer.Ascending);
         }
     }
 }
