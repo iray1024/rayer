@@ -53,7 +53,7 @@ public partial class VolumePanelViewModel : ObservableObject
     {
         SetImageIconTheme(_immersivePlayerService.IsNowImmersive);
 
-        _audioManager.Playback.Device.Volume = Volume / 100.0f;
+        _audioManager.Playback.DeviceManager.Volume = Volume / 100.0f;
 
         ToolTipService.SetToolTip(_dependency, $"音量：{(int)(_settingsService.Settings.Volume * 100)}%");
     }

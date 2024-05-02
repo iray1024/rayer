@@ -8,6 +8,8 @@ namespace Rayer.Core.Models;
 
 public class WaveMetadata : ISampleProvider, IDisposable
 {
+    public string Uri { get; set; } = string.Empty;
+
     public Stream? BaseStream { get; set; }
 
     public WaveStream? Reader { get; set; }

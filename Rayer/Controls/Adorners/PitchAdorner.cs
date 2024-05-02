@@ -184,14 +184,14 @@ public class PitchAdorner : Adorner
     {
         var factor = MathF.Round((float)_internalSlider.Value, 2);
 
-        _vm.AudioManager.Playback.Device.Pitch = factor;
+        _vm.AudioManager.Playback.DeviceManager.Pitch = factor;
 
         Save(factor);
     }
 
     private void OnPitchMouseWheel(object sender, MouseWheelEventArgs e)
     {
-        var factor = _vm.AudioManager.Playback.Device.Pitch + (0.05f * (e.Delta > 0 ? 1 : -1));
+        var factor = _vm.AudioManager.Playback.DeviceManager.Pitch + (0.05f * (e.Delta > 0 ? 1 : -1));
 
         factor = Math.Min(Math.Max(factor, 0.5f), 2f);
 

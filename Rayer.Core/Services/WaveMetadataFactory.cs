@@ -83,6 +83,7 @@ internal class WaveMetadataFactory : IWaveMetadataFactory
 
             return new WaveMetadata
             {
+                Uri = filepath,
                 BaseStream = baseStream,
                 Reader = waveStream,
                 PitchShiftingSampleProvider = pitchProvider,

@@ -78,14 +78,14 @@ internal partial class ImmersivePlayerService : IImmersivePlayerService
                 visualizerPresenter.SampleDrawingPanel.Height = mainWnd.Height * 2;
 
                 visualizerPresenter.Reset_Visualizer(256);
-                if (_audioManager.Playback.Device.PlaybackState is NAudio.Wave.PlaybackState.Playing)
+                if (_audioManager.Playback.DeviceManager.PlaybackState is NAudio.Wave.PlaybackState.Playing)
                 {
                     visualizerPresenter.AudioVisualizerStoryboard.Begin();
                 }
             }
             else if (presenter is ImmersiveVinylPresenter vinylPresenter)
             {
-                if (_audioManager.Playback.Device.PlaybackState is NAudio.Wave.PlaybackState.Playing)
+                if (_audioManager.Playback.DeviceManager.PlaybackState is NAudio.Wave.PlaybackState.Playing)
                 {
                     vinylPresenter.AlbumRotateStoryboard.Begin();
                 }

@@ -36,17 +36,17 @@ public class Playback : IDisposable
 
         _playQueueProvider = serviceProvider.GetRequiredService<IPlayQueueProvider>();
         _metadataFactory = serviceProvider.GetRequiredService<IWaveMetadataFactory>();
-        Device = serviceProvider.GetRequiredService<IDeviceManager>();
+        DeviceManager = serviceProvider.GetRequiredService<IDeviceManager>();
 
-        Device.PlaybackStopped += OnPlaybackStopped;
-        Device.MetadataChanged += OnMetadataChanged;
+        DeviceManager.PlaybackStopped += OnPlaybackStopped;
+        DeviceManager.MetadataChanged += OnMetadataChanged;
 
         Queue.AddRange(_audioManager.Audios);
 
         DispatcherTimer.Tick += OnTick;
     }
 
-    public IDeviceManager Device { get; } = null!;
+    public IDeviceManager DeviceManager { get; } = null!;
 
     public SortableObservableCollection<Audio> Queue => _playQueueProvider.Queue;
 
@@ -106,8 +106,8 @@ public class Playback : IDisposable
 
     public void Initialize(float volume, float pitch, PlayloopMode playloopMode)
     {
-        Device.Volume = volume;
-        Device.Pitch = pitch;
+        DeviceManager.Volume = volume;
+        DeviceManager.Pitch = pitch;
 
         if (playloopMode is PlayloopMode.List)
         {
@@ -224,7 +224,7 @@ public class Playback : IDisposable
         {
             _metadata = metadata;
 
-            await Device.LoadAsync(_metadata);
+            await DeviceManager.LoadAsync(_metadata);
 
             OpenFile();
         }
@@ -249,15 +249,15 @@ public class Playback : IDisposable
 
     public void Resume(bool fadeIn = true)
     {
-        if (Device.Device is not null && _metadata.Reader is not null && Device.PlaybackState is not PlaybackState.Playing)
+        if (DeviceManager.Device is not null && _metadata.Reader is not null && DeviceManager.PlaybackState is not PlaybackState.Playing)
         {
             DispatcherTimer.Start();
 
-            var oldState = Device.PlaybackState;
+            var oldState = DeviceManager.PlaybackState;
 #if DEBUG
             Console.WriteLine("开始播放\n");
 #endif
-            Device.Device.Play();
+            DeviceManager.Device.Play();
             if (fadeIn)
             {
                 _metadata.FadeInOutSampleProvider?.BeginFadeIn(1000);
@@ -273,7 +273,7 @@ public class Playback : IDisposable
     {
         DispatcherTimer.Stop();
 
-        Device.Device?.Pause();
+        DeviceManager.Device?.Pause();
 
         AudioPaused?.Invoke(this, EventArgs.Empty);
     }
@@ -282,7 +282,7 @@ public class Playback : IDisposable
     {
         DispatcherTimer.Stop();
 
-        Device.Stop();
+        DeviceManager.Stop();
 
         if (_metadata.Reader is not null)
         {
@@ -296,7 +296,7 @@ public class Playback : IDisposable
 
         Playing = false;
 
-        Device.Stop();
+        DeviceManager.Stop();
 
         if (_metadata.Reader is not null)
         {
@@ -360,10 +360,10 @@ public class Playback : IDisposable
         {
             if (_metadata.PitchShiftingSampleProvider is not null)
             {
-                _metadata.PitchShiftingSampleProvider.Pitch = Device.Pitch;
+                _metadata.PitchShiftingSampleProvider.Pitch = DeviceManager.Pitch;
             }
 
-            Device.Init();
+            DeviceManager.Init();
 
             AudioChanged?.Invoke(this, new AudioChangedArgs() { New = Audio });
         }
@@ -391,7 +391,7 @@ public class Playback : IDisposable
 #if DEBUG
         Debug.WriteLine("播放结束事件响应");
 #endif
-        Device.Stop();
+        DeviceManager.Stop();
 
         if (Repeat && Playing)
         {
@@ -409,10 +409,10 @@ public class Playback : IDisposable
 
         if (_metadata.PitchShiftingSampleProvider is not null)
         {
-            _metadata.PitchShiftingSampleProvider.Pitch = Device.Pitch;
+            _metadata.PitchShiftingSampleProvider.Pitch = DeviceManager.Pitch;
         }
 
-        Device.Device?.Play();
+        DeviceManager.Device?.Play();
 
         _metadata.FadeInOutSampleProvider?.BeginFadeIn(1000);
     }
@@ -452,7 +452,7 @@ public class Playback : IDisposable
     {
         DispatcherTimer.Stop();
 
-        Device.Stop();
+        DeviceManager.Stop();
     }
 
     private int GetExcludeRandomIndex(int exclude)

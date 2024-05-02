@@ -5,7 +5,6 @@ using Rayer.Core.Events;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Models;
 using System.Diagnostics;
-using System.IO;
 using System.Windows;
 
 namespace Rayer.Core.Services;
@@ -91,11 +90,9 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
 
             var currentTime = _metadata.Reader.CurrentTime;
 
-            var filePath = (_metadata.BaseStream as FileStream)?.Name!;
-
             var factory = serviceProvider.GetRequiredService<IWaveMetadataFactory>();
 
-            var metadata = await factory.CreateAsync(filePath);
+            var metadata = await factory.CreateAsync(_metadata.Uri);
 
             if (metadata is not null)
             {

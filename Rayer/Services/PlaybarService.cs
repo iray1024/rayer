@@ -8,11 +8,11 @@ namespace Rayer.Services;
 [Inject<IPlaybarService>]
 internal class PlaybarService(IAudioManager audioManager) : IPlaybarService
 {
-    public PlaybackState PlaybackState => audioManager.Playback.Device.PlaybackState;
+    public PlaybackState PlaybackState => audioManager.Playback.DeviceManager.PlaybackState;
 
     public void PlayOrPause(bool SuppressEvent = false)
     {
-        var currentPlaybackState = audioManager.Playback.Device.PlaybackState;
+        var currentPlaybackState = audioManager.Playback.DeviceManager.PlaybackState;
 
         if (currentPlaybackState is PlaybackState.Playing)
         {
@@ -35,7 +35,7 @@ internal class PlaybarService(IAudioManager audioManager) : IPlaybarService
 
     public async Task Previous()
     {
-        if (audioManager.Playback.Device.PlaybackState is not PlaybackState.Stopped)
+        if (audioManager.Playback.DeviceManager.PlaybackState is not PlaybackState.Stopped)
         {
             await audioManager.Playback.Previous();
         }
@@ -45,7 +45,7 @@ internal class PlaybarService(IAudioManager audioManager) : IPlaybarService
 
     public async Task Next()
     {
-        if (audioManager.Playback.Device.PlaybackState is not PlaybackState.Stopped)
+        if (audioManager.Playback.DeviceManager.PlaybackState is not PlaybackState.Stopped)
         {
             await audioManager.Playback.Next();
         }
