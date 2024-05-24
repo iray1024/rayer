@@ -3,7 +3,6 @@
     <BitmapImage x:Key="Logo" UriSource="pack://application:,,,/assets/logo.png" />
     <BitmapImage x:Key="AlbumFallback" UriSource="pack://application:,,,/assets/fallback.png" />
     <!--<BitmapImage x:Key="AlbumFallback" UriSource="pack://application:,,,/assets/fallback_mm.jpg" />-->
-    <BitmapImage x:Key="Loading" UriSource="pack://application:,,,/assets/loading.png" />
 
     <BitmapImage x:Key="Previous" UriSource="pack://application:,,,/assets/light/previous.png" />
     <BitmapImage x:Key="Next" UriSource="pack://application:,,,/assets/light/next.png" />
@@ -23,5 +22,6 @@
     <BitmapImage x:Key="FullScreen" UriSource="pack://application:,,,/assets/light/fullscreen.png" />
     <BitmapImage x:Key="Equalizer" UriSource="pack://application:,,,/assets/light/equalizer.png" />
     <BitmapImage x:Key="Lyric" UriSource="pack://application:,,,/assets/light/lyric.png" />
+    <BitmapImage x:Key="Speed" UriSource="pack://application:,,,/assets/light/speed.png" />
 
 </ResourceDictionary>

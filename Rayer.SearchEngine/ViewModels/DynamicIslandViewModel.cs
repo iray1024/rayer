@@ -70,6 +70,10 @@ public partial class DynamicIslandViewModel : ObservableObject
 
             _timer.Start();
         }
+        else
+        {
+            CurrentLine = _stopInfo;
+        }
     }
 
     private async void OnAudioChanged(object? sender, AudioChangedArgs e)

@@ -277,6 +277,7 @@ public partial class Playbar : UserControl
         {
             adornerLayer.Add(new PlayloopAdorner(element));
             adornerLayer.Add(new VolumeAdorner(element));
+            adornerLayer.Add(new SpeedAdorner(element));
             adornerLayer.Add(new PitchAdorner(element));
         }
     }

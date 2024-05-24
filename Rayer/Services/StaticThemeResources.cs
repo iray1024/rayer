@@ -22,6 +22,7 @@ internal static class StaticThemeResources
         internal static readonly BitmapImage Pitch = new(new Uri("pack://application:,,,/assets/light/pitch.png"));
         internal static readonly BitmapImage PlayQueue = new(new Uri("pack://application:,,,/assets/light/play-queue.png"));
         internal static readonly BitmapImage Equalizer = new(new Uri("pack://application:,,,/assets/light/equalizer.png"));
+        internal static readonly BitmapImage Speed = new(new Uri("pack://application:,,,/assets/light/speed.png"));
 
         internal static readonly SolidColorBrush TextFillColorPrimaryBrush = new(Color.FromArgb(0xe4, 0, 0, 0));
         internal static readonly SolidColorBrush SliderTrackFill = new(Color.FromArgb(0x72, 0, 0, 0));
@@ -42,6 +43,7 @@ internal static class StaticThemeResources
         internal static readonly BitmapImage Pitch = new(new Uri("pack://application:,,,/assets/dark/pitch.png"));
         internal static readonly BitmapImage PlayQueue = new(new Uri("pack://application:,,,/assets/dark/play-queue.png"));
         internal static readonly BitmapImage Equalizer = new(new Uri("pack://application:,,,/assets/dark/equalizer.png"));
+        internal static readonly BitmapImage Speed = new(new Uri("pack://application:,,,/assets/dark/speed.png"));
 
         internal static readonly SolidColorBrush TextFillColorPrimaryBrush = new(Color.FromRgb(255, 255, 255));
         internal static readonly SolidColorBrush SliderTrackFill = new(Color.FromArgb(0x8b, 255, 255, 255));

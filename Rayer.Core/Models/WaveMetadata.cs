@@ -2,6 +2,7 @@
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using Rayer.Core.AudioEffect.Abstractions;
+using SoundTouch.Net.NAudioSupport;
 using System.IO;
 
 namespace Rayer.Core.Models;
@@ -15,6 +16,8 @@ public class WaveMetadata : ISampleProvider, IDisposable
     public WaveStream? Reader { get; set; }
 
     public IPitchShiftingProvider? PitchShiftingSampleProvider { get; set; }
+
+    public SoundTouchWaveProvider? TempoChangeProvider { get; set; }
 
     public FadeInOutSampleProvider? FadeInOutSampleProvider { get; set; }
 
@@ -41,6 +44,7 @@ public class WaveMetadata : ISampleProvider, IDisposable
     public void Dispose()
     {
         PitchShiftingSampleProvider = null;
+        TempoChangeProvider = null;
         Equalizer = null;
         FadeInOutSampleProvider = null;
 

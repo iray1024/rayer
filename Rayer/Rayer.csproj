@@ -46,6 +46,7 @@
     <Resource Include="assets\dark\repeat.png" />    
     <Resource Include="assets\dark\shuffle.png" />    
     <Resource Include="assets\dark\single.png" />    
+    <Resource Include="assets\dark\speed.png" />    
     <Resource Include="assets\dark\volume-full.png" />    
     <Resource Include="assets\dark\volume-half.png" />    
     <Resource Include="assets\fallback.png" />    
@@ -66,6 +67,7 @@
     <Resource Include="assets\light\repeat.png" />
     <Resource Include="assets\light\shuffle.png" />
     <Resource Include="assets\light\single.png" />
+    <Resource Include="assets\light\speed.png" />
     <Resource Include="assets\light\volume-full.png" />
     <Resource Include="assets\light\volume-half.png" />
     <Resource Include="assets\logo.png" />

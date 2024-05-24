@@ -23,5 +23,6 @@ public enum ThemeSymbol
     FullScreen,
     Equalizer,
     Lyric,
-    Search
+    Search,
+    Speed
 }

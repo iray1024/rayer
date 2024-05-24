@@ -18,6 +18,7 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
 
     private float _volume = 1f;
     private float _pitch = 1f;
+    private float _speed = 1f;
 
     private int _isReOpen = 0;
 
@@ -40,6 +41,16 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
         {
             _pitch = Math.Min(Math.Max(value, 0.5f), 2);
             SetPitch();
+        }
+    }
+
+    public float Speed
+    {
+        get => _speed;
+        set
+        {
+            _speed = Math.Min(Math.Max(value, 0f), 2f);
+            SetSpeed();
         }
     }
 
@@ -182,5 +193,30 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
         {
             _metadata.PitchShiftingSampleProvider.Pitch = MathF.Round(Pitch, 2, MidpointRounding.ToZero);
         }
+    }
+
+    private void SetSpeed()
+    {
+#pragma warning disable IDE0045
+        if (_metadata?.TempoChangeProvider is not null)
+        {
+            if (Speed == 2)
+            {
+                _metadata.TempoChangeProvider.TempoChange = 100;
+            }
+            else if (Speed > 1)
+            {
+                _metadata.TempoChangeProvider.TempoChange = (Speed * 100) - 100;
+            }
+            else if (Speed == 1)
+            {
+                _metadata.TempoChangeProvider.TempoChange = 0;
+            }
+            else
+            {
+                _metadata.TempoChangeProvider.TempoChange = -50 + (Speed * 50);
+            }
+        }
+#pragma warning restore IDE0045
     }
 }

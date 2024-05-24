@@ -12,6 +12,8 @@ public interface IDeviceManager
 
     float Pitch { get; set; }
 
+    float Speed { get; set; }
+
     PlaybackState PlaybackState { get; }
 
     Task LoadAsync(WaveMetadata metadata);

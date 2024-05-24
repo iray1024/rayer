@@ -23,5 +23,6 @@
     <BitmapImage x:Key="FullScreen" UriSource="pack://application:,,,/assets/dark/fullscreen.png" />
     <BitmapImage x:Key="Equalizer" UriSource="pack://application:,,,/assets/dark/equalizer.png" />
     <BitmapImage x:Key="Lyric" UriSource="pack://application:,,,/assets/dark/lyric.png" />
+    <BitmapImage x:Key="Speed" UriSource="pack://application:,,,/assets/dark/speed.png" />
 
 </ResourceDictionary>

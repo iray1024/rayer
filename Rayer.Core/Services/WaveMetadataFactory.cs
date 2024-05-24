@@ -8,6 +8,7 @@ using Rayer.Core.AudioReader.Flac;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Http;
 using Rayer.Core.Models;
+using SoundTouch.Net.NAudioSupport;
 using System.IO;
 
 namespace Rayer.Core.Services;
@@ -77,7 +78,9 @@ internal class WaveMetadataFactory : IWaveMetadataFactory
 
             var pitchProvider = _pitchShiftingProviderFactory.Create(waveStream);
 
-            var equalizer = new Equalizer(pitchProvider.ToSampleProvider(), _equalizerProvider.Equalizer);
+            var tempoChangeProvider = new SoundTouchWaveProvider(pitchProvider.ToSampleProvider().ToWaveProvider());
+
+            var equalizer = new Equalizer(tempoChangeProvider.ToSampleProvider(), _equalizerProvider.Equalizer);
 
             var fadeInOutProvider = new FadeInOutSampleProvider(equalizer);
 
@@ -87,6 +90,7 @@ internal class WaveMetadataFactory : IWaveMetadataFactory
                 BaseStream = baseStream,
                 Reader = waveStream,
                 PitchShiftingSampleProvider = pitchProvider,
+                TempoChangeProvider = tempoChangeProvider,
                 Equalizer = equalizer,
                 FadeInOutSampleProvider = fadeInOutProvider,
                 IsWebStreaming = isWebStreaming
