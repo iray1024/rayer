@@ -24,11 +24,11 @@ internal class SnackbarFactory(ISnackbarService snackbarService) : ISnackbarFact
         Application.Current.Dispatcher.Invoke(() =>
         {
             snackbarService.Show(
-            title,
-            message,
-            Wpf.Ui.Controls.ControlAppearance.Secondary,
-            _logoIcon,
-            timeout.Value);
+                title,
+                message,
+                Wpf.Ui.Controls.ControlAppearance.Secondary,
+                _logoIcon,
+                timeout.Value);
         });
     }
 }
