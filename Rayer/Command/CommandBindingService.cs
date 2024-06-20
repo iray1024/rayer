@@ -10,7 +10,10 @@ using Rayer.Core.PlayControl.Abstractions;
 using Rayer.Core.Utils;
 using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
+using Rayer.Services;
 using Rayer.Views.Pages;
+using System.Windows;
+using System.Windows.Media;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 
@@ -34,7 +37,7 @@ internal partial class CommandBindingService : ICommandBinding
     }
 
     [RelayCommand]
-    private static async Task AddPlaylist()
+    private async Task AddPlaylist()
     {
         var dialogService = App.GetRequiredService<IContentDialogService>();
 
@@ -67,6 +70,8 @@ internal partial class CommandBindingService : ICommandBinding
             };
 
             nav.MenuItems.Add(newPlaylistMenu);
+
+            RefreshMenuIcon(playlist.Id, null);
         }
     }
 
@@ -135,6 +140,8 @@ internal partial class CommandBindingService : ICommandBinding
     private void AddTo(PlaylistUpdate model)
     {
         _playlistService.AddTo(model.Id, model.Target);
+
+        RefreshMenuIcon(model.Id, model.Target.Cover);
     }
 
     [RelayCommand]
@@ -146,6 +153,9 @@ internal partial class CommandBindingService : ICommandBinding
 
             var host = App.GetRequiredService<PlaylistPage>();
             host.ViewModel.Items.Remove(model.Target);
+
+            RefreshMenuIcon(model.Id, null);
+            RefreshMenuIcon(model.To.Value, model.Target.Cover);
         }
     }
 
@@ -156,6 +166,8 @@ internal partial class CommandBindingService : ICommandBinding
 
         var host = App.GetRequiredService<PlaylistPage>();
         host.ViewModel.Items.Remove(model.Target);
+
+        RefreshMenuIcon(model.Id, null);
     }
 
     [RelayCommand]
@@ -218,4 +230,43 @@ internal partial class CommandBindingService : ICommandBinding
         provider.FastBackward();
     }
     #endregion
+
+    private void RefreshMenuIcon(int id, ImageSource? icon)
+    {
+        var nav = App.GetRequiredService<INavigationService>().GetNavigationControl();
+        var menu = nav.MenuItems.Cast<NavigationViewItem>().FirstOrDefault(x => x.TargetPageTag == $"_playlist_{id}");
+
+        if (menu is not null)
+        {
+            var count = _playlistService.Count(id);
+
+            if (count == 0)
+            {
+                menu.Icon = new ImageIcon()
+                {
+                    Source = StaticThemeResources.AlbumFallback,
+                    Width = 24,
+                    Height = 24
+                };
+            }
+
+            if (count == 1)
+            {
+                if (icon is not null)
+                {
+                    menu.Icon = new ImageIcon()
+                    {
+                        Source = icon,
+                        Width = 24,
+                        Height = 24
+                    };
+                }
+            }
+
+            if (menu.Icon is not null)
+            {
+                menu.Icon.Clip = new RectangleGeometry(new Rect(0, 0, 24, 24), 4, 4);
+            }
+        }
+    }
 }

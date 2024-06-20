@@ -13,8 +13,6 @@ namespace Rayer.Core.AudioEffect.Providers;
 internal class EqualizerProvider : IEqualizerProvider
 {
     private readonly ISettingsService _settingsService;
-    private readonly EqualizerBand[] _currentBands = new EqualizerBand[10];
-
     private static readonly IList<EqualizerBand[]> _sourceBands = [];
     private readonly ImmutableArray<EqualizerBand[]> _immutableSourceBands;
 
@@ -38,7 +36,18 @@ internal class EqualizerProvider : IEqualizerProvider
         }
     }
 
-    public EqualizerBand[] Equalizer => _currentBands;
+    public EqualizerBand[] Equalizer { get; } = [
+        new(){ Bandwidth = 0.8f, Frequency = 31, Gain = 0 },
+        new(){ Bandwidth = 0.8f, Frequency = 62, Gain = 0 },
+        new(){ Bandwidth = 0.8f, Frequency = 125, Gain = 0 },
+        new(){ Bandwidth = 0.8f, Frequency = 250, Gain = 0 },
+        new(){ Bandwidth = 0.8f, Frequency = 500, Gain = 0 },
+        new(){ Bandwidth = 0.8f, Frequency = 1000, Gain = 0 },
+        new(){ Bandwidth = 0.8f, Frequency = 2000, Gain = 0 },
+        new(){ Bandwidth = 0.8f, Frequency = 4000, Gain = 0 },
+        new(){ Bandwidth = 0.8f, Frequency = 8000, Gain = 0 },
+        new(){ Bandwidth = 0.8f, Frequency = 16000, Gain = 0 }
+    ];
 
     public bool Available { get; } = true;
 
@@ -80,7 +89,7 @@ internal class EqualizerProvider : IEqualizerProvider
 
         var target = Path.Combine(Constants.Paths.AppDataDir, "equalizer", "自定义.json");
 
-        Json<EqualizerBand[]>.StoreData(target, _currentBands);
+        Json<EqualizerBand[]>.StoreData(target, Equalizer);
 
     }
 
@@ -129,7 +138,7 @@ internal class EqualizerProvider : IEqualizerProvider
 
     private void ReplaceEqualizerBands(EqualizerBand[] source)
     {
-        Array.Copy(source, _currentBands, IEqualizerProvider.EqualizerBandCount);
+        Array.Copy(source, Equalizer, IEqualizerProvider.EqualizerBandCount);
     }
 
     private static EqualizerBand[] Clone(EqualizerBand[] source)

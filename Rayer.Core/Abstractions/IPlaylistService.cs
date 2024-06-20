@@ -15,4 +15,6 @@ public interface IPlaylistService
     void RemoveFrom(int id, Audio audio);
 
     void Migrate(int from, int to, Audio audio);
+
+    int Count(int id);
 }

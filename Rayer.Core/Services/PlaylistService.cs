@@ -82,4 +82,11 @@ internal class PlaylistService : IPlaylistService
             File.Delete(Path.Combine(Constants.Paths.PlaylistPath, $"{playlist.Name}.json"));
         }
     }
+
+    public int Count(int id)
+    {
+        var playlist = _provider.Playlists.FirstOrDefault(x => x.Id == id);
+
+        return playlist is not null ? playlist.Audios.Count : -1;
+    }
 }

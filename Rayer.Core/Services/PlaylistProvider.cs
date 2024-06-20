@@ -15,7 +15,7 @@ internal class PlaylistProvider : IPlaylistProvider
 
     public int GetFinallySort()
     {
-        return Playlists.Max(x => x.Sort) + 1;
+        return Playlists.Count > 0 ? Playlists.Max(x => x.Sort) + 1 : 0;
     }
 
     public void Initialize(IAudioManager audioManager)
@@ -75,6 +75,6 @@ internal class PlaylistProvider : IPlaylistProvider
 
     private int GetFinallyId()
     {
-        return Playlists.Max(x => x.Id) + 1;
+        return Playlists.Count > 0 ? Playlists.Max(x => x.Id) + 1 : 0;
     }
 }
