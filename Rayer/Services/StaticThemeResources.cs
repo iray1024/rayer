@@ -26,6 +26,8 @@ internal static class StaticThemeResources
 
         internal static readonly SolidColorBrush TextFillColorPrimaryBrush = new(Color.FromArgb(0xe4, 0, 0, 0));
         internal static readonly SolidColorBrush SliderTrackFill = new(Color.FromArgb(0x72, 0, 0, 0));
+        internal static readonly SolidColorBrush SliderThumbForeground = new(Color.FromRgb(63, 72, 76));
+        internal static readonly SolidColorBrush SliderThumbBackground = new(Color.FromRgb(255, 255, 255));
     }
 
     internal static class Dark
@@ -47,6 +49,8 @@ internal static class StaticThemeResources
 
         internal static readonly SolidColorBrush TextFillColorPrimaryBrush = new(Color.FromRgb(255, 255, 255));
         internal static readonly SolidColorBrush SliderTrackFill = new(Color.FromArgb(0x8b, 255, 255, 255));
+        internal static readonly SolidColorBrush SliderThumbForeground = new(Color.FromRgb(121, 125, 127));
+        internal static readonly SolidColorBrush SliderThumbBackground = new(Color.FromRgb(69, 69, 69));
     }
 
     internal static readonly BitmapImage AlbumFallback = new(new Uri("pack://application:,,,/assets/fallback.png"));

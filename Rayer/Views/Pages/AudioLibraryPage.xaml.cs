@@ -115,9 +115,9 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
         }
     }
 
-    private void AudioCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private async void AudioCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        Application.Current.Dispatcher.Invoke(() =>
+        await Application.Current.Dispatcher.InvokeAsync(() =>
         {
             if (e.Action is NotifyCollectionChangedAction.Add)
             {

@@ -30,13 +30,7 @@ internal class ImmersivePresenterProvider(ISettingsService settingsService) : II
         });
     }
 
-    public UserControl Presenter
-    {
-        get
-        {
-            return settingsService.Settings.ImmersiveMode is ImmersiveMode.Vinyl
+    public UserControl Presenter => settingsService.Settings.ImmersiveMode is ImmersiveMode.Vinyl
                 ? _vinylPresenter.Value
                 : _audioVisualizerlPresenter.Value;
-        }
-    }
 }

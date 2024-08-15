@@ -4,6 +4,7 @@ using Rayer.Services;
 using Rayer.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -58,6 +59,8 @@ public class PitchAdorner : Adorner
     private void OnSwitchImmersivePlayerDisplay(object? sender, EventArgs e)
     {
         SetInternalImageIconTheme();
+
+
     }
 
     private void OnThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)
@@ -164,6 +167,10 @@ public class PitchAdorner : Adorner
                         var trackBorder = (Border)_internalSlider.Template.FindName("TrackBackground", _internalSlider);
                         trackBorder.Background = StaticThemeResources.Dark.SliderTrackFill;
 
+                        var thumb = (Thumb)_internalSlider.Template.FindName("Thumb", _internalSlider);
+                        thumb.Foreground = StaticThemeResources.Dark.SliderThumbForeground;
+                        thumb.Background = StaticThemeResources.Dark.SliderThumbBackground;
+
                         _internalTextBlock.Foreground = StaticThemeResources.Dark.TextFillColorPrimaryBrush;
                     }
                     else
@@ -172,6 +179,10 @@ public class PitchAdorner : Adorner
 
                         var trackBorder = (Border)_internalSlider.Template.FindName("TrackBackground", _internalSlider);
                         trackBorder.SetResourceReference(Control.BackgroundProperty, "SliderTrackFill");
+
+                        var thumb = (Thumb)_internalSlider.Template.FindName("Thumb", _internalSlider);
+                        thumb.SetResourceReference(Control.ForegroundProperty, "SliderThumbBackground");
+                        thumb.SetResourceReference(Control.BackgroundProperty, "SliderOuterThumbBackground");
 
                         _internalTextBlock.SetResourceReference(Control.ForegroundProperty, "TextFillColorPrimaryBrush");
                     }

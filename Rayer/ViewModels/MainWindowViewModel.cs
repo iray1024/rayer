@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Rayer.Core;
 using Rayer.Core.Abstractions;
+using Rayer.Core.Common;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Menu;
@@ -86,12 +87,12 @@ public partial class MainWindowViewModel : ObservableObject
                 {
                     args.Handled = true;
 
-                    await Application.Current.Dispatcher.InvokeAsync(async () =>
-                    {
-                        var model = await _searchEngineProvider
-                        .GetSearchEngine(Core.Common.SearcherType.Netease)
-                        .SuggestAsync(args.Text);
+                    var model = await Task.Run(() =>
+                        _searchEngineProvider.GetSearchEngine(SearcherType.Netease).SuggestAsync(args.Text, AppCore.StoppingToken),
+                        AppCore.StoppingToken);
 
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
                         box.ItemsSource = model is not null && model.Code == 200
                             ? model.Audios.Length > 0
                                 ? model.Audios.Select(x => x.Name).ToList()
@@ -118,10 +119,14 @@ public partial class MainWindowViewModel : ObservableObject
     {
         args.Handled = true;
 
-        await Application.Current.Dispatcher.InvokeAsync(async () =>
+        _loaderProvider.Loading();
+
+        var model = await Task.Run(() =>
+            _searchEngineProvider.SearchEngine.SearchAsync(args.QueryText, SearchType.Audio, AppCore.StoppingToken),
+            AppCore.StoppingToken);
+
+        await Application.Current.Dispatcher.InvokeAsync(() =>
         {
-            _loaderProvider.Loading();
-            var model = await _searchEngineProvider.SearchEngine.SearchAsync(args.QueryText, SearchType.Audio, AppCore.StoppingToken);
             _loaderProvider.Loaded();
 
             model.QueryText = args.QueryText;
@@ -162,8 +167,12 @@ public partial class MainWindowViewModel : ObservableObject
             source.Text = _currentSuggestText;
 
             _loaderProvider.Loading();
-            var model = await _searchEngineProvider.SearchEngine.SearchAsync(_currentSuggestText, SearchType.Audio, AppCore.StoppingToken);
-            _loaderProvider.Loaded();
+
+            var model = await Task.Run(() =>
+                _searchEngineProvider.SearchEngine.SearchAsync(_currentSuggestText, SearchType.Audio, AppCore.StoppingToken),
+                AppCore.StoppingToken);
+
+            Application.Current.Dispatcher.Invoke(_loaderProvider.Loaded);
 
             model.QueryText = _currentSuggestText;
             _ = Interlocked.Exchange(ref _currentSuggestText, string.Empty);

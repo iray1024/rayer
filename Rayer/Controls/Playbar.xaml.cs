@@ -12,6 +12,7 @@ using Rayer.ViewModels;
 using System.Threading.RateLimiting;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -368,8 +369,11 @@ public partial class Playbar : UserControl
         TotalTime.Foreground = StaticThemeResources.Dark.TextFillColorPrimaryBrush;
 
         var trackBorder = (Border)PlaybarSlider.Template.FindName("TrackBackground", PlaybarSlider);
-
         trackBorder.Background = StaticThemeResources.Dark.SliderTrackFill;
+
+        var thumb = (Thumb)PlaybarSlider.Template.FindName("Thumb", PlaybarSlider);
+        thumb.Foreground = StaticThemeResources.Dark.SliderThumbForeground;
+        thumb.Background = StaticThemeResources.Dark.SliderThumbBackground;
     }
 
     private void OnImmersivePlayerHidden(object? sender, EventArgs e)
@@ -392,5 +396,9 @@ public partial class Playbar : UserControl
 
         var trackBorder = (Border)PlaybarSlider.Template.FindName("TrackBackground", PlaybarSlider);
         trackBorder.SetResourceReference(BackgroundProperty, "SliderTrackFill");
+
+        var thumb = (Thumb)PlaybarSlider.Template.FindName("Thumb", PlaybarSlider);
+        thumb.SetResourceReference(ForegroundProperty, "SliderThumbBackground");
+        thumb.SetResourceReference(BackgroundProperty, "SliderOuterThumbBackground");
     }
 }

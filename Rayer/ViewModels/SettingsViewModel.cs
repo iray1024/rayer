@@ -87,7 +87,7 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
             UpdateConfigFile();
             Task.Run(async () =>
             {
-                await System.Windows.Application.Current.Dispatcher.InvokeAsync(async () =>
+                await Task.Run(async () =>
                 {
                     var deviceManager = App.GetRequiredService<IDeviceManager>();
                     await deviceManager.SwitchPitchProvider();

@@ -12,7 +12,6 @@ namespace Rayer.Services;
 [Inject<IImmersivePlayerService>]
 internal partial class ImmersivePlayerService : IImmersivePlayerService
 {
-    private ImmersivePlayer _player = default!;
     private readonly IImmersivePresenterProvider _presenterProvider;
     private readonly IAudioManager _audioManager;
 
@@ -27,15 +26,12 @@ internal partial class ImmersivePlayerService : IImmersivePlayerService
         _presenterProvider = presenterProvider;
     }
 
-    public ImmersivePlayer Player => _player;
+    public ImmersivePlayer Player { get; private set; } = default!;
 
     public bool IsNowImmersive
     {
         get => _isNowImmersiveFlag != 0;
-        set
-        {
-            _ = Interlocked.Exchange(ref _isNowImmersiveFlag, value ? 1 : 0);
-        }
+        set => _ = Interlocked.Exchange(ref _isNowImmersiveFlag, value ? 1 : 0);
     }
 
     public event EventHandler? Show;
@@ -43,7 +39,7 @@ internal partial class ImmersivePlayerService : IImmersivePlayerService
 
     public void SetPlayer(ImmersivePlayer player)
     {
-        _player = player ?? throw new ArgumentException("请正确设置ImmersivePlayer", nameof(player));
+        Player = player ?? throw new ArgumentException("请正确设置ImmersivePlayer", nameof(player));
     }
 
     public async Task ToggleShow()
@@ -67,7 +63,7 @@ internal partial class ImmersivePlayerService : IImmersivePlayerService
 
             var presenter = _presenterProvider.Presenter;
 
-            _player.Presenter.Children.Add(presenter);
+            Player.Presenter.Children.Add(presenter);
 
             if (presenter is ImmersiveVisualizerPresenter visualizerPresenter)
             {
@@ -91,11 +87,11 @@ internal partial class ImmersivePlayerService : IImmersivePlayerService
                 }
             }
 
-            _player.Visibility = Visibility.Visible;
+            Player.Visibility = Visibility.Visible;
 
-            await PlayerFadeInOutAsync(_player);
+            await PlayerFadeInOutAsync(Player);
 
-            _player.GridBottomBlurEffect.Radius = 160;
+            Player.GridBottomBlurEffect.Radius = 160;
         }
         else
         {
@@ -108,7 +104,7 @@ internal partial class ImmersivePlayerService : IImmersivePlayerService
             actualWnd.TitleBar.ShowMaximize = true;
             actualWnd.TitleBar.ShowClose = true;
 
-            await PlayerFadeInOutAsync(_player, false);
+            await PlayerFadeInOutAsync(Player, false);
         }
     }
 
@@ -121,12 +117,12 @@ internal partial class ImmersivePlayerService : IImmersivePlayerService
 
         var presenter = _presenterProvider.Presenter;
 
-        var previousPresenter = _player.Presenter.Children[0];
+        var previousPresenter = Player.Presenter.Children[0];
 
-        _player.Presenter.Children.Remove(previousPresenter);
-        _player.Presenter.Children.Add(presenter);
+        Player.Presenter.Children.Remove(previousPresenter);
+        Player.Presenter.Children.Add(presenter);
 
-        await PlayerFadeInOutAsync(_player.Presenter, true);
+        await PlayerFadeInOutAsync(Player.Presenter, true);
 
         if (presenter is ImmersiveVisualizerPresenter visualizerPresenter)
         {
@@ -185,19 +181,19 @@ internal partial class ImmersivePlayerService : IImmersivePlayerService
 
     private void OnStoryboardCompleted(object? sender, EventArgs e)
     {
-        _player.Visibility ^= Visibility.Hidden;
+        Player.Visibility ^= Visibility.Hidden;
 
-        if (_player.Presenter.Children[0] is ImmersiveVisualizerPresenter visualizerPresenter)
+        if (Player.Presenter.Children[0] is ImmersiveVisualizerPresenter visualizerPresenter)
         {
             ResetAudioVisualiazer(visualizerPresenter);
         }
 
-        _player.Presenter.Children.Clear();
+        Player.Presenter.Children.Clear();
     }
 
     internal void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        if (_player.Presenter.Children[0] is ImmersiveVisualizerPresenter element)
+        if (Player.Presenter.Children[0] is ImmersiveVisualizerPresenter element)
         {
             element.Width = e.NewSize.Width;
             element.Height = e.NewSize.Height;

@@ -6,6 +6,7 @@ using Rayer.Core.Events;
 using Rayer.Core.Lyric.Abstractions;
 using Rayer.Core.Lyric.Impl;
 using Rayer.Core.Menu;
+using Rayer.Core.Utils;
 using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Events;
 using Rayer.SearchEngine.Views.Windows;
@@ -13,6 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Wpf.Ui.Appearance;
 
 namespace Rayer.SearchEngine.ViewModels;
 
@@ -56,6 +58,27 @@ public partial class DynamicIslandViewModel : ObservableObject
         _timer.Tick += OnTick;
 
         ContextMenu = AppCore.GetRequiredService<IContextMenuFactory>().CreateContextMenu(ContextMenuScope.DynamicIsland);
+
+        ApplicationThemeManager.Changed += OnThemeChanged;
+    }
+
+    private void OnThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)
+    {
+        foreach (var item in ContextMenu.Items.SourceCollection)
+        {
+            if (item is MenuItem { Header: "切换歌词搜索器" } searcherMenu)
+            {
+                foreach (var searcherMenuItem in searcherMenu.Items)
+                {
+                    if (searcherMenuItem is MenuItem { Icon: not null } menuItem)
+                    {
+                        menuItem.Icon = ImageIconFactory.Create("Play", 18);
+                    }
+                }
+            }
+
+            
+        }
     }
 
     public DynamicIsland DynamicIsland { get; set; } = default!;

@@ -75,19 +75,22 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
             {
                 await LoadInformationAsync();
 
-                loader.Loaded();
+                Application.Current.Dispatcher.Invoke(loader.Loaded);
 
                 LoginSucceed?.Invoke(this, EventArgs.Empty);
             }
         }
         else
         {
-            var loginWindow = AppCore.GetRequiredService<LoginWindow>();
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var loginWindow = AppCore.GetRequiredService<LoginWindow>();
 
-            loginWindow.Owner = AppCore.MainWindow;
-            loginWindow.Closed += OnLoginWindowClosed;
+                loginWindow.Owner = AppCore.MainWindow;
+                loginWindow.Closed += OnLoginWindowClosed;
 
-            loginWindow.Show();
+                loginWindow.Show();
+            });
         }
     }
 

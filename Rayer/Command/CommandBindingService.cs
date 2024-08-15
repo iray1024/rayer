@@ -204,7 +204,7 @@ internal partial class CommandBindingService : ICommandBinding
         settingsService.Settings.LyricSearcher = searcher;
         settingsService.Save();
 
-        await System.Windows.Application.Current.Dispatcher.InvokeAsync(async () =>
+        await Task.Run(async () =>
         {
             if (_audioManager.Playback.Playing)
             {

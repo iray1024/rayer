@@ -18,7 +18,6 @@ using Rayer.SearchEngine.ViewModels.Presenter;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Threading;
 using Wpf.Ui.Controls;
 
 namespace Rayer.SearchEngine.Views.Pages;
@@ -90,26 +89,18 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
             await _requestToken.CancelAsync();
             _requestToken = new CancellationTokenSource();
 
-            var dispatcherTask = Application.Current.Dispatcher.InvokeAsync(async () =>
-            {
-                try
-                {
-                    await SearchProcess(e.New, _requestToken.Token);
-                }
-                finally
-                {
-                    _loaderProvider.Loaded();
-                }
-            },
-            DispatcherPriority.Normal,
-            _requestToken.Token);
+            await Task.Run(() => SearchProcess(e.New, _requestToken.Token), _requestToken.Token)
+                .ContinueWith(task => Application.Current.Dispatcher.Invoke(_loaderProvider.Loaded));
         }
     }
 
     private async Task SearchProcess(SearchType searchType, CancellationToken cancellationToken = default)
     {
-        ScrollViewer.SetCanContentScroll(this, true);
-        ScrollViewer.SetVerticalScrollBarVisibility(this, ScrollBarVisibility.Auto);
+        await Application.Current.Dispatcher.InvokeAsync(() =>
+        {
+            ScrollViewer.SetCanContentScroll(this, true);
+            ScrollViewer.SetVerticalScrollBarVisibility(this, ScrollBarVisibility.Auto);
+        });
 
         if (searchType is SearchType.Audio)
         {
@@ -117,8 +108,11 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
 
             ApplyPresenter<SearchAudioPresenterViewModel, SearchAudio>(searchType, dataContext);
 
-            ScrollViewer.SetCanContentScroll(this, false);
-            ScrollViewer.SetVerticalScrollBarVisibility(this, ScrollBarVisibility.Disabled);
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                ScrollViewer.SetCanContentScroll(this, false);
+                ScrollViewer.SetVerticalScrollBarVisibility(this, ScrollBarVisibility.Disabled);
+            });
         }
         else if (searchType is SearchType.Artist)
         {
@@ -152,28 +146,31 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
         where TViewModel : class, IPresenterViewModel<TContext>
         where TContext : class
     {
-        var presenter = _searchPresenterProvider.GetPresenter<TViewModel, TContext>(searchType);
-
-        if (presenter is UserControl control)
+        Application.Current.Dispatcher.Invoke(() =>
         {
-            if (Presenter.Children.Count > 0)
+            var presenter = _searchPresenterProvider.GetPresenter<TViewModel, TContext>(searchType);
+
+            if (presenter is UserControl control)
             {
-                Presenter.Children.Remove(Presenter.Children[0]);
+                if (Presenter.Children.Count > 0)
+                {
+                    Presenter.Children.Remove(Presenter.Children[0]);
+                }
+
+                Presenter.Children.Add(control);
+
+                control.Width = ActualWidth;
+                control.Height = ActualHeight;
+
+                presenter.ViewModel ??= AppCore.GetRequiredService<TViewModel>();
+
+                if (presenter.ViewModel.PresenterDataContext is null ||
+                    !presenter.ViewModel.PresenterDataContext.Equals(dataContext))
+                {
+                    presenter.ViewModel.PresenterDataContext = dataContext;
+                }
             }
-
-            Presenter.Children.Add(control);
-
-            control.Width = ActualWidth;
-            control.Height = ActualHeight;
-
-            presenter.ViewModel ??= AppCore.GetRequiredService<TViewModel>();
-
-            if (presenter.ViewModel.PresenterDataContext is null ||
-                !presenter.ViewModel.PresenterDataContext.Equals(dataContext))
-            {
-                presenter.ViewModel.PresenterDataContext = dataContext;
-            }
-        }
+        });
     }
 
     public void OnNavigatedTo()

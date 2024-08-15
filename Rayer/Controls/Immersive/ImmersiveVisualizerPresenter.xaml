@@ -9,15 +9,17 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance local:ImmersiveVisualizerPresenter,
                                      IsDesignTimeCreatable=False}"
-    d:DesignHeight="450" Loaded="OnLoaded"
+    d:DesignHeight="450"
     d:DesignWidth="800"
+    Loaded="OnLoaded"
     mc:Ignorable="d">
     <UserControl.Background>
-        <LinearGradientBrush>
+        <SolidColorBrush Opacity="0.65" Color="#000" />
+        <!--<LinearGradientBrush Opacity="0.9">
             <GradientStop Offset="0" Color="#000000" />
             <GradientStop Offset="0.9" Color="#90000000" />
             <GradientStop Offset="1" Color="#90434343" />
-        </LinearGradientBrush>
+        </LinearGradientBrush>-->
     </UserControl.Background>
 
     <UserControl.Resources>
@@ -232,7 +234,8 @@
             <Path
                 Name="SampleWaveUp"
                 Margin="0,-300,0,0"
-                RenderTransformOrigin="0.5,0.5">
+                RenderTransformOrigin="0.5,0.5"
+                Visibility="Collapsed">
                 <Path.RenderTransform>
                     <RotateTransform x:Name="SampleWaveUpRotate" />
                 </Path.RenderTransform>
@@ -240,7 +243,8 @@
             <Path
                 Name="SampleWaveDown"
                 Margin="0,300,0,0"
-                RenderTransformOrigin="0.5,0.5">
+                RenderTransformOrigin="0.5,0.5"
+                Visibility="Collapsed">
                 <Path.RenderTransform>
                     <RotateTransform x:Name="SampleWaveDownRotate" />
                 </Path.RenderTransform>

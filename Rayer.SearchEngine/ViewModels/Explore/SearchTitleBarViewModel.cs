@@ -52,10 +52,12 @@ public partial class SearchTitleBarViewModel : ObservableObject
         await _requestToken.CancelAsync();
         _requestToken = new CancellationTokenSource();
 
-        var dispatcherTask = Application.Current.Dispatcher.InvokeAsync(async () =>
-        {
-            var model = await provider.SearchEngine.SearchAsync(_searchEngineOptions.LatestQueryText, SearchType, AppCore.StoppingToken);
+        var model = await Task.Run(() =>
+            provider.SearchEngine.SearchAsync(_searchEngineOptions.LatestQueryText, SearchType, AppCore.StoppingToken),
+            AppCore.StoppingToken);
 
+        Application.Current.Dispatcher.Invoke(() =>
+        {
             model.QueryText = _searchEngineOptions.LatestQueryText;
 
             var searchAware = AppCore.GetRequiredService<ISearchAware>();

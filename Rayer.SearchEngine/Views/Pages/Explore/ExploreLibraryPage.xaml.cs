@@ -47,7 +47,7 @@ public partial class ExploreLibraryPage : INavigableView<ExploreLibraryViewModel
 
         loader.Loading();
 
-        await ViewModel.OnLoadAsync();
+        await Task.Run(() => ViewModel.OnLoadAsync());
 
         var login = AppCore.GetRequiredService<ILoginManager>();
     }
@@ -66,7 +66,7 @@ public partial class ExploreLibraryPage : INavigableView<ExploreLibraryViewModel
 
     private void OnLoginSucceed(object? sender, EventArgs e)
     {
-        ViewPanel.Visibility = Visibility.Visible;
+        Application.Current.Dispatcher.Invoke(() => ViewPanel.Visibility = Visibility.Visible);
     }
 
     private void OnMyFavoriteMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
