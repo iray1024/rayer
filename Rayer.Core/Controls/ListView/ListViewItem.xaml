@@ -14,9 +14,7 @@
             Margin="0,1,0,1"
             CornerRadius="6">
             <Border.Background>
-                <SolidColorBrush
-                    x:Name="ContentBorderBrush"                   
-                    Color="Transparent" />
+                <SolidColorBrush x:Name="ContentBorderBrush" Color="Transparent" />
             </Border.Background>
             <Border
                 x:Name="HoverBorder"

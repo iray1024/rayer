@@ -60,7 +60,7 @@
                             TextWrapping="Wrap">
                             喵师傅
                         </TextBlock>
-                        <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" TextWrapping="Wrap">在我开发过程中的理解与帮助</TextBlock>
+                        <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" TextWrapping="Wrap">提供的安装包UI设计</TextBlock>
                     </StackPanel>
 
                 </materialDesign:ColorZone>

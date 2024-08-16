@@ -41,7 +41,7 @@ public partial class AudioPresenter : System.Windows.Controls.UserControl
                 "AlbumWidth",
                 typeof(double),
                 typeof(AudioPresenter),
-                new PropertyMetadata(36d));
+                new PropertyMetadata(36d, OnAlbumWidthPropertyChanged));
 
     public double AlbumWidth
     {
@@ -54,7 +54,7 @@ public partial class AudioPresenter : System.Windows.Controls.UserControl
             "TitleMaxWidth",
             typeof(double),
             typeof(AudioPresenter),
-            new PropertyMetadata(double.NaN));
+            new PropertyMetadata(double.NaN, OnTitleMaxWidthPropertyChanged));
 
     public double TitleMaxWidth
     {
@@ -67,7 +67,7 @@ public partial class AudioPresenter : System.Windows.Controls.UserControl
             "ArtistsMaxWidth",
             typeof(double),
             typeof(AudioPresenter),
-            new PropertyMetadata(double.NaN));
+            new PropertyMetadata(double.NaN, OnArtistsMaxWidthPropertyChanged));
 
     public double ArtistsMaxWidth
     {
@@ -80,7 +80,7 @@ public partial class AudioPresenter : System.Windows.Controls.UserControl
             "AlbumTitleMaxWidth",
             typeof(double),
             typeof(AudioPresenter),
-            new PropertyMetadata(double.NaN));
+            new PropertyMetadata(double.NaN, OnAlbumTitleMaxWidthPropertyChanged));
 
     public double AlbumTitleMaxWidth
     {
@@ -93,7 +93,7 @@ public partial class AudioPresenter : System.Windows.Controls.UserControl
             "DurationMaxWidth",
             typeof(double),
             typeof(AudioPresenter),
-            new PropertyMetadata(double.NaN));
+            new PropertyMetadata(double.NaN, OnDurationMaxWidthPropertyChanged));
 
     public double DurationMaxWidth
     {
@@ -210,6 +210,31 @@ public partial class AudioPresenter : System.Windows.Controls.UserControl
         var listViewItem = ElementHelper.FindParent<ListViewItem>(d);
 
         listViewItem?.SetValue(ListViewItem.IsAvailableProperty, e.NewValue);
+    }
+
+    private static void OnAlbumWidthPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+
+    }
+
+    private static void OnTitleMaxWidthPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+
+    }
+
+    private static void OnArtistsMaxWidthPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+
+    }
+
+    private static void OnAlbumTitleMaxWidthPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+
+    }
+
+    private static void OnDurationMaxWidthPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+
     }
 
     private static void OnIsSelectedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

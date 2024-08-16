@@ -22,8 +22,10 @@ public abstract class AdaptivePage(AdaptiveViewModelBase viewModel) : NoneFocusa
             ? new Thickness(0, 0, 30, 0)
             : new Thickness(0, 0, 24, 0);
 
-        AppCore.MainWindow.Width += 1;
-        AppCore.MainWindow.Width -= 1;
+        var orginalWidth = AppCore.MainWindow.Width;
+
+        //AppCore.MainWindow.Width = orginalWidth + 1;
+        //AppCore.MainWindow.Width = orginalWidth;
     }
 
     protected virtual void OnUnloaded(object sender, RoutedEventArgs e)
