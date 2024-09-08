@@ -67,14 +67,14 @@ public partial class MainWindow : IWindow
         var pageType = args.Page.GetType();
 
         NavigationView.HeaderVisibility =
-            pageType != typeof(AudioLibraryPage) &&
+            //pageType != typeof(AudioLibraryPage) &&
             pageType != typeof(SettingsPage) &&
             pageType != typeof(PlaylistPage)
                 ? Visibility.Collapsed
                 : Visibility.Visible;
 
         PageHeaderContainer.Visibility =
-            pageType != typeof(AudioLibraryPage) &&
+            //pageType != typeof(AudioLibraryPage) &&
             pageType != typeof(SettingsPage) &&
             pageType != typeof(PlaylistPage)
                 ? Visibility.Collapsed

@@ -45,7 +45,7 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
         ViewModel = viewModel;
         DataContext = this;
 
-        ViewModel.Items.AddRange(_audioManager.Audios);
+        ViewModel.Audios.AddRange(_audioManager.Audios);
 
         InitializeComponent();
     }
@@ -86,7 +86,7 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
 
     private void OnAudioChanged(object? sender, AudioChangedArgs e)
     {
-        var index = ViewModel.Items.IndexOf(e.New);
+        var index = ViewModel.Audios.IndexOf(e.New);
         LibListView.SelectedIndex = index;
         LibListView.ScrollIntoView(e.New);
 
@@ -128,7 +128,7 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
                     {
                         var audio = (Audio)item;
 
-                        ViewModel.Items.Insert(startIndex++, audio);
+                        ViewModel.Audios.Insert(startIndex++, audio);
                         _audioManager.Playback.Queue.Add(audio);
                     }
                 }
@@ -140,7 +140,7 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
                     e.OldItems.Count > 0 &&
                     e.OldItems[0] is Audio audio)
                 {
-                    ViewModel.Items.Remove(audio);
+                    ViewModel.Audios.Remove(audio);
                     _audioManager.Playback.Queue.Remove(audio);
                 }
             }
@@ -237,6 +237,14 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
                     }
                 }
             }
+        }
+    }
+
+    private void OnFilterTextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+    {
+        if (e.Source is TextBox textBox)
+        {
+            ViewModel.FilterText = textBox.Text;
         }
     }
 }
