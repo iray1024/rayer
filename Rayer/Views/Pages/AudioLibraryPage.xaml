@@ -21,32 +21,8 @@
         Margin="0,0,0,24"
         SnapsToDevicePixels="True"
         UseLayoutRounding="True">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
-            <ui:TextBlock
-                Margin="12,24,0,28"
-                FontTypography="Title"
-                Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                Text="本地音乐" />
-            <ui:TextBox
-                x:Name="FilterBox"
-                Grid.Column="1"
-                Height="36"
-                MinWidth="120"
-                HorizontalAlignment="Right"
-                PlaceholderText="搜索本地音乐"
-                TextChanged="OnFilterTextChanged" />
-        </Grid>
         <layout:ListView
             Name="LibListView"
-            Grid.Row="1"
             VerticalContentAlignment="Top"
             d:ItemsSource="{d:SampleData ItemCount=2}"
             ItemsSource="{Binding ViewModel.AudiosView, Mode=OneWay}">

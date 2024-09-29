@@ -1,8 +1,10 @@
-﻿using Rayer.Core;
+﻿using Rayer.Controls;
+using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Controls;
 using Rayer.Core.Events;
+using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Menu;
@@ -18,25 +20,30 @@ using ListViewItem = Rayer.Core.Controls.ListViewItem;
 namespace Rayer.Views.Pages;
 
 [Inject]
-public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibraryViewModel>
+public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibraryViewModel>, INavigationAware
 {
     private readonly IAudioManager _audioManager;
     private readonly IPlaylistService _playlistService;
     private readonly ICommandBinding _commandBinding;
     private readonly ISettingsService _settingsService;
+    private readonly INavigationCustomHeaderController _headerController;
+
+    private int _hasNavigationTo = 0;
 
     public AudioLibraryPage(
         AudioLibraryViewModel viewModel,
         IAudioManager audioManager,
         IPlaylistService playlistService,
         ICommandBinding commandBinding,
-        ISettingsService settingsService)
+        ISettingsService settingsService,
+        INavigationCustomHeaderController headerController)
         : base(viewModel)
     {
         _audioManager = audioManager;
         _playlistService = playlistService;
         _commandBinding = commandBinding;
         _settingsService = settingsService;
+        _headerController = headerController;
 
         _audioManager.AudioChanged += OnAudioChanged;
         _audioManager.AudioStopped += OnAudioStopped;
@@ -48,6 +55,12 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
         ViewModel.Audios.AddRange(_audioManager.Audios);
 
         InitializeComponent();
+    }
+
+    public bool HasNavigationTo
+    {
+        get => _hasNavigationTo == 1;
+        set => _ = Interlocked.Exchange(ref _hasNavigationTo, value ? 1 : 0);
     }
 
     public new AudioLibraryViewModel ViewModel { get; private set; }
@@ -240,11 +253,39 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
         }
     }
 
-    private void OnFilterTextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+    public void OnFilterTextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
     {
         if (e.Source is TextBox textBox)
         {
             ViewModel.FilterText = textBox.Text;
+
+            OnAudioChanged(this, new AudioChangedArgs { New = _audioManager.Playback.Audio });
+        }
+    }
+
+    public void OnFilterBoxFocusChanged(object sender, RoutedEventArgs e)
+    {
+        AppCore.GetRequiredService<ProcessMessageWindow>().ToggleProcess();
+    }
+
+    public void OnNavigatedTo()
+    {
+        if (!HasNavigationTo)
+        {
+            HasNavigationTo = true;
+
+            var titleBar = AppCore.GetRequiredService<AudioLibraryTitlebar>();
+            _headerController.Show(titleBar);
+        }
+    }
+
+    public void OnNavigatedFrom()
+    {
+        if (HasNavigationTo)
+        {
+            HasNavigationTo = false;
+
+            _headerController.Hide();
         }
     }
 }

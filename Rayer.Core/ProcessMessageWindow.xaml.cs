@@ -29,10 +29,7 @@ public partial class ProcessMessageWindow : Window
         get => _isProcess != 0;
 
         [DebuggerStepThrough]
-        set
-        {
-            _ = Interlocked.Exchange(ref _isProcess, value ? 1 : 0);
-        }
+        set => _ = Interlocked.Exchange(ref _isProcess, value ? 1 : 0);
     }
 
     public ProcessMessageWindow(IPlaybarService playbarService, ISettingsService settingsService)
