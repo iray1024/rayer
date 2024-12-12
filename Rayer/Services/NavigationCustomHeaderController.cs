@@ -7,8 +7,21 @@ using Wpf.Ui.Controls;
 namespace Rayer.Services;
 
 [Inject<INavigationCustomHeaderController>]
-internal class NavigationCustomHeaderController(INavigationService navigationService) : INavigationCustomHeaderController
+internal class NavigationCustomHeaderController : INavigationCustomHeaderController
 {
+    private object? _previousPage = null;
+    private readonly INavigationService navigationService;
+
+    public NavigationCustomHeaderController(INavigationService navigationService)
+    {
+        this.navigationService = navigationService;
+
+        this.navigationService.GetNavigationControl().Navigating += (_, e) =>
+        {
+            _previousPage = e.Page;
+        };
+    }
+
     public void Show(object content)
     {
         if (navigationService.GetNavigationControl() is INavigationView navView)
@@ -27,12 +40,15 @@ internal class NavigationCustomHeaderController(INavigationService navigationSer
 
     public void Hide()
     {
-        var mainWindow = App.MainWindow;
+        if (_previousPage is not INavigationCustomHeader)
+        {
+            var mainWindow = App.MainWindow;
 
-        mainWindow.Presenter.Content = default!;
+            mainWindow.Presenter.Content = default!;
 
-        mainWindow.PageHeaderContainer.Margin = new Thickness(32, 32, 42, 20);
-        mainWindow.PageHeader.Visibility = Visibility.Visible;
-        mainWindow.Presenter.Visibility = Visibility.Collapsed;
+            mainWindow.PageHeaderContainer.Margin = new Thickness(32, 32, 42, 20);
+            mainWindow.PageHeader.Visibility = Visibility.Visible;
+            mainWindow.Presenter.Visibility = Visibility.Collapsed;
+        }
     }
 }

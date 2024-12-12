@@ -20,7 +20,7 @@ using ListViewItem = Rayer.Core.Controls.ListViewItem;
 namespace Rayer.Views.Pages;
 
 [Inject]
-public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibraryViewModel>, INavigationAware
+public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibraryViewModel>, INavigationAware, INavigationCustomHeader
 {
     private readonly IAudioManager _audioManager;
     private readonly IPlaylistService _playlistService;

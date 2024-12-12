@@ -23,7 +23,7 @@ using Wpf.Ui.Controls;
 namespace Rayer.SearchEngine.Views.Pages;
 
 [Inject<ISearchAware>(ResolveServiceType = true)]
-public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAware, ISearchAware
+public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAware, ISearchAware, INavigationCustomHeader
 {
     private readonly ISearchPresenterProvider _searchPresenterProvider;
     private readonly ILoaderProvider _loaderProvider;
@@ -106,7 +106,7 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
         {
             var dataContext = await ViewModel.LoadAudioAsync();
 
-            ApplyPresenter<SearchAudioPresenterViewModel, SearchAudio>(searchType, dataContext);
+            await ApplyPresenter<SearchAudioPresenterViewModel, SearchAudio>(searchType, dataContext);
 
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
@@ -120,33 +120,33 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
 
             await Task.Delay(1000, cancellationToken);
 
-            ApplyPresenter<SearchArtistPresenterViewModel, SearchArtist>(searchType, dataContext);
+            await ApplyPresenter<SearchArtistPresenterViewModel, SearchArtist>(searchType, dataContext);
         }
         else if (searchType is SearchType.Album)
         {
             var dataContext = await ViewModel.LoadAlbumAsync();
 
-            ApplyPresenter<SearchAlbumPresenterViewModel, SearchAlbum>(searchType, dataContext);
+            await ApplyPresenter<SearchAlbumPresenterViewModel, SearchAlbum>(searchType, dataContext);
         }
         else if (searchType is SearchType.Video)
         {
             var dataContext = await ViewModel.LoadVideoAsync();
 
-            ApplyPresenter<SearchVideoPresenterViewModel, SearchVideo>(searchType, dataContext);
+            await ApplyPresenter<SearchVideoPresenterViewModel, SearchVideo>(searchType, dataContext);
         }
         else if (searchType is SearchType.Playlist)
         {
             var dataContext = await ViewModel.LoadPlaylistAsync();
 
-            ApplyPresenter<SearchPlaylistPresenterViewModel, SearchPlaylist>(searchType, dataContext);
+            await ApplyPresenter<SearchPlaylistPresenterViewModel, SearchPlaylist>(searchType, dataContext);
         }
     }
 
-    private void ApplyPresenter<TViewModel, TContext>(SearchType searchType, TContext dataContext)
+    private async Task ApplyPresenter<TViewModel, TContext>(SearchType searchType, TContext dataContext)
         where TViewModel : class, IPresenterViewModel<TContext>
         where TContext : class
     {
-        Application.Current.Dispatcher.Invoke(() =>
+        await Application.Current.Dispatcher.InvokeAsync(() =>
         {
             var presenter = _searchPresenterProvider.GetPresenter<TViewModel, TContext>(searchType);
 
