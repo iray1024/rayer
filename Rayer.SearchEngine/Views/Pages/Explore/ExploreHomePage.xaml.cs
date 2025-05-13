@@ -1,7 +1,7 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Framework.Injection;
 using Rayer.SearchEngine.ViewModels.Explore;
-using Wpf.Ui.Controls;
+using Wpf.Ui.Abstractions.Controls;
 
 namespace Rayer.SearchEngine.Views.Pages.Explore;
 

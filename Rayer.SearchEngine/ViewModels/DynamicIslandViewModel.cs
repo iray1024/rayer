@@ -7,7 +7,6 @@ using Rayer.Core.Lyric.Abstractions;
 using Rayer.Core.Lyric.Impl;
 using Rayer.Core.Menu;
 using Rayer.Core.Utils;
-using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Events;
 using Rayer.SearchEngine.Views.Windows;
 using System.Windows;

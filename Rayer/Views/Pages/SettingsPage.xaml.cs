@@ -4,6 +4,7 @@ using Rayer.Services;
 using Rayer.ViewModels;
 using System.Windows.Media;
 using Wpf.Ui;
+using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 

@@ -1,13 +1,12 @@
 ﻿using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
+using Rayer.Core.Events;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Lyric;
 using Rayer.Core.Lyric.Abstractions;
 using Rayer.Core.Lyric.Impl;
 using Rayer.Core.Lyric.Models;
-using Rayer.SearchEngine.Abstractions;
-using Rayer.SearchEngine.Events;
 using Rayer.SearchEngine.Lyric.Abstractions;
 
 namespace Rayer.SearchEngine.Services;
@@ -16,15 +15,18 @@ namespace Rayer.SearchEngine.Services;
 internal class LyricProvider : ILyricProvider
 {
     private readonly ILyricSearchEngine _lyricSearchEngine;
+    private readonly ILyricManager _lyricManager;
     private readonly IAudioManager _audioManager;
     private readonly ISettingsService _settingsService;
 
     public LyricProvider(
         ILyricSearchEngine lyricSearchEngine,
+        ILyricManager lyricManager,
         IAudioManager audioManager,
         ISettingsService settingsService)
     {
         _lyricSearchEngine = lyricSearchEngine;
+        _lyricManager = lyricManager;
         _audioManager = audioManager;
         _settingsService = settingsService;
 
@@ -38,18 +40,18 @@ internal class LyricProvider : ILyricProvider
 
     public LyricSearcher LyricSearcher => _settingsService.Settings.LyricSearcher;
 
-    public event EventHandler<Rayer.Core.Events.AudioPlayingArgs>? AudioPlaying;
-    public event EventHandler<Rayer.Core.Events.AudioChangedArgs>? AudioChanged;
+    public event EventHandler<AudioPlayingArgs>? AudioPlaying;
+    public event EventHandler<AudioChangedArgs>? AudioChanged;
     public event EventHandler? AudioPaused;
     public event EventHandler? AudioStopped;
     public event EventHandler<SwitchLyricSearcherArgs>? LyricChanged;
 
-    protected virtual void OnAudioPlaying(object? sender, Rayer.Core.Events.AudioPlayingArgs e)
+    protected virtual void OnAudioPlaying(object? sender, AudioPlayingArgs e)
     {
         AudioPlaying?.Invoke(this, e);
     }
 
-    protected virtual async void OnAudioChanged(object? sender, Rayer.Core.Events.AudioChangedArgs e)
+    protected virtual async void OnAudioChanged(object? sender, AudioChangedArgs e)
     {
         if (e.New.SearcherType is not SearcherType.Bilibili)
         {
@@ -123,6 +125,20 @@ internal class LyricProvider : ILyricProvider
 
                 if (LyricData is not null)
                 {
+                    var offset = _lyricManager.LoadOffset(_audioManager.Playback.Audio);
+                    if (offset != 0)
+                    {
+                        foreach (var line in LyricData.Lines ?? [])
+                        {
+                            if (line.StartTime is int startTime)
+                            {
+                                line.StartTime = Math.Max(startTime + offset, 0);
+                            }
+
+                            line.EndTime += offset;
+                        }
+                    }
+
                     return true;
                 }
             }
@@ -146,7 +162,8 @@ internal class LyricProvider : ILyricProvider
                 line.EndTime -= 500;
             }
 
-            LyricChanged?.Invoke(this, SwitchLyricSearcherArgs.False);
+            LyricChanged?.Invoke(this, new SwitchLyricSearcherArgs(false));
+            _lyricManager.Store(_audioManager.Playback.Audio, -500);
         }
     }
 
@@ -160,7 +177,8 @@ internal class LyricProvider : ILyricProvider
                 line.EndTime += 500;
             }
 
-            LyricChanged?.Invoke(this, SwitchLyricSearcherArgs.False);
+            LyricChanged?.Invoke(this, new SwitchLyricSearcherArgs(false));
+            _lyricManager.Store(_audioManager.Playback.Audio, 500);
         }
     }
 }

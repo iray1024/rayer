@@ -10,7 +10,8 @@ namespace Rayer.SearchEngine.Services;
 [Inject<ILoaderProvider>]
 internal class LoaderProvider : ILoaderProvider
 {
-    private readonly Loader _loader = new();
+    private Loader _loader = new();
+    private ContentPresenter? _loaderHost;
     private int _offsetX = 0;
     private int _offsetY = 0;
 
@@ -25,7 +26,14 @@ internal class LoaderProvider : ILoaderProvider
 
     public void SetLoader(ContentPresenter presenter, int offsetX = 0, int offsetY = 0)
     {
-        presenter.Content = _loader;
+        if (_loaderHost is not null)
+        {
+            _loaderHost.Content = null;
+            _loader = new();
+        }
+
+        _loaderHost = presenter;
+        _loaderHost.Content = _loader;
 
         _offsetX = offsetX;
         _offsetY = offsetY;

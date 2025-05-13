@@ -14,6 +14,7 @@ using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
 using Wpf.Ui;
+using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Controls;
 using ListViewItem = Rayer.Core.Controls.ListViewItem;
 
@@ -268,7 +269,7 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
         AppCore.GetRequiredService<ProcessMessageWindow>().ToggleProcess();
     }
 
-    public void OnNavigatedTo()
+    public Task OnNavigatedToAsync()
     {
         if (!HasNavigationTo)
         {
@@ -277,9 +278,11 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
             var titleBar = AppCore.GetRequiredService<AudioLibraryTitlebar>();
             _headerController.Show(titleBar);
         }
+
+        return Task.CompletedTask;
     }
 
-    public void OnNavigatedFrom()
+    public Task OnNavigatedFromAsync()
     {
         if (HasNavigationTo)
         {
@@ -287,5 +290,7 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
 
             _headerController.Hide();
         }
+
+        return Task.CompletedTask;
     }
 }

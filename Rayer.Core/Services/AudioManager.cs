@@ -15,11 +15,13 @@ internal class AudioManager : IAudioManager, IDisposable
 {
     private readonly IAudioFileWatcher _audioFileWatcher;
     private readonly IPlaylistProvider _playlistProvider;
+    private readonly ILyricManager _lyricManager;
 
     public AudioManager(IServiceProvider serviceProvider)
     {
         _audioFileWatcher = serviceProvider.GetRequiredService<IAudioFileWatcher>();
         _playlistProvider = serviceProvider.GetRequiredService<IPlaylistProvider>();
+        _lyricManager = serviceProvider.GetRequiredService<ILyricManager>();
 
         var settings = serviceProvider.GetRequiredService<ISettingsService>().Settings;
 

@@ -1,4 +1,4 @@
-﻿namespace Rayer.SearchEngine.Events;
+﻿namespace Rayer.Core.Events;
 
 public class SwitchLyricSearcherArgs(bool hasData = true) : EventArgs
 {

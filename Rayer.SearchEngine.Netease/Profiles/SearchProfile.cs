@@ -21,7 +21,7 @@ internal class SearchProfile : Profile
 
         CreateMap<SearchAudioDetailInformationModel, SearchAudioDetail>()
             .ForMember(d => d.Title, o => o.MapFrom(s => s.Name))
-            .ForMember(d => d.Duration, o => o.MapFrom(s => TimeSpan.FromMilliseconds(s.Duration)))
+            .ForMember(d => d.Duration, o => o.MapFrom(s => TimeSpan.FromMilliseconds(s.Duration, 0)))
             .ForMember(d => d.Rank, o => o.MapFrom(s => s.Pop));
 
         CreateMap<SearchAudioModel, SearchAudio>()

@@ -9,6 +9,7 @@ using Rayer.SearchEngine.ViewModels.Explore;
 using System.Windows;
 using System.Windows.Data;
 using Wpf.Ui;
+using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Controls;
 
 namespace Rayer.SearchEngine.Views.Pages.Explore;

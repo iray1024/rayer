@@ -8,7 +8,6 @@ using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Menu;
 using Rayer.Core.PlayControl.Abstractions;
 using Rayer.Core.Utils;
-using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.Services;
 using Rayer.Views.Pages;

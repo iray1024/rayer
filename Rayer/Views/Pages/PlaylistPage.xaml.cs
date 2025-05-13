@@ -10,6 +10,7 @@ using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.ViewModels;
 using System.Windows;
 using Wpf.Ui;
+using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Controls;
 using ListViewItem = Rayer.Core.Controls.ListViewItem;
 
@@ -288,20 +289,24 @@ public partial class PlaylistPage : AdaptivePage, INavigableView<PlaylistPageVie
         }
     }
 
-    public void OnNavigatedTo()
+    public Task OnNavigatedToAsync()
     {
         if (!HasNavigationTo)
         {
             HasNavigationTo = true;
         }
+
+        return Task.CompletedTask;
     }
 
-    public void OnNavigatedFrom()
+    public Task OnNavigatedFromAsync()
     {
         if (HasNavigationTo)
         {
             HasNavigationTo = false;
         }
+
+        return Task.CompletedTask;
     }
 
     private void OnAudioPresenterItemLoaded(object sender, RoutedEventArgs e)

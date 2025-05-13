@@ -18,6 +18,7 @@ using Rayer.SearchEngine.ViewModels.Presenter;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Controls;
 
 namespace Rayer.SearchEngine.Views.Pages;
@@ -173,7 +174,7 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
         });
     }
 
-    public void OnNavigatedTo()
+    public Task OnNavigatedToAsync()
     {
         if (!HasNavigationTo)
         {
@@ -196,6 +197,8 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
 
             AppCore.MainWindow.SizeChanged += OnWindowSizeChanged;
         }
+
+        return Task.CompletedTask;
     }
 
     public void OnSearch(SearchAggregationModel model)
@@ -222,7 +225,7 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
         titleBar.DefaultPage.IsChecked = true;
     }
 
-    public void OnNavigatedFrom()
+    public Task OnNavigatedFromAsync()
     {
         if (HasNavigationTo)
         {
@@ -239,6 +242,8 @@ public partial class SearchPage : INavigableView<SearchViewModel>, INavigationAw
 
             AppCore.MainWindow.SizeChanged -= OnWindowSizeChanged;
         }
+
+        return Task.CompletedTask;
     }
 
     private void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)

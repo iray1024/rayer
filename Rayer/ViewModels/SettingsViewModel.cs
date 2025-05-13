@@ -7,13 +7,13 @@ using Rayer.Core.FileSystem.Abstractions;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
-using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Core.Options;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Windows.Media;
 using Wpf.Ui;
+using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
@@ -182,17 +182,19 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         _settings.Save();
     }
 
-    public void OnNavigatedTo()
+    public Task OnNavigatedToAsync()
     {
         if (!_isInitialized)
         {
             InitializeViewModel();
         }
+
+        return Task.CompletedTask;
     }
 
-    public void OnNavigatedFrom()
+    public Task OnNavigatedFromAsync()
     {
-
+        return Task.CompletedTask;
     }
 
     private static void OnCurrentApplicationThemeChanged(ApplicationTheme newValue)

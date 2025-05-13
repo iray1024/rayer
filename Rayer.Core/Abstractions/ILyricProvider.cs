@@ -1,8 +1,8 @@
 ﻿using Rayer.Core.Common;
+using Rayer.Core.Events;
 using Rayer.Core.Lyric.Models;
-using Rayer.SearchEngine.Events;
 
-namespace Rayer.SearchEngine.Abstractions;
+namespace Rayer.Core.Abstractions;
 
 public interface ILyricProvider
 {
@@ -16,8 +16,8 @@ public interface ILyricProvider
 
     void FastBackward();
 
-    event EventHandler<Rayer.Core.Events.AudioPlayingArgs> AudioPlaying;
-    event EventHandler<Rayer.Core.Events.AudioChangedArgs> AudioChanged;
+    event EventHandler<AudioPlayingArgs> AudioPlaying;
+    event EventHandler<AudioChangedArgs> AudioChanged;
     event EventHandler AudioPaused;
     event EventHandler AudioStopped;
     event EventHandler<SwitchLyricSearcherArgs> LyricChanged;
