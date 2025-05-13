@@ -7,7 +7,6 @@ using Rayer.Core.Lyric.Abstractions;
 using Rayer.Core.Lyric.Impl;
 using Rayer.Core.Menu;
 using Rayer.Core.Utils;
-using Rayer.SearchEngine.Events;
 using Rayer.SearchEngine.Views.Windows;
 using System.Windows;
 using System.Windows.Controls;
@@ -75,8 +74,6 @@ public partial class DynamicIslandViewModel : ObservableObject
                     }
                 }
             }
-
-            
         }
     }
 
@@ -116,6 +113,16 @@ public partial class DynamicIslandViewModel : ObservableObject
                 _currentLineIndex = 0;
                 CurrentLine = _totalLines[0];
 
+                if (_totalLines.Count(x => x.StartTime == 0) > 10)
+                {
+                    var latestLine = _totalLines.FirstOrDefault(x => x.StartTime != 0);
+                    if (latestLine is not null)
+                    {
+                        CurrentLine = latestLine;
+                        _currentLineIndex = _totalLines.IndexOf(CurrentLine);
+                    }
+                }
+                
                 _timer.Start();
             }
             else
