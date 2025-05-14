@@ -95,7 +95,7 @@ public partial class Playbar : UserControl
             var item = AppCore.MainWindow.TaskbarItemInfo.ThumbButtonInfos[1];
 
             item.Description = "播放";
-            item.ImageSource = ImageSourceFactory.Create("pack://application:,,,/assets/dark/play.png");
+            item.ImageSource = ImageSourceFactory.Create("pack://application:,,,/assets/dark/play_24x24.png");
         }
     }
 
@@ -114,7 +114,7 @@ public partial class Playbar : UserControl
             }
 
             taskbar.ThumbButtonInfos[1].Description = "播放";
-            taskbar.ThumbButtonInfos[1].ImageSource = ImageSourceFactory.Create("pack://application:,,,/assets/dark/play.png");
+            taskbar.ThumbButtonInfos[1].ImageSource = ImageSourceFactory.Create("pack://application:,,,/assets/dark/play_24x24.png");
         }
     }
 

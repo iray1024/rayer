@@ -1,4 +1,5 @@
 ﻿using Rayer.Core.Models;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -94,14 +95,14 @@ public class SystemMediaTransportControlsManager
     {
         try
         {
-            BitmapImage bitmapImage = (BitmapImage)audio.Cover!;
+            var bitmapImage = (BitmapImage)audio.Cover!;
 
             // 1. 创建与 BitmapImage 相同尺寸的 WriteableBitmap
-            WriteableBitmap writableBitmap = new WriteableBitmap(bitmapImage);
+            var writableBitmap = new WriteableBitmap(bitmapImage);
 
             // 2. 将 BitmapImage 的像素数据复制到 WriteableBitmap
-            int stride = bitmapImage.PixelWidth * (bitmapImage.Format.BitsPerPixel / 8);
-            byte[] pixels = new byte[bitmapImage.PixelHeight * stride];
+            var stride = bitmapImage.PixelWidth * (bitmapImage.Format.BitsPerPixel / 8);
+            var pixels = new byte[bitmapImage.PixelHeight * stride];
 
             bitmapImage.CopyPixels(pixels, stride, 0);
 
@@ -116,7 +117,6 @@ public class SystemMediaTransportControlsManager
             BitmapEncoder encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(writableBitmap));
             encoder.Save(memoryStream);
-            memoryStream.Position = 0;
 
             // 4. 创建临时文件
             var tempFilePath = Path.Combine(Path.GetTempPath(), "cover_temp.png");
@@ -137,7 +137,7 @@ public class SystemMediaTransportControlsManager
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"设置专辑封面失败: {ex.Message}");
+            Debug.WriteLine($"设置专辑封面失败: {ex.Message}");
             // 失败时清除封面
             _smtc.DisplayUpdater.Thumbnail = null;
             _smtc.DisplayUpdater.Update();
