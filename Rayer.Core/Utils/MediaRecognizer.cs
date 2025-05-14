@@ -120,6 +120,35 @@ public static class MediaRecognizer
         return null;
     }
 
+    public static Stream? ExtractCoverStream(string path)
+    {
+        try
+        {
+            using var tfile = TagLib.File.Create(path);
+            var fileName = Path.GetFileNameWithoutExtension(path);
+
+            var tag = tfile.Tag;
+            if (tag.Pictures.Length > 0)
+            {
+                try
+                {
+                    var cover = tag.Pictures[0];
+                    return new MemoryStream(cover.Data.Data);
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+        }
+        catch
+        {
+            return null;
+        }
+
+        return null;
+    }
+
     public static void Initialize()
     {
         _xxh = AppCore.GetRequiredService<IXXH64>();

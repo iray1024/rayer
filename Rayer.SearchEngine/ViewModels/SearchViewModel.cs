@@ -57,7 +57,6 @@ public partial class SearchViewModel : ObservableObject
 
     public async Task<SearchArtist> LoadArtistAsync()
     {
-
         return default!;
     }
 

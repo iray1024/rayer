@@ -22,7 +22,7 @@
         Cursor="Hand">
         <Border.Background>
             <SolidColorBrush
-                x:Name="BorderBrush"
+                x:Name="_BorderBrush"
                 Opacity="0"
                 Color="{DynamicResource ControlStrokeColorDefault}" />
         </Border.Background>

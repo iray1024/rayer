@@ -6,6 +6,7 @@ using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Menu;
+using Rayer.Core.Playing;
 using Rayer.Core.Utils;
 using Rayer.SearchEngine.Core.Options;
 using Rayer.SearchEngine.Views.Windows;
@@ -29,6 +30,8 @@ public partial class MainWindow : IWindow
 {
     private bool _isUserClosedPane;
     private bool _isPaneOpenedOrClosedFromCode;
+
+    private readonly SystemMediaTransportControlsManager _smtc = new();
 
     public MainWindow(
         MainWindowViewModel viewModel,
@@ -153,6 +156,35 @@ public partial class MainWindow : IWindow
         await OnBootloaderInjectingAsync();
 
         InitializeTaskbarInfo();
+
+        var audioManager = AppCore.GetRequiredService<IAudioManager>();
+        var windowHandle = new WindowInteropHelper(this).Handle;
+        _smtc.Initialize(
+            windowHandle,
+            () => Application.Current.Dispatcher.Invoke(() => audioManager.Playback.Resume(false)),
+            () => Application.Current.Dispatcher.Invoke(() => audioManager.Playback.Pause()),
+            () => Application.Current.Dispatcher.Invoke(() => audioManager.Playback.Next()),
+            () => Application.Current.Dispatcher.Invoke(() => audioManager.Playback.Previous()));
+
+        audioManager.AudioChanged += async (s, e) =>
+        {
+            await _smtc.UpdateMetadata(e.New);
+        };
+
+        audioManager.AudioPlaying += (s, e) =>
+        {
+            _smtc.UpdatePlaybackStatus(Windows.Media.MediaPlaybackStatus.Playing);
+        };
+
+        audioManager.AudioPaused += (s, e) =>
+        {
+            _smtc.UpdatePlaybackStatus(Windows.Media.MediaPlaybackStatus.Paused);
+        };
+
+        audioManager.AudioStopped += (s, e) =>
+        {
+            _smtc.UpdatePlaybackStatus(Windows.Media.MediaPlaybackStatus.Stopped);
+        };
     }
 
     private async void OnAutoSuggestTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
