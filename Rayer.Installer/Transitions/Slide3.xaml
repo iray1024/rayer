@@ -25,7 +25,7 @@
                 Grid.Row="1"
                 Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                 TextWrapping="Wrap">
-                Rayer 基于.NET 8，天生的性能巨兽
+                Rayer 基于.NET 9，天生的性能巨兽
             </TextBlock>
             <StackPanel
                 Grid.Row="2"
