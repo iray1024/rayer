@@ -5,6 +5,8 @@ using Rayer.Core.Controls;
 using Rayer.Core.Extensions;
 using Rayer.Core.Menu;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
@@ -24,7 +26,7 @@ public partial class AudioLibraryViewModel : AdaptiveViewModelBase
         ContextMenu = contextMenuFactory.CreateContextMenu(ContextMenuScope.Library);
     }
 
-    public ICollectionView AudiosView { get; }
+    public ICollectionView AudiosView { get; private set; }
 
     public SortableObservableCollection<Audio> Audios { get; } = default!;
 
@@ -36,9 +38,13 @@ public partial class AudioLibraryViewModel : AdaptiveViewModelBase
     {
         _filterResult = FilterByNameMatch(Audios, value);
 
-        AudiosView.Refresh();
+        Task.Run(() =>
+        {
+            Application.Current.Dispatcher.Invoke(() => AudiosView.Refresh());
+        });
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private bool OnFilter(object item)
     {
         return (_filterResult.Length == 0 && string.IsNullOrWhiteSpace(FilterText)) || _filterResult.Contains((Audio)item);
@@ -48,7 +54,7 @@ public partial class AudioLibraryViewModel : AdaptiveViewModelBase
     {
         if (string.IsNullOrWhiteSpace(keyword))
         {
-            return source.ToArray();
+            return [.. source];
         }
 
         var matchedAudios = new List<Audio>();
@@ -86,6 +92,6 @@ public partial class AudioLibraryViewModel : AdaptiveViewModelBase
             }
         }
 
-        return matchedAudios.DistinctBy(x => x.Id).ToArray();
+        return [.. matchedAudios.DistinctBy(x => x.Id)];
     }
 }

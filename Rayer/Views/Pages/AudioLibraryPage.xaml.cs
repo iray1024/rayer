@@ -259,7 +259,6 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
         if (e.Source is TextBox textBox)
         {
             ViewModel.FilterText = textBox.Text;
-
             OnAudioChanged(this, new AudioChangedArgs { New = _audioManager.Playback.Audio });
         }
     }
