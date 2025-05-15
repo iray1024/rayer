@@ -6,6 +6,7 @@ using Rayer.Core.Framework;
 using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Menu;
+using Rayer.Core.PlayControl.Abstractions;
 using Rayer.Core.Playing;
 using Rayer.Core.Utils;
 using Rayer.SearchEngine.Core.Options;
@@ -158,13 +159,14 @@ public partial class MainWindow : IWindow
         InitializeTaskbarInfo();
 
         var audioManager = AppCore.GetRequiredService<IAudioManager>();
+        var playbar = AppCore.GetRequiredService<IPlaybarService>();
         var windowHandle = new WindowInteropHelper(this).Handle;
         _smtc.Initialize(
             windowHandle,
-            () => Application.Current.Dispatcher.Invoke(() => audioManager.Playback.Resume(false)),
-            () => Application.Current.Dispatcher.Invoke(() => audioManager.Playback.Pause()),
-            () => Application.Current.Dispatcher.Invoke(() => audioManager.Playback.Next()),
-            () => Application.Current.Dispatcher.Invoke(() => audioManager.Playback.Previous()));
+            () => Application.Current.Dispatcher.Invoke(() => playbar.PlayOrPause()),
+            () => Application.Current.Dispatcher.Invoke(() => playbar.PlayOrPause()),
+            () => Application.Current.Dispatcher.BeginInvoke(async () => await playbar.Next()),
+            () => Application.Current.Dispatcher.BeginInvoke(async () => await playbar.Previous()));
 
         audioManager.AudioChanged += async (s, e) =>
         {
