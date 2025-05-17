@@ -12,8 +12,8 @@ public partial class ExploreSpotViewModel : ObservableObject
         _loginManager = loginManager;
     }
 
-    public async Task OnLoadAsync()
+    public Task OnLoadAsync()
     {
-
+        return Task.CompletedTask;
     }
 }

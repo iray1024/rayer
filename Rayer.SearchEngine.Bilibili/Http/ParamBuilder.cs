@@ -2,7 +2,9 @@
 
 namespace Rayer.SearchEngine.Bilibili.Http;
 
+#pragma warning disable CS9113 // 参数未读。
 internal class ParamBuilder(string httpEndpoint, string apiEndpoint) : IParamBuilder
+#pragma warning restore CS9113 // 参数未读。
 {
     private Dictionary<string, string> _params = [];
 

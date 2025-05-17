@@ -20,21 +20,25 @@ internal class PhoneService : SearchEngineBase, IPhoneService
         throw new NotImplementedException();
     }
 
-    public async Task LoginWithCaptchaAsync(string phone, string captcha, CancellationToken cancellationToken = default)
+    public Task LoginWithCaptchaAsync(string phone, string captcha, CancellationToken cancellationToken = default)
     {
         //var result = await Searcher.GetAsync(UrlBuilder.Build(ApiEndpoints.LoginSelector.PhoneLogin, new Dictionary<string, string>()
         //{
         //    ["phone"] = phone,
         //    ["captcha"] = captcha
         //}));
+
+        return Task.CompletedTask;
     }
 
-    public async Task SendCaptchaAsync(string phone, CancellationToken cancellationToken = default)
+    public Task SendCaptchaAsync(string phone, CancellationToken cancellationToken = default)
     {
         //var result = await Searcher.GetAsync(UrlBuilder.Build(ApiEndpoints.LoginSelector.Captcha, new Dictionary<string, string>() { ["phone"] = phone }));
+
+        return Task.CompletedTask;
     }
 
-    public async Task<bool> VerifyCaptchaAsync(string phone, string captcha, CancellationToken cancellationToken = default)
+    public Task<bool> VerifyCaptchaAsync(string phone, string captcha, CancellationToken cancellationToken = default)
     {
         //var result = await Searcher.GetAsync(UrlBuilder.Build(ApiEndpoints.LoginSelector.CaptchaVerify, new Dictionary<string, string>() 
         //{ 
@@ -42,6 +46,6 @@ internal class PhoneService : SearchEngineBase, IPhoneService
         //    ["captcha"] = captcha
         //}));
 
-        return true;
+        return Task.FromResult(true);
     }
 }

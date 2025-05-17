@@ -55,9 +55,9 @@ public partial class SearchViewModel : ObservableObject
         }
     }
 
-    public async Task<SearchArtist> LoadArtistAsync()
+    public Task<SearchArtist> LoadArtistAsync()
     {
-        return default!;
+        return Task.FromResult<SearchArtist>(default!);
     }
 
     public async Task<SearchAlbum> LoadAlbumAsync()
@@ -83,13 +83,13 @@ public partial class SearchViewModel : ObservableObject
         return Model.Album;
     }
 
-    public async Task<SearchVideo> LoadVideoAsync()
+    public Task<SearchVideo> LoadVideoAsync()
     {
-        return default!;
+        return Task.FromResult<SearchVideo>(default!);
     }
 
-    public async Task<SearchPlaylist> LoadPlaylistAsync()
+    public Task<SearchPlaylist> LoadPlaylistAsync()
     {
-        return default!;
+        return Task.FromResult<SearchPlaylist>(default!);
     }
 }
