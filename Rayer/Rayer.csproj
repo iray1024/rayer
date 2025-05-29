@@ -83,7 +83,7 @@
     <Resource Include="assets\minimum.png" />
     <Resource Include="assets\power.png" />
     <Resource Include="assets\vinyl.png" />
-    <Resource Include="assets\fallback_mm.jpg" />
-  </ItemGroup>  
+    <!--<Resource Include="assets\fallback_mm.jpg" />-->
+  </ItemGroup>
 
 </Project>
