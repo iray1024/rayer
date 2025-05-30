@@ -21,8 +21,8 @@ jobs:
       with:
         dotnet-version: 9.0.x
     - name: 还原依赖项
-      run: msbuild /t:Restore Rayer.csproj
+      run: msbuild /t:Restore Rayer/Rayer.csproj
     - name: 构建
-      run: msbuild /t:Build /p:RestorePackages=false Rayer.csproj
+      run: msbuild /t:Build /p:RestorePackages=false Rayer/Rayer.csproj
     - name: 发布
-      run: msbuild Rayer.csproj /p:Configuration=Release /p:Platform="x64" /p:PublishProfile=FolderProfile /p:RuntimeIdentifier=win-x64 /p:PublishReadyToRun=true /t:Publish
+      run: msbuild Rayer/Rayer.csproj /p:Configuration=Release /p:Platform="x64" /p:PublishProfile=FolderProfile /p:RuntimeIdentifier=win-x64 /p:PublishReadyToRun=true /t:Publish
