@@ -25,4 +25,4 @@ jobs:
     - name: 构建
       run: msbuild /t:Build /p:RestorePackages=false Rayer/Rayer.csproj
     - name: 发布
-      run: msbuild Rayer/Rayer.csproj /p:Configuration=Release /p:Platform="x64" /p:PublishProfile=FolderProfile /p:RuntimeIdentifier=win-x64 /p:PublishReadyToRun=true /t:Publish
+      run: msbuild Rayer/Rayer.csproj /p:Configuration=Release /p:Platform="x64" /p:PublishProfile=FolderProfile /p:RuntimeIdentifier=win-x64 /p:PublishReadyToRun=true /t:Publish /p:AssemblyOriginatorKeyFile="$(Build.SourcesDirectory)\rayer.snk"
