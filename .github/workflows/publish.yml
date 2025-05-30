@@ -27,12 +27,7 @@ jobs:
     - name: 还原依赖项      
       run: msbuild /t:Restore /p:Configuration=Release
     - name: 构建      
-      run: msbuild /t:Build /p:Configuration=Release /p:RestorePackages=false
-    - name: 路径
-      run: |          
-          echo "工作目录: $GITHUB_WORKSPACE"
-          echo "当前目录: $(pwd)"
-          echo "当前目录内容: $(ls -la)"
+      run: msbuild /t:Build /p:Configuration=Release /p:RestorePackages=false    
     - name: 打印文件
       run: |          
           ls "$GITHUB_WORKSPACE/Rayer.Core/bin/x64/Release/net9.0-windows10.0.26100.0"
