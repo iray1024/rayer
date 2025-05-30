@@ -28,8 +28,5 @@ jobs:
       run: msbuild /t:Restore /p:Configuration=Release
     - name: 构建      
       run: msbuild /t:Build /p:Configuration=Release /p:RestorePackages=false    
-    - name: 打印文件
-      run: |          
-          ls "$GITHUB_WORKSPACE/Rayer.Core/bin/x64/Release/net9.0-windows10.0.26100.0"
     - name: 发布
       run: msbuild /t:Restore /p:NoBuild=true /p:Configuration=Release /p:TargetFramework=net9.0-windows10.0.26100.0 /p:Platform="x64" /p:RuntimeIdentifier=win-x64 /p:PublishReadyToRun=true /t:Publish Rayer/Rayer.csproj
