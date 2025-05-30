@@ -31,8 +31,8 @@ jobs:
           echo "Root dir: $GITHUB_WORKSPACE"
           ls "$GITHUB_WORKSPACE"
     - name: 还原依赖项      
-      run: msbuild /t:Restore Rayer/Rayer.csproj
+      run: msbuild /t:Restore
     - name: 构建
-      run: msbuild /t:Build /p:RestorePackages=false Rayer/Rayer.csproj
+      run: msbuild /t:Build /p:RestorePackages=false
     - name: 发布
-      run: msbuild Rayer/Rayer.csproj /t:Restore /p:NoBuild=true /p:Configuration=Release /p:TargetFramework=net9.0-windows10.0.26100.0 /p:Platform="x64" /p:RuntimeIdentifier=win-x64 /p:PublishReadyToRun=true /t:Publish
+      run: msbuild /p:NoBuild=true /p:Configuration=Release /p:TargetFramework=net9.0-windows10.0.26100.0 /p:Platform="x64" /p:RuntimeIdentifier=win-x64 /p:PublishReadyToRun=true /t:Publish Rayer/Rayer.csproj
