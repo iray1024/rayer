@@ -25,4 +25,4 @@ jobs:
     - name: 构建
       run: msbuild /t:Build /p:RestorePackages=false Rayer/Rayer.csproj
     - name: 发布
-      run: msbuild Rayer/Rayer.csproj /t:Restore /p:NoBuild=true /p:Configuration=Release /p:TargetFramework=net9.0-windows10.0.26100.0 /p:Platform="x64" /p:PublishProfile=FolderProfile /p:RuntimeIdentifier=win-x64 /p:PublishReadyToRun=true /t:Publish
+      run: msbuild Rayer/Rayer.csproj /t:Restore /p:NoBuild=true /p:Configuration=Release /p:TargetFramework=net9.0-windows10.0.26100.0 /p:Platform="x64" /p:RuntimeIdentifier=win-x64 /p:PublishReadyToRun=true /t:Publish
