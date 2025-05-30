@@ -25,9 +25,9 @@ jobs:
       with:
         dotnet-version: 9.0.x
     - name: 还原依赖项      
-      run: msbuild /t:Restore
+      run: msbuild /t:Restore /p:Configuration=Release
     - name: 构建      
-      run: msbuild /t:Build /p:RestorePackages=false
+      run: msbuild /t:Build /p:Configuration=Release /p:RestorePackages=false
     - name: 路径
       run: |          
           echo "工作目录: $GITHUB_WORKSPACE"
