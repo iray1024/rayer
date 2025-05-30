@@ -24,7 +24,13 @@ jobs:
       uses: microsoft/setup-msbuild@v2
       with:
         dotnet-version: 9.0.x
-    - name: 还原依赖项
+    - name: 打印路径
+      run: ls .
+    - name: 使用绝对路径
+      run: |
+          echo "Root dir: $GITHUB_WORKSPACE"
+          ls "$GITHUB_WORKSPACE"
+    - name: 还原依赖项      
       run: msbuild /t:Restore Rayer/Rayer.csproj
     - name: 构建
       run: msbuild /t:Build /p:RestorePackages=false Rayer/Rayer.csproj
