@@ -5,9 +5,8 @@ name: .NET
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    tags:
+      - 'v*' # 匹配 v 开头的标签 (如 v1.0.1)
 
 jobs:
   build:
@@ -20,6 +19,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4.2.2
+      with:
+        fetch-depth: 0 # 获取完整的 Git 历史记录（用于读取标签）
+    - name: 从标签中提取版本号
+      id: version
+      run: |
+        # 提取当前推送的标签（格式如 refs/tags/v1.0.1）
+        TAG_NAME=${GITHUB_REF#refs/tags/}
+        echo "当前标签: $TAG_NAME"
+
+        # 去除 'v' 前缀（如果存在）
+        VERSION=${TAG_NAME//v/}
+        echo "版本号: $VERSION"
+
+        # 存储供后续步骤使用
+        echo "版本号=$VERSION" >> $GITHUB_ENV
+        echo "标签=$TAG_NAME" >> $GITHUB_ENV    
     - name: 初始化.NET编译环境
       uses: microsoft/setup-msbuild@v2
       with:
@@ -29,4 +44,15 @@ jobs:
     - name: 构建      
       run: msbuild /t:Build /p:Configuration=Release
     - name: 发布
-      run: msbuild /t:Restore /p:Configuration=Release /p:TargetFramework=net9.0-windows10.0.26100.0 /p:Platform="x64" /p:RuntimeIdentifier=win-x64 /t:Publish Rayer/Rayer.csproj
+      run: msbuild /t:Restore /p:Configuration=Release /p:TargetFramework=net9.0-windows10.0.26100.0 /p:Platform="x64" /p:RuntimeIdentifier=win-x64 -p:Version=${{ env.VERSION }} /t:Publish Rayer/Rayer.csproj
+
+    - name: 创建 GitHub 发布
+      uses: softprops/action-gh-release@v2.2.2
+      with:
+        tag_name: ${{ env.TAG_NAME }}  # 直接使用原始标签（如 v1.0.1）
+        name: Release ${{ env.VERSION }}
+        body: "Release version ${{ env.VERSION }}"
+        files: publish/**/*
+        draft: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
