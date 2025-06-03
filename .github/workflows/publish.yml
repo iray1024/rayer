@@ -10,13 +10,10 @@ on:
 
 jobs:
   build:
-
     runs-on: windows-latest
-
     defaults:
       run:        
         working-directory: .
-
     steps:
     - uses: actions/checkout@v4.2.2
       with:
@@ -51,12 +48,19 @@ jobs:
     - name: 发布
       run: msbuild /t:Restore /p:Configuration=Release /p:TargetFramework=net9.0-windows10.0.26100.0 /p:Platform="x64" /p:RuntimeIdentifier=win-x64 /p:PublishDir="../publish/" /t:Publish Rayer/Rayer.csproj
 
-    - name: 打包构建产物
+    - name: 压缩上传
       uses: actions/upload-artifact@v4.6.2
       with:
         name: rayer
         path: publish/
         retention-days: 1
+    
+    - name: 本地打包
+      shell: pwsh
+      run: |
+        # 压缩 publish 目录下的所有文件
+        Compress-Archive -Path "publish/*" -DestinationPath "publish/rayer.zip" -Force
+        echo "打包完成，文件已保存到 publish/rayer.zip"
 
     - name: 创建 GitHub 发布
       uses: softprops/action-gh-release@v2.2.2
