@@ -35,16 +35,27 @@ jobs:
         # 存储供后续步骤使用
         echo "版本号=$VERSION" >> $GITHUB_ENV
         echo "标签=$TAG_NAME" >> $GITHUB_ENV    
+
     - name: 初始化.NET编译环境
       uses: microsoft/setup-msbuild@v2
       with:
         dotnet-version: 9.0.x
+
     - name: 还原依赖项      
       run: msbuild /t:Restore /p:Configuration=Release
+
     - name: 构建      
       run: msbuild /t:Build /p:Configuration=Release
+
     - name: 发布
       run: msbuild /t:Restore /p:Configuration=Release /p:TargetFramework=net9.0-windows10.0.26100.0 /p:Platform="x64" /p:RuntimeIdentifier=win-x64 -p:Version=${{ env.VERSION }} /t:Publish Rayer/Rayer.csproj
+
+    - name: 打包构建产物
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: release-package
+        path: publish/
+        retention-days: 1
 
     - name: 创建 GitHub 发布
       uses: softprops/action-gh-release@v2.2.2
@@ -52,7 +63,8 @@ jobs:
         tag_name: ${{ env.TAG_NAME }}  # 直接使用原始标签（如 v1.0.1）
         name: Release ${{ env.VERSION }}
         body: "Release version ${{ env.VERSION }}"
-        files: publish/**/*
+        files: publish/**/*  # 直接上传 publish 目录下的文件
+        prerelease: false
         draft: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
