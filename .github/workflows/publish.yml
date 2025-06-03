@@ -5,9 +5,8 @@ name: .NET
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    tags:
+      - '*' # 匹配所有标签
 
 jobs:
   build:
@@ -25,7 +24,7 @@ jobs:
     - name: 从标签中提取版本号
       id: version
       run: |
-        # 提取当前推送的标签（格式如 refs/tags/v1.0.1）
+        # 提取当前推送的标签
         $TAG_NAME = $env:GITHUB_REF -replace 'refs/tags/', ''
         echo "Tag: $TAG_NAME"
 
