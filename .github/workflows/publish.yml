@@ -38,15 +38,6 @@ jobs:
         echo "TAG_NAME=$TAG_NAME" | Out-File -FilePath $env:GITHUB_ENV -Append
       shell: pwsh
 
-    - name: 设置 GitHub 令牌
-      run: |        
-        $Token = "${{ secrets.GITHUB_TOKEN }}"
-        echo "Token=$Token" | Out-File -FilePath $env:GITHUB_ENV -Append
-
-        $Token2 = "${{ secrets.RELEASE_TOKEN }}"
-        echo "Token2=$Token2" | Out-File -FilePath $env:GITHUB_ENV -Append
-      shell: pwsh
-
     - name: 初始化.NET编译环境
       uses: microsoft/setup-msbuild@v2
       with:
@@ -77,5 +68,6 @@ jobs:
         files: publish/**/*  # 直接上传 publish 目录下的文件
         prerelease: false
         draft: false
+        token: ${{ secrets.RELEASE_TOKEN }}  # 使用自定义令牌进行发布
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
