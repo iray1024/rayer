@@ -37,6 +37,12 @@ jobs:
         echo "标签=$TAG_NAME" >> $GITHUB_ENV
       shell: pwsh
 
+    - name: 设置 GitHub 令牌
+      run: |
+        echo "当前Token: ${{ secrets.RELEASE_TOKEN }}"
+        echo "RELEASE_TOKEN=${{ secrets.RELEASE_TOKEN }}" >> $GITHUB_ENV
+        echo "环境Token: $GITHUB_ENV"
+
     - name: 初始化.NET编译环境
       uses: microsoft/setup-msbuild@v2
       with:
@@ -54,7 +60,7 @@ jobs:
     - name: 打包构建产物
       uses: actions/upload-artifact@v4.6.2
       with:
-        name: release-package
+        name: rayer
         path: publish/
         retention-days: 1
 
