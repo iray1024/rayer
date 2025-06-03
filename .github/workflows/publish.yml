@@ -30,11 +30,11 @@ jobs:
         echo "Tag: $TAG_NAME"
 
         # 去除 'v' 前缀（如果存在）
-        $VERSION = $TAG_NAME -replace 'v', ''
-        echo "版本号: $VERSION"
+        $CurrentVersion = $TAG_NAME -replace 'v', ''
+        echo "版本号: $CurrentVersion"
 
         # 存储供后续步骤使用
-        echo "VERSION=$VERSION" | Out-File -FilePath $env:GITHUB_ENV -Append
+        echo "CurrentVersion=$CurrentVersion" | Out-File -FilePath $env:GITHUB_ENV -Append
         echo "TAG_NAME=$TAG_NAME" | Out-File -FilePath $env:GITHUB_ENV -Append
       shell: pwsh
 
@@ -63,8 +63,8 @@ jobs:
       uses: softprops/action-gh-release@v2.2.2
       with:
         tag_name: ${{ env.TAG_NAME }}  # 直接使用原始标签（如 v1.0.1）
-        name: Release ${{ env.VERSION }}
-        body: "Release version ${{ env.VERSION }}"
+        name: Release ${{ env.CurrentVersion }}
+        body: "Release version ${{ env.CurrentVersion }}"
         files: publish/**/*  # 直接上传 publish 目录下的文件
         prerelease: false
         draft: false
