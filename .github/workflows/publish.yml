@@ -25,16 +25,17 @@ jobs:
       id: version
       run: |
         # 提取当前推送的标签（格式如 refs/tags/v1.0.1）
-        TAG_NAME=${GITHUB_REF#refs/tags/}
+        $TAG_NAME = $env:GITHUB_REF -replace 'refs/tags/', ''
         echo "当前标签: $TAG_NAME"
 
         # 去除 'v' 前缀（如果存在）
-        VERSION=${TAG_NAME//v/}
+        $VERSION = $TAG_NAME -replace 'v', ''
         echo "版本号: $VERSION"
 
         # 存储供后续步骤使用
         echo "版本号=$VERSION" >> $GITHUB_ENV
-        echo "标签=$TAG_NAME" >> $GITHUB_ENV    
+        echo "标签=$TAG_NAME" >> $GITHUB_ENV
+      shell: pwsh
 
     - name: 初始化.NET编译环境
       uses: microsoft/setup-msbuild@v2
