@@ -27,7 +27,7 @@ jobs:
       run: |
         # 提取当前推送的标签（格式如 refs/tags/v1.0.1）
         $TAG_NAME = $env:GITHUB_REF -replace 'refs/tags/', ''
-        echo "当前标签: $TAG_NAME"
+        echo "Tag: $TAG_NAME"
 
         # 去除 'v' 前缀（如果存在）
         $VERSION = $TAG_NAME -replace 'v', ''
@@ -39,15 +39,12 @@ jobs:
       shell: pwsh
 
     - name: 设置 GitHub 令牌
-      run: |
-        echo "${{ env.VERSION }}"
+      run: |        
         $Token = "${{ secrets.GITHUB_TOKEN }}"
         echo "Token=$Token" | Out-File -FilePath $env:GITHUB_ENV -Append
-        echo "Token=${{ env.Token }}"
 
         $Token2 = "${{ secrets.RELEASE_TOKEN }}"
         echo "Token2=$Token2" | Out-File -FilePath $env:GITHUB_ENV -Append
-        echo "Token2=${{ env.Token2 }}"
       shell: pwsh
 
     - name: 初始化.NET编译环境
@@ -81,4 +78,4 @@ jobs:
         prerelease: false
         draft: false
       env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
