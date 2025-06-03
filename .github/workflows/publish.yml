@@ -36,14 +36,12 @@ jobs:
         # 存储供后续步骤使用
         echo "版本号=$VERSION" >> $GITHUB_ENV
         echo "标签=$TAG_NAME" >> $GITHUB_ENV
-        echo "${ env.VERSION }"
-        echo "${ env.TAG_NAME }"
       shell: pwsh
 
     - name: 设置 GitHub 令牌
       run: |
-        echo $VERSION
-        echo "${ env.VERSION }"
+        echo "$VERSION"
+        echo "${{ env.VERSION }}"
         $Token = "${{ secrets.GITHUB_TOKEN }}
         echo "自动Token=$Token" >> $GITHUB_ENV
         echo "自动Token=${{ env.Token }}"
