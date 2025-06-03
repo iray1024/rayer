@@ -64,7 +64,7 @@ jobs:
         tag_name: ${{ env.TAG_NAME }}  # 直接使用原始标签（如 v1.0.1）
         name: Release ${{ env.CurrentVersion }}
         body: "Release version ${{ env.CurrentVersion }}"
-        files: publish/**/*  # 直接上传 publish 目录下的文件
+        files: publish/rayer.zip  # 直接上传 publish 目录下的文件
         prerelease: false
         draft: false
       env:
