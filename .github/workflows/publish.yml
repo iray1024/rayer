@@ -5,8 +5,9 @@ name: .NET
 
 on:
   push:
-    tags:
-      - 'v*' # 匹配 v 开头的标签 (如 v1.0.1)
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
 
 jobs:
   build:
@@ -35,6 +36,8 @@ jobs:
         # 存储供后续步骤使用
         echo "版本号=$VERSION" >> $GITHUB_ENV
         echo "标签=$TAG_NAME" >> $GITHUB_ENV
+        echo "${{ env.VERSION }}"
+        echo "${{ env.TAG_NAME }}"
       shell: pwsh
 
     - name: 设置 GitHub 令牌
