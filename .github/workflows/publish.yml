@@ -40,12 +40,10 @@ jobs:
     - name: 设置 GitHub 令牌
       run: |
         $Token = "${{ secrets.GITHUB_TOKEN }}
-        echo "自动Token: $Token" 
         echo "自动Token=$Token" >> $GITHUB_ENV
         echo "自动Token=${{ env.Token }}"
 
         $Token2 = "${{ secrets.RELEASE_TOKEN }}"
-        echo "自动Token: $Token2" 
         echo "自动Token=$Token2" >> $GITHUB_ENV
         echo "自动Token=${{ env.Token2 }}"
 
