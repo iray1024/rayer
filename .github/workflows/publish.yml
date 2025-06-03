@@ -68,6 +68,5 @@ jobs:
         files: publish/**/*  # 直接上传 publish 目录下的文件
         prerelease: false
         draft: false
-        token: ${{ secrets.RELEASE_TOKEN }}  # 使用自定义令牌进行发布
       env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }} # 使用自定义令牌进行发布
