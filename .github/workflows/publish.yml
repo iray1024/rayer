@@ -46,7 +46,7 @@ jobs:
       run: msbuild /t:Build /p:Configuration=Release
 
     - name: 发布
-      run: msbuild /t:Restore /p:Configuration=Release /p:TargetFramework=net9.0-windows10.0.26100.0 /p:Platform="x64" /p:RuntimeIdentifier=win-x64 /p:PublishDir="../publish/" /t:Publish Rayer/Rayer.csproj
+      run: msbuild /t:Restore /p:Configuration=Release /p:TargetFramework=net9.0-windows10.0.26100.0 /p:Platform="x64" /p:RuntimeIdentifier=win-x64 -p:Version=${{ env.CurrentVersion }} /p:FileVersion=${{ env.CurrentVersion }} /p:PublishDir="../publish/" /t:Publish Rayer/Rayer.csproj
 
     - name: 压缩上传
       uses: actions/upload-artifact@v4.6.2
