@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
 
   <PropertyGroup>
     <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
@@ -16,6 +16,6 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
-     <DebugType>None</DebugType>
+    <DebugType>None</DebugType>
   </PropertyGroup>
 </Project>

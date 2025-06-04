@@ -409,5 +409,10 @@
         </ui:CardControl>
 
         <controls:KeybindingPanel />
+
+        <ui:HyperlinkButton
+            HorizontalAlignment="Left"
+            Click="OnAboutClicked"
+            Content="关于 Rayer" />
     </StackPanel>
 </core:NoneFocusablePage>

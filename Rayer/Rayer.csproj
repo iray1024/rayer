@@ -14,12 +14,12 @@
     <Content Include="assets\logo.ico" />
   </ItemGroup>
 
-	<ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.5" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.5" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.5" />
-	</ItemGroup>
-	
+  <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.5" />
+  </ItemGroup>
+  
   <ItemGroup>		    
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.5" />		
@@ -76,7 +76,7 @@
     <Resource Include="assets\light\volume-half.png" />
     <Resource Include="assets\logo.png" />
     <Resource Include="assets\dark\next.png" />
-		<Resource Include="assets\dark\pause.png" />
+    <Resource Include="assets\dark\pause.png" />
     <Resource Include="assets\dark\play.png" />
     <Resource Include="assets\dark\previous.png" />
     <Resource Include="assets\maximum.png" />

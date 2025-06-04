@@ -19,7 +19,8 @@
     <EmbeddedResource Include="assets\equalizer.zip" />     
     <EmbeddedResource Include="assets\copyright.jpg" />      
     <!--<EmbeddedResource Include="assets\partner.jpg" />-->			
-    <EmbeddedResource Include="assets\rayer.zip" />      
+    <EmbeddedResource Include="assets\rayer.zip" />			
+    <EmbeddedResource Include="assets\updater.zip" />      
   </ItemGroup>
 
   <ItemGroup>

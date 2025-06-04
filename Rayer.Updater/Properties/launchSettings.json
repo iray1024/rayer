@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Rayer.Updater": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\mm\\source\\repos\\rayer\\Rayer\\bin\\Debug\\net9.0-windows10.0.26100.0"
+    }
+  }
+}

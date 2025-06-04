@@ -1,0 +1,89 @@
+﻿<ui:ContentDialog
+    x:Class="Rayer.Core.Controls.AboutContentDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Rayer.Core.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    x:Name="root"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Loaded="OnLoaded"
+    Unloaded="OnUnloaded"
+    mc:Ignorable="d">
+    <ui:ContentDialog.Resources>
+        <DataTemplate x:Key="TitleTemplate">
+            <Grid>
+                <TextBlock
+                    Margin="12,0,0,0"
+                    FontSize="22"
+                    Foreground="White"
+                    RenderOptions.ClearTypeHint="Enabled"
+                    RenderOptions.EdgeMode="Aliased"
+                    Text="{Binding Path=(local:AboutContentDialog.Title), ElementName=root}" />
+                <ui:ImageIcon
+                    Width="24"
+                    Height="24"
+                    Margin="0,0,2,0"
+                    HorizontalAlignment="Right"
+                    Cursor="Hand"
+                    PreviewMouseLeftButtonUp="OnPreviewCloseMouseLeftButtonUp"
+                    RenderOptions.BitmapScalingMode="Fant"
+                    RenderOptions.CachingHint="Unspecified"
+                    Source="pack://application:,,,/assets/power.png" />
+            </Grid>
+        </DataTemplate>
+    </ui:ContentDialog.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid
+            Grid.Row="0"
+            Margin="0,0,0,12"
+            HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <local:AsyncImage
+                x:Name="PART_Logo"
+                Grid.Column="0"
+                Width="80"
+                Height="60"
+                CornerRadius="6"
+                RenderOptions.BitmapScalingMode="HighQuality"
+                RenderOptions.CachingHint="Unspecified"
+                Source="{Binding Path=(local:AboutContentDialog.Logo), ElementName=root}"
+                Stretch="UniformToFill" />
+            <ui:TextBlock
+                Grid.Column="1"
+                Margin="0,8,0,0"
+                VerticalAlignment="Center"
+                Focusable="False"
+                FontSize="36"
+                RenderOptions.ClearTypeHint="Enabled"
+                RenderOptions.EdgeMode="Aliased"
+                Text="Rayer" />
+        </Grid>
+        <TextBlock
+            Grid.Row="1"
+            Padding="12,10,12,0"
+            Focusable="False"
+            FontSize="14"
+            Foreground="White"
+            KeyboardNavigation.IsTabStop="False"
+            RenderOptions.ClearTypeHint="Enabled"
+            RenderOptions.EdgeMode="Aliased"
+            Text="{Binding Path=(local:AboutContentDialog.Description), ElementName=root}"
+            TextWrapping="WrapWithOverflow" />
+        <ui:Button
+            Grid.Row="2"
+            HorizontalAlignment="Right"
+            Click="OnCheckUpdateClicked"
+            Content="检查更新" />
+    </Grid>
+</ui:ContentDialog>

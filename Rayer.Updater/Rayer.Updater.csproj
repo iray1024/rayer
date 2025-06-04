@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>assets\logo.ico</ApplicationIcon>
+    <UseWPF>true</UseWPF>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>		
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />		
+    <PackageReference Include="Downloader" Version="3.3.4" />		
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.5" />		
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.5" />		
+    <PackageReference Include="WPF-UI" Version="4.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Rayer.Core\Rayer.Core.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Resource Include="assets\logo.ico" />
+    <Resource Include="assets\logo.png" />
+  </ItemGroup>
+  
+</Project>
