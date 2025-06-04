@@ -1,4 +1,5 @@
 ﻿using Downloader;
+using Rayer.Core.Abstractions;
 using Rayer.Core.Framework.Injection;
 using Rayer.Updater.Models;
 using System.Diagnostics;
@@ -13,16 +14,14 @@ using System.Net.Mime;
 namespace Rayer.Updater.Services;
 
 [Inject<IUpdateService>]
-internal sealed class UpdateService : IUpdateService
+internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateService
 {
-    private const string GITHUB_TOKEN = "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";
-
     public string[] Args { get; set; } = [];
 
     public async Task<Release> GetLatestReleaseAsync(CancellationToken cancellationToken = default)
     {
         using var http = new HttpClient();
-        http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", GITHUB_TOKEN);
+        http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", gitHubManager.Token);
         http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
         http.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
         http.DefaultRequestHeaders.Host = "api.github.com";
@@ -66,7 +65,7 @@ internal sealed class UpdateService : IUpdateService
     {
         using var http = new HttpClient();
         http.Timeout = TimeSpan.FromMinutes(5);
-        http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", GITHUB_TOKEN);
+        http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", gitHubManager.Token);
         http.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
         http.DefaultRequestHeaders.Host = "github.com";
         http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("iray1024", "1.0"));
@@ -90,7 +89,7 @@ internal sealed class UpdateService : IUpdateService
                 {
                     Accept = MediaTypeNames.Application.Octet,
                     UserAgent = "iray1024/1.0",
-                    Headers = [$"Authorization: Bearer {GITHUB_TOKEN}", "X-GitHub-Api-Version: 2022-11-28", $"Host: {uri.Host}"],
+                    Headers = [$"Authorization: Bearer {gitHubManager.Token}", "X-GitHub-Api-Version: 2022-11-28", $"Host: {uri.Host}"],
                     Proxy = WebRequest.DefaultWebProxy
                 }
             };

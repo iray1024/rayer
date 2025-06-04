@@ -1,5 +1,6 @@
 ﻿using Rayer.Abstractions;
 using Rayer.Core;
+using Rayer.Core.Abstractions;
 using Rayer.Core.Framework.Injection;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
@@ -15,14 +16,12 @@ using Wpf.Ui.Extensions;
 namespace Rayer.Services;
 
 [Inject<IUpdateService>]
-internal sealed class UpdateService : IUpdateService
+internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateService
 {
-    private const string GITHUB_TOKEN = "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";
-
     public async Task<bool> CheckUpdateAsync(CancellationToken cancellationToken = default)
     {
         using var http = new HttpClient();
-        http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", GITHUB_TOKEN);
+        http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", gitHubManager.Token);
         http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
         http.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
         http.DefaultRequestHeaders.Host = "api.github.com";
