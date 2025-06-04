@@ -16,7 +16,8 @@ internal sealed class GitHubManagerImpl : IGitHubManager
         var resourceStream = typeof(GitHubManagerImpl).Assembly.GetManifestResourceStream("Rayer.Core.secrets");
         using var reader = new StreamReader(resourceStream!);
 
-        Token = reader.ReadToEnd();
+        var base64Token = reader.ReadToEnd();
+        Token = Encoding.UTF8.GetString(Convert.FromBase64String(base64Token));
     }
 
     public string Token { get; private set; } = string.Empty;
