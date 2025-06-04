@@ -33,7 +33,7 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
 
         release.Version = Version.Parse(release.Tag.Replace("v", string.Empty, StringComparison.OrdinalIgnoreCase));
 
-        var localPath = Directory.GetCurrentDirectory();
+        var localPath = AppDomain.CurrentDomain.BaseDirectory;
         var fileVersionInfo = FileVersionInfo.GetVersionInfo(Path.Combine(localPath, "rayer.exe"));
 
         Contract.Assert(fileVersionInfo is { FileVersion: not null });
