@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
 
   <PropertyGroup>
     <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
@@ -7,15 +7,15 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <SignAssembly>True</SignAssembly>
-		<Authors>喵蛙王子丶</Authors>
-		<Company>喵蛙王子丶</Company>
-		<Copyright>喵蛙王子丶</Copyright>
-		<Product>Rayer-Music</Product>
-	  <AssemblyOriginatorKeyFile>$(SolutionDir)rayer.snk</AssemblyOriginatorKeyFile>
-		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+    <Authors>喵蛙王子丶</Authors>
+    <Company>喵蛙王子丶</Company>
+    <Copyright>喵蛙王子丶</Copyright>
+    <Product>Rayer-Music</Product>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)rayer.snk</AssemblyOriginatorKeyFile>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
   </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)'=='Release'">
-		<DebugType>None</DebugType>
-	</PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>None</DebugType>
+  </PropertyGroup>
 </Project>

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>    
-		<UseWPF>true</UseWPF>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>		
+    <UseWPF>true</UseWPF>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>		
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +23,6 @@
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
     <PackageReference Include="WPF-UI" Version="4.0.2" />
     <PackageReference Include="WPF-UI.Tray" Version="4.0.2" />
-		
   </ItemGroup>
 
   <ItemGroup>

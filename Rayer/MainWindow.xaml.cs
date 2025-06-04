@@ -23,6 +23,7 @@ using System.Windows.Shell;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
+using Wpf.Ui.Extensions;
 
 namespace Rayer;
 
@@ -187,6 +188,12 @@ public partial class MainWindow : IWindow
         {
             _smtc.UpdatePlaybackStatus(Windows.Media.MediaPlaybackStatus.Stopped);
         };
+
+        var updater = AppCore.GetRequiredService<IUpdateService>();
+        if (await updater.CheckUpdateAsync(AppCore.StoppingToken))
+        {
+            await updater.UpdateAsync(AppCore.StoppingToken);
+        }
     }
 
     private async void OnAutoSuggestTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
