@@ -74,8 +74,8 @@ public partial class MainWindow : Window
 
             var rayerExe = Path.Combine(ViewModel.InstallPath, "Rayer.exe");
 
-            WindowsUtils.CreateShortcutOnDesktop("Rayer", rayerExe, "喵蛙王子丶的音乐播放器", rayerExe);
-            WindowsUtils.AddToStartMenu("Rayer", rayerExe, "喵蛙王子丶的音乐播放器", rayerExe);
+            WindowsUtils.CreateShortcutOnDesktop("Rayer", rayerExe, "喵蛙王子丶的音乐播放器", rayerExe, ViewModel.InstallPath);
+            WindowsUtils.AddToStartMenu("Rayer", rayerExe, "喵蛙王子丶的音乐播放器", rayerExe, ViewModel.InstallPath);
 
             using var lastKey = Registry.CurrentUser.OpenSubKey(Constants.RegisterKey, true);
 

@@ -8,6 +8,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Reflection;
 using System.Windows;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
@@ -33,7 +34,8 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
 
         release.Version = Version.Parse(release.Tag.Replace("v", string.Empty, StringComparison.OrdinalIgnoreCase));
 
-        var localPath = AppDomain.CurrentDomain.BaseDirectory;
+        var localPath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)
+            ?? AppDomain.CurrentDomain.BaseDirectory;
         var fileVersionInfo = FileVersionInfo.GetVersionInfo(Path.Combine(localPath, "rayer.exe"));
 
         Contract.Assert(fileVersionInfo is { FileVersion: not null });
@@ -63,7 +65,12 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
         //var updaterPath = @"C:\Users\mm\source\repos\rayer\Rayer.Updater\bin\Debug\net9.0-windows10.0.26100.0\Rayer.Updater.exe";
         var updaterPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Rayer", "updater", "Rayer.Updater.exe");
 
-        Process.Start(updaterPath, AppDomain.CurrentDomain.BaseDirectory);
+        Process.Start(new ProcessStartInfo(updaterPath, AppDomain.CurrentDomain.BaseDirectory)
+        {
+            Verb = "runas",
+            UseShellExecute = true
+        });
+
         Application.Current.Shutdown();
 
         return Task.CompletedTask;
