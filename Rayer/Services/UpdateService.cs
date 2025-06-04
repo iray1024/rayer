@@ -5,6 +5,7 @@ using Rayer.Core.Framework.Injection;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -20,6 +21,8 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
 {
     public async Task<bool> CheckUpdateAsync(CancellationToken cancellationToken = default)
     {
+        var originalProxy = SetProxy();
+
         using var http = new HttpClient();
         http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", gitHubManager.Token);
         http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
@@ -50,12 +53,9 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
             PrimaryButtonText = "暂不更新",
         }, cancellationToken: cancellationToken);
 
-        if (result is ContentDialogResult.None)
-        {
-            return true;
-        }
+        HttpClient.DefaultProxy = originalProxy;
 
-        return false;
+        return result is ContentDialogResult.None;
     }
 
     public Task UpdateAsync(CancellationToken cancellationToken = default)
@@ -67,6 +67,17 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
         Application.Current.Shutdown();
 
         return Task.CompletedTask;
+    }
+
+    private static IWebProxy SetProxy()
+    {
+        var originalProxy = HttpClient.DefaultProxy;
+        if (WebRequest.DefaultWebProxy is not null)
+        {
+            HttpClient.DefaultProxy = WebRequest.DefaultWebProxy;
+        }
+
+        return originalProxy;
     }
 
     public class Release

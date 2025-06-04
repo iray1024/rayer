@@ -5,6 +5,8 @@ using Rayer.Core;
 using Rayer.Core.Extensions;
 using Rayer.Core.Framework;
 using Rayer.Updater.Services;
+using System.Net;
+using System.Net.Http;
 using System.Windows;
 using System.Windows.Threading;
 using Wpf.Ui;
@@ -51,9 +53,14 @@ public partial class App : Application
         var updater = GetRequiredService<IUpdateService>();
         updater.Args = e.Args;
 
+        if (WebRequest.DefaultWebProxy is not null)
+        {
+            HttpClient.DefaultProxy = WebRequest.DefaultWebProxy;
+        }
+
         var mainWindow = GetRequiredService<IWindow>();
         mainWindow.Show();
-        
+
         _host.Start();
     }
 
