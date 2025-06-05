@@ -19,6 +19,9 @@ namespace Rayer.Services;
 [Inject<IUpdateService>]
 internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateService
 {
+    internal static string LocalPath => Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)
+            ?? AppDomain.CurrentDomain.BaseDirectory;
+
     public async Task<bool> CheckUpdateAsync(CancellationToken cancellationToken = default)
     {
         using var http = new HttpClient();
@@ -34,9 +37,7 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
 
         release.Version = Version.Parse(release.Tag.Replace("v", string.Empty, StringComparison.OrdinalIgnoreCase));
 
-        var localPath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)
-            ?? AppDomain.CurrentDomain.BaseDirectory;
-        var fileVersionInfo = FileVersionInfo.GetVersionInfo(Path.Combine(localPath, "rayer.exe"));
+        var fileVersionInfo = FileVersionInfo.GetVersionInfo(Path.Combine(LocalPath, "rayer.exe"));
 
         Contract.Assert(fileVersionInfo is { FileVersion: not null });
 
@@ -65,7 +66,7 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
         //var updaterPath = @"C:\Users\mm\source\repos\rayer\Rayer.Updater\bin\Debug\net9.0-windows10.0.26100.0\Rayer.Updater.exe";
         var updaterPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Rayer", "updater", "Rayer.Updater.exe");
 
-        Process.Start(new ProcessStartInfo(updaterPath, AppDomain.CurrentDomain.BaseDirectory)
+        Process.Start(new ProcessStartInfo(updaterPath, LocalPath)
         {
             Verb = "runas",
             UseShellExecute = true
