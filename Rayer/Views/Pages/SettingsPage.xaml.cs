@@ -13,6 +13,7 @@ using Wpf.Ui;
 using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
+using Wpf.Ui.Extensions;
 
 namespace Rayer.Views.Pages;
 
@@ -54,7 +55,7 @@ public partial class SettingsPage : INavigableView<SettingsViewModel>
         };
     }
 
-    private void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
+    private void OnLoaded(object sender, RoutedEventArgs e)
     {
         var navView = AppCore.GetRequiredService<INavigationService>().GetNavigationControl() as NavigationView;
 
@@ -66,7 +67,7 @@ public partial class SettingsPage : INavigableView<SettingsViewModel>
         }
     }
 
-    private async void OnAboutClicked(object sender, System.Windows.RoutedEventArgs e)
+    private async void OnAboutClicked(object sender, RoutedEventArgs e)
     {
         var contentDialogService = AppCore.GetRequiredService<IContentDialogService>();
         var updater = AppCore.GetRequiredService<IUpdateService>();
@@ -76,7 +77,7 @@ public partial class SettingsPage : INavigableView<SettingsViewModel>
 
         Contract.Assert(fileVersionInfo is { FileVersion: not null });
 
-        var version = Version.Parse(fileVersionInfo.FileVersion);
+        var local = Version.Parse(fileVersionInfo.FileVersion);
 
         var dialog = new AboutContentDialog(contentDialogService.GetDialogHost())
         {
@@ -91,12 +92,22 @@ public partial class SettingsPage : INavigableView<SettingsViewModel>
                     {
                         await updater.UpdateAsync(AppCore.StoppingToken);
                     }
+                    else
+                    {
+                        var dialogService = AppCore.GetRequiredService<IContentDialogService>();
+                        await dialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions
+                        {
+                            Title = "恭喜",
+                            Content = "您已是最新版本！",
+                            CloseButtonText = "关闭"
+                        });
+                    }
                 });
             }
         };
 
         AboutContentDialog.SetLogo(dialog, ImageSourceFactory.Create("pack://application:,,,/assets/logo.png"));
-        AboutContentDialog.SetDescription(dialog, $"Rayer {version.ToString(3)}\n喵蛙王子丶 版权所有\nCopyright(C) 2020-2025 MM. All Rights Reserved");
+        AboutContentDialog.SetDescription(dialog, $"Rayer {local.ToString(3)}\n喵蛙王子丶 版权所有\nCopyright(C) 2020-2025 MM. All Rights Reserved");
 
         await dialog.ShowAsync();
     }

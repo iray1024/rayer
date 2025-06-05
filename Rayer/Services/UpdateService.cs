@@ -5,6 +5,7 @@ using Rayer.Core.Framework.Injection;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -24,6 +25,8 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
 
     public async Task<bool> CheckUpdateAsync(CancellationToken cancellationToken = default)
     {
+        var originalProxy = SetProxy();
+
         using var http = new HttpClient();
         http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", gitHubManager.Token);
         http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
@@ -31,31 +34,35 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
         http.DefaultRequestHeaders.Host = "api.github.com";
         http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("iray1024", "1.0"));
 
-        var release = await http.GetFromJsonAsync<Release>("https://api.github.com/repos/iray1024/rayer/releases/latest", cancellationToken: cancellationToken);
+        var latest = await http.GetFromJsonAsync<Release>("https://api.github.com/repos/iray1024/rayer/releases/latest", cancellationToken: cancellationToken);
 
-        Contract.Assert(release is not null);
+        Contract.Assert(latest is not null);
 
-        release.Version = Version.Parse(release.Tag.Replace("v", string.Empty, StringComparison.OrdinalIgnoreCase));
+        latest.Version = Version.Parse(latest.Tag.Replace("v", string.Empty, StringComparison.OrdinalIgnoreCase));
 
         var fileVersionInfo = FileVersionInfo.GetVersionInfo(Path.Combine(LocalPath, "rayer.exe"));
 
         Contract.Assert(fileVersionInfo is { FileVersion: not null });
 
-        var version = Version.Parse(fileVersionInfo.FileVersion);
+        var local = Version.Parse(fileVersionInfo.FileVersion);
 
-        var dialogService = AppCore.GetRequiredService<IContentDialogService>();
+        HttpClient.DefaultProxy = originalProxy;
 
-        var result = await dialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions
+        if (latest.Version > local)
         {
-            Title = "存在新版本",
-            Content = $"当前版本: {version.ToString(3)}\n最新版本: {release.Version.ToString(3)}",
-            CloseButtonText = "立即更新",
-            PrimaryButtonText = "暂不更新",
-        }, cancellationToken: cancellationToken);
+            var dialogService = AppCore.GetRequiredService<IContentDialogService>();
+            var result = await dialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions
+            {
+                Title = "存在新版本",
+                Content = $"当前版本: {local.ToString(3)}\n最新版本: {latest.Version.ToString(3)}",
+                CloseButtonText = "立即更新",
+                PrimaryButtonText = "暂不更新",
+            }, cancellationToken: cancellationToken);
 
-        if (result is ContentDialogResult.None)
-        {
-            return true;
+            if (result is ContentDialogResult.None)
+            {
+                return true;
+            }
         }
 
         return false;
@@ -75,6 +82,17 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
         Application.Current.Shutdown();
 
         return Task.CompletedTask;
+    }
+
+    private static IWebProxy SetProxy()
+    {
+        var originalProxy = HttpClient.DefaultProxy;
+        if (WebRequest.DefaultWebProxy is not null)
+        {
+            HttpClient.DefaultProxy = WebRequest.DefaultWebProxy;
+        }
+
+        return originalProxy;
     }
 
     public class Release
