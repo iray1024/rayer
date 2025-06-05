@@ -39,14 +39,11 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
     public Task<AppVersion> GetLocalVersionAsync(CancellationToken cancellationToken = default)
     {
         const string localPath = @"C:\Program Files\Rayer";
-        Console.WriteLine(string.Join(',', Args));
 
         if (Args.Length == 0)
         {
             Args = [localPath];
         }
-
-        Console.WriteLine(Args[0]);
 
         var fileVersionInfo = FileVersionInfo.GetVersionInfo(Path.Combine(Args[0], "rayer.exe"));
 
