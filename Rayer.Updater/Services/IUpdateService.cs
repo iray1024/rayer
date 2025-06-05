@@ -5,7 +5,9 @@ namespace Rayer.Updater.Services;
 
 public interface IUpdateService
 {
-    string[] Args { get; internal set; }
+    string[] Args { get; }
+
+    void Initialize(string[] args);
 
     /// <summary>
     /// 获取最新的发布

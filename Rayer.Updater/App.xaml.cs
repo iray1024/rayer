@@ -51,7 +51,7 @@ public partial class App : Application
         AppCore.UseServiceProvider(_host.Services);
 
         var updater = GetRequiredService<IUpdateService>();
-        updater.Args = e.Args;
+        updater.Initialize(e.Args);
 
         if (WebRequest.DefaultWebProxy is not null)
         {

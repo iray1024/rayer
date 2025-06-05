@@ -16,7 +16,21 @@ namespace Rayer.Updater.Services;
 [Inject<IUpdateService>]
 internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateService
 {
-    public string[] Args { get; set; } = [];
+    public string[] Args { get; private set; } = [];
+
+    public void Initialize(string[] args)
+    {
+        const string localPath = @"C:\Program Files\Rayer";
+
+        if (args.Length == 0)
+        {
+            Args = [localPath];
+        }
+        else
+        {
+            Args = args;
+        }
+    }
 
     public async Task<Release> GetLatestReleaseAsync(CancellationToken cancellationToken = default)
     {
@@ -38,13 +52,6 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
 
     public Task<AppVersion> GetLocalVersionAsync(CancellationToken cancellationToken = default)
     {
-        const string localPath = @"C:\Program Files\Rayer";
-
-        if (Args.Length == 0)
-        {
-            Args = [localPath];
-        }
-
         var fileVersionInfo = FileVersionInfo.GetVersionInfo(Path.Combine(Args[0], "rayer.exe"));
 
         Contract.Assert(fileVersionInfo is { FileVersion: not null });
