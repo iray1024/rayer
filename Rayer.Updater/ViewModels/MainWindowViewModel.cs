@@ -40,8 +40,13 @@ public partial class MainWindowViewModel(IUpdateService updateService) : Observa
     [ObservableProperty]
     private bool _finished;
 
+    [ObservableProperty]
+    private string? _workingDirectory;
+
     public async Task CheckUpdateAsync(CancellationToken cancellationToken = default)
     {
+        WorkingDirectory = $"工作目录: {updateService.Args[0]}";
+
         var localVersion = await updateService.GetLocalVersionAsync(AppCore.StoppingToken);
         var latest = await updateService.GetLatestReleaseAsync(AppCore.StoppingToken);
 
