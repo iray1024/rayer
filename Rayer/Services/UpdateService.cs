@@ -73,7 +73,7 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
         //var updaterPath = @"C:\Users\mm\source\repos\rayer\Rayer.Updater\bin\Debug\net9.0-windows10.0.26100.0\Rayer.Updater.exe";
         var updaterPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Rayer", "updater", "Rayer.Updater.exe");
 
-        Process.Start(new ProcessStartInfo(updaterPath, LocalPath)
+        Process.Start(new ProcessStartInfo(updaterPath, [LocalPath])
         {
             Verb = "runas",
             UseShellExecute = true
