@@ -34,31 +34,38 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
         http.DefaultRequestHeaders.Host = "api.github.com";
         http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("iray1024", "1.0"));
 
-        var release = await http.GetFromJsonAsync<Release>("https://api.github.com/repos/iray1024/rayer/releases/latest", cancellationToken: cancellationToken);
+        var latest = await http.GetFromJsonAsync<Release>("https://api.github.com/repos/iray1024/rayer/releases/latest", cancellationToken: cancellationToken);
 
-        Contract.Assert(release is not null);
+        Contract.Assert(latest is not null);
 
-        release.Version = Version.Parse(release.Tag.Replace("v", string.Empty, StringComparison.OrdinalIgnoreCase));
+        latest.Version = Version.Parse(latest.Tag.Replace("v", string.Empty, StringComparison.OrdinalIgnoreCase));
 
         var fileVersionInfo = FileVersionInfo.GetVersionInfo(Path.Combine(LocalPath, "rayer.exe"));
 
         Contract.Assert(fileVersionInfo is { FileVersion: not null });
 
-        var version = Version.Parse(fileVersionInfo.FileVersion);
-
-        var dialogService = AppCore.GetRequiredService<IContentDialogService>();
-
-        var result = await dialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions
-        {
-            Title = "存在新版本",
-            Content = $"当前版本: {version.ToString(3)}\n最新版本: {release.Version.ToString(3)}",
-            CloseButtonText = "立即更新",
-            PrimaryButtonText = "暂不更新",
-        }, cancellationToken: cancellationToken);
+        var local = Version.Parse(fileVersionInfo.FileVersion);
 
         HttpClient.DefaultProxy = originalProxy;
 
-        return result is ContentDialogResult.None;
+        if (latest.Version > local)
+        {
+            var dialogService = AppCore.GetRequiredService<IContentDialogService>();
+            var result = await dialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions
+            {
+                Title = "存在新版本",
+                Content = $"当前版本: {local.ToString(3)}\n最新版本: {latest.Version.ToString(3)}",
+                CloseButtonText = "立即更新",
+                PrimaryButtonText = "暂不更新",
+            }, cancellationToken: cancellationToken);
+
+            if (result is ContentDialogResult.None)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Task UpdateAsync(CancellationToken cancellationToken = default)
