@@ -1,7 +1,7 @@
 ﻿using NAudio.Wave;
-using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
+using Rayer.FrameworkCore;
 using Rayer.ViewModels;
 using System.Windows;
 using System.Windows.Controls;

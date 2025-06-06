@@ -1,7 +1,7 @@
 ﻿using Rayer.Abstractions;
-using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
+using Rayer.FrameworkCore;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;

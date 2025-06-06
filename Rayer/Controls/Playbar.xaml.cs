@@ -1,11 +1,10 @@
 ﻿using NAudio.Wave;
 using Rayer.Abstractions;
 using Rayer.Controls.Adorners;
-using Rayer.Core;
 using Rayer.Core.Abstractions;
-using Rayer.Core.Framework;
 using Rayer.Core.PlayControl.Abstractions;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore;
 using Rayer.Markup;
 using Rayer.Services;
 using Rayer.ViewModels;

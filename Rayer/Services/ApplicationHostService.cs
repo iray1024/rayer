@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Rayer.Core;
-using Rayer.Core.Framework;
+using Rayer.FrameworkCore;
 using Rayer.Views.Pages;
 using System.Windows;
 

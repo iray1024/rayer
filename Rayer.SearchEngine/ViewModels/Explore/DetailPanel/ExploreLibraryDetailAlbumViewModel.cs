@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Rayer.Core;
-using Rayer.Core.Framework.Injection;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Business.Data;
 using System.Windows.Media;
 

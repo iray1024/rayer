@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Downloader;
 using ICSharpCode.SharpZipLib.Zip;
-using Rayer.Core;
-using Rayer.Core.Framework.Injection;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.Updater.Models;
 using Rayer.Updater.Services;
 using System.Diagnostics;
@@ -29,12 +29,6 @@ public partial class MainWindowViewModel(IUpdateService updateService) : Observa
     private DownloadInfo _downloadInfo = new();
 
     [ObservableProperty]
-    private long? _receiveBytes;
-
-    [ObservableProperty]
-    private long? _totalBytes;
-
-    [ObservableProperty]
     private double? _downloadSpeed;
 
     [ObservableProperty]
@@ -47,21 +41,20 @@ public partial class MainWindowViewModel(IUpdateService updateService) : Observa
     {
         WorkingDirectory = $"工作目录: {updateService.Args[0]}";
 
-        var localVersion = await updateService.GetLocalVersionAsync(AppCore.StoppingToken);
+        var local = await updateService.GetLocalVersionAsync(AppCore.StoppingToken);
         var latest = await updateService.GetLatestReleaseAsync(AppCore.StoppingToken);
 
-        LocalVersion = localVersion.Version.ToString(3);
+        LocalVersion = local.ToString(3);
         LatestVersion = latest.Version.ToString(3);
 
         var dialogService = AppCore.GetRequiredService<IContentDialogService>();
-        var needUpdate = latest.Version > localVersion.Version;
+        var needUpdate = latest.Version > local;
         if (needUpdate)
         {
             var (downloader, url) = await updateService.UpdateAsync(latest, cancellationToken);
 
             downloader.DownloadStarted += OnDownloadStarted;
             downloader.DownloadProgressChanged += OnDownloadProgressChanged;
-            downloader.ChunkDownloadProgressChanged += OnChunkDownloadProgressChanged;
 
             var webStream = await downloader.DownloadFileTaskAsync(url, cancellationToken);
 
@@ -129,14 +122,8 @@ public partial class MainWindowViewModel(IUpdateService updateService) : Observa
         }
     }
 
-    private void OnChunkDownloadProgressChanged(object? sender, DownloadProgressChangedEventArgs e)
-    {
-
-    }
-
     private void OnDownloadProgressChanged(object? sender, DownloadProgressChangedEventArgs e)
     {
-        ReceiveBytes = e.ReceivedBytesSize;
         Percent = Math.Round(e.ProgressPercentage, 2);
         DownloadSpeed = e.BytesPerSecondSpeed;
 
@@ -147,7 +134,6 @@ public partial class MainWindowViewModel(IUpdateService updateService) : Observa
 
     private void OnDownloadStarted(object? sender, DownloadStartedEventArgs e)
     {
-        TotalBytes = e.TotalBytesToReceive;
         DownloadInfo.TotalBytes = e.TotalBytesToReceive;
     }
 

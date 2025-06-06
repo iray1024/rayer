@@ -1,11 +1,11 @@
-﻿using Rayer.Core;
-using Rayer.Core.Abstractions;
+﻿using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Controls;
 using Rayer.Core.Events;
 using Rayer.Core.Menu;
 using Rayer.Core.Models;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.ViewModels.Presenter;

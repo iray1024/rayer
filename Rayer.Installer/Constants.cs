@@ -28,7 +28,6 @@ internal static class Constants
         new(){
             Name = "Updater",
             Path = "Rayer.Installer.assets.updater.zip",
-            IsReplace = false,
             DestinationDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Rayer")
         }
     };

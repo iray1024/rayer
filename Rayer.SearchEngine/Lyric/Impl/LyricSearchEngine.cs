@@ -1,6 +1,6 @@
 ﻿using Rayer.Core.Common;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Lyric.Abstractions;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Lyric.Abstractions;
 using Rayer.SearchEngine.Lyric.Models;
 using Rayer.SearchEngine.Lyric.Searchers.Impl;

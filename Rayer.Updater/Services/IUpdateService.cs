@@ -17,7 +17,7 @@ public interface IUpdateService
     /// <summary>
     /// 获取本地App的版本号
     /// </summary>
-    Task<AppVersion> GetLocalVersionAsync(CancellationToken cancellationToken = default);
+    Task<Version> GetLocalVersionAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// 更新

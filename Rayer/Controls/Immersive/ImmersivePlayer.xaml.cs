@@ -1,4 +1,4 @@
-﻿using Rayer.Core;
+﻿using Rayer.FrameworkCore;
 using Rayer.ViewModels;
 using System.Windows;
 using System.Windows.Controls;

@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using Rayer.Core;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Http;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Options;
 using System.Net;
 using System.Text.RegularExpressions;

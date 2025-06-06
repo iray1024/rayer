@@ -1,5 +1,5 @@
-﻿using Rayer.Core.Framework.Injection;
-using Rayer.Core.Utils;
+﻿using Rayer.Core.Utils;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Enums;
 using System.Collections.Concurrent;
 using System.Windows;
@@ -118,7 +118,7 @@ public partial class ExploreLibraryDetailPanel : UserControl
                 {
                     AlbumPanel.Visibility = Visibility.Visible;
                     PlaylistPanel.Visibility = Visibility.Collapsed;
-                }                
+                }
                 else
                 {
                     AlbumPanel.Visibility = Visibility.Collapsed;

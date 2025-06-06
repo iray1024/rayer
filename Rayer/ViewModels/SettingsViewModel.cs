@@ -1,12 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Options;
-using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.FileSystem.Abstractions;
 using Rayer.Core.Framework;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Options;
 using System.Collections.ObjectModel;
 using System.Reflection;

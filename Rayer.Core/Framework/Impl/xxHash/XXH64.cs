@@ -1,4 +1,4 @@
-﻿using Rayer.Core.Framework.Injection;
+﻿using Rayer.FrameworkCore.Injection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;

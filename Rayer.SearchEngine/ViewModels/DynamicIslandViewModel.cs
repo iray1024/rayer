@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Events;
@@ -7,6 +6,7 @@ using Rayer.Core.Lyric.Abstractions;
 using Rayer.Core.Lyric.Impl;
 using Rayer.Core.Menu;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore;
 using Rayer.SearchEngine.Views.Windows;
 using System.Windows;
 using System.Windows.Controls;
@@ -122,7 +122,7 @@ public partial class DynamicIslandViewModel : ObservableObject
                         _currentLineIndex = _totalLines.IndexOf(CurrentLine);
                     }
                 }
-                
+
                 _timer.Start();
             }
             else

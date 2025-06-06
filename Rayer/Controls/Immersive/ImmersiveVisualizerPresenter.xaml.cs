@@ -1,10 +1,10 @@
 ﻿using NAudio.CoreAudioApi;
 using NAudio.Wave;
-using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.AudioVisualizer;
 using Rayer.Core.Events;
 using Rayer.Core.PInvoke;
+using Rayer.FrameworkCore;
 using Rayer.ViewModels;
 using System.Collections.ObjectModel;
 using System.Windows;

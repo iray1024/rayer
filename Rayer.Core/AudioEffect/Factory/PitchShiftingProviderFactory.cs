@@ -2,8 +2,8 @@
 using Rayer.Core.AudioEffect.Abstractions;
 using Rayer.Core.AudioEffect.Providers;
 using Rayer.Core.Common;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
+using Rayer.FrameworkCore.Injection;
 
 namespace Rayer.Core.AudioEffect.Factory;
 

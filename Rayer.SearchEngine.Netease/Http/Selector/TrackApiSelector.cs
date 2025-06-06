@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
-using Rayer.Core.Framework.Injection;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Http.Abstractions;
 using Rayer.SearchEngine.Core.Options;
 

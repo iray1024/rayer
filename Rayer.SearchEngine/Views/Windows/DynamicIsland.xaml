@@ -55,6 +55,7 @@
         ContextMenu="{Binding ViewModel.ContextMenu}"
         CornerRadius="30"
         Cursor="Hand"
+        Opacity="0.96"
         RenderOptions.BitmapScalingMode="Fant">
         <Grid
             x:Name="InnerGrid"

@@ -1,6 +1,6 @@
-﻿using Rayer.Core;
-using Rayer.Core.Framework;
-using Rayer.Core.Framework.Injection;
+﻿using Rayer.Core.Framework;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Controls;
 using System.Windows;
 using System.Windows.Controls;

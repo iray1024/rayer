@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Rayer.Core.Common;
-using Rayer.Core.Framework.Injection;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Abstractions;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aggregation;

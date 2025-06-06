@@ -1,7 +1,6 @@
-﻿using Rayer.Core.Framework.Injection;
-using System.IO;
+﻿using Rayer.FrameworkCore.Injection;
 
-namespace Rayer.Core.Abstractions;
+namespace Rayer.FrameworkCore;
 
 public interface IGitHubManager
 {
@@ -13,14 +12,11 @@ public interface IGitHubManager
 [Inject<IGitHubManager>]
 internal sealed class GitHubManagerImpl : IGitHubManager
 {
+    private const string EncryptedSecret = "x8FdhB3XiVHa0l2Z4EmMwElTPpVWMFUM1E0XzkkVGZDb61Udl5EbI9WayN1ZJdHeFNUUEpGSwFnTnRDeup1R2MTRnlnRJRzTyMUVBZkVHlzcjhUZ202M21mNwNnS";
+
     public GitHubManagerImpl()
     {
-        var resourceStream = typeof(GitHubManagerImpl).Assembly.GetManifestResourceStream("Rayer.Core.secrets");
-        using var reader = new StreamReader(resourceStream!);
-
-        var secret = reader.ReadToEnd();
-
-        Token = Encoding.UTF8.GetString(Convert.FromBase64String(DecryptToken(secret)));
+        Token = Encoding.UTF8.GetString(Convert.FromBase64String(DecryptToken(EncryptedSecret)));
     }
 
     public string Token { get; private set; } = string.Empty;

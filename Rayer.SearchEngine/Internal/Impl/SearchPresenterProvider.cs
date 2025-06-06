@@ -1,5 +1,5 @@
-﻿using Rayer.Core;
-using Rayer.Core.Framework.Injection;
+﻿using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Controls;
 using Rayer.SearchEngine.Controls.Search;
 using Rayer.SearchEngine.Core.Enums;

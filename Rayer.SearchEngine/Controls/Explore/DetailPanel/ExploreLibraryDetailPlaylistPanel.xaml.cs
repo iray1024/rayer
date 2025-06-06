@@ -1,6 +1,6 @@
-﻿using Rayer.Core;
-using Rayer.Core.Controls;
+﻿using Rayer.Core.Controls;
 using Rayer.Core.Framework;
+using Rayer.FrameworkCore;
 using Rayer.SearchEngine.Core.Domain.Playlist;
 using Rayer.SearchEngine.ViewModels.Explore.DetailPanel;
 using System.Windows;

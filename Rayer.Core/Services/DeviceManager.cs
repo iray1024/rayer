@@ -2,8 +2,9 @@
 using NAudio.Wave;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Models;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using System.Diagnostics;
 using System.Windows;
 

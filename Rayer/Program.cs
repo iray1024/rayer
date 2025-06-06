@@ -1,6 +1,7 @@
 ﻿using Rayer.Core;
 using Rayer.Core.Framework.IPC;
 using Rayer.Core.PInvoke;
+using Rayer.FrameworkCore;
 using System.Windows;
 using Wpf.Ui;
 using Wpf.Ui.Extensions;

@@ -1,6 +1,7 @@
-﻿using Rayer.Core.Framework.Injection;
-using Rayer.Core.Framework.Settings.Abstractions;
+﻿using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.PlayControl.Abstractions;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;

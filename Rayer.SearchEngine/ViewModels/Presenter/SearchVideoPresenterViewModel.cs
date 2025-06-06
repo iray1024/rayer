@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Rayer.Core.Framework.Injection;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Controls;
 using Rayer.SearchEngine.Core.Domain.Video;
 

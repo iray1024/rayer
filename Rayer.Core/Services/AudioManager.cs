@@ -2,10 +2,10 @@
 using Rayer.Core.Abstractions;
 using Rayer.Core.Events;
 using Rayer.Core.FileSystem.Abstractions;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Models;
 using Rayer.Core.Playing;
+using Rayer.FrameworkCore.Injection;
 using System.Collections.ObjectModel;
 
 namespace Rayer.Core.Services;

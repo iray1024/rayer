@@ -1,4 +1,5 @@
 ﻿using Rayer.Core.Framework;
+using Rayer.FrameworkCore;
 using System.Windows;
 
 namespace Rayer.Core.Controls;

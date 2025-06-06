@@ -1,11 +1,11 @@
-﻿using Rayer.Core;
-using Rayer.Core.Abstractions;
+﻿using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Controls;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Menu;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.ViewModels;
 using System.Windows;

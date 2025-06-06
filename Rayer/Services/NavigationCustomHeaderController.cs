@@ -1,5 +1,5 @@
 ﻿using Rayer.Core.Framework;
-using Rayer.Core.Framework.Injection;
+using Rayer.FrameworkCore.Injection;
 using System.Windows;
 using Wpf.Ui;
 using Wpf.Ui.Controls;

@@ -1,8 +1,8 @@
 ﻿using Rayer.Core.FileSystem.Abstractions;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Models;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore.Injection;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;

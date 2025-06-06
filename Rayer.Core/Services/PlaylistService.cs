@@ -1,7 +1,7 @@
 ﻿using Rayer.Core.Abstractions;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Models;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore.Injection;
 using System.IO;
 
 namespace Rayer.Core.Services;

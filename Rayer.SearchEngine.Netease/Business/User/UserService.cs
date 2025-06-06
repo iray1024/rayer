@@ -1,5 +1,5 @@
 ﻿using Rayer.Core.Common;
-using Rayer.Core.Framework.Injection;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Business.User;
 using Rayer.SearchEngine.Core.Domain.Album;
 using Rayer.SearchEngine.Core.Domain.Playlist;

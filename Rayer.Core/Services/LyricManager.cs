@@ -1,13 +1,14 @@
 ﻿using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Models;
+using Rayer.FrameworkCore.Injection;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Security.Cryptography;
 
 namespace Rayer.Core.Services;
+
 [Inject<ILyricManager>]
 internal sealed class LyricManager : ILyricManager
 {

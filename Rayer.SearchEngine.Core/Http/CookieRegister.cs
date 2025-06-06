@@ -1,5 +1,5 @@
-﻿using Rayer.Core.Framework.Injection;
-using Rayer.Core.Http;
+﻿using Rayer.Core.Http;
+using Rayer.FrameworkCore.Injection;
 using System.Collections.ObjectModel;
 
 namespace Rayer.SearchEngine.Core.Http;
