@@ -1,7 +1,6 @@
 ﻿using Rayer.Abstractions;
-using Rayer.Core;
-using Rayer.Core.Abstractions;
-using Rayer.Core.Framework.Injection;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.IO;

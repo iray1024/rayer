@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
-using Rayer.Core;
 using Rayer.Core.Common;
-using Rayer.Core.Framework.Injection;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Abstractions;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Business.Login;

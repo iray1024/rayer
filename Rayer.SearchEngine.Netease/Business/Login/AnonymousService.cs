@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Rayer.Core.Common;
-using Rayer.Core.Framework.Injection;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Business.Login;
 using Rayer.SearchEngine.Core.Domain.Authority;
 using Rayer.SearchEngine.Netease.Engine;

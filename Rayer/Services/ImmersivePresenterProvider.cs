@@ -1,8 +1,8 @@
 ﻿using Rayer.Abstractions;
 using Rayer.Controls.Immersive;
 using Rayer.Core.Common;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
+using Rayer.FrameworkCore.Injection;
 using System.Windows;
 using System.Windows.Controls;
 

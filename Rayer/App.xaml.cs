@@ -8,6 +8,7 @@ using Rayer.Core.FileSystem.Abstractions;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Playing;
+using Rayer.FrameworkCore;
 using Rayer.SearchEngine.Bilibili.Extensions;
 using Rayer.SearchEngine.Extensions;
 using Rayer.SearchEngine.Netease.Extensions;

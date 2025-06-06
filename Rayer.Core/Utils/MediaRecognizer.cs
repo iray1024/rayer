@@ -1,5 +1,6 @@
 ﻿using Rayer.Core.Framework;
 using Rayer.Core.Models;
+using Rayer.FrameworkCore;
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;

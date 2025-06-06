@@ -1,4 +1,4 @@
-﻿using Rayer.Core.Framework.Injection;
+﻿using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Business.Lyric;
 using Rayer.SearchEngine.Netease.Engine;
 using Rayer.SearchEngine.Netease.Models.Lyric;

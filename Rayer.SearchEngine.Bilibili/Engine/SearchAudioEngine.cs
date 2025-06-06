@@ -1,5 +1,5 @@
 ﻿using Rayer.Core.Common;
-using Rayer.Core.Framework.Injection;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Bilibili.Http;
 using Rayer.SearchEngine.Bilibili.Models.Search;
 using Rayer.SearchEngine.Core.Abstractions;

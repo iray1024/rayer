@@ -1,5 +1,5 @@
-﻿using Rayer.Core;
-using Rayer.Core.Framework.Injection;
+﻿using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.Views.Pages;
 using System.Windows;
 using System.Windows.Controls;

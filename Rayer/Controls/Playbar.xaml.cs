@@ -1,11 +1,10 @@
 ﻿using NAudio.Wave;
 using Rayer.Abstractions;
 using Rayer.Controls.Adorners;
-using Rayer.Core;
 using Rayer.Core.Abstractions;
-using Rayer.Core.Framework;
 using Rayer.Core.PlayControl.Abstractions;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore;
 using Rayer.Markup;
 using Rayer.Services;
 using Rayer.ViewModels;
@@ -180,18 +179,18 @@ public partial class Playbar : UserControl
     #endregion
 
     #region Slider Events
-    private void Slider_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
+    private void Slider_DragStarted(object sender, DragStartedEventArgs e)
     {
         ViewModel.IgnoreUpdateProgressValue = true;
         ViewModel.AudioManager.Playback.IsSeeking = true;
     }
 
-    private void Slider_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+    private void Slider_DragDelta(object sender, DragDeltaEventArgs e)
     {
         ViewModel.AudioManager.Playback.Seek(ViewModel.ProgressValue);
     }
 
-    private void Slider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+    private void Slider_DragCompleted(object sender, DragCompletedEventArgs e)
     {
         ViewModel.AudioManager.Playback.IsSeeking = false;
 

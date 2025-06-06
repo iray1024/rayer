@@ -1,7 +1,7 @@
 ﻿using Rayer.Core.Common;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Menu;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore.Injection;
 using System.Windows.Controls;
 
 namespace Rayer.Services;

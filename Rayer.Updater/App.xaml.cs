@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Rayer.Core;
-using Rayer.Core.Extensions;
-using Rayer.Core.Framework;
+using Rayer.FrameworkCore;
 using Rayer.Updater.Services;
 using System.Net;
 using System.Net.Http;

@@ -24,15 +24,6 @@
 
     <UserControl.Resources>
         <Storyboard x:Key="AudioVisualizerStoryboard" RepeatBehavior="Forever">
-            <DoubleAnimation
-                BeginTime="00:00:00"
-                RepeatBehavior="Forever"
-                Storyboard.TargetName="AlbumRotate"
-                Storyboard.TargetProperty="Angle"
-                From="0"
-                To="360"
-                Duration="00:00:18" />
-
             <DoubleAnimationUsingKeyFrames
                 RepeatBehavior="Forever"
                 Storyboard.TargetName="SampleWaveUpRotate"
@@ -124,14 +115,11 @@
                 Height="200"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                CornerRadius="130"
+                CornerRadius="100"
                 RenderTransformOrigin="0.5,0.5">
                 <Border.Background>
                     <ImageBrush ImageSource="{Binding ViewModel.Current.Cover, Mode=OneWay, FallbackValue={StaticResource AlbumFallback}, TargetNullValue={StaticResource AlbumFallback}}" Stretch="UniformToFill" />
                 </Border.Background>
-                <Border.RenderTransform>
-                    <RotateTransform x:Name="AlbumRotate" />
-                </Border.RenderTransform>
             </Border>
         </Grid>
 

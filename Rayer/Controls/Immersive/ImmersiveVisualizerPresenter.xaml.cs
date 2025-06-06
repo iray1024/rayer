@@ -1,10 +1,10 @@
 ﻿using NAudio.CoreAudioApi;
 using NAudio.Wave;
-using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.AudioVisualizer;
 using Rayer.Core.Events;
 using Rayer.Core.PInvoke;
+using Rayer.FrameworkCore;
 using Rayer.ViewModels;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -101,8 +101,6 @@ public partial class ImmersiveVisualizerPresenter : UserControl
     /// <summary>
     /// 重置启动 频谱可视化
     /// </summary>
-    /// <param name="wave_data_size"></param>
-    /// <param name="DeviceNumber"></param>
     public void Reset_Visualizer(int wave_data_size)
     {
         if (Environment.OSVersion.Platform == PlatformID.Win32NT)
@@ -511,8 +509,6 @@ public partial class ImmersiveVisualizerPresenter : UserControl
     /// <summary>
     /// 用来刷新频谱数据以及实现频谱数据缓动
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
     public void DataTimer_Tick(object? state)
     {
         if (pathGeometries != null)
@@ -573,7 +569,6 @@ public partial class ImmersiveVisualizerPresenter : UserControl
     /// <summary>
     /// 绘制频谱数据
     /// </summary>
-    /// <param name="state"></param>
     public void DrawingTimer_Tick(object? state)
     {
         if (spectrumData == null)

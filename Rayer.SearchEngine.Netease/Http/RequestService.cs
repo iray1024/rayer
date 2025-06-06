@@ -1,6 +1,6 @@
 ﻿using Rayer.Core.Common;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Http;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Http.Abstractions;
 
 namespace Rayer.SearchEngine.Netease.Http;

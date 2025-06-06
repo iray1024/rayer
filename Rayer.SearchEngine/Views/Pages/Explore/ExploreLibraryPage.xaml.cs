@@ -1,7 +1,7 @@
-﻿using Rayer.Core;
-using Rayer.Core.Framework;
-using Rayer.Core.Framework.Injection;
+﻿using Rayer.Core.Framework;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Controls.Explore;
 using Rayer.SearchEngine.Core.Business.Data;
 using Rayer.SearchEngine.Core.Business.Login;

@@ -1,7 +1,7 @@
-﻿using Rayer.Core;
-using Rayer.Core.Framework;
-using Rayer.Core.Framework.Injection;
+﻿using Rayer.Core.Framework;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Abstractions;
 using Rayer.SearchEngine.Controls;
 using Rayer.SearchEngine.Core.Domain.Aduio;
@@ -19,7 +19,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Wpf.Ui.Abstractions.Controls;
-using Wpf.Ui.Controls;
 
 namespace Rayer.SearchEngine.Views.Pages;
 

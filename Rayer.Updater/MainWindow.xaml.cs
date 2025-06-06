@@ -1,6 +1,5 @@
-﻿using Rayer.Core;
-using Rayer.Core.Framework;
-using Rayer.Core.Framework.Injection;
+﻿using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.Updater.ViewModels;
 using System.Windows;
 using Wpf.Ui;

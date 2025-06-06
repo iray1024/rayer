@@ -1,4 +1,4 @@
-﻿using Rayer.Core;
+﻿using Rayer.FrameworkCore;
 using Rayer.SearchEngine.Core.Domain.Playlist;
 using Rayer.SearchEngine.ViewModels.Presenter;
 using System.Windows.Controls;

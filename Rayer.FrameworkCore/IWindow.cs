@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Rayer.Core.Framework;
+namespace Rayer.FrameworkCore;
 
 public interface IWindow
 {

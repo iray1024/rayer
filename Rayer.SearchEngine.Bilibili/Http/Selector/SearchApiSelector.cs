@@ -1,4 +1,4 @@
-﻿using Rayer.Core.Framework.Injection;
+﻿using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Http.Abstractions;
 
 namespace Rayer.SearchEngine.Bilibili.Http.Selector;

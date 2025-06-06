@@ -6,16 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="secrets" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="AutoMapper.Extensions.ExpressionMapping" Version="8.0.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />		
     <PackageReference Include="FftSharp" Version="2.2.0" />
-    <PackageReference Include="hyjiacan.pinyin4net" Version="4.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.5" />
+    <PackageReference Include="hyjiacan.pinyin4net" Version="4.1.1" />    
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.5" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <PackageReference Include="NAudio" Version="2.2.1" />
@@ -31,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Rayer.FFmpegCore\Rayer.FFmpegCore.csproj" />
+    <ProjectReference Include="..\Rayer.FrameworkCore\Rayer.FrameworkCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

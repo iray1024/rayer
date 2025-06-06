@@ -5,6 +5,7 @@ using Rayer.Core.Common;
 using Rayer.Core.Events;
 using Rayer.Core.Models;
 using Rayer.Core.PlayControl.Abstractions;
+using Rayer.FrameworkCore;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;

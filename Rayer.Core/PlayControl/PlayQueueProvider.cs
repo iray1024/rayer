@@ -1,7 +1,7 @@
 ﻿using Rayer.Core.Common;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Models;
 using Rayer.Core.PlayControl.Abstractions;
+using Rayer.FrameworkCore.Injection;
 
 namespace Rayer.Core.PlayControl;
 

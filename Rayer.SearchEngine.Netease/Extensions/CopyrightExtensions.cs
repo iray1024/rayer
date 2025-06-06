@@ -1,4 +1,4 @@
-﻿using Rayer.Core;
+﻿using Rayer.FrameworkCore;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Netease.Models;
 using Rayer.SearchEngine.Netease.Models.Search.Audio;

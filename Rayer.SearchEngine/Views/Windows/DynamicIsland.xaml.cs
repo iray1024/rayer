@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Options;
-using Rayer.Core;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Http;
 using Rayer.Core.PInvoke;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Options;
 using Rayer.SearchEngine.ViewModels;
 using System.Net.Http;

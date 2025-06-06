@@ -1,7 +1,7 @@
-﻿using Rayer.Core;
-using Rayer.Core.Controls;
+﻿using Rayer.Core.Controls;
 using Rayer.Core.Framework;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore;
 using Rayer.SearchEngine.Controls.Explore;
 using Rayer.SearchEngine.Core.Domain.Album;
 using Rayer.SearchEngine.ViewModels.Presenter;

@@ -1,7 +1,7 @@
-﻿using Rayer.Core;
-using Rayer.Core.Common;
-using Rayer.Core.Framework.Injection;
+﻿using Rayer.Core.Common;
 using Rayer.Core.Http;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Business.Login;
 using Rayer.SearchEngine.Netease.Engine;
 using Rayer.SearchEngine.Netease.Models.Login.Authority;

@@ -3,12 +3,13 @@ using Rayer.Abstractions;
 using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Framework;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Menu;
 using Rayer.Core.PlayControl.Abstractions;
 using Rayer.Core.Playing;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Options;
 using Rayer.SearchEngine.Views.Windows;
 using Rayer.Services;
@@ -186,6 +187,11 @@ public partial class MainWindow : IWindow
         audioManager.AudioStopped += (s, e) =>
         {
             _smtc.UpdatePlaybackStatus(Windows.Media.MediaPlaybackStatus.Stopped);
+        };
+
+        audioManager.Playback.Seeked += (s, e) =>
+        {
+            _smtc.UpdateSeek(audioManager.Playback);
         };
 
         var updater = AppCore.GetRequiredService<IUpdateService>();

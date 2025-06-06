@@ -1,5 +1,5 @@
 ﻿using Rayer.Core.Common;
-using Rayer.Core.Framework.Injection;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Abstractions;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.Netease.Extensions;

@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Windows;
 
-namespace Rayer.Core;
+namespace Rayer.FrameworkCore;
 
 public static class AppCore
 {

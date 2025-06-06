@@ -1,6 +1,6 @@
-﻿using Rayer.Core.Framework.Injection;
-using Rayer.Core.Framework.Settings.Abstractions;
+﻿using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore.Injection;
 
 namespace Rayer.Core.Framework.Settings.Impl;
 

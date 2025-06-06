@@ -1,4 +1,4 @@
-﻿using Rayer.Core;
+﻿using Rayer.FrameworkCore;
 using Rayer.SearchEngine.ViewModels;
 using System.Windows;
 

@@ -1,4 +1,4 @@
-﻿using Rayer.Core.Framework.Injection;
+﻿using Rayer.FrameworkCore.Injection;
 using System.Windows;
 using System.Windows.Media;
 using Wpf.Ui;

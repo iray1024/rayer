@@ -1,4 +1,4 @@
-﻿using Rayer.Core;
+﻿using Rayer.FrameworkCore;
 
 namespace Rayer.SearchEngine.Lyric.Providers.Web;
 

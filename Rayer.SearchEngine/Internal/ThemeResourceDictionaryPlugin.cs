@@ -1,5 +1,5 @@
 ﻿using Rayer.Core.Abstractions;
-using Rayer.Core.Framework.Injection;
+using Rayer.FrameworkCore.Injection;
 using Wpf.Ui.Appearance;
 
 namespace Rayer.SearchEngine.Internal;

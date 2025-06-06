@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
-using Rayer.Core;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Controls;
 using Rayer.Core.Events;
 using Rayer.Core.Framework;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Menu;
 using Rayer.Core.Models;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.SearchEngine.Core.Domain.Aduio;
 using Rayer.SearchEngine.Core.Domain.Album;

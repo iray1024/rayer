@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Rayer.Core;
 using Rayer.Core.Framework;
-using Rayer.Core.Framework.Injection;
+using Rayer.FrameworkCore.Injection;
 using Rayer.IPSHost.Utils;
 using System.Text.RegularExpressions;
 

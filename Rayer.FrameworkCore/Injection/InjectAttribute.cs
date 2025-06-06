@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Rayer.Core.Framework.Injection;
+namespace Rayer.FrameworkCore.Injection;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class InjectAttribute<T> : InjectAttribute

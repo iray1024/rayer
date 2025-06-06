@@ -1,7 +1,7 @@
 ﻿using NAudio.Wave;
 using Rayer.Core.Abstractions;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.PlayControl.Abstractions;
+using Rayer.FrameworkCore.Injection;
 
 namespace Rayer.Services;
 

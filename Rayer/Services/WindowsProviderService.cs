@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Rayer.Core.Framework;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore.Injection;
 using System.Windows;
 
 namespace Rayer.Services;

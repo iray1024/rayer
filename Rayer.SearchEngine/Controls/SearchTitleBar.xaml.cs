@@ -1,6 +1,6 @@
-﻿using Rayer.Core;
-using Rayer.Core.Framework.Injection;
-using Rayer.Core.Utils;
+﻿using Rayer.Core.Utils;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Enums;
 using Rayer.SearchEngine.Events;
 using Rayer.SearchEngine.ViewModels.Explore;

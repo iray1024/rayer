@@ -1,7 +1,7 @@
 ﻿using Rayer.Abstractions;
-using Rayer.Core;
 using Rayer.Core.Controls;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore;
 using Rayer.Services;
 using Rayer.ViewModels;
 using System.Diagnostics;

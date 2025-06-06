@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Rayer.Core\Rayer.Core.csproj" />
+    <ProjectReference Include="..\Rayer.FrameworkCore\Rayer.FrameworkCore.csproj" />
   </ItemGroup>
   
   <ItemGroup>

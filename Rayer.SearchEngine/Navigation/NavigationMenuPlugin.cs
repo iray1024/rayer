@@ -1,5 +1,5 @@
 ﻿using Rayer.Core.Framework;
-using Rayer.Core.Framework.Injection;
+using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Views.Pages.Explore;
 using System.Windows;
 using System.Windows.Media;

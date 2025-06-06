@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Rayer.Core;
 using Rayer.Core.Framework;
+using Rayer.FrameworkCore;
 using Rayer.IPSHost.EventedStream;
 using System.Diagnostics;
 using System.Runtime.InteropServices;

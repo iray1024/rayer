@@ -1,6 +1,6 @@
 ﻿using Downloader;
-using Rayer.Core.Abstractions;
-using Rayer.Core.Framework.Injection;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using Rayer.Updater.Models;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
@@ -36,10 +36,11 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
     {
         using var http = new HttpClient();
         http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", gitHubManager.Token);
-        http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
-        http.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
         http.DefaultRequestHeaders.Host = "api.github.com";
         http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("iray1024", "1.0"));
+        http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
+        http.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
+
 
         var release = await http.GetFromJsonAsync<Release>("https://api.github.com/repos/iray1024/rayer/releases/latest", cancellationToken: cancellationToken);
 
@@ -50,19 +51,15 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
         return release;
     }
 
-    public Task<AppVersion> GetLocalVersionAsync(CancellationToken cancellationToken = default)
+    public Task<Version> GetLocalVersionAsync(CancellationToken cancellationToken = default)
     {
         var fileVersionInfo = FileVersionInfo.GetVersionInfo(Path.Combine(Args[0], "rayer.exe"));
 
         Contract.Assert(fileVersionInfo is { FileVersion: not null });
 
         var version = Version.Parse(fileVersionInfo.FileVersion);
-        var appVersion = new AppVersion
-        {
-            Version = version
-        };
 
-        return Task.FromResult(appVersion);
+        return Task.FromResult(version);
     }
 
     public async Task<(DownloadService, string)> UpdateAsync(Release release, CancellationToken cancellationToken = default)
@@ -70,10 +67,10 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
         using var http = new HttpClient();
         http.Timeout = TimeSpan.FromMinutes(5);
         http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", gitHubManager.Token);
-        http.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
         http.DefaultRequestHeaders.Host = "github.com";
         http.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("iray1024", "1.0"));
         http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Octet));
+        http.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
 
         var response = await http.GetAsync(release.Assets[0].DownloadUrl, cancellationToken);
         if (response.StatusCode is HttpStatusCode.InternalServerError)

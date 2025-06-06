@@ -27,6 +27,7 @@
  
   <ItemGroup>
     <ProjectReference Include="..\Rayer.Core\Rayer.Core.csproj" />
+    <ProjectReference Include="..\Rayer.FrameworkCore\Rayer.FrameworkCore.csproj" />
     <ProjectReference Include="..\Rayer.IPSHost\Rayer.IPSHost.csproj" />
     <ProjectReference Include="..\Rayer.SearchEngine.Bilibili\Rayer.SearchEngine.Bilibili.csproj" />
     <ProjectReference Include="..\Rayer.SearchEngine.Netease\Rayer.SearchEngine.Netease.csproj" />

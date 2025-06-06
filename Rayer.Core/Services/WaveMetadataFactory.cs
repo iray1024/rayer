@@ -5,9 +5,10 @@ using NAudio.Wave.SampleProviders;
 using Rayer.Core.Abstractions;
 using Rayer.Core.AudioEffect.Abstractions;
 using Rayer.Core.AudioReader.Flac;
-using Rayer.Core.Framework.Injection;
 using Rayer.Core.Http;
 using Rayer.Core.Models;
+using Rayer.FrameworkCore;
+using Rayer.FrameworkCore.Injection;
 using SoundTouch.Net.NAudioSupport;
 using System.IO;
 
