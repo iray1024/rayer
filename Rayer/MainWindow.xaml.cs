@@ -189,7 +189,7 @@ public partial class MainWindow : IWindow
         };
 
         var updater = AppCore.GetRequiredService<IUpdateService>();
-        if (await updater.CheckUpdateAsync(AppCore.StoppingToken))
+        if (await updater.CheckUpdateAsync(AppCore.StoppingToken) == true)
         {
             await updater.UpdateAsync(AppCore.StoppingToken);
         }

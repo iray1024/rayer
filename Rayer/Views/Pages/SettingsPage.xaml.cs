@@ -88,11 +88,8 @@ public partial class SettingsPage : INavigableView<SettingsViewModel>
                 await Application.Current.Dispatcher.InvokeAsync(async () =>
                 {
                     var updater = AppCore.GetRequiredService<IUpdateService>();
-                    if (await updater.CheckUpdateAsync(AppCore.StoppingToken))
-                    {
-                        await updater.UpdateAsync(AppCore.StoppingToken);
-                    }
-                    else
+                    var checkResult = await updater.CheckUpdateAsync(AppCore.StoppingToken);
+                    if (!checkResult.HasValue)
                     {
                         var dialogService = AppCore.GetRequiredService<IContentDialogService>();
                         await dialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions
@@ -101,6 +98,13 @@ public partial class SettingsPage : INavigableView<SettingsViewModel>
                             Content = "您已是最新版本！",
                             CloseButtonText = "关闭"
                         });
+
+                        return;
+                    }
+
+                    if (checkResult == true)
+                    {
+                        await updater.UpdateAsync(AppCore.StoppingToken);
                     }
                 });
             }
