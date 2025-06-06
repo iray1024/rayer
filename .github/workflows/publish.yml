@@ -1,0 +1,73 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+    tags:
+      - '*' # 匹配所有标签
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:        
+        working-directory: .
+    steps:
+    - uses: actions/checkout@v4.2.2
+      with:
+        fetch-depth: 0 # 获取完整的 Git 历史记录（用于读取标签）
+    - name: 从标签中提取版本号
+      id: version
+      run: |
+        # 提取当前推送的标签
+        $TAG_NAME = $env:GITHUB_REF -replace 'refs/tags/', ''
+        echo "Tag: $TAG_NAME"
+
+        # 去除 'v' 前缀（如果存在）
+        $CurrentVersion = $TAG_NAME -replace 'v', ''
+        echo "版本号: $CurrentVersion"
+
+        # 存储供后续步骤使用
+        echo "CurrentVersion=$CurrentVersion" | Out-File -FilePath $env:GITHUB_ENV -Append
+        echo "TAG_NAME=$TAG_NAME" | Out-File -FilePath $env:GITHUB_ENV -Append
+      shell: pwsh
+
+    - name: 初始化.NET编译环境
+      uses: microsoft/setup-msbuild@v2
+
+    - name: 还原依赖项      
+      run: msbuild /t:Restore /p:Configuration=Release
+
+    - name: 构建      
+      run: msbuild /t:Build /p:Configuration=Release
+
+    - name: 发布
+      run: msbuild /t:Restore /p:Configuration=Release /p:TargetFramework=net9.0-windows10.0.26100.0 /p:Platform="x64" /p:RuntimeIdentifier=win-x64 -p:Version=${{ env.CurrentVersion }} /p:FileVersion=${{ env.CurrentVersion }} /p:PublishDir="../publish/" /t:Publish Rayer/Rayer.csproj
+
+    - name: 压缩上传
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: rayer
+        path: publish/
+        retention-days: 1
+    
+    - name: 本地打包
+      shell: pwsh
+      run: |
+        # 压缩 publish 目录下的所有文件
+        Compress-Archive -Path "publish/*" -DestinationPath "publish/rayer.zip" -Force
+        echo "打包完成，文件已保存到 publish/rayer.zip"
+
+    - name: 创建 GitHub 发布
+      uses: softprops/action-gh-release@v2.2.2
+      with:
+        tag_name: ${{ env.TAG_NAME }}  # 直接使用原始标签
+        name: Release ${{ env.CurrentVersion }}
+        body: "Release version ${{ env.CurrentVersion }}"
+        files: publish/rayer.zip  # 直接上传 publish 目录下的文件
+        prerelease: false
+        draft: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }} # 使用自定义令牌进行发布

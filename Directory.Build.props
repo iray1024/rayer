@@ -6,7 +6,7 @@
     <SupportedOSPlatformVersion>10.0.26100.0</SupportedOSPlatformVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <SignAssembly>True</SignAssembly>
+    <SignAssembly>False</SignAssembly>
     <Authors>喵蛙王子丶</Authors>
     <Company>喵蛙王子丶</Company>
     <Copyright>喵蛙王子丶</Copyright>
