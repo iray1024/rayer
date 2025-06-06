@@ -189,6 +189,11 @@ public partial class MainWindow : IWindow
             _smtc.UpdatePlaybackStatus(Windows.Media.MediaPlaybackStatus.Stopped);
         };
 
+        audioManager.Playback.Seeked += (s, e) =>
+        {
+            _smtc.UpdateSeek(audioManager.Playback);
+        };
+
         var updater = AppCore.GetRequiredService<IUpdateService>();
         if (await updater.CheckUpdateAsync(AppCore.StoppingToken))
         {

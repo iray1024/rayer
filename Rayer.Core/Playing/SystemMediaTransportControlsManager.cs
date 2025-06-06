@@ -18,6 +18,8 @@ public class SystemMediaTransportControlsManager
     private Action? _nextAction;
     private Action? _previousAction;
 
+    public SystemMediaTransportControls Instance => _smtc;
+
     public void Initialize(
         IntPtr windowHandle,
         Action playAction,
@@ -76,6 +78,18 @@ public class SystemMediaTransportControlsManager
         {
             _smtc.PlaybackStatus = status;
         }
+    }
+
+    public void UpdateSeek(Playback playback)
+    {
+        _smtc.UpdateTimelineProperties(new SystemMediaTransportControlsTimelineProperties
+        {
+            StartTime = TimeSpan.Zero,
+            EndTime = playback.TotalTime,
+            MinSeekTime = TimeSpan.Zero,
+            MaxSeekTime = playback.TotalTime,
+            Position = playback.CurrentTime
+        });
     }
 
     public async Task UpdateMetadata(Audio audio)
