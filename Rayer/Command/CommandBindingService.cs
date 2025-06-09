@@ -10,6 +10,7 @@ using Rayer.FrameworkCore;
 using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Abstractions.Provider;
 using Rayer.Services;
+using Rayer.ViewModels;
 using Rayer.Views.Pages;
 using System.Windows;
 using System.Windows.Media;
@@ -67,7 +68,11 @@ internal partial class CommandBindingService : ICommandBinding
             var newPlaylistMenu = new NavigationViewItem(name, typeof(PlaylistPage))
             {
                 TargetPageTag = tag,
-                ContextMenu = contextMenuFactory.CreateContextMenu(ContextMenuScope.PlaylistMenu, tag)
+                ContextMenu = contextMenuFactory.CreateContextMenu(ContextMenuScope.PlaylistMenu, tag),
+                Content = new Emoji.Wpf.TextBlock()
+                {
+                    Text = name
+                }
             };
 
             nav.MenuItems.Add(newPlaylistMenu);
@@ -96,8 +101,9 @@ internal partial class CommandBindingService : ICommandBinding
         if (result is ContentDialogResult.Primary)
         {
             var name = dialog.PlaylistName.Text;
-            target.Content = name;
+            ((Emoji.Wpf.TextBlock)target.Content).Text = name;
 
+            AppCore.GetRequiredService<PlaylistPageViewModel>().Name = name;
             _playlistService.Update(int.Parse(tag[10..]), name);
         }
     }

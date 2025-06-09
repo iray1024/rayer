@@ -53,7 +53,10 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
             var result = await dialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions
             {
                 Title = "存在新版本",
-                Content = $"当前版本: {local.ToString(3)}\n最新版本: {latest.Version.ToString(3)}\n\n{latest.Body}",
+                Content = new Emoji.Wpf.TextBlock()
+                {
+                    Text = $"当前版本: {local.ToString(3)}\n最新版本: {latest.Version.ToString(3)}\n\n{latest.Body}"
+                },
                 CloseButtonText = "立即更新",
                 PrimaryButtonText = "暂不更新",
             }, cancellationToken: cancellationToken);

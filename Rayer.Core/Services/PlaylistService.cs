@@ -40,6 +40,11 @@ internal class PlaylistService : IPlaylistService
             var oldPlaylistName = playlist.Name;
             playlist.Name = newName;
 
+            if (oldPlaylistName == newName)
+            {
+                return;
+            }
+
             Json<Playlist>.StoreData(Path.Combine(Constants.Paths.PlaylistPath, $"{playlist.Name}.json"), playlist);
             File.Delete(Path.Combine(Constants.Paths.PlaylistPath, $"{oldPlaylistName}.json"));
         }
