@@ -211,7 +211,11 @@ public partial class MainWindowViewModel : ObservableObject
         {
             var navViewItem = new NavigationViewItem(item.Name, typeof(PlaylistPage))
             {
-                TargetPageTag = $"_playlist_{item.Id}"
+                TargetPageTag = $"_playlist_{item.Id}",
+                Content = new Emoji.Wpf.TextBlock()
+                {
+                    Text = item.Name
+                }
             };
 
             navViewItem.ContextMenu = contextMenuFactory.CreateContextMenu(ContextMenuScope.PlaylistMenu, navViewItem.TargetPageTag);

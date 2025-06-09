@@ -1,6 +1,8 @@
-﻿using Rayer.Core.Abstractions;
+﻿using Rayer.Controls;
+using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Controls;
+using Rayer.Core.Framework;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Menu;
 using Rayer.Core.Utils;
@@ -17,12 +19,13 @@ using ListViewItem = Rayer.Core.Controls.ListViewItem;
 namespace Rayer.Views.Pages;
 
 [Inject]
-public partial class PlaylistPage : AdaptivePage, INavigableView<PlaylistPageViewModel>, INavigationAware
+public partial class PlaylistPage : AdaptivePage, INavigableView<PlaylistPageViewModel>, INavigationAware, INavigationCustomHeader
 {
     private readonly IAudioManager _audioManager;
     private readonly IPlaylistService _playlistService;
     private readonly ICommandBinding _commandBinding;
     private readonly ISettingsService _settingsService;
+    private readonly INavigationCustomHeaderController _headerController;
 
     private int _hasNavigationTo = 0;
 
@@ -31,13 +34,15 @@ public partial class PlaylistPage : AdaptivePage, INavigableView<PlaylistPageVie
         IAudioManager audioManager,
         IPlaylistService playlistService,
         ICommandBinding commandBinding,
-        ISettingsService settingsService)
+        ISettingsService settingsService,
+        INavigationCustomHeaderController headerController)
         : base(viewModel)
     {
         _audioManager = audioManager;
         _playlistService = playlistService;
         _commandBinding = commandBinding;
         _settingsService = settingsService;
+        _headerController = headerController;
 
         _audioManager.AudioChanged += OnAudioChanged;
         _audioManager.AudioStopped += OnAudioStopped;
@@ -294,6 +299,11 @@ public partial class PlaylistPage : AdaptivePage, INavigableView<PlaylistPageVie
         if (!HasNavigationTo)
         {
             HasNavigationTo = true;
+
+            var nav = App.GetRequiredService<INavigationService>().GetNavigationControl();
+
+            var titleBar = AppCore.GetRequiredService<PlaylistTitleBar>();
+            _headerController.Show(titleBar);
         }
 
         return Task.CompletedTask;
@@ -304,6 +314,10 @@ public partial class PlaylistPage : AdaptivePage, INavigableView<PlaylistPageVie
         if (HasNavigationTo)
         {
             HasNavigationTo = false;
+
+            var nav = App.GetRequiredService<INavigationService>().GetNavigationControl();
+
+            _headerController.Hide();
         }
 
         return Task.CompletedTask;

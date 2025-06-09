@@ -79,6 +79,9 @@ internal partial class CommandBindingService : ICommandBinding
     [RelayCommand]
     private async Task EditPlaylist(string tag)
     {
+        var nav = App.GetRequiredService<INavigationService>().GetNavigationControl();
+        var target = nav.MenuItems.OfType<NavigationViewItem>().FirstOrDefault(x => x.TargetPageTag == tag)!;
+
         var dialogService = App.GetRequiredService<IContentDialogService>();
         var dialog = new NewPlaylistDialog(dialogService.GetDialogHost())
         {
@@ -87,13 +90,12 @@ internal partial class CommandBindingService : ICommandBinding
             CloseButtonText = "取消"
         };
 
+        dialog.PlaylistName.Text = (target.Content as Emoji.Wpf.TextBlock)?.Text ?? string.Empty;
+
         var result = await dialog.ShowAsync(AppCore.StoppingToken);
         if (result is ContentDialogResult.Primary)
         {
             var name = dialog.PlaylistName.Text;
-
-            var nav = App.GetRequiredService<INavigationService>().GetNavigationControl();
-            var target = nav.MenuItems.OfType<NavigationViewItem>().FirstOrDefault(x => x.TargetPageTag == tag)!;
             target.Content = name;
 
             _playlistService.Update(int.Parse(tag[10..]), name);
