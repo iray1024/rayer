@@ -5,5 +5,5 @@ namespace Rayer.Core.Menu;
 
 public interface IContextMenuFactory
 {
-    ContextMenu CreateContextMenu(ContextMenuScope scope);
+    ContextMenu CreateContextMenu(ContextMenuScope scope, object? commandParameter = null);
 }

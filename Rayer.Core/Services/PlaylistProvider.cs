@@ -46,7 +46,6 @@ internal class PlaylistProvider : IPlaylistProvider
         else
         {
             var playlistFiles = Directory.GetFiles(Constants.Paths.PlaylistPath, "*.json");
-
             foreach (var file in playlistFiles)
             {
                 var model = Json<Playlist>.LoadData(file);

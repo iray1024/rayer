@@ -15,6 +15,7 @@ using System.Windows;
 using System.Windows.Media;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
+using Wpf.Ui.Extensions;
 
 namespace Rayer.Command;
 
@@ -39,7 +40,6 @@ internal partial class CommandBindingService : ICommandBinding
     private async Task AddPlaylist()
     {
         var dialogService = App.GetRequiredService<IContentDialogService>();
-
         var dialog = new NewPlaylistDialog(dialogService.GetDialogHost())
         {
             Title = "新建歌单",
@@ -48,7 +48,6 @@ internal partial class CommandBindingService : ICommandBinding
         };
 
         var result = await dialog.ShowAsync(AppCore.StoppingToken);
-
         if (result is ContentDialogResult.Primary)
         {
             var name = dialog.PlaylistName.Text;
@@ -63,14 +62,63 @@ internal partial class CommandBindingService : ICommandBinding
 
             playlistService.Add(playlist);
 
+            var contextMenuFactory = AppCore.GetRequiredService<IContextMenuFactory>();
+            var tag = $"_playlist_{playlist.Id}";
             var newPlaylistMenu = new NavigationViewItem(name, typeof(PlaylistPage))
             {
-                TargetPageTag = $"_playlist_{playlist.Id}"
+                TargetPageTag = tag,
+                ContextMenu = contextMenuFactory.CreateContextMenu(ContextMenuScope.PlaylistMenu, tag)
             };
 
             nav.MenuItems.Add(newPlaylistMenu);
 
             RefreshMenuIcon(playlist.Id, null);
+        }
+    }
+
+    [RelayCommand]
+    private async Task EditPlaylist(string tag)
+    {
+        var dialogService = App.GetRequiredService<IContentDialogService>();
+        var dialog = new NewPlaylistDialog(dialogService.GetDialogHost())
+        {
+            Title = "编辑歌单",
+            PrimaryButtonText = "确认",
+            CloseButtonText = "取消"
+        };
+
+        var result = await dialog.ShowAsync(AppCore.StoppingToken);
+        if (result is ContentDialogResult.Primary)
+        {
+            var name = dialog.PlaylistName.Text;
+
+            var nav = App.GetRequiredService<INavigationService>().GetNavigationControl();
+            var target = nav.MenuItems.OfType<NavigationViewItem>().FirstOrDefault(x => x.TargetPageTag == tag)!;
+            target.Content = name;
+
+            _playlistService.Update(int.Parse(tag[10..]), name);
+        }
+    }
+
+    [RelayCommand]
+    private async Task DeletePlaylist(string tag)
+    {
+        var nav = App.GetRequiredService<INavigationService>().GetNavigationControl();
+        var target = nav.MenuItems.OfType<NavigationViewItem>().FirstOrDefault(x => x.TargetPageTag == tag)!;
+
+        var dialogService = App.GetRequiredService<IContentDialogService>();
+        var result = await dialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions
+        {
+            Title = $"Rayer ({target.Content})",
+            Content = "确定删除歌单？若由于误操作删除歌单，可没有办法恢复~",
+            PrimaryButtonText = "确认",
+            CloseButtonText = "取消"
+        });
+
+        if (result is ContentDialogResult.Primary)
+        {
+            _playlistService.Remove(int.Parse(tag[10..]));
+            nav.MenuItems.Remove(target);
         }
     }
 

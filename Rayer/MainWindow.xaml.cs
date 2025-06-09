@@ -194,11 +194,13 @@ public partial class MainWindow : IWindow
             _smtc.UpdateSeek(audioManager.Playback);
         };
 
+#if RELEASE
         var updater = AppCore.GetRequiredService<IUpdateService>();
         if (await updater.CheckUpdateAsync(AppCore.StoppingToken) == true)
         {
             await updater.UpdateAsync(AppCore.StoppingToken);
         }
+#endif
     }
 
     private async void OnAutoSuggestTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

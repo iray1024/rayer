@@ -16,13 +16,14 @@ internal class ContextMenuFactory : IContextMenuFactory
         _commandBinding = commandBinding;
     }
 
-    public ContextMenu CreateContextMenu(ContextMenuScope scope)
+    public ContextMenu CreateContextMenu(ContextMenuScope scope, object? commandParameter = null)
     {
         return scope switch
         {
             ContextMenuScope.Library => CreateLibraryContextMenu(),
             ContextMenuScope.Playlist => CreatePlaylistContextMenu(),
             ContextMenuScope.PlaylistPanel => CreatePlaylistPanelContextMenu(),
+            ContextMenuScope.PlaylistMenu => CreatePlaylistMenuContextMenu(commandParameter),
             ContextMenuScope.PlayQueue => CreatePlayQueueContextMenu(),
             ContextMenuScope.DynamicIsland => CreateDynamicIslandContextMenu(),
             _ => throw new NotImplementedException(),
@@ -91,6 +92,27 @@ internal class ContextMenuFactory : IContextMenuFactory
         {
             Header = "删除",
             Command = _commandBinding.DeleteCommand
+        });
+
+        return menu;
+    }
+
+    private ContextMenu CreatePlaylistMenuContextMenu(object? commandParameter = null)
+    {
+        var menu = new ContextMenu();
+
+        menu.Items.Add(new MenuItem()
+        {
+            Header = "编辑歌单",
+            Command = _commandBinding.EditPlaylistCommand,
+            CommandParameter = commandParameter
+        });
+
+        menu.Items.Add(new MenuItem()
+        {
+            Header = "删除歌单",
+            Command = _commandBinding.DeletePlaylistCommand,
+            CommandParameter = commandParameter
         });
 
         return menu;

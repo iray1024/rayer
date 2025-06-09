@@ -10,6 +10,8 @@ public interface IPlaylistService
 
     void Remove(int id);
 
+    void Update(int id, string newName);
+
     void AddTo(int id, Audio audio);
 
     void RemoveFrom(int id, Audio audio);

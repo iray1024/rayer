@@ -32,6 +32,19 @@ internal class PlaylistService : IPlaylistService
         Json<Playlist>.StoreData(Path.Combine(Constants.Paths.PlaylistPath, $"{playlist.Name}.json"), playlist);
     }
 
+    public void Update(int id, string newName)
+    {
+        var playlist = _provider.Playlists.FirstOrDefault(x => x.Id == id);
+        if (playlist is not null)
+        {
+            var oldPlaylistName = playlist.Name;
+            playlist.Name = newName;
+
+            Json<Playlist>.StoreData(Path.Combine(Constants.Paths.PlaylistPath, $"{playlist.Name}.json"), playlist);
+            File.Delete(Path.Combine(Constants.Paths.PlaylistPath, $"{oldPlaylistName}.json"));
+        }
+    }
+
     public void AddTo(int id, Audio audio)
     {
         var playlist = _provider.Playlists.FirstOrDefault(x => x.Id == id);
@@ -74,7 +87,6 @@ internal class PlaylistService : IPlaylistService
     public void Remove(int id)
     {
         var playlist = _provider.Playlists.FirstOrDefault(x => x.Id == id);
-
         if (playlist is not null)
         {
             _provider.Playlists.Remove(playlist);

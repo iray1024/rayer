@@ -26,6 +26,7 @@ public partial class MainWindowViewModel : ObservableObject
     private readonly ILoaderProvider _loaderProvider;
     private readonly ISearchEngineProvider _searchEngineProvider;
     private readonly INavigationService _navigationService;
+    private readonly IContextMenuFactory contextMenuFactory;
 
     private string _currentSuggestText = string.Empty;
     private bool _userRaiseClickSuggestItem = false;
@@ -33,8 +34,7 @@ public partial class MainWindowViewModel : ObservableObject
 
     private static readonly RectangleGeometry _defaultClipSetting = new(new Rect(0, 0, 24, 24), 4, 4);
 
-    public MainWindowViewModel(
-            INavigationService navigationService)
+    public MainWindowViewModel(INavigationService navigationService, IContextMenuFactory contextMenuFactory)
     {
         var plugins = App.GetServices<INavigationMenuPlugin>();
 
@@ -46,11 +46,12 @@ public partial class MainWindowViewModel : ObservableObject
             }
         }
 
-        ProcessPlaylistMenu();
-
         _loaderProvider = App.GetRequiredService<ILoaderProvider>();
         _searchEngineProvider = App.GetRequiredService<ISearchEngineProvider>();
         _navigationService = navigationService;
+        this.contextMenuFactory = contextMenuFactory;
+
+        ProcessPlaylistMenu();
     }
 
     #region Properties    
@@ -210,8 +211,10 @@ public partial class MainWindowViewModel : ObservableObject
         {
             var navViewItem = new NavigationViewItem(item.Name, typeof(PlaylistPage))
             {
-                TargetPageTag = $"_playlist_{item.Id}",
+                TargetPageTag = $"_playlist_{item.Id}"
             };
+
+            navViewItem.ContextMenu = contextMenuFactory.CreateContextMenu(ContextMenuScope.PlaylistMenu, navViewItem.TargetPageTag);
 
             var coverItem = item.Audios.FirstOrDefault();
 
@@ -244,6 +247,18 @@ public partial class MainWindowViewModel : ObservableObject
                 {
                     navViewItem.Icon.Clip = _defaultClipSetting;
                 }
+            }
+            else
+            {
+                var cover = (ImageSource)Application.Current.Resources["AlbumFallback"];
+                navViewItem.Icon = new ImageIcon()
+                {
+                    Source = cover,
+                    Width = 24,
+                    Height = 24,
+                    Clip = _defaultClipSetting
+                };
+
             }
 
             MenuItems.Add(navViewItem);

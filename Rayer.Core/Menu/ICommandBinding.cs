@@ -12,6 +12,10 @@ public interface ICommandBinding
 
     IAsyncRelayCommand AddPlaylistCommand { get; }
 
+    IAsyncRelayCommand<string> EditPlaylistCommand { get; }
+
+    IAsyncRelayCommand<string> DeletePlaylistCommand { get; }
+
     IAsyncRelayCommand<object?> PlayCommand { get; }
 
     IRelayCommand<PlaylistUpdate> AddToCommand { get; }
