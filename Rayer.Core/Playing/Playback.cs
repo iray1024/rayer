@@ -492,7 +492,7 @@ public class Playback : IDisposable
     {
         var his = new PlaybackRecord()
         {
-            Id = Audio.Id,
+            Id = Audio?.Id ?? null,
             Offset = CurrentTime
         };
 

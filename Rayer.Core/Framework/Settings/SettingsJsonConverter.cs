@@ -107,6 +107,15 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
                     case nameof(settings.KeyRewind):
                         settings.KeyRewind = ReadKeyBinding(ref reader);
                         break;
+                    default:
+                        {
+                            while (reader.Read() && reader.TokenType != JsonTokenType.EndArray && reader.TokenType != JsonTokenType.EndObject)
+                            {
+
+                            }
+                        }
+
+                        break;
                 }
             }
         }
