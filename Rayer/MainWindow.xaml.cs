@@ -119,6 +119,8 @@ public partial class MainWindow : IWindow
             _smtc.UpdateSeek(audioManager.Playback);
         };
 
+        await audioManager.Playback.RecoveryAsync();
+
 #if RELEASE
         var updater = AppCore.GetRequiredService<IUpdateService>();
         var (checkResult, _) = await updater.CheckUpdateAsync(AppCore.StoppingToken);

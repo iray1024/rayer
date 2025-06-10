@@ -1,5 +1,6 @@
 ﻿using Rayer.Core.Common;
 using Rayer.Core.Framework.Settings.Abstractions;
+using Rayer.Core.Models;
 using System.Windows.Input;
 using Wpf.Ui.Appearance;
 
@@ -82,6 +83,9 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
                     case nameof(settings.Pitch):
                         settings.Pitch = (float)reader.GetDouble();
                         break;
+                    case nameof(settings.PlaybackRecord):
+                        settings.PlaybackRecord = ReadPlaybackRecord(ref reader);
+                        break;
                     case nameof(settings.KeyPlayOrPause):
                         settings.KeyPlayOrPause = ReadKeyBinding(ref reader);
                         break;
@@ -131,6 +135,10 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
         writer.WriteNumber(nameof(value.DefaultSearcher), Convert.ToDecimal(value.DefaultSearcher));
         writer.WriteNumber(nameof(value.Volume), Convert.ToDecimal(value.Volume));
         writer.WriteNumber(nameof(value.Pitch), Convert.ToDecimal(value.Pitch));
+        writer.WriteStartObject(nameof(value.PlaybackRecord));
+        writer.WriteString(nameof(value.PlaybackRecord.Id), value.PlaybackRecord.Id);
+        writer.WriteString(nameof(value.PlaybackRecord.Offset), value.PlaybackRecord.Offset.ToString());
+        writer.WriteEndObject();
 
         writer.WriteStartObject(nameof(value.KeyPlayOrPause));
         writer.WriteNumber(nameof(value.KeyPlayOrPause.Modifiers), Convert.ToDecimal(value.KeyPlayOrPause.Modifiers));
@@ -189,10 +197,10 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
                 reader.Read();
                 switch (propertyName)
                 {
-                    case "Key":
+                    case nameof(KeyBinding.Key):
                         key = (Key)reader.GetInt32();
                         break;
-                    case "Modifiers":
+                    case nameof(KeyBinding.Modifiers):
                         modifiers = (ModifierKeys)reader.GetInt32();
                         break;
                 }
@@ -200,5 +208,37 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
         }
 
         return new KeyBinding() { Key = key, Modifiers = modifiers };
+    }
+
+    private static PlaybackRecord ReadPlaybackRecord(ref Utf8JsonReader reader)
+    {
+        string? id = null;
+        TimeSpan offset = TimeSpan.Zero;
+
+        while (reader.Read())
+        {
+            if (reader.TokenType == JsonTokenType.EndObject)
+            {
+                return new PlaybackRecord() { Id = id, Offset = offset };
+            }
+
+            if (reader.TokenType == JsonTokenType.PropertyName)
+            {
+                var propertyName = reader.GetString();
+
+                reader.Read();
+                switch (propertyName)
+                {
+                    case nameof(PlaybackRecord.Id):
+                        id = reader.GetString();
+                        break;
+                    case nameof(PlaybackRecord.Offset):
+                        offset = TimeSpan.TryParse(reader.GetString(), out var timespan) ? timespan : TimeSpan.Zero;
+                        break;
+                }
+            }
+        }
+
+        return new PlaybackRecord() { Id = id, Offset = offset };
     }
 }

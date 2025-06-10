@@ -3,6 +3,7 @@ using NAudio.Wave;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Events;
+using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Models;
 using Rayer.Core.PlayControl.Abstractions;
 using Rayer.FrameworkCore;
@@ -21,6 +22,7 @@ public class Playback : IDisposable
 
     private readonly IPlayQueueProvider _playQueueProvider;
     private readonly IWaveMetadataFactory _metadataFactory;
+    private readonly ISettingsService _settingsService;
 
     private readonly IAudioManager _audioManager = null!;
     private static readonly Audio _fallbackAudio = new();
@@ -37,6 +39,7 @@ public class Playback : IDisposable
 
         _playQueueProvider = serviceProvider.GetRequiredService<IPlayQueueProvider>();
         _metadataFactory = serviceProvider.GetRequiredService<IWaveMetadataFactory>();
+        _settingsService = serviceProvider.GetRequiredService<ISettingsService>();
         DeviceManager = serviceProvider.GetRequiredService<IDeviceManager>();
 
         DeviceManager.PlaybackStopped += OnPlaybackStopped;
@@ -102,6 +105,7 @@ public class Playback : IDisposable
     public event EventHandler? AudioPaused;
     public event EventHandler<AudioChangedArgs>? AudioChanged;
     public event EventHandler? AudioStopped;
+    public event EventHandler? AudioRecoveried;
 
     public event EventHandler? Seeked;
 
@@ -161,6 +165,21 @@ public class Playback : IDisposable
             _metadata.FadeInOutSampleProvider?.BeginFadeIn(1000);
 
             Seeked?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public async Task RecoveryAsync()
+    {
+        var record = _settingsService.Settings.PlaybackRecord;
+
+        if (!string.IsNullOrEmpty(record.Id) &&
+            TryGetAudio(record.Id, out var audio))
+        {
+            await Play(audio);
+            CurrentTime = record.Offset;
+            Pause();
+
+            AudioRecoveried?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -232,7 +251,6 @@ public class Playback : IDisposable
         else
         {
             var dialogService = AppCore.GetRequiredService<IContentDialogService>();
-
             if (dialogService is not null)
             {
                 await Application.Current.Dispatcher.InvokeAsync(async () =>
@@ -472,6 +490,15 @@ public class Playback : IDisposable
 
     public void Dispose()
     {
+        var his = new PlaybackRecord()
+        {
+            Id = Audio.Id,
+            Offset = CurrentTime
+        };
+
+        _settingsService.Settings.PlaybackRecord = his;
+        _settingsService.Save();
+
         EndPlay();
 
         GC.SuppressFinalize(this);

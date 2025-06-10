@@ -58,6 +58,7 @@ public partial class Playbar : UserControl
         _audioManager.AudioPlaying += OnAudioPlaying;
         _audioManager.AudioPaused += OnAudioPaused;
         _audioManager.AudioStopped += OnAudioStopped;
+        _audioManager.Playback.AudioRecoveried += OnAudioRecoveried;
 
         _immersivePlayerService.Show += OnImmersivePlayerShow;
         _immersivePlayerService.Hidden += OnImmersivePlayerHidden;
@@ -72,7 +73,6 @@ public partial class Playbar : UserControl
     private void OnAudioPlaying(object? sender, Core.Events.AudioPlayingArgs e)
     {
         var taskbar = AppCore.MainWindow.TaskbarItemInfo;
-
         if (taskbar is not null)
         {
             taskbar.ThumbButtonInfos[1].Description = "暂停";
@@ -88,7 +88,6 @@ public partial class Playbar : UserControl
     private void OnAudioPaused(object? sender, EventArgs e)
     {
         var taskbar = AppCore.MainWindow.TaskbarItemInfo;
-
         if (taskbar is not null)
         {
             var item = AppCore.MainWindow.TaskbarItemInfo.ThumbButtonInfos[1];
@@ -115,6 +114,13 @@ public partial class Playbar : UserControl
             taskbar.ThumbButtonInfos[1].Description = "播放";
             taskbar.ThumbButtonInfos[1].ImageSource = ImageSourceFactory.Create("pack://application:,,,/assets/dark/play_24x24.png");
         }
+    }
+
+    private void OnAudioRecoveried(object? sender, EventArgs e)
+    {
+        SetPlayOrPauseTheme();
+        ViewModel.RefreshProgress();
+        OnAudioPaused(null, EventArgs.Empty);
     }
 
     private void OnPlayOrPauseTriggered(object? sender, EventArgs e)

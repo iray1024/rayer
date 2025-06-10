@@ -52,7 +52,7 @@ public partial class PlaybarViewModel : ObservableObject
 
     public bool IgnoreUpdateProgressValue { get; set; } = false;
 
-    private void UpdateProgress(object? sender, EventArgs e)
+    public void RefreshProgress()
     {
         CurrentTime = _audioManager.Playback.CurrentTime.Hours == 0
             ? _audioManager.Playback.CurrentTime.ToString(@"mm\:ss")
@@ -66,6 +66,11 @@ public partial class PlaybarViewModel : ObservableObject
         {
             ProgressValue = _audioManager.Playback.CurrentTime / _audioManager.Playback.TotalTime * 100.0d;
         }
+    }
+
+    private void UpdateProgress(object? sender, EventArgs e)
+    {
+        RefreshProgress();
     }
 
     public void OnSwitch(object? sender, AudioChangedArgs e)

@@ -1,4 +1,5 @@
 ﻿using Rayer.Core.Common;
+using Rayer.Core.Models;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Wpf.Ui.Appearance;
@@ -25,6 +26,8 @@ public interface ISettings
     public LyricSearcher LyricSearcher { get; set; }
 
     public SearcherType DefaultSearcher { get; set; }
+
+    public PlaybackRecord PlaybackRecord { get; set; }
 
     public float Volume { get; set; }
 

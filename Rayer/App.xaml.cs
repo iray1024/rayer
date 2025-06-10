@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Rayer.Core;
-using Rayer.Core.Extensions;
 using Rayer.Core.FileSystem.Abstractions;
 using Rayer.Core.Framework;
 using Rayer.Core.Framework.Settings.Abstractions;
@@ -87,7 +86,6 @@ public partial class App : Application
         CrossThreadAccessor.Initialize();
 
         var watcher = GetRequiredService<IAudioFileWatcher>();
-
         watcher.Watch();
 
         _host.Start();
