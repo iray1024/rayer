@@ -65,6 +65,70 @@ public partial class MainWindow : IWindow
         RenderOptions.ProcessRenderMode = RenderMode.Default;
     }
 
+    private async void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        ApplyNavigationMenuIcons();
+
+        var immersivePlayerService = App.GetRequiredService<IImmersivePlayerService>();
+
+        immersivePlayerService.SetPlayer(ImmersivePlayer);
+
+        var dynamicIsland = App.GetRequiredService<DynamicIsland>();
+        dynamicIsland.Show();
+
+        AutoSuggest.TextChanged += OnAutoSuggestTextChanged;
+        AutoSuggest.SuggestionChosen += OnSuggestionChosen;
+        AutoSuggest.QuerySubmitted += OnAutoSuggestQuerySubmitted;
+
+        await OnBootloaderInjectingAsync();
+
+        InitializeTaskbarInfo();
+
+        var audioManager = AppCore.GetRequiredService<IAudioManager>();
+        var playbar = AppCore.GetRequiredService<IPlaybarService>();
+        var windowHandle = new WindowInteropHelper(this).Handle;
+        _smtc.Initialize(
+            windowHandle,
+            () => Application.Current.Dispatcher.Invoke(() => playbar.PlayOrPause()),
+            () => Application.Current.Dispatcher.Invoke(() => playbar.PlayOrPause()),
+            () => Application.Current.Dispatcher.BeginInvoke(async () => await playbar.Next()),
+            () => Application.Current.Dispatcher.BeginInvoke(async () => await playbar.Previous()));
+
+        audioManager.AudioChanged += async (s, e) =>
+        {
+            await _smtc.UpdateMetadata(e.New);
+        };
+
+        audioManager.AudioPlaying += (s, e) =>
+        {
+            _smtc.UpdatePlaybackStatus(Windows.Media.MediaPlaybackStatus.Playing);
+        };
+
+        audioManager.AudioPaused += (s, e) =>
+        {
+            _smtc.UpdatePlaybackStatus(Windows.Media.MediaPlaybackStatus.Paused);
+        };
+
+        audioManager.AudioStopped += (s, e) =>
+        {
+            _smtc.UpdatePlaybackStatus(Windows.Media.MediaPlaybackStatus.Stopped);
+        };
+
+        audioManager.Playback.Seeked += (s, e) =>
+        {
+            _smtc.UpdateSeek(audioManager.Playback);
+        };
+
+#if RELEASE
+        var updater = AppCore.GetRequiredService<IUpdateService>();
+        var (checkResult, _) = await updater.CheckUpdateAsync(AppCore.StoppingToken);
+        if (checkResult == true)
+        {
+            await updater.UpdateAsync(AppCore.StoppingToken);
+        }
+#endif
+    }
+
     public MainWindowViewModel ViewModel { get; set; } = null!;
 
     private void OnNavigating(NavigationView sender, NavigatingCancelEventArgs args)
@@ -138,69 +202,6 @@ public partial class MainWindow : IWindow
         }
 
         _isUserClosedPane = true;
-    }
-
-    private async void OnLoaded(object sender, RoutedEventArgs e)
-    {
-        ApplyNavigationMenuIcons();
-
-        var immersivePlayerService = App.GetRequiredService<IImmersivePlayerService>();
-
-        immersivePlayerService.SetPlayer(ImmersivePlayer);
-
-        var dynamicIsland = App.GetRequiredService<DynamicIsland>();
-        dynamicIsland.Show();
-
-        AutoSuggest.TextChanged += OnAutoSuggestTextChanged;
-        AutoSuggest.SuggestionChosen += OnSuggestionChosen;
-        AutoSuggest.QuerySubmitted += OnAutoSuggestQuerySubmitted;
-
-        await OnBootloaderInjectingAsync();
-
-        InitializeTaskbarInfo();
-
-        var audioManager = AppCore.GetRequiredService<IAudioManager>();
-        var playbar = AppCore.GetRequiredService<IPlaybarService>();
-        var windowHandle = new WindowInteropHelper(this).Handle;
-        _smtc.Initialize(
-            windowHandle,
-            () => Application.Current.Dispatcher.Invoke(() => playbar.PlayOrPause()),
-            () => Application.Current.Dispatcher.Invoke(() => playbar.PlayOrPause()),
-            () => Application.Current.Dispatcher.BeginInvoke(async () => await playbar.Next()),
-            () => Application.Current.Dispatcher.BeginInvoke(async () => await playbar.Previous()));
-
-        audioManager.AudioChanged += async (s, e) =>
-        {
-            await _smtc.UpdateMetadata(e.New);
-        };
-
-        audioManager.AudioPlaying += (s, e) =>
-        {
-            _smtc.UpdatePlaybackStatus(Windows.Media.MediaPlaybackStatus.Playing);
-        };
-
-        audioManager.AudioPaused += (s, e) =>
-        {
-            _smtc.UpdatePlaybackStatus(Windows.Media.MediaPlaybackStatus.Paused);
-        };
-
-        audioManager.AudioStopped += (s, e) =>
-        {
-            _smtc.UpdatePlaybackStatus(Windows.Media.MediaPlaybackStatus.Stopped);
-        };
-
-        audioManager.Playback.Seeked += (s, e) =>
-        {
-            _smtc.UpdateSeek(audioManager.Playback);
-        };
-
-#if RELEASE
-        var updater = AppCore.GetRequiredService<IUpdateService>();
-        if (await updater.CheckUpdateAsync(AppCore.StoppingToken) == true)
-        {
-            await updater.UpdateAsync(AppCore.StoppingToken);
-        }
-#endif
     }
 
     private async void OnAutoSuggestTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

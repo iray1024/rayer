@@ -234,7 +234,11 @@ public partial class PlaylistPage : AdaptivePage, INavigableView<PlaylistPageVie
                             {
                                 var vMenuItme = new MenuItem
                                 {
-                                    Header = playlist.Name,
+                                    Header = new Emoji.Wpf.TextBlock()
+                                    {
+                                        Text = playlist.Name,
+                                        FontSize = 14
+                                    },
                                     Command = _commandBinding.AddToCommand,
                                     CommandParameter = new PlaylistUpdate
                                     {
@@ -261,7 +265,11 @@ public partial class PlaylistPage : AdaptivePage, INavigableView<PlaylistPageVie
                             {
                                 var vMenuItme = new MenuItem
                                 {
-                                    Header = playlist.Name,
+                                    Header = new Emoji.Wpf.TextBlock()
+                                    {
+                                        Text = playlist.Name,
+                                        FontSize = 14
+                                    },
                                     Command = _commandBinding.MoveToCommand,
                                     CommandParameter = new PlaylistUpdate
                                     {

@@ -235,7 +235,11 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
                             {
                                 var vMenuItme = new System.Windows.Controls.MenuItem
                                 {
-                                    Header = playlist.Name,
+                                    Header = new Emoji.Wpf.TextBlock()
+                                    {
+                                        Text = playlist.Name,
+                                        FontSize = 14
+                                    },
                                     Command = _commandBinding.AddToCommand,
                                     CommandParameter = new PlaylistUpdate
                                     {

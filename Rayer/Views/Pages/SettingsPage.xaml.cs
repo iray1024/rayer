@@ -88,14 +88,17 @@ public partial class SettingsPage : INavigableView<SettingsViewModel>
                 await Application.Current.Dispatcher.InvokeAsync(async () =>
                 {
                     var updater = AppCore.GetRequiredService<IUpdateService>();
-                    var checkResult = await updater.CheckUpdateAsync(AppCore.StoppingToken);
+                    var (checkResult, body) = await updater.CheckUpdateAsync(AppCore.StoppingToken);
                     if (!checkResult.HasValue)
                     {
                         var dialogService = AppCore.GetRequiredService<IContentDialogService>();
                         await dialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions
                         {
                             Title = "恭喜",
-                            Content = "您已是最新版本！",
+                            Content = new Emoji.Wpf.TextBlock()
+                            {
+                                Text = $"您已是最新版本！\n\n更新内容：\n{body}"
+                            },
                             CloseButtonText = "关闭"
                         });
 
@@ -111,7 +114,7 @@ public partial class SettingsPage : INavigableView<SettingsViewModel>
         };
 
         AboutContentDialog.SetLogo(dialog, ImageSourceFactory.Create("pack://application:,,,/assets/logo.png"));
-        AboutContentDialog.SetDescription(dialog, $"Rayer {local.ToString(3)}\n喵蛙王子丶 版权所有\nCopyright(C) 2020-2025 MM. All Rights Reserved");
+        AboutContentDialog.SetDescription(dialog, $"Rayer {local.ToString(3)}\n喵蛙王子丶 版权所有\nCopyright(C) 1998-2025 子墨丶. All Rights Reserved");
 
         await dialog.ShowAsync();
     }

@@ -22,7 +22,7 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
     internal static string LocalPath => Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)
             ?? AppDomain.CurrentDomain.BaseDirectory;
 
-    public async Task<bool?> CheckUpdateAsync(CancellationToken cancellationToken = default)
+    public async Task<(bool?, string?)> CheckUpdateAsync(CancellationToken cancellationToken = default)
     {
         var originalProxy = SetProxy();
 
@@ -55,7 +55,7 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
                 Title = "存在新版本",
                 Content = new Emoji.Wpf.TextBlock()
                 {
-                    Text = $"当前版本: {local.ToString(3)}\n最新版本: {latest.Version.ToString(3)}\n\n{latest.Body}"
+                    Text = $"当前版本：{local.ToString(3)}\n最新版本：{latest.Version.ToString(3)}\n\n更新内容：\n{latest.Body}"
                 },
                 CloseButtonText = "立即更新",
                 PrimaryButtonText = "暂不更新",
@@ -63,13 +63,13 @@ internal sealed class UpdateService(IGitHubManager gitHubManager) : IUpdateServi
 
             if (result is ContentDialogResult.None)
             {
-                return true;
+                return (true, latest.Body);
             }
 
-            return false;
+            return (false, latest.Body);
         }
 
-        return null;
+        return (null, latest.Body);
     }
 
     public Task UpdateAsync(CancellationToken cancellationToken = default)
