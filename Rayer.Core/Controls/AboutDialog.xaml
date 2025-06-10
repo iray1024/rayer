@@ -66,7 +66,7 @@
                                         Focusable="False" />
                                     <Grid
                                         Grid.Row="0"
-                                        Margin="24,10,24,0"
+                                        Margin="22,10,22,0"
                                         Focusable="False">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
