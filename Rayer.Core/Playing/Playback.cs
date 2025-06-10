@@ -143,6 +143,18 @@ public class Playback : IDisposable
         }
     }
 
+    public void Seek(TimeSpan target)
+    {
+        if (_metadata.Reader is not null)
+        {
+            CurrentTime = target;
+
+            _metadata.FadeInOutSampleProvider?.BeginFadeIn(1000);
+
+            Seeked?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
     public void Jump(bool negative = false)
     {
         if (_metadata.Reader is not null)
@@ -176,8 +188,8 @@ public class Playback : IDisposable
             TryGetAudio(record.Id, out var audio))
         {
             await Play(audio);
-            CurrentTime = record.Offset;
             Pause();
+            Seek(record.Offset);
 
             AudioRecoveried?.Invoke(this, EventArgs.Empty);
         }
