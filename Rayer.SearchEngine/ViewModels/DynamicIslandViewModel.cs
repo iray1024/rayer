@@ -22,6 +22,8 @@ public partial class DynamicIslandViewModel : ObservableObject
     private readonly IAudioManager _audioManager;
     private readonly DispatcherTimer _timer;
 
+    private bool _isInitializing = false;
+
     private static readonly ILineInfo _noneLyricInfo = new LineInfo("暂无匹配歌词");
     private static readonly ILineInfo _pauseInfo = new LineInfo("暂停播放");
     private static readonly ILineInfo _stopInfo = new LineInfo("喵蛙王子丶");
@@ -48,6 +50,7 @@ public partial class DynamicIslandViewModel : ObservableObject
         _lyricProvider.LyricChanged += OnLyricChanged;
 
         _audioManager.Playback.Seeked += OnSeeked;
+        _audioManager.Playback.AudioRecoveried += OnAudioRecoveried;
 
         _timer = new DispatcherTimer(DispatcherPriority.Normal, Application.Current.Dispatcher)
         {
@@ -58,6 +61,11 @@ public partial class DynamicIslandViewModel : ObservableObject
         ContextMenu = AppCore.GetRequiredService<IContextMenuFactory>().CreateContextMenu(ContextMenuScope.DynamicIsland);
 
         ApplicationThemeManager.Changed += OnThemeChanged;
+    }
+
+    private void OnAudioRecoveried(object? sender, EventArgs e)
+    {
+        _isInitializing = true;
     }
 
     private void OnThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)
@@ -86,12 +94,14 @@ public partial class DynamicIslandViewModel : ObservableObject
         if (e.PlaybackState is NAudio.Wave.PlaybackState.Paused && _totalLines.Count > 0)
         {
             CurrentLine = _totalLines[_currentLineIndex];
+            DynamicIsland.Lyric.IsGradientable = true;
 
             _timer.Start();
         }
         else
         {
             CurrentLine = _stopInfo;
+            DynamicIsland.Lyric.IsGradientable = false;
         }
     }
 
@@ -145,6 +155,7 @@ public partial class DynamicIslandViewModel : ObservableObject
         CurrentLine = _pauseInfo;
 
         _timer.Stop();
+        DynamicIsland.Lyric.IsGradientable = false;
     }
 
     private void OnAudioStopped(object? sender, EventArgs e)
@@ -154,17 +165,18 @@ public partial class DynamicIslandViewModel : ObservableObject
         _totalLines.Clear();
 
         _timer.Stop();
+        DynamicIsland.Lyric.IsGradientable = false;
     }
 
     private void OnLyricChanged(object? sender, SwitchLyricSearcherArgs e)
     {
         var lyricData = _lyricProvider.LyricData;
-
         if (lyricData is not null && lyricData.Lines is { Count: > 0 })
         {
             _totalLines = lyricData.Lines;
             _currentLineIndex = 0;
             CurrentLine = _totalLines[0];
+            DynamicIsland.Lyric.IsGradientable = true;
 
             OnSeeked(sender, e);
         }
@@ -173,6 +185,7 @@ public partial class DynamicIslandViewModel : ObservableObject
             _totalLines = [];
             _currentLineIndex = 0;
             CurrentLine = _noneLyricInfo;
+            DynamicIsland.Lyric.IsGradientable = false;
         }
     }
 
@@ -181,19 +194,30 @@ public partial class DynamicIslandViewModel : ObservableObject
         if (CurrentLine is not null)
         {
             var currentLineIndex = _totalLines.IndexOf(CurrentLine);
-            var nextLine = currentLineIndex == _totalLines.Count - 1 ? null : _totalLines[currentLineIndex + 1];
+            var nextLine = currentLineIndex == _totalLines.Count - 1 ? null : _totalLines[_currentLineIndex + 1];
 
             if (nextLine is not null && _audioManager.Playback.CurrentTime.TotalMilliseconds >= nextLine.StartTime)
             {
-                if (_currentLineIndex + 2 < _totalLines.Count &&
-                    _totalLines[_currentLineIndex + 2].StartTime - nextLine.StartTime > 1000)
+                if (!_isInitializing)
                 {
-                    DynamicIsland.TextBlurStroyboard.Begin();
+                    if (_currentLineIndex + 2 < _totalLines.Count &&
+                    _totalLines[_currentLineIndex + 2].StartTime - nextLine.StartTime > 1000)
+                    {
+                        DynamicIsland.TextBlurStroyboard.Begin();
+                    }
+
+                    CurrentLine = nextLine;                    
                 }
 
-                CurrentLine = nextLine;
                 _currentLineIndex++;
             }
+            else
+            {
+                CurrentLine = _totalLines[_currentLineIndex];
+                _isInitializing = false;
+            }
+
+            UpdateKaraokeText((_audioManager.Playback.CurrentTime - TimeSpan.FromMilliseconds(CurrentLine.StartTime ?? 0)).TotalMilliseconds / CurrentLine.Duration ?? 0);
         }
     }
 
@@ -204,6 +228,7 @@ public partial class DynamicIslandViewModel : ObservableObject
         if (_audioManager.Playback.IsSeeking)
         {
             CurrentLine = _seekingInfo;
+            DynamicIsland.Lyric.IsGradientable = false;
 
             return;
         }
@@ -236,6 +261,12 @@ public partial class DynamicIslandViewModel : ObservableObject
             CurrentLine = _totalLines.LastOrDefault();
         }
 
+        DynamicIsland.Lyric.IsGradientable = true;
         _timer.Start();
+    }
+
+    private void UpdateKaraokeText(double progress)
+    {
+        DynamicIsland.Lyric.Progress = Math.Max(0, Math.Min(1, progress));
     }
 }

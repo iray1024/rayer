@@ -34,7 +34,7 @@ public partial class DynamicIsland : Window
         InitializeComponent();
 
         TextBlurStroyboard = Resources["TextBlurStroyboard"] as Storyboard
-            ?? throw new ArgumentNullException("未找到 AlbumRotateStoryboard 资源");
+            ?? throw new ArgumentNullException("未找到 TextBlurStroyboard 资源");
 
         _windowStateChangedStoryboard.Completed += static (s, e) =>
         {
