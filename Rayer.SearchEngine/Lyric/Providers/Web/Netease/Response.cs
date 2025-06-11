@@ -1,4 +1,5 @@
-﻿using Rayer.SearchEngine.Lyric.Abstractions;
+﻿using Rayer.Core.Lyric.Enums;
+using Rayer.SearchEngine.Lyric.Abstractions;
 using Rayer.SearchEngine.Lyric.Models;
 
 namespace Rayer.SearchEngine.Lyric.Providers.Web.Netease;
@@ -88,6 +89,11 @@ public class LyricResult : ILyricResult
             YTranslationrc = Ytlrc is not null && !string.IsNullOrEmpty(Ytlrc.Lyric) ? Ytlrc.Lyric : null,
             YRomalrc = Yromalrc is not null && !string.IsNullOrEmpty(Yromalrc.Lyric) ? Yromalrc.Lyric : null,
         };
+    }
+
+    public (string, LyricRawType) GetLyricTarget()
+    {
+        return (Lrc.Lyric, LyricRawType.Lrc);
     }
 }
 

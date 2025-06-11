@@ -1,4 +1,5 @@
 ﻿#nullable disable
+using Rayer.Core.Lyric.Enums;
 using Rayer.SearchEngine.Lyric.Abstractions;
 using Rayer.SearchEngine.Lyric.Models;
 
@@ -156,12 +157,25 @@ public class LyricResult : ILyricResult
 
     public string Content { get; set; }
 
+    public string KrcContent { get; set; }
+
     public LyricWrapper GetLyric()
     {
         return new LyricWrapper
         {
-            Lyric = !string.IsNullOrEmpty(Content) ? Encoding.UTF8.GetString(Convert.FromBase64String(Content)) : string.Empty
+            Lyric = !string.IsNullOrEmpty(Content) ? Encoding.UTF8.GetString(Convert.FromBase64String(Content)) : string.Empty,
+            Klyric = KrcContent
         };
+    }
+
+    public (string, LyricRawType) GetLyricTarget()
+    {
+        if (!string.IsNullOrEmpty(KrcContent))
+        {
+            return (KrcContent, LyricRawType.Krc);
+        }
+
+        return (GetLyric().Lyric, LyricRawType.Lrc);
     }
 }
 #nullable restore

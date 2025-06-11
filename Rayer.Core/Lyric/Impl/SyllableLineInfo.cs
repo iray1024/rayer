@@ -20,11 +20,13 @@ public class SyllableLineInfo(IEnumerable<ISyllableInfo> syllables) : ILineInfo
 
     public int? EndTime { get; set; } = syllables.Last().EndTime;
 
+    public TimeSpan Duration { get; set; } = TimeSpan.FromMilliseconds(syllables.Last().EndTime - syllables.First().StartTime);
+
     public LyricAlignment LyricsAlignment { get; set; } = LyricAlignment.Unspecified;
 
     public ILineInfo? SubLine { get; set; }
 
-    public List<ISyllableInfo> Syllables { get; set; } = syllables.ToList();
+    public List<ISyllableInfo> Syllables { get; set; } = [.. syllables];
 
     public bool IsSyllable => Syllables is { Count: > 0 };
 

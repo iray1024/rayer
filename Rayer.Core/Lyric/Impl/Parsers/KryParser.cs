@@ -3,6 +3,7 @@ using Rayer.Core.Lyric.Enums;
 using Rayer.Core.Lyric.Impl.AdditionalFileInfo;
 using Rayer.Core.Lyric.Models;
 using Rayer.Core.Lyric.Utils;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace Rayer.Core.Lyric.Impl.Parsers;
@@ -132,36 +133,44 @@ internal static partial class KryParser
             return null;
         }
 
-        var lineTime = line[1..line.IndexOf(']')].Split(',');
-        var lineStart = int.Parse(lineTime[0]);
-
-        var syllables = new List<ISyllableInfo>();
-
-        var time = words[0][1..].Split(',');
-        var start = int.Parse(time[0]);
-        var duration = int.Parse(time[1]);
-        for (var i = 1; i < words.Length; i++)
+        try
         {
-            var word = words[i];
-            if (word.Contains('<'))
-            {
-                word = word[..word.LastIndexOf('<')];
-            }
-            syllables.Add(new SyllableInfo()
-            {
-                StartTime = lineStart + start,
-                EndTime = lineStart + start + duration,
-                Text = word,
-            });
-            if (words[i].Contains('<'))
-            {
-                time = words[i][(words[i].LastIndexOf('<') + 1)..].Split(',');
-                start = int.Parse(time[0]);
-                duration = int.Parse(time[1]);
-            }
-        }
+            var lineTime = line[1..line.IndexOf(']')].Split(',');
+            var lineStart = int.Parse(lineTime[0]);
 
-        return new(syllables);
+            var syllables = new List<ISyllableInfo>();
+
+            var time = words[0][1..].Split(',');
+            var start = int.Parse(time[0]);
+            var duration = int.Parse(time[1]);
+            for (var i = 1; i < words.Length; i++)
+            {
+                var word = words[i];
+                if (word.Contains('<'))
+                {
+                    word = word[..word.LastIndexOf('<')];
+                }
+                syllables.Add(new SyllableInfo()
+                {
+                    StartTime = lineStart + start,
+                    EndTime = lineStart + start + duration,
+                    Text = word,
+                });
+                if (words[i].Contains('<'))
+                {
+                    time = words[i][(words[i].LastIndexOf('<') + 1)..].Split(',');
+                    start = int.Parse(time[0]);
+                    duration = int.Parse(time[1]);
+                }
+            }
+
+            return new(syllables);
+        }
+        catch
+        {
+            Debug.WriteLine("歌词解析失败");
+            return null;
+        }
     }
 
     private static bool IsNumber(string val)

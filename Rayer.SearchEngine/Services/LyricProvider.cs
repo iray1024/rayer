@@ -118,10 +118,10 @@ internal class LyricProvider : ILyricProvider
         if (result is not null)
         {
             var lyricResult = await _lyricSearchEngine.GetLyricAsync(result);
-
-            if (lyricResult is not null && lyricResult.GetLyric().Lyric is string lyric)
+            if (lyricResult is not null)
             {
-                LyricData = LyricParser.ParseLyrics(lyric, Rayer.Core.Lyric.Enums.LyricRawType.Lrc);
+                var (lyric, rawType) = lyricResult.GetLyricTarget();
+                LyricData = LyricParser.ParseLyrics(lyric, rawType);
 
                 if (LyricData is not null)
                 {

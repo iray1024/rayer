@@ -2,6 +2,7 @@
 using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Core.Http.Abstractions;
 using Rayer.SearchEngine.Core.Http.Serialization;
+using Rayer.SearchEngine.Lyric.Decrypter.Krc;
 
 namespace Rayer.SearchEngine.Lyric.Providers.Web.Kugou;
 
@@ -35,6 +36,15 @@ internal class Api(IHttpClientProvider httpClientProvider) : RequestBase(httpCli
 
     public async Task<LyricResult?> GetLyricAsync(string id, string accessKey)
     {
+        var krcResult = await Helper.GetLyricsAsync(id, accessKey);
+        if (!string.IsNullOrWhiteSpace(krcResult))
+        {
+            return new LyricResult
+            {
+                KrcContent = krcResult
+            };
+        }
+
         var response = await GetAsync($"http://lyrics.kugou.com/download?ver=1&client=pc&id={id}&accesskey={accessKey}&fmt=lrc&charset=utf8");
 
         var resp = response.ToEntity<LyricResult>();

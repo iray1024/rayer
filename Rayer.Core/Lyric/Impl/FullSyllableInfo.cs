@@ -21,7 +21,7 @@ internal class FullSyllableInfo(IEnumerable<SyllableInfo> syllableInfos) : ISyll
 
     public int EndTime => _endTime ??= SubItems.Last().EndTime;
 
-    public List<SyllableInfo> SubItems { get; set; } = syllableInfos.ToList();
+    public List<SyllableInfo> SubItems { get; set; } = [.. syllableInfos];
 
     public void RefreshProperties()
     {

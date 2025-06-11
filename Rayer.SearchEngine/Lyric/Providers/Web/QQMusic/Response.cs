@@ -1,4 +1,5 @@
 ﻿#nullable disable
+using Rayer.Core.Lyric.Enums;
 using Rayer.SearchEngine.Lyric.Abstractions;
 using Rayer.SearchEngine.Lyric.Models;
 
@@ -310,6 +311,11 @@ public class LyricResult : ILyricResult
             Lyric = Lyric,
             Translationrc = !string.IsNullOrEmpty(Trans) ? Trans : null
         };
+    }
+
+    public (string, LyricRawType) GetLyricTarget()
+    {
+        return (Lyric, LyricRawType.Lrc);
     }
 }
 

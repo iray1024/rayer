@@ -4,6 +4,8 @@ public struct LyricWrapper
 {
     public string? Lyric { get; set; }
 
+    public string? Klyric { get; set; }
+
     public string? Translationrc { get; set; }
 
     public string? Romalrc { get; set; }
