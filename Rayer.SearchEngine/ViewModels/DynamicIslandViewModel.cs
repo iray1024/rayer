@@ -193,28 +193,29 @@ public partial class DynamicIslandViewModel : ObservableObject
     {
         if (CurrentLine is not null)
         {
-            var currentLineIndex = _totalLines.IndexOf(CurrentLine);
-            var nextLine = currentLineIndex == _totalLines.Count - 1 ? null : _totalLines[_currentLineIndex + 1];
-
-            if (nextLine is not null && _audioManager.Playback.CurrentTime.TotalMilliseconds >= nextLine.StartTime)
+            var nextLine = _currentLineIndex == _totalLines.Count - 1 ? null : _totalLines[_currentLineIndex + 1];
+            if (nextLine is not null)
             {
-                if (!_isInitializing)
+                if (_audioManager.Playback.CurrentTime.TotalMilliseconds >= nextLine.StartTime)
                 {
-                    if (_currentLineIndex + 2 < _totalLines.Count &&
-                    _totalLines[_currentLineIndex + 2].StartTime - nextLine.StartTime > 1000)
+                    if (!_isInitializing)
                     {
-                        DynamicIsland.TextBlurStroyboard.Begin();
+                        if (_currentLineIndex + 2 < _totalLines.Count &&
+                        _totalLines[_currentLineIndex + 2].StartTime - nextLine.StartTime > 1000)
+                        {
+                            DynamicIsland.TextBlurStroyboard.Begin();
+                        }
+
+                        CurrentLine = nextLine;
                     }
 
-                    CurrentLine = nextLine;                    
+                    _currentLineIndex++;
                 }
-
-                _currentLineIndex++;
-            }
-            else
-            {
-                CurrentLine = _totalLines[_currentLineIndex];
-                _isInitializing = false;
+                else
+                {
+                    CurrentLine = _totalLines[_currentLineIndex];
+                    _isInitializing = false;
+                }
             }
 
             UpdateKaraokeText((_audioManager.Playback.CurrentTime - TimeSpan.FromMilliseconds(CurrentLine.StartTime ?? 0)).TotalMilliseconds / CurrentLine.Duration ?? 0);
