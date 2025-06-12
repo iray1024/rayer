@@ -59,6 +59,7 @@ public partial class Playbar : UserControl
         _audioManager.AudioPaused += OnAudioPaused;
         _audioManager.AudioStopped += OnAudioStopped;
         _audioManager.Playback.AudioRecoveried += OnAudioRecoveried;
+        _audioManager.Playback.Seeked += OnSeeked;
 
         _immersivePlayerService.Show += OnImmersivePlayerShow;
         _immersivePlayerService.Hidden += OnImmersivePlayerHidden;
@@ -95,6 +96,8 @@ public partial class Playbar : UserControl
             item.Description = "播放";
             item.ImageSource = ImageSourceFactory.Create("pack://application:,,,/assets/dark/play_24x24.png");
         }
+
+        SetPlayOrPauseTheme();
     }
 
     private void OnAudioStopped(object? sender, EventArgs e)
@@ -121,6 +124,11 @@ public partial class Playbar : UserControl
         SetPlayOrPauseTheme();
         ViewModel.RefreshProgress();
         OnAudioPaused(null, EventArgs.Empty);
+    }
+
+    private void OnSeeked(object? sender, EventArgs e)
+    {
+        ViewModel.RefreshProgress();
     }
 
     private void OnPlayOrPauseTriggered(object? sender, EventArgs e)

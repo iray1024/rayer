@@ -98,6 +98,11 @@ public sealed class GradientTextBlock : Control
             return;
         }
 
+        if (_textInfos.Count > 1 && IsGradientable)
+        {
+            _textInfos.ForEach(e => e.CurrentIsGradientable = IsGradientable);
+        }
+
         double xPos = 0;
         foreach (var textInfo in _textInfos)
         {
@@ -168,8 +173,7 @@ public sealed class GradientTextBlock : Control
 
         foreach (var syllable in syllableLineInfo.Syllables)
         {
-            var formattedText = CreateFormattedText(syllable.Text, Brushes.Black);
-
+            var formattedText = CreateFormattedText(syllable.Text, Brushes.White);
             _textInfos.Add(new TextInfo
             {
                 FormattedText = formattedText,
