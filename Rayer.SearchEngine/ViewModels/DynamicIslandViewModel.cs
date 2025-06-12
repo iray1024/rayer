@@ -152,7 +152,10 @@ public partial class DynamicIslandViewModel : ObservableObject
 
     private void OnAudioPaused(object? sender, EventArgs e)
     {
-        CurrentLine = _pauseInfo;
+        if (!_isInitializing)
+        {
+            CurrentLine = _pauseInfo;
+        }
 
         _timer.Stop();
         DynamicIsland.Lyric.IsGradientable = false;
@@ -269,5 +272,6 @@ public partial class DynamicIslandViewModel : ObservableObject
     private void UpdateKaraokeText(double progress)
     {
         DynamicIsland.Lyric.Progress = Math.Max(0, Math.Min(1, progress));
+        DynamicIsland.Lyric.CurrentTime = _audioManager.Playback.CurrentTime;
     }
 }

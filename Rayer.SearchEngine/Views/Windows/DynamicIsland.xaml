@@ -87,6 +87,7 @@
                 DataContext="{Binding ViewModel.CurrentLine}"
                 FontSize="24"
                 IsGradientable="False"
+                Lyrics="{Binding}"
                 RenderOptions.ClearTypeHint="Enabled"
                 SizeChanged="OnSizeChanged"
                 Text="{Binding Text, FallbackValue='喵蛙王子丶'}"

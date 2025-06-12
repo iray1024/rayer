@@ -188,10 +188,10 @@ public class Playback : IDisposable
             TryGetAudio(record.Id, out var audio))
         {
             await Play(audio);
+            AudioRecoveried?.Invoke(this, EventArgs.Empty);
+
             Pause();
             Seek(record.Offset);
-
-            AudioRecoveried?.Invoke(this, EventArgs.Empty);
         }
     }
 

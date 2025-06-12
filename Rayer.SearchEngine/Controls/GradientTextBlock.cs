@@ -1,15 +1,15 @@
-﻿using System.Globalization;
+﻿using Rayer.Core.Lyric.Abstractions;
+using Rayer.Core.Lyric.Impl;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Media;
 
 namespace Rayer.SearchEngine.Controls;
 
-public sealed class GradientTextBlock : FrameworkElement
+public sealed class GradientTextBlock : Control
 {
-    private FormattedText _formattedText = default!;
-    private Size _lastRenderSize;
+    private readonly List<TextInfo> _textInfos = [];
     private double _originalProgress;
     private static readonly Typeface _defaultTypeface = new("Microsoft YaHei");
     private static readonly Color _defaultBackgroundColor = Color.FromRgb(122, 122, 122);
@@ -22,14 +22,15 @@ public sealed class GradientTextBlock : FrameworkElement
         DependencyProperty.Register("Progress", typeof(double), typeof(GradientTextBlock),
             new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender));
 
-    public static readonly DependencyProperty FontSizeProperty =
-        TextElement.FontSizeProperty.AddOwner(typeof(GradientTextBlock));
-
     public static readonly DependencyProperty IsGradientableProperty =
         DependencyProperty.Register("IsGradientable", typeof(bool), typeof(GradientTextBlock),
             new FrameworkPropertyMetadata(false,
                 FrameworkPropertyMetadataOptions.AffectsRender,
                 OnIsGradientableChanged));
+
+    public static readonly DependencyProperty LyricsProperty =
+        DependencyProperty.Register("Lyrics", typeof(ILineInfo), typeof(GradientTextBlock),
+            new PropertyMetadata(null, OnLyricsChanged));
     #endregion
 
     static GradientTextBlock()
@@ -37,12 +38,6 @@ public sealed class GradientTextBlock : FrameworkElement
         TextProperty.OverrideMetadata(typeof(GradientTextBlock),
             new FrameworkPropertyMetadata(
                 string.Empty,
-                FrameworkPropertyMetadataOptions.AffectsMeasure |
-                FrameworkPropertyMetadataOptions.AffectsRender));
-
-        FontSizeProperty.OverrideMetadata(typeof(GradientTextBlock),
-            new FrameworkPropertyMetadata(
-                24D,
                 FrameworkPropertyMetadataOptions.AffectsMeasure |
                 FrameworkPropertyMetadataOptions.AffectsRender));
     }
@@ -60,57 +55,55 @@ public sealed class GradientTextBlock : FrameworkElement
         set => SetValue(ProgressProperty, value);
     }
 
-    public double FontSize
-    {
-        get => (double)GetValue(FontSizeProperty);
-        set => SetValue(FontSizeProperty, value);
-    }
-
     public bool IsGradientable
     {
         get => (bool)GetValue(IsGradientableProperty);
         set => SetValue(IsGradientableProperty, value);
     }
+
+    public ILineInfo Lyrics
+    {
+        get => (ILineInfo)GetValue(LyricsProperty);
+        set => SetValue(LyricsProperty, value);
+    }
+
+    public TimeSpan CurrentTime { get; set; }
     #endregion
 
     protected override Size MeasureOverride(Size availableSize)
     {
-        if (string.IsNullOrEmpty(Text))
+        if (_textInfos.Count == 0)
         {
-            return new Size(0, 0);
+            return new Size(0, 32);
         }
 
-        _formattedText = CreateFormattedText(Text, Brushes.White, 1920);
-        return new Size(_formattedText.Width, _formattedText.Height);
+        double totalWidth = 0;
+        double maxHeight = 0;
+
+        foreach (var textInfo in _textInfos)
+        {
+            totalWidth += textInfo.Width;
+            maxHeight = Math.Max(maxHeight, textInfo.Height);
+        }
+
+        return new Size(Math.Min(totalWidth, availableSize.Width), Math.Min(maxHeight, 1920));
     }
 
     protected override void OnRender(DrawingContext drawingContext)
     {
         base.OnRender(drawingContext);
 
-        if (_formattedText is null || string.IsNullOrEmpty(Text))
+        if (_textInfos.Count == 0)
         {
             return;
         }
 
-        _lastRenderSize = new Size(ActualWidth, ActualHeight);
-
-        if (IsGradientable)
+        double xPos = 0;
+        foreach (var textInfo in _textInfos)
         {
-            // 计算每个字符的位置
-            double xPos;
-            var charWidths = new double[Text.Length];
-
-            for (int i = 0; i < Text.Length; i++)
+            if (textInfo.CurrentIsGradientable)
             {
-                charWidths[i] = CreateFormattedText(Text[i].ToString(), Brushes.Black).Width;
-            }
-
-            // 绘制每个字符
-            xPos = 0;
-            for (int i = 0; i < Text.Length; i++)
-            {
-                double charProgress = Math.Min(1, Math.Max(0, (Progress * Text.Length) - i));
+                var charProgress = CalculateProgress(textInfo.StartTime, textInfo.EndTime, unchecked((int)CurrentTime.TotalMilliseconds));
 
                 // 创建渐变画笔（从白色到灰色）
                 var gradientBrush = new LinearGradientBrush()
@@ -122,16 +115,17 @@ public sealed class GradientTextBlock : FrameworkElement
                 gradientBrush.GradientStops.Add(new GradientStop(Colors.White, charProgress));
                 gradientBrush.GradientStops.Add(new GradientStop(_defaultBackgroundColor, charProgress));
 
-                // 绘制单个字符
-                var charText = CreateFormattedText(Text[i].ToString(), gradientBrush);
+                // 绘制单个字符                
+                var formattedText = textInfo.FormattedText;
+                formattedText.SetForegroundBrush(gradientBrush);
 
-                drawingContext.DrawText(charText, new Point(xPos, 0));
-                xPos += charWidths[i];
+                drawingContext.DrawText(formattedText, new Point(xPos, 0));
+                xPos += textInfo.Width;
             }
-        }
-        else
-        {
-            drawingContext.DrawText(_formattedText, new Point(0, 0));
+            else
+            {
+                drawingContext.DrawText(_textInfos.First().FormattedText, new Point(0, 0));
+            }
         }
     }
 
@@ -139,6 +133,53 @@ public sealed class GradientTextBlock : FrameworkElement
     {
         base.OnRenderSizeChanged(sizeInfo);
         InvalidateVisual();
+    }
+
+    private static void OnIsGradientableChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var control = (GradientTextBlock)d;
+        control.UpdatePauseState();
+    }
+
+    private static void OnLyricsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var control = (GradientTextBlock)d;
+        control.InitializeText();
+        control.InvalidateVisual();
+    }
+
+    private void InitializeText()
+    {
+        _textInfos.Clear();
+
+        if (Lyrics is not SyllableLineInfo syllableLineInfo || (syllableLineInfo is not { IsSyllable: true }))
+        {
+            var formattedText = CreateFormattedText(Lyrics?.Text ?? Text, Brushes.White);
+            _textInfos.Add(new TextInfo
+            {
+                FormattedText = formattedText,
+                Width = formattedText.Width,
+                Height = formattedText.Height,
+                CurrentIsGradientable = IsGradientable
+            });
+
+            return;
+        }
+
+        foreach (var syllable in syllableLineInfo.Syllables)
+        {
+            var formattedText = CreateFormattedText(syllable.Text, Brushes.Black);
+
+            _textInfos.Add(new TextInfo
+            {
+                FormattedText = formattedText,
+                StartTime = syllable.StartTime,
+                EndTime = syllable.EndTime,
+                Width = formattedText.Width,
+                Height = formattedText.Height,
+                CurrentIsGradientable = IsGradientable
+            });
+        }
     }
 
     private FormattedText CreateFormattedText(string text, Brush foreground, double? maxWidth = null)
@@ -161,10 +202,19 @@ public sealed class GradientTextBlock : FrameworkElement
         return formattedText;
     }
 
-    private static void OnIsGradientableChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static double CalculateProgress(int startTime, int endTime, int currentTime)
     {
-        var control = (GradientTextBlock)d;
-        control.UpdatePauseState();
+        if (currentTime <= startTime)
+        {
+            return 0;
+        }
+
+        if (currentTime >= endTime)
+        {
+            return 1;
+        }
+
+        return (double)(currentTime - startTime) / (endTime - startTime);
     }
 
     private void UpdatePauseState()
@@ -182,5 +232,20 @@ public sealed class GradientTextBlock : FrameworkElement
             // 恢复时还原原始状态
             Progress = _originalProgress;
         }
+    }
+
+    private class TextInfo
+    {
+        public FormattedText FormattedText { get; set; } = null!;
+
+        public int StartTime { get; set; }
+
+        public int EndTime { get; set; }
+
+        public double Width { get; set; }
+
+        public double Height { get; set; }
+
+        public required bool CurrentIsGradientable { get; set; }
     }
 }
