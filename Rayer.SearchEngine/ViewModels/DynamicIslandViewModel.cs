@@ -122,6 +122,7 @@ public partial class DynamicIslandViewModel : ObservableObject
                 _totalLines = lyricData.Lines;
                 _currentLineIndex = 0;
                 CurrentLine = _totalLines[0];
+                DynamicIsland.Lyric.IsGradientable = true;
 
                 if (_totalLines.Count(x => x.StartTime == 0) > 10)
                 {
@@ -145,6 +146,7 @@ public partial class DynamicIslandViewModel : ObservableObject
                     await Task.Delay(2000);
 
                     CurrentLine = _stopInfo;
+                    DynamicIsland.Lyric.IsGradientable = false;
                 });
             }
         }, DispatcherPriority.Background);
