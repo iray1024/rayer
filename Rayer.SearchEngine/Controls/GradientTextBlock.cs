@@ -58,7 +58,7 @@ public sealed class GradientTextBlock : Control
     public bool IsGradientable
     {
         get => (bool)GetValue(IsGradientableProperty);
-        set => SetValue(IsGradientableProperty, value);
+        set => Dispatcher.BeginInvoke(() => SetValue(IsGradientableProperty, value));
     }
 
     public ILineInfo Lyrics

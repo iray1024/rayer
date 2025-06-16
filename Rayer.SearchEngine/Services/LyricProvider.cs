@@ -130,12 +130,14 @@ internal class LyricProvider : ILyricProvider
                     {
                         foreach (var line in LyricData.Lines ?? [])
                         {
-                            if (line.StartTime is int startTime)
+                            if (line is SyllableLineInfo syllable)
                             {
-                                line.StartTime = Math.Max(startTime + offset, 0);
+                                AdjustSyllableOffset(syllable, offset);
                             }
-
-                            line.EndTime += offset;
+                            else
+                            {
+                                AdjustOffSet(line, offset);
+                            }
                         }
                     }
 
@@ -180,5 +182,28 @@ internal class LyricProvider : ILyricProvider
             LyricChanged?.Invoke(this, new SwitchLyricSearcherArgs(false));
             _lyricManager.Store(_audioManager.Playback.Audio, 500);
         }
+    }
+
+    private static void AdjustOffSet(ILineInfo line, int offset)
+    {
+        if (line.StartTime is int startTime)
+        {
+            line.StartTime = Math.Max(startTime + offset, 0);
+        }
+
+        line.EndTime += offset;
+    }
+
+    private static void AdjustSyllableOffset(SyllableLineInfo syllable, int offset)
+    {
+        foreach (var syllableItem in syllable.Syllables)
+        {
+            syllableItem.StartTime = Math.Max(syllableItem.StartTime + offset, 0);
+            syllableItem.EndTime += offset;
+        }
+
+        syllable.StartTime = syllable.Syllables.FirstOrDefault()?.StartTime;
+        syllable.EndTime = syllable.Syllables.LastOrDefault()?.EndTime;
+        syllable.Duration = TimeSpan.FromMilliseconds(syllable.EndTime.GetValueOrDefault() - syllable.StartTime.GetValueOrDefault());
     }
 }

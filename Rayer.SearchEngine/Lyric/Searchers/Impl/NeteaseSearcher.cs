@@ -18,7 +18,7 @@ internal class NeteaseSearcher : Searcher, ISearcher
         try
         {
             var result = await Providers.Web.Providers.NeteaseApi.Search(searchString, Api.SearchTypeEnum.SONG_ID);
-            var results = result?.Result.Songs;
+            var results = result?.Result?.Songs;
             if (results == null)
             {
                 return null;

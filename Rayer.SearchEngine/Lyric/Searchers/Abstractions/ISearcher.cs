@@ -15,8 +15,6 @@ public interface ISearcher
     /// <summary>
     /// 搜索最佳匹配的曲目
     /// </summary>
-    /// <param name="track"></param>
-    /// <returns></returns>
     public Task<ISearchResult?> SearchForResult(ITrackMetadata track);
 
     /// <summary>
@@ -24,14 +22,11 @@ public interface ISearcher
     /// </summary>
     /// <param name="track"></param>
     /// <param name="minimumMatch">最低匹配要求</param>
-    /// <returns></returns>
     public Task<ISearchResult?> SearchForResult(ITrackMetadata track, MatchType minimumMatch);
 
     /// <summary>
     /// 搜索匹配的曲目列表
     /// </summary>
-    /// <param name="track"></param>
-    /// <returns></returns>
     public Task<List<ISearchResult>> SearchForResults(ITrackMetadata track);
 
     /// <summary>
@@ -45,7 +40,5 @@ public interface ISearcher
     /// <summary>
     /// 搜索关键字的曲目列表
     /// </summary>
-    /// <param name="searchString"></param>
-    /// <returns></returns>
     public Task<List<ISearchResult>?> SearchForResults(string searchString);
 }

@@ -4,9 +4,9 @@ public interface ISyllableInfo
 {
     public string Text { get; }
 
-    public int StartTime { get; }
+    public int StartTime { get; set; }
 
-    public int EndTime { get; }
+    public int EndTime { get; set; }
 
     public int Duration => EndTime - StartTime;
 }

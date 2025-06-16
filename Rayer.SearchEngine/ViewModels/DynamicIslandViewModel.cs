@@ -198,7 +198,12 @@ public partial class DynamicIslandViewModel : ObservableObject
     {
         if (CurrentLine is not null)
         {
-            var nextLine = _currentLineIndex == _totalLines.Count - 1 ? null : _totalLines[_currentLineIndex + 1];
+            var nextLine = _currentLineIndex == _totalLines.Count - 1
+                ? null
+                : _totalLines.Count < _currentLineIndex + 1
+                    ? null
+                    : _totalLines[_currentLineIndex + 1];
+
             if (nextLine is not null)
             {
                 if (_audioManager.Playback.CurrentTime.TotalMilliseconds >= nextLine.StartTime)

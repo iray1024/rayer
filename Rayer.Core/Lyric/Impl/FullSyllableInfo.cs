@@ -17,9 +17,9 @@ internal class FullSyllableInfo(IEnumerable<SyllableInfo> syllableInfos) : ISyll
 
     public string Text => _text ??= SyllableUtils.GetTextFromSyllableList(SubItems);
 
-    public int StartTime => _startTime ??= SubItems.First().StartTime;
+    public int StartTime { get => _startTime ??= SubItems.First().StartTime; set => _startTime = value; }
 
-    public int EndTime => _endTime ??= SubItems.Last().EndTime;
+    public int EndTime { get => _endTime ??= SubItems.Last().EndTime; set => _endTime = value; }
 
     public List<SyllableInfo> SubItems { get; set; } = [.. syllableInfos];
 
