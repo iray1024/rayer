@@ -16,11 +16,11 @@ public class SyllableLineInfo(IEnumerable<ISyllableInfo> syllables) : ILineInfo
 
     public string Text => _text ??= SyllableUtils.GetTextFromSyllableList(Syllables);
 
-    public int? StartTime { get; set; } = syllables.First().StartTime;
+    public int? StartTime { get; set; } = syllables.FirstOrDefault()?.StartTime;
 
-    public int? EndTime { get; set; } = syllables.Last().EndTime;
+    public int? EndTime { get; set; } = syllables.LastOrDefault()?.EndTime;
 
-    public TimeSpan Duration { get; set; } = TimeSpan.FromMilliseconds(syllables.Last().EndTime - syllables.First().StartTime);
+    public TimeSpan Duration { get; set; } = TimeSpan.FromMilliseconds(Math.Abs((syllables.LastOrDefault()?.EndTime ?? 0 - syllables.FirstOrDefault()?.StartTime ?? 0)));
 
     public LyricAlignment LyricsAlignment { get; set; } = LyricAlignment.Unspecified;
 

@@ -13,6 +13,7 @@ internal class ImmersivePresenterProvider(ISettingsService settingsService) : II
 {
     private static readonly Lazy<ImmersiveVinylPresenter> _vinylPresenter;
     private static readonly Lazy<ImmersiveVisualizerPresenter> _audioVisualizerlPresenter;
+    private static readonly Lazy<ImmersiveAlbumPresenter> _albumPresenter;
 
     static ImmersivePresenterProvider()
     {
@@ -28,9 +29,19 @@ internal class ImmersivePresenterProvider(ISettingsService settingsService) : II
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center
         });
+
+        _albumPresenter = new Lazy<ImmersiveAlbumPresenter>(() => new ImmersiveAlbumPresenter()
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        });
     }
 
-    public UserControl Presenter => settingsService.Settings.ImmersiveMode is ImmersiveMode.Vinyl
-                ? _vinylPresenter.Value
-                : _audioVisualizerlPresenter.Value;
+    public UserControl Presenter => settingsService.Settings.ImmersiveMode switch
+    {
+        ImmersiveMode.Vinyl => _vinylPresenter.Value,
+        ImmersiveMode.AudioVisualizer => _audioVisualizerlPresenter.Value,
+        ImmersiveMode.Album => _albumPresenter.Value,
+        _ => throw new NotImplementedException()
+    };
 }

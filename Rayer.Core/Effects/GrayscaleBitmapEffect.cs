@@ -16,7 +16,7 @@ internal class GrayscaleBitmapEffect : ShaderEffect
     {
         PixelShader = new PixelShader
         {
-            UriSource = new Uri("pack://application:,,,/Rayer.Core;component/Effects/GrayscaleEffect.ps")
+            UriSource = new Uri("pack://application:,,,/Rayer.Core;component/Effects/Shaders/GrayscaleEffect.ps")
         };
 
         UpdateShaderValue(InputProperty);

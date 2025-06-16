@@ -3,5 +3,6 @@
 public enum ImmersiveMode
 {
     Vinyl,
-    AudioVisualizer
+    AudioVisualizer,
+    Album
 }

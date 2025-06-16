@@ -302,6 +302,7 @@
                 SelectedIndex="{Binding ViewModel.ImmersiveMode, Converter={StaticResource ImmersiveModeConverter}, Mode=TwoWay}">
                 <ComboBoxItem Content="唱片模式" />
                 <ComboBoxItem Content="频谱模式" />
+                <ComboBoxItem Content="专辑模式" />
             </ComboBox>
         </ui:CardControl>
 
