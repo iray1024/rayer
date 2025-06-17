@@ -2,6 +2,7 @@
 using Rayer.Controls.Immersive;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
+using Rayer.Core.Effects;
 using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.FrameworkCore.Injection;
 using System.Windows;
@@ -85,6 +86,10 @@ internal partial class ImmersivePlayerService : IImmersivePlayerService
                 {
                     vinylPresenter.AlbumRotateStoryboard.Begin();
                 }
+            }
+            else if (presenter is ImmersiveAlbumPresenter albumPresenter)
+            {
+                ImageTransition.ForceRenderEffect(albumPresenter.Frame.ImagePresenter);
             }
 
             Player.Visibility = Visibility.Visible;

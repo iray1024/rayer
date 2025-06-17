@@ -26,6 +26,8 @@ public partial class AudioLibraryViewModel : AdaptiveViewModelBase
         ContextMenu = contextMenuFactory.CreateContextMenu(ContextMenuScope.Library);
     }
 
+    public event EventHandler? FilterRefreshed;
+
     public ICollectionView AudiosView { get; private set; }
 
     public SortableObservableCollection<Audio> Audios { get; } = default!;
@@ -40,7 +42,11 @@ public partial class AudioLibraryViewModel : AdaptiveViewModelBase
 
         Task.Run(() =>
         {
-            Application.Current.Dispatcher.Invoke(() => AudiosView.Refresh());
+            Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                AudiosView.Refresh();
+                FilterRefreshed?.Invoke(this, EventArgs.Empty);
+            });
         });
     }
 

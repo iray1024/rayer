@@ -24,6 +24,7 @@ public class Settings : ISettings
     public PlaybackRecord PlaybackRecord { get; set; }
     public float Volume { get; set; } = 1.0f;
     public float Pitch { get; set; } = 1.0f;
+    public float Speed { get; set; } = 1.0f;
     public KeyBinding KeyPlayOrPause { get; set; } = DefaultKeyBinding.KeyPlayOrPause;
     public KeyBinding KeyPrevious { get; set; } = DefaultKeyBinding.KeyPrevious;
     public KeyBinding KeyNext { get; set; } = DefaultKeyBinding.KeyNext;

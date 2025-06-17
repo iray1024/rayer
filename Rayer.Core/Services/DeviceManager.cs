@@ -83,6 +83,13 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
             throw new InvalidOperationException("请先加载WaveMetadata");
         }
 
+        if (_metadata.PitchShiftingSampleProvider is not null)
+        {
+            _metadata.PitchShiftingSampleProvider.Pitch = Pitch;
+        }
+
+        SetSpeed();
+
         Device?.Init(_metadata);
     }
 

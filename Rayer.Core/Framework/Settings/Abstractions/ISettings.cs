@@ -33,6 +33,8 @@ public interface ISettings
 
     public float Pitch { get; set; }
 
+    public float Speed { get; set; }
+
     public KeyBinding KeyPlayOrPause { get; set; }
     public KeyBinding KeyPrevious { get; set; }
     public KeyBinding KeyNext { get; set; }

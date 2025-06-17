@@ -109,10 +109,11 @@ public class Playback : IDisposable
 
     public event EventHandler? Seeked;
 
-    public void Initialize(float volume, float pitch, PlayloopMode playloopMode)
+    public void Initialize(float volume, float pitch, float speed, PlayloopMode playloopMode)
     {
         DeviceManager.Volume = volume;
         DeviceManager.Pitch = pitch;
+        DeviceManager.Speed = speed;
 
         if (playloopMode is PlayloopMode.List)
         {
@@ -251,7 +252,6 @@ public class Playback : IDisposable
         ForceStopCurrentDevice();
 
         var metadata = await _metadataFactory.CreateAsync(Audio.Path);
-
         if (metadata is not null)
         {
             _metadata = metadata;
@@ -389,11 +389,6 @@ public class Playback : IDisposable
     {
         try
         {
-            if (_metadata.PitchShiftingSampleProvider is not null)
-            {
-                _metadata.PitchShiftingSampleProvider.Pitch = DeviceManager.Pitch;
-            }
-
             DeviceManager.Init();
 
             AudioChanged?.Invoke(this, new AudioChangedArgs() { New = Audio });
@@ -484,6 +479,7 @@ public class Playback : IDisposable
         DispatcherTimer.Stop();
 
         DeviceManager.Stop();
+        _metadata.Dispose();
     }
 
     private int GetExcludeRandomIndex(int exclude)

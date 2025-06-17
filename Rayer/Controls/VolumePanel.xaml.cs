@@ -37,7 +37,6 @@ public partial class VolumePanel : UserControl
     private void Slider_DragCompleted(object sender, DragCompletedEventArgs e)
     {
         ViewModel.SetVolume();
-
         ViewModel.Save();
     }
 
@@ -46,7 +45,6 @@ public partial class VolumePanel : UserControl
         var value = 100 - (e.GetPosition(VolumeSlider).Y / VolumeSlider.ActualHeight * (VolumeSlider.Maximum - VolumeSlider.Minimum));
 
         ViewModel.SetVolume((float)value);
-
         ViewModel.Save();
     }
 

@@ -63,6 +63,7 @@ public partial class SpeedPanel : UserControl
     private void Slider_DragCompleted(object sender, DragCompletedEventArgs e)
     {
         ViewModel.SetSpeed();
+        ViewModel.Save();
     }
 
     private void Slider_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -70,6 +71,7 @@ public partial class SpeedPanel : UserControl
         var value = 100 - (e.GetPosition(SpeedSlider).Y / SpeedSlider.ActualHeight * (SpeedSlider.Maximum - SpeedSlider.Minimum));
 
         ViewModel.SetSpeed((float)value);
+        ViewModel.Save();
     }
 
     private void OnMouseWheel(object sender, MouseWheelEventArgs e)
@@ -79,6 +81,7 @@ public partial class SpeedPanel : UserControl
         value = Math.Min(Math.Max(value, 0f), 100);
 
         ViewModel.SetSpeed(value);
+        ViewModel.Save();
     }
     #endregion
 }

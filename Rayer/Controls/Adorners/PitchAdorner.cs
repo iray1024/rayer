@@ -59,8 +59,6 @@ public class PitchAdorner : Adorner
     private void OnSwitchImmersivePlayerDisplay(object? sender, EventArgs e)
     {
         SetInternalImageIconTheme();
-
-
     }
 
     private void OnThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)

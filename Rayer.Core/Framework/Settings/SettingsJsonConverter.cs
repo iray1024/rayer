@@ -83,6 +83,9 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
                     case nameof(settings.Pitch):
                         settings.Pitch = (float)reader.GetDouble();
                         break;
+                    case nameof(settings.Speed):
+                        settings.Speed = (float)reader.GetDouble();
+                        break;
                     case nameof(settings.PlaybackRecord):
                         settings.PlaybackRecord = ReadPlaybackRecord(ref reader);
                         break;
@@ -144,6 +147,7 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
         writer.WriteNumber(nameof(value.DefaultSearcher), Convert.ToDecimal(value.DefaultSearcher));
         writer.WriteNumber(nameof(value.Volume), Convert.ToDecimal(value.Volume));
         writer.WriteNumber(nameof(value.Pitch), Convert.ToDecimal(value.Pitch));
+        writer.WriteNumber(nameof(value.Speed), Convert.ToDecimal(value.Speed));
         writer.WriteStartObject(nameof(value.PlaybackRecord));
         writer.WriteString(nameof(value.PlaybackRecord.Id), value.PlaybackRecord.Id);
         writer.WriteString(nameof(value.PlaybackRecord.Offset), value.PlaybackRecord.Offset.ToString());

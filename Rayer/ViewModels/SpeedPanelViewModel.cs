@@ -51,6 +51,7 @@ public partial class SpeedPanelViewModel : ObservableObject
         Speed = 50f;
 
         _audioManager.Playback.DeviceManager.Speed = 1f;
+        Save();
 
         ToolTipService.SetToolTip(_dependency, $"速度：100%");
     }
@@ -67,5 +68,11 @@ public partial class SpeedPanelViewModel : ObservableObject
         Speed = value;
 
         SetSpeed();
+    }
+
+    public void Save()
+    {
+        _settingsService.Settings.Speed = MathF.Round(_audioManager.Playback.DeviceManager.Speed, 2);
+        _settingsService.Save();
     }
 }

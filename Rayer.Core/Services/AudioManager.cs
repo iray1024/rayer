@@ -27,7 +27,7 @@ internal class AudioManager : IAudioManager, IDisposable
 
         Playback = new Playback(this, serviceProvider);
 
-        Playback.Initialize(settings.Volume, settings.Pitch, settings.PlayloopMode);
+        Playback.Initialize(settings.Volume, settings.Pitch, settings.Speed, settings.PlayloopMode);
 
         Playback.AudioPlaying += OnAudioPlaying;
         Playback.AudioPaused += OnAudioPaused;

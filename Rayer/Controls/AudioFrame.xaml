@@ -20,6 +20,7 @@
         Margin="{Binding CurrentMargin}"
         HorizontalAlignment="Center">
         <controls:AsyncImage
+            x:Name="ImagePresenter"
             ee:ImageTransition.Source="{Binding Album}"
             CornerRadius="12"
             RenderOptions.BitmapScalingMode="HighQuality"

@@ -13,6 +13,7 @@ using Rayer.FrameworkCore.Injection;
 using Rayer.ViewModels;
 using System.Collections.Specialized;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions.Controls;
@@ -55,6 +56,8 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
         DataContext = this;
 
         ViewModel.Audios.AddRange(_audioManager.Audios);
+
+        ViewModel.FilterRefreshed += OnFilterRefreshed;
 
         InitializeComponent();
     }
@@ -101,7 +104,7 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
 
     private void OnAudioChanged(object? sender, AudioChangedArgs e)
     {
-        var index = ViewModel.Audios.IndexOf(e.New);
+        var index = ((ListCollectionView)ViewModel.AudiosView).IndexOf(e.New);
         LibListView.SelectedIndex = index;
         LibListView.ScrollIntoView(e.New);
 
@@ -264,8 +267,12 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
         if (e.Source is TextBox textBox)
         {
             ViewModel.FilterText = textBox.Text;
-            OnAudioChanged(this, new AudioChangedArgs { New = _audioManager.Playback.Audio });
         }
+    }
+
+    private void OnFilterRefreshed(object? sender, EventArgs e)
+    {
+        OnAudioChanged(this, new AudioChangedArgs { New = _audioManager.Playback.Audio });
     }
 
     public void OnFilterBoxFocusChanged(object sender, RoutedEventArgs e)

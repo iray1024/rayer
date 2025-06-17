@@ -20,6 +20,18 @@ public sealed class ImageTransition : DependencyObject
     public static ImageSource GetSource(DependencyObject obj) => (ImageSource)obj.GetValue(SourceProperty);
     public static void SetSource(DependencyObject obj, ImageSource value) => obj.SetValue(SourceProperty, value);
 
+    public static void ForceRenderEffect(DependencyObject obj)
+    {
+        if (obj is not AsyncImage image)
+        {
+            return;
+        }
+
+        var source = GetSource(obj);
+
+        RenderEffect(image, source);
+    }
+
     private static void OnSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not AsyncImage image)
@@ -36,11 +48,16 @@ public sealed class ImageTransition : DependencyObject
             return;
         }
 
+        RenderEffect(image, newImage);
+    }
+
+    private static void RenderEffect(AsyncImage image, ImageSource source)
+    {
         var transitionId = Guid.NewGuid();
         _currentTransitionId = transitionId;
 
         var effect = new RadialBlurTransitionEffect();
-        effect.Input = new ImageBrush(newImage);
+        effect.Input = new ImageBrush(source);
         effect.Progress = 0;
 
         RenderOptions.SetCachingHint(effect, CachingHint.Cache);
