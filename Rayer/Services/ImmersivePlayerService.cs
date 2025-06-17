@@ -153,6 +153,11 @@ internal partial class ImmersivePlayerService : IImmersivePlayerService
             {
                 vinylPresenter.AlbumRotateStoryboard.Begin();
             }
+
+            if (presenter is ImmersiveAlbumPresenter albumPresenter)
+            {
+                ImageTransition.ForceRenderEffect(albumPresenter.Frame.ImagePresenter);
+            }
         }
     }
 
