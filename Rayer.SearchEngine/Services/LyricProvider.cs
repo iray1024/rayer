@@ -156,16 +156,45 @@ internal class LyricProvider : ILyricProvider
         {
             foreach (var line in LyricData.Lines)
             {
-                if (line.StartTime is int startTime)
+                if (line is SyllableLineInfo syllable)
                 {
-                    line.StartTime = Math.Max(startTime - 500, 0);
-                }
+                    foreach (var item in syllable.Syllables)
+                    {
+                        AdjustSyllableLineInfo(item);
+                    }
 
-                line.EndTime -= 500;
+                    syllable.StartTime = syllable.Syllables.FirstOrDefault()?.StartTime;
+                    syllable.EndTime = syllable.Syllables.LastOrDefault()?.EndTime;
+                    syllable.Duration = TimeSpan.FromMilliseconds(syllable.EndTime.GetValueOrDefault() - syllable.StartTime.GetValueOrDefault());
+                }
+                else
+                {
+                    AdjustLineInfo(line);
+                }
             }
 
             LyricChanged?.Invoke(this, new SwitchLyricSearcherArgs(false));
             _lyricManager.Store(_audioManager.Playback.Audio, -500);
+        }
+
+        static void AdjustLineInfo(ILineInfo line)
+        {
+            if (line.StartTime is int startTime)
+            {
+                line.StartTime = Math.Max(startTime - 500, 0);
+            }
+
+            line.EndTime -= 500;
+        }
+
+        static void AdjustSyllableLineInfo(ISyllableInfo line)
+        {
+            if (line.StartTime is int startTime)
+            {
+                line.StartTime = Math.Max(startTime - 500, 0);
+            }
+
+            line.EndTime -= 500;
         }
     }
 
@@ -175,8 +204,23 @@ internal class LyricProvider : ILyricProvider
         {
             foreach (var line in LyricData.Lines)
             {
-                line.StartTime += 500;
-                line.EndTime += 500;
+                if (line is SyllableLineInfo syllable)
+                {
+                    foreach (var item in syllable.Syllables)
+                    {
+                        item.StartTime += 500;
+                        item.EndTime += 500;
+                    }
+
+                    syllable.StartTime = syllable.Syllables.FirstOrDefault()?.StartTime;
+                    syllable.EndTime = syllable.Syllables.LastOrDefault()?.EndTime;
+                    syllable.Duration = TimeSpan.FromMilliseconds(syllable.EndTime.GetValueOrDefault() - syllable.StartTime.GetValueOrDefault());
+                }
+                else
+                {
+                    line.StartTime += 500;
+                    line.EndTime += 500;
+                }
             }
 
             LyricChanged?.Invoke(this, new SwitchLyricSearcherArgs(false));

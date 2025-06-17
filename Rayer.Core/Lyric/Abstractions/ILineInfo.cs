@@ -48,6 +48,7 @@ public interface ILineInfo : IComparable
                     sb.Append(RemoveFrontBackBrackets(SubLine.Text));
                     sb.Append(')');
                 }
+
                 return sb.ToString();
             }
         }
