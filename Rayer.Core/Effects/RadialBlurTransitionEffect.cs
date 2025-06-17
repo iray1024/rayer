@@ -3,7 +3,7 @@ using System.Windows.Media.Effects;
 
 namespace Rayer.Core.Effects;
 
-public class RadialBlurTransitionEffect : TransitionEffect
+public sealed class RadialBlurTransitionEffect : TransitionEffect
 {
     public RadialBlurTransitionEffect()
     {

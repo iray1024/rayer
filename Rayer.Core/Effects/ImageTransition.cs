@@ -6,7 +6,7 @@ using System.Windows.Media.Animation;
 
 namespace Rayer.Core.Effects;
 
-public class ImageTransition : DependencyObject
+public sealed class ImageTransition : DependencyObject
 {
     private static Guid _currentTransitionId;
 

@@ -33,8 +33,7 @@
   <ItemGroup>
     <Resource Include="Effects\Shaders\GrayscaleEffect.ps" />
     <Resource Include="Effects\Shaders\RadialBlurTransitionEffect.ps" />
-    <Resource Include="Effects\Shaders\SmoothSwirlGridTransitioneffect.ps" />
-    <Resource Include="Effects\Shaders\WaveTransitionEffect.ps" />
+    <Resource Include="Effects\Shaders\RippleTransitionEffect.ps" />
   </ItemGroup>
 
 </Project>

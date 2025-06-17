@@ -4,7 +4,7 @@ using System.Windows.Media.Effects;
 
 namespace Rayer.Core.Effects;
 
-internal class GrayscaleBitmapEffect : ShaderEffect
+public sealed class GrayscaleBitmapEffect : ShaderEffect
 {
     public static readonly DependencyProperty InputProperty =
         RegisterPixelShaderSamplerProperty(
