@@ -40,6 +40,7 @@
     <Resource Include="assets\dark\equalizer.png" />    
     <Resource Include="assets\dark\fullscreen.png" />    
     <Resource Include="assets\dark\lyric.png" />    
+    <Resource Include="assets\dark\media.png" />    
     <Resource Include="assets\dark\mute.png" />    
     <Resource Include="assets\dark\next_24x24.png" />    
     <Resource Include="assets\dark\pitch.png" />    
@@ -60,6 +61,7 @@
     <Resource Include="assets\light\equalizer.png" />    
     <Resource Include="assets\light\fullscreen.png" />    
     <Resource Include="assets\light\lyric.png" />    
+    <Resource Include="assets\light\media.png" />    
     <Resource Include="assets\light\mute.png" />
     <Resource Include="assets\light\next.png" />
     <Resource Include="assets\light\pause.png" />

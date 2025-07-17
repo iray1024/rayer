@@ -12,7 +12,6 @@
     <BitmapImage x:Key="Repeat" UriSource="pack://application:,,,/assets/dark/repeat.png" />
     <BitmapImage x:Key="Single" UriSource="pack://application:,,,/assets/dark/single.png" />
     <BitmapImage x:Key="Shuffle" UriSource="pack://application:,,,/assets/dark/shuffle.png" />
-    <BitmapImage x:Key="Speaker" UriSource="pack://application:,,,/assets/dark/speaker.png" />
     <BitmapImage x:Key="Mute" UriSource="pack://application:,,,/assets/dark/mute.png" />
     <BitmapImage x:Key="VolumeFull" UriSource="pack://application:,,,/assets/dark/volume-full.png" />
     <BitmapImage x:Key="VolumeHalf" UriSource="pack://application:,,,/assets/dark/volume-half.png" />
@@ -24,5 +23,6 @@
     <BitmapImage x:Key="Equalizer" UriSource="pack://application:,,,/assets/dark/equalizer.png" />
     <BitmapImage x:Key="Lyric" UriSource="pack://application:,,,/assets/dark/lyric.png" />
     <BitmapImage x:Key="Speed" UriSource="pack://application:,,,/assets/dark/speed.png" />
+    <BitmapImage x:Key="Media" UriSource="pack://application:,,,/assets/dark/media.png" />
 
 </ResourceDictionary>

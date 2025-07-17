@@ -15,10 +15,12 @@
     Loaded="OnLoaded"
     Unloaded="OnUnloaded"
     mc:Ignorable="d">
-    <Grid
+    <Border
         x:Name="LayoutRoot"
         Margin="{Binding CurrentMargin}"
-        HorizontalAlignment="Center">
+        HorizontalAlignment="Center"
+        ClipToBounds="True"
+        CornerRadius="12">
         <controls:AsyncImage
             x:Name="ImagePresenter"
             ee:ImageTransition.Source="{Binding Album}"
@@ -27,5 +29,5 @@
             RenderOptions.CachingHint="Unspecified"
             Source="{Binding Album}"
             Stretch="Uniform" />
-    </Grid>
+    </Border>
 </UserControl>

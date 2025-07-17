@@ -29,4 +29,7 @@ public interface ICommandBinding
     IAsyncRelayCommand<LyricSearcher> SwitchLyricSearcherCommand { get; }
     IRelayCommand FastForwardCommand { get; }
     IRelayCommand FastBackwardCommand { get; }
+
+    IAsyncRelayCommand<Audio> SetAlbumCoverCommand { get; }
+    IAsyncRelayCommand<Audio> RemoveAlbumCoverCommand { get; }
 }

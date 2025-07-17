@@ -26,6 +26,7 @@ internal class ContextMenuFactory : IContextMenuFactory
             ContextMenuScope.PlaylistMenu => CreatePlaylistMenuContextMenu(commandParameter),
             ContextMenuScope.PlayQueue => CreatePlayQueueContextMenu(),
             ContextMenuScope.DynamicIsland => CreateDynamicIslandContextMenu(),
+            ContextMenuScope.AlbumPresenter => CreateAlbumPresenterContextMenu(commandParameter),
             _ => throw new NotImplementedException(),
         };
     }
@@ -198,6 +199,29 @@ internal class ContextMenuFactory : IContextMenuFactory
 
         menu.Items.Add(fastbackward);
         menu.Items.Add(fastforward);
+
+        return menu;
+    }
+
+    private ContextMenu CreateAlbumPresenterContextMenu(object? commandParameter = null)
+    {
+        var menu = new ContextMenu();
+
+        menu.Items.Add(new MenuItem()
+        {
+            Header = "设置封面",
+            Icon = ImageIconFactory.Create("Media", 18),
+            Command = _commandBinding.SetAlbumCoverCommand,
+            CommandParameter = commandParameter
+        });
+
+        menu.Items.Add(new MenuItem()
+        {
+            Header = "移除封面",
+            Icon = ImageIconFactory.Create("Recycle", 18),
+            Command = _commandBinding.RemoveAlbumCoverCommand,
+            CommandParameter = commandParameter
+        });
 
         return menu;
     }

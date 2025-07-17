@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
 using Rayer.Controls;
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
@@ -21,22 +22,11 @@ using Wpf.Ui.Extensions;
 namespace Rayer.Command;
 
 [Inject<ICommandBinding>]
-internal partial class CommandBindingService : ICommandBinding
+internal partial class CommandBindingService(
+    IAudioManager audioManager,
+    IPlaybarService playbarService,
+    IPlaylistService playlistService) : ICommandBinding
 {
-    private readonly IAudioManager _audioManager;
-    private readonly IPlaybarService _playbarService;
-    private readonly IPlaylistService _playlistService;
-
-    public CommandBindingService(
-        IAudioManager audioManager,
-        IPlaybarService playbarService,
-        IPlaylistService playlistService)
-    {
-        _audioManager = audioManager;
-        _playbarService = playbarService;
-        _playlistService = playlistService;
-    }
-
     [RelayCommand]
     private async Task AddPlaylist()
     {
@@ -104,7 +94,7 @@ internal partial class CommandBindingService : ICommandBinding
             ((Emoji.Wpf.TextBlock)target.Content).Text = name;
 
             AppCore.GetRequiredService<PlaylistPageViewModel>().Name = name;
-            _playlistService.Update(int.Parse(tag[10..]), name);
+            playlistService.Update(int.Parse(tag[10..]), name);
         }
     }
 
@@ -125,7 +115,7 @@ internal partial class CommandBindingService : ICommandBinding
 
         if (result is ContentDialogResult.Primary)
         {
-            _playlistService.Remove(int.Parse(tag[10..]));
+            playlistService.Remove(int.Parse(tag[10..]));
             nav.MenuItems.Remove(target);
         }
     }
@@ -134,19 +124,19 @@ internal partial class CommandBindingService : ICommandBinding
     [RelayCommand]
     private async Task Previous()
     {
-        await _playbarService.Previous();
+        await playbarService.Previous();
     }
 
     [RelayCommand]
     private void PlayOrPause()
     {
-        _playbarService.PlayOrPause();
+        playbarService.PlayOrPause();
     }
 
     [RelayCommand]
     private async Task Next()
     {
-        await _playbarService.Next();
+        await playbarService.Next();
     }
     #endregion
 
@@ -157,11 +147,11 @@ internal partial class CommandBindingService : ICommandBinding
         {
             if (!parameter.Audio.IsVirualWebSource)
             {
-                await _audioManager.Playback.Play(parameter.Audio);
+                await audioManager.Playback.Play(parameter.Audio);
             }
             else
             {
-                if (!_audioManager.Playback.TryGetAudio(parameter.Audio.Id, out var existsAudio))
+                if (!audioManager.Playback.TryGetAudio(parameter.Audio.Id, out var existsAudio))
                 {
                     var provider = App.GetRequiredService<ISearchAudioEngineProvider>();
                     var engine = provider.GetAudioEngine(parameter.Audio.SearcherType);
@@ -179,13 +169,13 @@ internal partial class CommandBindingService : ICommandBinding
                         parameter.Audio.Cover = await ImageSourceFactory.CreateWebSourceAsync(new Uri(parameter.Audio.CoverUri));
                     }
 
-                    _audioManager.Playback.Queue.Add(parameter.Audio);
+                    audioManager.Playback.Queue.Add(parameter.Audio);
 
-                    await _audioManager.Playback.Play(parameter.Audio);
+                    await audioManager.Playback.Play(parameter.Audio);
                 }
                 else
                 {
-                    await _audioManager.Playback.Play(existsAudio);
+                    await audioManager.Playback.Play(existsAudio);
                 }
             }
         }
@@ -194,7 +184,7 @@ internal partial class CommandBindingService : ICommandBinding
     [RelayCommand]
     private void AddTo(PlaylistUpdate model)
     {
-        _playlistService.AddTo(model.Id, model.Target);
+        playlistService.AddTo(model.Id, model.Target);
 
         RefreshMenuIcon(model.Id, model.Target.Cover);
     }
@@ -204,7 +194,7 @@ internal partial class CommandBindingService : ICommandBinding
     {
         if (model.To.HasValue)
         {
-            _playlistService.Migrate(model.Id, model.To.Value, model.Target);
+            playlistService.Migrate(model.Id, model.To.Value, model.Target);
 
             var host = App.GetRequiredService<PlaylistPage>();
             host.ViewModel.Items.Remove(model.Target);
@@ -217,7 +207,7 @@ internal partial class CommandBindingService : ICommandBinding
     [RelayCommand]
     private void DeleteFrom(PlaylistUpdate model)
     {
-        _playlistService.RemoveFrom(model.Id, model.Target);
+        playlistService.RemoveFrom(model.Id, model.Target);
 
         var host = App.GetRequiredService<PlaylistPage>();
         host.ViewModel.Items.Remove(model.Target);
@@ -232,20 +222,20 @@ internal partial class CommandBindingService : ICommandBinding
         {
             if (parameter.Scope is ContextMenuScope.PlayQueue)
             {
-                if (_audioManager.Playback.Playing &&
-                    _audioManager.Playback.Audio.Equals(parameter.Audio))
+                if (audioManager.Playback.Playing &&
+                    audioManager.Playback.Audio.Equals(parameter.Audio))
                 {
-                    if (_audioManager.Playback.Queue.Count > 1)
+                    if (audioManager.Playback.Queue.Count > 1)
                     {
-                        await _audioManager.Playback.Next();
+                        await audioManager.Playback.Next();
                     }
                     else
                     {
-                        _audioManager.Playback.EndPlay();
+                        audioManager.Playback.EndPlay();
                     }
                 }
 
-                _audioManager.Playback.Queue.Remove(parameter.Audio);
+                audioManager.Playback.Queue.Remove(parameter.Audio);
             }
         }
     }
@@ -261,7 +251,7 @@ internal partial class CommandBindingService : ICommandBinding
 
         await Task.Run(async () =>
         {
-            if (_audioManager.Playback.Playing)
+            if (audioManager.Playback.Playing)
             {
                 var provider = App.GetRequiredService<ILyricProvider>();
                 await provider.SwitchSearcherAsync();
@@ -286,6 +276,33 @@ internal partial class CommandBindingService : ICommandBinding
     }
     #endregion
 
+    [RelayCommand]
+    private static async Task SetAlbumCover(Audio audio)
+    {
+        var folderBrowserDialog = new OpenFileDialog
+        {
+            Title = "选择媒体文件",
+            InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+            Filter = "媒体文件 (*.mp4, *.mkv, *.mov)|*.mp4;*.mkv;*.mov|所有文件 (*.*)|*.*",
+            Multiselect = false,
+        };
+
+        if (folderBrowserDialog.ShowDialog() == true)
+        {
+            var path = folderBrowserDialog.FileName;
+
+            var coverManager = AppCore.GetRequiredService<ICoverManager>();
+            await coverManager.SetCoverAsync(audio, path);
+        }
+    }
+
+    [RelayCommand]
+    private static async Task RemoveAlbumCover(Audio audio)
+    {
+        var coverManager = AppCore.GetRequiredService<ICoverManager>();
+        await coverManager.RemoveCoverAsync(audio);
+    }
+
     private void RefreshMenuIcon(int id, ImageSource? icon)
     {
         var nav = App.GetRequiredService<INavigationService>().GetNavigationControl();
@@ -293,7 +310,7 @@ internal partial class CommandBindingService : ICommandBinding
 
         if (menu is not null)
         {
-            var count = _playlistService.Count(id);
+            var count = playlistService.Count(id);
 
             if (count == 0)
             {

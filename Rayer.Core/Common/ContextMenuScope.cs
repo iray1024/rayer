@@ -12,5 +12,7 @@ public enum ContextMenuScope
 
     PlayQueue,
 
-    DynamicIsland
+    DynamicIsland,
+
+    AlbumPresenter
 }

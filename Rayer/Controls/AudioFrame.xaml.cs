@@ -1,4 +1,7 @@
 ﻿using Rayer.Core.Abstractions;
+using Rayer.Core.Common;
+using Rayer.Core.Controls;
+using Rayer.Core.Menu;
 using Rayer.FrameworkCore;
 using Rayer.Services;
 using System.Windows;
@@ -16,6 +19,13 @@ public partial class AudioFrame : UserControl
             typeof(ImageSource),
             typeof(AudioFrame),
             new UIPropertyMetadata(StaticThemeResources.AlbumFallback));
+
+    public static readonly DependencyProperty MeidaSourceProperty =
+       DependencyProperty.Register(
+           nameof(MeidaSource),
+           typeof(string),
+           typeof(AudioFrame),
+           new UIPropertyMetadata(null, OnMediaSourceChanged));
 
     public static readonly DependencyProperty TitleProperty =
         DependencyProperty.Register(
@@ -40,6 +50,8 @@ public partial class AudioFrame : UserControl
     #endregion
 
     private readonly IAudioManager audioManager;
+    private readonly ICoverManager coverManager;
+    private readonly IContextMenuFactory contextMenuFactory;
 
     public AudioFrame()
     {
@@ -47,8 +59,13 @@ public partial class AudioFrame : UserControl
 
         InitializeComponent();
 
+        contextMenuFactory = AppCore.GetRequiredService<IContextMenuFactory>();
+
         audioManager = AppCore.GetRequiredService<IAudioManager>();
         audioManager.AudioChanged += OnAudioChanged;
+
+        coverManager = AppCore.GetRequiredService<ICoverManager>();
+        coverManager.CoverChanged += OnCoverChanged;
 
         UpdateAudioMetadata(audioManager.Playback.Audio);
     }
@@ -58,11 +75,27 @@ public partial class AudioFrame : UserControl
         UpdateAudioMetadata(e.New);
     }
 
+    private void OnCoverChanged(object? sender, Audio e)
+    {
+        if (audioManager.Playback.Audio.Equals(e))
+        {
+            MeidaSource = coverManager.GetCover(e);
+        }
+    }
+
     public ImageSource Album
     {
         get => (ImageSource)GetValue(AlbumProperty);
         set => SetValue(AlbumProperty, value);
     }
+
+    public string? MeidaSource
+    {
+        get => (string)GetValue(MeidaSourceProperty);
+        set => SetValue(MeidaSourceProperty, value);
+    }
+
+    public ContextMenu CoverContextMenu { get; } = null!;
 
     public string Title
     {
@@ -89,6 +122,7 @@ public partial class AudioFrame : UserControl
             Album = StaticThemeResources.AlbumFallback;
             Title = string.Empty;
             Information = string.Empty;
+            MeidaSource = null;
 
             return;
         }
@@ -96,6 +130,10 @@ public partial class AudioFrame : UserControl
         Album = audio.Cover ?? StaticThemeResources.AlbumFallback;
         Title = audio.Title;
         Information = $"{string.Join('&', audio.Artists)} - {audio.Album}";
+
+        MeidaSource = coverManager.GetCover(audio);
+
+        ImagePresenter.ContextMenu = contextMenuFactory.CreateContextMenu(ContextMenuScope.AlbumPresenter, audio);
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
@@ -115,5 +153,57 @@ public partial class AudioFrame : UserControl
         var currentTopMargin = Math.Max(0, ((currentWindowHeight - width) / 4) + 16);
 
         CurrentMargin = new Thickness(0, currentTopMargin, 0, 140);
+    }
+
+    private static async void OnMediaSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is AudioFrame { Content: Border border })
+        {
+            var videoPath = e.NewValue as string;
+
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                if (!string.IsNullOrWhiteSpace(videoPath))
+                {
+                    // 创建 MediaElement 用于播放视频
+                    var mediaElement = new MediaElement
+                    {
+                        Source = new Uri(videoPath),
+                        IsMuted = true,
+                        SpeedRatio = 0.6,
+                        LoadedBehavior = MediaState.Play,
+                        UnloadedBehavior = MediaState.Stop,
+                    };
+
+                    mediaElement.MediaOpened += (s, e) => mediaElement.Clip = new RectangleGeometry(new Rect(0, 0, mediaElement.NaturalVideoWidth, mediaElement.NaturalVideoHeight), 38, 38);
+                    mediaElement.MediaEnded += (s, e) => mediaElement.Position = TimeSpan.Zero;
+
+                    // 创建 VisualBrush
+                    var visualBrush = new VisualBrush
+                    {
+                        Visual = mediaElement,
+                        Stretch = Stretch.Uniform
+                    };
+
+                    // 设置 Border 背景
+                    border.Background = visualBrush;
+                    if (border.Child is AsyncImage image)
+                    {
+                        border.ContextMenu = image.ContextMenu;
+                        image.Visibility = Visibility.Hidden;
+                    }
+                }
+                else
+                {
+                    // 清除背景并显示 Image 控件
+                    border.Background = null;
+                    if (border.Child is AsyncImage image)
+                    {
+                        border.ContextMenu = null;
+                        image.Visibility = Visibility.Visible;
+                    }
+                }
+            });
+        }
     }
 }
