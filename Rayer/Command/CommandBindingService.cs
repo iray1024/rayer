@@ -277,7 +277,7 @@ internal partial class CommandBindingService(
     #endregion
 
     [RelayCommand]
-    private static async Task SetAlbumCover(Audio audio)
+    private static async Task SetAlbumCover(AlbumCoverCommandParameter parameter)
     {
         var folderBrowserDialog = new OpenFileDialog
         {
@@ -292,15 +292,25 @@ internal partial class CommandBindingService(
             var path = folderBrowserDialog.FileName;
 
             var coverManager = AppCore.GetRequiredService<ICoverManager>();
-            await coverManager.SetCoverAsync(audio, path);
+            await coverManager.SetCoverAsync(parameter.Audio, path);
+
+            if (parameter.Context.Items.Cast<System.Windows.Controls.MenuItem>().FirstOrDefault(x => x.Header.Equals("移除封面")) is System.Windows.Controls.MenuItem menuItem)
+            {
+                menuItem.IsEnabled = true;
+            }
         }
     }
 
     [RelayCommand]
-    private static async Task RemoveAlbumCover(Audio audio)
+    private static async Task RemoveAlbumCover(AlbumCoverCommandParameter parameter)
     {
         var coverManager = AppCore.GetRequiredService<ICoverManager>();
-        await coverManager.RemoveCoverAsync(audio);
+        await coverManager.RemoveCoverAsync(parameter.Audio);
+
+        if (parameter.Context.Items.Cast<System.Windows.Controls.MenuItem>().FirstOrDefault(x => x.Header.Equals("移除封面")) is System.Windows.Controls.MenuItem menuItem)
+        {
+            menuItem.IsEnabled = false;
+        }
     }
 
     private void RefreshMenuIcon(int id, ImageSource? icon)

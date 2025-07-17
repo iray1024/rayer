@@ -30,6 +30,6 @@ public interface ICommandBinding
     IRelayCommand FastForwardCommand { get; }
     IRelayCommand FastBackwardCommand { get; }
 
-    IAsyncRelayCommand<Audio> SetAlbumCoverCommand { get; }
-    IAsyncRelayCommand<Audio> RemoveAlbumCoverCommand { get; }
+    IAsyncRelayCommand<AlbumCoverCommandParameter> SetAlbumCoverCommand { get; }
+    IAsyncRelayCommand<AlbumCoverCommandParameter> RemoveAlbumCoverCommand { get; }
 }

@@ -59,13 +59,13 @@ public partial class AudioFrame : UserControl
 
         InitializeComponent();
 
-        contextMenuFactory = AppCore.GetRequiredService<IContextMenuFactory>();
-
         audioManager = AppCore.GetRequiredService<IAudioManager>();
         audioManager.AudioChanged += OnAudioChanged;
 
         coverManager = AppCore.GetRequiredService<ICoverManager>();
         coverManager.CoverChanged += OnCoverChanged;
+
+        contextMenuFactory = AppCore.GetRequiredService<IContextMenuFactory>();
 
         UpdateAudioMetadata(audioManager.Playback.Audio);
     }
@@ -94,8 +94,6 @@ public partial class AudioFrame : UserControl
         get => (string)GetValue(MeidaSourceProperty);
         set => SetValue(MeidaSourceProperty, value);
     }
-
-    public ContextMenu CoverContextMenu { get; } = null!;
 
     public string Title
     {
@@ -130,7 +128,6 @@ public partial class AudioFrame : UserControl
         Album = audio.Cover ?? StaticThemeResources.AlbumFallback;
         Title = audio.Title;
         Information = $"{string.Join('&', audio.Artists)} - {audio.Album}";
-
         MeidaSource = coverManager.GetCover(audio);
 
         ImagePresenter.ContextMenu = contextMenuFactory.CreateContextMenu(ContextMenuScope.AlbumPresenter, audio);

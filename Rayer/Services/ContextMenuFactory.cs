@@ -1,6 +1,8 @@
-﻿using Rayer.Core.Common;
+﻿using Rayer.Core.Abstractions;
+using Rayer.Core.Common;
 using Rayer.Core.Menu;
 using Rayer.Core.Utils;
+using Rayer.FrameworkCore;
 using Rayer.FrameworkCore.Injection;
 using System.Windows.Controls;
 
@@ -207,21 +209,28 @@ internal class ContextMenuFactory : IContextMenuFactory
     {
         var menu = new ContextMenu();
 
-        menu.Items.Add(new MenuItem()
+        if (commandParameter is Audio audio)
         {
-            Header = "设置封面",
-            Icon = ImageIconFactory.Create("Media", 18),
-            Command = _commandBinding.SetAlbumCoverCommand,
-            CommandParameter = commandParameter
-        });
+            var parameter = new AlbumCoverCommandParameter(audio, menu);
 
-        menu.Items.Add(new MenuItem()
-        {
-            Header = "移除封面",
-            Icon = ImageIconFactory.Create("Recycle", 18),
-            Command = _commandBinding.RemoveAlbumCoverCommand,
-            CommandParameter = commandParameter
-        });
+            menu.Items.Add(new MenuItem()
+            {
+                Header = "设置封面",
+                Icon = ImageIconFactory.Create("Media", 18),
+                Command = _commandBinding.SetAlbumCoverCommand,
+                CommandParameter = parameter
+            });
+
+            var coverManager = AppCore.GetRequiredService<ICoverManager>();
+            menu.Items.Add(new MenuItem()
+            {
+                Header = "移除封面",
+                Icon = ImageIconFactory.Create("Recycle", 18),
+                Command = _commandBinding.RemoveAlbumCoverCommand,
+                CommandParameter = parameter,
+                IsEnabled = coverManager.GetCover(audio) is not null
+            });
+        }
 
         return menu;
     }
