@@ -58,46 +58,52 @@ internal class AudioFileWatcher : IAudioFileWatcher
 
     private void Attatch(FileSystemWatcher watcher)
     {
-        watcher.Changed += Watcher_Changed;
-        watcher.Created += Watcher_Created;
-        watcher.Deleted += Watcher_Deleted;
-        watcher.Renamed += Watcher_Renamed;
-
-        var files = Directory
-            .GetFiles(watcher.Path, "*", SearchOption.AllDirectories)
-            .Where(ValidFileType);
-
-        foreach (var item in files.Select(MediaRecognizer.Recognize))
+        Task.Run(() =>
         {
-            Audios.Add(item);
-        }
+            watcher.Changed += Watcher_Changed;
+            watcher.Created += Watcher_Created;
+            watcher.Deleted += Watcher_Deleted;
+            watcher.Renamed += Watcher_Renamed;
 
-        watcher.IncludeSubdirectories = true;
-        watcher.EnableRaisingEvents = true;
+            var files = Directory
+                .GetFiles(watcher.Path, "*", SearchOption.AllDirectories)
+                .Where(ValidFileType);
+
+            foreach (var item in files.Select(MediaRecognizer.Recognize))
+            {
+                Audios.Add(item);
+            }
+
+            watcher.IncludeSubdirectories = true;
+            watcher.EnableRaisingEvents = true;
+        });
     }
 
     private void Detatch(FileSystemWatcher watcher)
     {
-        watcher.EnableRaisingEvents = false;
-
-        watcher.Changed -= Watcher_Changed;
-        watcher.Created -= Watcher_Created;
-        watcher.Deleted -= Watcher_Deleted;
-        watcher.Renamed -= Watcher_Renamed;
-
-        var files = Directory
-            .GetFiles(watcher.Path, "*", SearchOption.AllDirectories)
-            .Where(ValidFileType);
-
-        foreach (var item in files.Select(MediaRecognizer.Recognize))
+        Task.Run(() =>
         {
-            var target = Audios.FirstOrDefault(x => x.Path == item.Path);
+            watcher.EnableRaisingEvents = false;
 
-            if (target is not null)
+            watcher.Changed -= Watcher_Changed;
+            watcher.Created -= Watcher_Created;
+            watcher.Deleted -= Watcher_Deleted;
+            watcher.Renamed -= Watcher_Renamed;
+
+            var files = Directory
+                .GetFiles(watcher.Path, "*", SearchOption.AllDirectories)
+                .Where(ValidFileType);
+
+            foreach (var item in files.Select(MediaRecognizer.Recognize))
             {
-                Audios.Remove(target);
+                var target = Audios.FirstOrDefault(x => x.Path == item.Path);
+
+                if (target is not null)
+                {
+                    Audios.Remove(target);
+                }
             }
-        }
+        });
     }
 
     public void Watch()
