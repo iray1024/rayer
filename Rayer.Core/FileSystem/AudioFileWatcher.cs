@@ -32,6 +32,8 @@ internal class AudioFileWatcher : IAudioFileWatcher
         _watchers.CollectionChanged += WatchersChanged;
     }
 
+    public event EventHandler? PreLoaded;
+
     private void WatchersChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (e.Action is NotifyCollectionChangedAction.Add)
@@ -56,9 +58,9 @@ internal class AudioFileWatcher : IAudioFileWatcher
         }
     }
 
-    private void Attatch(FileSystemWatcher watcher)
+    private Task Attatch(FileSystemWatcher watcher)
     {
-        Task.Run(() =>
+        return Task.Run(() =>
         {
             watcher.Changed += Watcher_Changed;
             watcher.Created += Watcher_Created;
@@ -108,10 +110,13 @@ internal class AudioFileWatcher : IAudioFileWatcher
 
     public void Watch()
     {
+        var tasks = new List<Task>();
         foreach (var watcher in _watchers)
         {
-            Attatch(watcher);
+            tasks.Add(Attatch(watcher));
         }
+
+        _ = Task.WhenAll(tasks).ContinueWith(task => PreLoaded?.Invoke(this, EventArgs.Empty));
     }
 
     public void AddWatcher(string path)

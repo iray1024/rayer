@@ -119,7 +119,10 @@ public partial class MainWindow : IWindow
             _smtc.UpdateSeek(audioManager.Playback);
         };
 
-        await audioManager.Playback.RecoveryAsync();
+        audioManager.PreLoaded += async (s, e) =>
+        {
+            await Application.Current.Dispatcher.InvokeAsync(() => audioManager.Playback.RecoveryAsync());
+        };
 
 #if RELEASE
         var updater = AppCore.GetRequiredService<IUpdateService>();

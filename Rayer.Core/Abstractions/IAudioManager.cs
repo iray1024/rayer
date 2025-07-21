@@ -17,4 +17,5 @@ public interface IAudioManager
     event EventHandler? AudioPaused;
     event EventHandler<AudioChangedArgs>? AudioChanged;
     event EventHandler? AudioStopped;
+    event EventHandler? PreLoaded;
 }

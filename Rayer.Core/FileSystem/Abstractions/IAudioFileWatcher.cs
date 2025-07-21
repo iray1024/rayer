@@ -13,4 +13,6 @@ public interface IAudioFileWatcher : IDisposable
 
     void AddWatcher(string path);
     void RemoveWatcher(string path);
+
+    event EventHandler PreLoaded;
 }

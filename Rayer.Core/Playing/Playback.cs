@@ -185,6 +185,9 @@ public class Playback : IDisposable
     {
         var record = _settingsService.Settings.PlaybackRecord;
 
+        Queue.Clear();
+        Queue.AddRange(_audioManager.Audios);
+
         if (!string.IsNullOrEmpty(record.Id) &&
             TryGetAudio(record.Id, out var audio))
         {
