@@ -86,7 +86,8 @@ public abstract class RequestBase(IHttpClientProvider httpClientProvider)
 
         if (!string.IsNullOrEmpty(Cookie))
         {
-            _httpClient.DefaultRequestHeaders.Add("Cookie", Cookie);
+            // 暂时屏蔽默认Cookie的添加（基于网易云风控策略的变更）
+            //_httpClient.DefaultRequestHeaders.Add("Cookie", Cookie);
         }
 
         foreach (var pair in GetAdditionalHeaders())

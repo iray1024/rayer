@@ -50,7 +50,7 @@ public class ParamBuilder(string httpEndpoint, string apiEndpoint) : IParamBuild
 
     private static string CreateTimestamp()
     {
-        return DateTime.Now.Ticks.ToString();
+        return DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
     }
 
     private static string GetRealIP()

@@ -8,24 +8,21 @@ using System.Windows.Media.Imaging;
 
 namespace Rayer.SearchEngine.ViewModels;
 
-public partial class LoginViewModel : ObservableObject
+public partial class LoginViewModel(
+    ILoginManager loginManager,
+    ICookieManager cookieManager) : ObservableObject
 {
-    private readonly ILoginManager _loginManager;
-    private readonly ICookieManager _cookieManager;
-
     [ObservableProperty]
     private BitmapImage? _qrCode;
 
     [ObservableProperty]
-    private string _state = "加载二维码中";
+    private string? _nickName;
 
-    public LoginViewModel(
-        ILoginManager loginManager,
-        ICookieManager cookieManager)
-    {
-        _loginManager = loginManager;
-        _cookieManager = cookieManager;
-    }
+    [ObservableProperty]
+    private string? _avatarUrl;
+
+    [ObservableProperty]
+    private string _state = "加载二维码中";
 
     public event EventHandler? QrCodeLoaded;
     public event EventHandler? QrCodeExpired;
@@ -33,7 +30,7 @@ public partial class LoginViewModel : ObservableObject
 
     public async Task LoadAsync()
     {
-        var login = _loginManager.UseQrCode();
+        var login = loginManager.UseQrCode();
 
         var response = await login.GetQrCodeAsync();
 
@@ -51,17 +48,20 @@ public partial class LoginViewModel : ObservableObject
             QrCodeVerify checkResult;
             while (true)
             {
-                await Task.Delay(100);
+                await Task.Delay(3000);
 
                 checkResult = await login.CheckAsync();
 
+#if DEBUG
+                Console.WriteLine($"code={checkResult.Code}, message={checkResult.Message}, cookie={checkResult.Cookie}");
+#endif
                 if (checkResult is { Code: 803 })
                 {
                     State = "授权成功";
 
-                    _cookieManager.StoreCookie();
+                    cookieManager.StoreCookie();
 
-                    _loginManager.RaiseLoginSucceed();
+                    loginManager.RaiseLoginSucceed();
                     LoginSucceed?.Invoke(null, EventArgs.Empty);
                     break;
                 }
@@ -82,7 +82,9 @@ public partial class LoginViewModel : ObservableObject
                             State = "等待扫码";
                             break;
                         case 802:
-                            State = "等待确认";
+                            NickName = checkResult.NickName;
+                            AvatarUrl = checkResult.AvatarUrl;
+                            State = "授权中";
                             break;
                         case 502:
                             State = "noCookie";

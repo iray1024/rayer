@@ -19,6 +19,7 @@
     <converters:WebDateTimeConverter x:Key="WebDateTimeConverter" />
     <converters:PlaylistDescriptionConverter x:Key="PlaylistDescriptionConverter" />
     <converters:CompanyConverter x:Key="CompanyConverter" />
+    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
 
     <Style x:Key="DefaultWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="Background" Value="Transparent" />
