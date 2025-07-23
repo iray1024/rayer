@@ -51,6 +51,7 @@ public partial class DynamicIslandViewModel : ObservableObject
 
         _audioManager.Playback.Seeked += OnSeeked;
         _audioManager.Playback.AudioRecoveried += OnAudioRecoveried;
+        _audioManager.PreLoaded += (s, e) => { CurrentLine = _stopInfo; };
 
         _timer = new DispatcherTimer(DispatcherPriority.Normal, Application.Current.Dispatcher)
         {
@@ -61,6 +62,8 @@ public partial class DynamicIslandViewModel : ObservableObject
         ContextMenu = AppCore.GetRequiredService<IContextMenuFactory>().CreateContextMenu(ContextMenuScope.DynamicIsland);
 
         ApplicationThemeManager.Changed += OnThemeChanged;
+
+        CurrentLine = new LineInfo("加载音乐列表中...");
     }
 
     private void OnAudioRecoveried(object? sender, EventArgs e)

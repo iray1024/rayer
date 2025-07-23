@@ -462,42 +462,12 @@ public class Playback : IDisposable
         int index;
         if (Shuffle)
         {
-            if (reverse)
+            if (_shuffleLink.Current.Audio is null || _shuffleLink.Current.Audio.Equals(_fallbackAudio))
             {
-                var previousNode = _shuffleLink.Current.Previous;
-                if (previousNode is not null)
-                {
-                    index = Queue.IndexOf(previousNode.Audio);
-                    _shuffleLink.Current = previousNode;
-                }
-                else
-                {
-                    index = GetExcludeRandomIndex(currentIndex);
-                    var newPreviousNode = new ShuffleLinkNode(Queue[index]);
-
-                    _shuffleLink.Current.Previous = newPreviousNode;
-                    _shuffleLink.Current.Previous.Next = _shuffleLink.Current;
-                    _shuffleLink.Current = _shuffleLink.Current.Previous;
-                }
+                _shuffleLink.Current.Audio = Audio;
             }
-            else
-            {
-                var nextNode = _shuffleLink.Current.Next;
-                if (nextNode is not null)
-                {
-                    index = Queue.IndexOf(nextNode.Audio);
-                    _shuffleLink.Current = nextNode;
-                }
-                else
-                {
-                    index = GetExcludeRandomIndex(currentIndex);
-                    var newNextNode = new ShuffleLinkNode(Queue[index]);
 
-                    _shuffleLink.Current.Next = newNextNode;
-                    _shuffleLink.Current.Next.Previous = _shuffleLink.Current;
-                    _shuffleLink.Current = _shuffleLink.Current.Next;
-                }
-            }
+            index = CreateLinkNodeIndex(reverse);
         }
         else
         {
@@ -509,6 +479,60 @@ public class Playback : IDisposable
                 ? 0
                 : index
             : -1;
+    }
+
+    private int CreateLinkNodeIndex(bool reverse = false)
+    {
+        var currentIndex = Queue.IndexOf(Audio);
+        int index;
+
+        var targetNode = reverse ? _shuffleLink.Current.Previous : _shuffleLink.Current.Next;
+        if (targetNode is not null)
+        {
+            index = Queue.IndexOf(targetNode.Audio);
+            if (index == -1)
+            {
+                index = GetExcludeRandomIndex(currentIndex);
+                var currentNode = new ShuffleLinkNode(Queue[index]);
+                currentNode.Previous = targetNode.Previous;
+                currentNode.Next = targetNode.Next;
+
+                if (reverse)
+                {
+                    _shuffleLink.Current.Previous = currentNode;
+                }
+                else
+                {
+                    _shuffleLink.Current.Next = currentNode;
+                }
+
+                _shuffleLink.Current = currentNode;
+            }
+            else
+            {
+                _shuffleLink.Current = targetNode;
+            }
+        }
+        else
+        {
+            index = GetExcludeRandomIndex(currentIndex);
+            var newTargetNode = new ShuffleLinkNode(Queue[index]);
+
+            if (reverse)
+            {
+                _shuffleLink.Current.Previous = newTargetNode;
+                _shuffleLink.Current.Previous.Next = _shuffleLink.Current;
+                _shuffleLink.Current = _shuffleLink.Current.Previous;
+            }
+            else
+            {
+                _shuffleLink.Current.Next = newTargetNode;
+                _shuffleLink.Current.Next.Previous = _shuffleLink.Current;
+                _shuffleLink.Current = _shuffleLink.Current.Next;
+            }
+        }
+
+        return index;
     }
 
     private void ResetShuffleLink()
