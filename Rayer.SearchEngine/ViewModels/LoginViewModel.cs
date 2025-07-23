@@ -33,11 +33,9 @@ public partial class LoginViewModel(
         var login = loginManager.UseQrCode();
 
         var response = await login.GetQrCodeAsync();
-
         if (response is not null)
         {
             QrCode = ProcessQrCodeResponse(response.Image);
-
             State = "等待扫码";
 
             QrCodeLoaded?.Invoke(null, EventArgs.Empty);
@@ -48,10 +46,9 @@ public partial class LoginViewModel(
             QrCodeVerify checkResult;
             while (true)
             {
-                await Task.Delay(3000);
+                await Task.Delay(100);
 
                 checkResult = await login.CheckAsync();
-
 #if DEBUG
                 Console.WriteLine($"code={checkResult.Code}, message={checkResult.Message}, cookie={checkResult.Cookie}");
 #endif
@@ -100,7 +97,6 @@ public partial class LoginViewModel(
     private static BitmapImage ProcessQrCodeResponse(string response)
     {
         var base64 = response.Replace("data:image/png;base64,", "");
-
         var buffer = Convert.FromBase64String(base64);
 
         using var stream = new MemoryStream(buffer);
@@ -110,6 +106,7 @@ public partial class LoginViewModel(
         bitmap.BeginInit();
         bitmap.CacheOption = BitmapCacheOption.OnLoad;
         bitmap.StreamSource = stream;
+        bitmap.DecodePixelWidth = 256;
         bitmap.EndInit();
 
         return bitmap;

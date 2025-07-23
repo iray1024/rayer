@@ -65,8 +65,8 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
     public async Task OnLoadAsync()
     {
         await _provider.LoginManager.RefreshLoginStateAsync(AppCore.StoppingToken);
-        var user = await _provider.LoginManager.GetAccountInfoAsync(AppCore.StoppingToken);
 
+        var user = await _provider.LoginManager.GetAccountInfoAsync(AppCore.StoppingToken);
         if (user.Profile is not null)
         {
             User = user;
@@ -103,7 +103,6 @@ public partial class ExploreLibraryViewModel : ObservableObject, IExploreLibrary
     private async void OnLoginWindowClosed(object? sender, EventArgs e)
     {
         var user = await _provider.LoginManager.GetAccountInfoAsync(AppCore.StoppingToken);
-
         if (user is { Account.Anonimous: false } && user.Profile is not null)
         {
             User = user;

@@ -62,7 +62,6 @@ internal class LoginManager : SearchEngineBase, ILoginManager
         var result = await Searcher.GetAsync(AccountSelector.AccountInfo().Build());
 
         var response = result.ToEntity<UserModel>();
-
         if (response is not null)
         {
             Account = Mapper.Map<Core.Domain.Authority.User>(response);

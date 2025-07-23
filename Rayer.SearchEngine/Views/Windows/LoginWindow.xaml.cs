@@ -20,6 +20,8 @@ public partial class LoginWindow
         InitializeComponent();
     }
 
+    public LoginViewModel ViewModel { get; set; }
+
     private void OnQrCodeLoaded(object? sender, EventArgs e)
     {
         Progress.Visibility = Visibility.Collapsed;
@@ -38,8 +40,6 @@ public partial class LoginWindow
 
         await ViewModel.LoadAsync();
     }
-
-    public LoginViewModel ViewModel { get; set; }
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {

@@ -4,7 +4,6 @@ using Rayer.FrameworkCore;
 using Rayer.FrameworkCore.Injection;
 using Rayer.SearchEngine.Controls.Explore;
 using Rayer.SearchEngine.Core.Business.Data;
-using Rayer.SearchEngine.Core.Business.Login;
 using Rayer.SearchEngine.ViewModels.Explore;
 using System.Windows;
 using System.Windows.Data;
@@ -32,7 +31,6 @@ public partial class ExploreLibraryPage : INavigableView<ExploreLibraryViewModel
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {
         var navView = AppCore.GetRequiredService<INavigationService>().GetNavigationControl() as NavigationView;
-
         if (navView?.Template.FindName("PART_NavigationViewContentPresenter", navView) is NavigationViewContentPresenter navPresenter)
         {
             var scrollViewer = ElementHelper.GetScrollViewer(navPresenter);
@@ -41,16 +39,12 @@ public partial class ExploreLibraryPage : INavigableView<ExploreLibraryViewModel
         }
 
         ViewModel ??= (ExploreLibraryViewModel)AppCore.GetRequiredService<IExploreLibraryDataProvider>();
-
         ViewModel.LoginSucceed += OnLoginSucceed;
 
         var loader = AppCore.GetRequiredService<ILoaderProvider>();
-
         loader.Loading();
 
         await Task.Run(() => ViewModel.OnLoadAsync());
-
-        var login = AppCore.GetRequiredService<ILoginManager>();
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
