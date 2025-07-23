@@ -21,7 +21,7 @@ internal partial class CookieManager : ICookieManager
 
         _handler = new HttpClientHandler
         {
-            Proxy = new WebProxy(new Uri("http://127.0.0.1:10809"), true),
+            Proxy = HttpClient.DefaultProxy,
             UseProxy = false,
             CookieContainer = _cookieContainer
         };
