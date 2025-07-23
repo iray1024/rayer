@@ -158,7 +158,6 @@ internal class DeviceManager(IServiceProvider serviceProvider) : IDeviceManager
         }
 
         Device = new WaveOutEvent() { Volume = _volume, DesiredLatency = 200 };
-
         Device.PlaybackStopped += async (s, a) =>
         {
             try

@@ -30,6 +30,7 @@ public class Playback : IDisposable
     private static readonly TimeSpan _jumpThreshold = TimeSpan.FromSeconds(5);
 
     private int _isClickToPlay = 0;
+    private ShuffleLink _shuffleLink = new();
 
     public Playback(
         IAudioManager audioManager,
@@ -54,6 +55,7 @@ public class Playback : IDisposable
 
     public SortableObservableCollection<Audio> Queue => _playQueueProvider.Queue;
 
+    #region 播放属性    
     public bool Repeat { get; set; } = true;
 
     public bool Shuffle { get; set; } = false;
@@ -100,6 +102,7 @@ public class Playback : IDisposable
         new DispatcherTimer(DispatcherPriority.Render) { Interval = TimeSpan.FromMilliseconds(100) };
 
     public bool IsSeeking { get; set; } = false;
+    #endregion
 
     public event EventHandler<AudioPlayingArgs>? AudioPlaying;
     public event EventHandler? AudioPaused;
@@ -115,21 +118,7 @@ public class Playback : IDisposable
         DeviceManager.Pitch = pitch;
         DeviceManager.Speed = speed;
 
-        if (playloopMode is PlayloopMode.List)
-        {
-            Repeat = false;
-            Shuffle = false;
-        }
-        else if (playloopMode is PlayloopMode.Single)
-        {
-            Repeat = true;
-            Shuffle = false;
-        }
-        else
-        {
-            Repeat = false;
-            Shuffle = true;
-        }
+        SetPlayMode(playloopMode);
     }
 
     public void Seek(double value)
@@ -196,6 +185,28 @@ public class Playback : IDisposable
 
             Pause();
             Seek(record.Offset);
+            _shuffleLink.Current = new ShuffleLinkNode(audio);
+        }
+    }
+
+    public void SetPlayMode(PlayloopMode mode)
+    {
+        if (mode is PlayloopMode.List)
+        {
+            Repeat = false;
+            Shuffle = false;
+        }
+        else if (mode is PlayloopMode.Single)
+        {
+            Repeat = true;
+            Shuffle = false;
+        }
+        else
+        {
+            Repeat = false;
+            Shuffle = true;
+            ResetShuffleLink();
+            _shuffleLink.Current = new ShuffleLinkNode(Audio);
         }
     }
 
@@ -363,7 +374,6 @@ public class Playback : IDisposable
     public async Task Next(bool isEventTriggered = false)
     {
         var index = GetNextAudioIndex();
-
         if (index != -1)
         {
             await Play(Queue[index], isEventTriggered);
@@ -376,7 +386,7 @@ public class Playback : IDisposable
 
     public async Task Previous(bool isEventTriggered = false)
     {
-        var index = Queue.IndexOf(Audio) - 1;
+        var index = GetNextAudioIndex(true);
 
         index = index < 0 ? Queue.Count - 1 : index;
 
@@ -446,17 +456,82 @@ public class Playback : IDisposable
         _metadata.FadeInOutSampleProvider?.BeginFadeIn(500);
     }
 
-    private int GetNextAudioIndex()
+    private int GetNextAudioIndex(bool reverse = false)
     {
         var currentIndex = Queue.IndexOf(Audio);
+        int index;
+        if (Shuffle)
+        {
+            if (reverse)
+            {
+                var previousNode = _shuffleLink.Current.Previous;
+                if (previousNode is not null)
+                {
+                    index = Queue.IndexOf(previousNode.Audio);
+                    _shuffleLink.Current = previousNode;
+                }
+                else
+                {
+                    index = GetExcludeRandomIndex(currentIndex);
+                    var newPreviousNode = new ShuffleLinkNode(Queue[index]);
 
-        var index = Shuffle ? GetExcludeRandomIndex(currentIndex) : currentIndex + 1;
+                    _shuffleLink.Current.Previous = newPreviousNode;
+                    _shuffleLink.Current.Previous.Next = _shuffleLink.Current;
+                    _shuffleLink.Current = _shuffleLink.Current.Previous;
+                }
+            }
+            else
+            {
+                var nextNode = _shuffleLink.Current.Next;
+                if (nextNode is not null)
+                {
+                    index = Queue.IndexOf(nextNode.Audio);
+                    _shuffleLink.Current = nextNode;
+                }
+                else
+                {
+                    index = GetExcludeRandomIndex(currentIndex);
+                    var newNextNode = new ShuffleLinkNode(Queue[index]);
+
+                    _shuffleLink.Current.Next = newNextNode;
+                    _shuffleLink.Current.Next.Previous = _shuffleLink.Current;
+                    _shuffleLink.Current = _shuffleLink.Current.Next;
+                }
+            }
+        }
+        else
+        {
+            index = reverse ? currentIndex - 1 : currentIndex + 1;
+        }
 
         return Queue.Count > 0
             ? index >= Queue.Count
                 ? 0
                 : index
             : -1;
+    }
+
+    private void ResetShuffleLink()
+    {
+        if (_shuffleLink.Current is not null)
+        {
+            while (_shuffleLink.Current.Previous is not null)
+            {
+                _shuffleLink.Current = _shuffleLink.Current.Previous;
+            }
+
+            while (_shuffleLink.Current.Next is not null)
+            {
+                var next = _shuffleLink.Current.Next;
+
+                _shuffleLink.Current.Previous = null;
+                _shuffleLink.Current.Next = null;
+                _shuffleLink.Current = next;
+            }
+
+            _shuffleLink.Current.Previous = null;
+            _shuffleLink.Current = null!;
+        }
     }
 
     private void CheckAudio(ref Audio audio)

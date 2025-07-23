@@ -85,21 +85,7 @@ public class PlayloopAdorner : Adorner
         _vm.SettingsService.Settings.PlayloopMode = (PlayloopMode)currentPlayloopMode;
         _vm.SettingsService.Save();
 
-        if (_vm.SettingsService.Settings.PlayloopMode is PlayloopMode.List)
-        {
-            _vm.AudioManager.Playback.Repeat = false;
-            _vm.AudioManager.Playback.Shuffle = false;
-        }
-        else if (_vm.SettingsService.Settings.PlayloopMode is PlayloopMode.Single)
-        {
-            _vm.AudioManager.Playback.Repeat = true;
-            _vm.AudioManager.Playback.Shuffle = false;
-        }
-        else
-        {
-            _vm.AudioManager.Playback.Repeat = false;
-            _vm.AudioManager.Playback.Shuffle = true;
-        }
+        _vm.AudioManager.Playback.SetPlayMode(_vm.SettingsService.Settings.PlayloopMode);
 
         _playLoop.Source = GetSource();
 
