@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace Rayer.Core.Models;
 
-public class Audio
+public class Audio : IEquatable<Audio>
 {
     public string Id { get; set; } = string.Empty;
 
@@ -28,6 +28,28 @@ public class Audio
     public SearcherType SearcherType { get; set; } = SearcherType.Local;
 
     public IDictionary<string, string> Tags { get; init; } = new Dictionary<string, string>();
+
+    public bool Equals(Audio? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        return Id == other.Id &&
+            Title == other.Title &&
+            SearcherType == other.SearcherType;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj as Audio);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Id, Title, SearcherType);
+    }
 }
 
 public class AudioSortComparer : IComparer<Audio>

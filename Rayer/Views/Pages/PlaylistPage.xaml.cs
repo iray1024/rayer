@@ -26,6 +26,7 @@ public partial class PlaylistPage : AdaptivePage, INavigableView<PlaylistPageVie
     private readonly ICommandBinding _commandBinding;
     private readonly ISettingsService _settingsService;
     private readonly INavigationCustomHeaderController _headerController;
+    private volatile string? _lastPlaylistPageName;
 
     private int _hasNavigationTo = 0;
 
@@ -304,11 +305,11 @@ public partial class PlaylistPage : AdaptivePage, INavigableView<PlaylistPageVie
 
     public Task OnNavigatedToAsync()
     {
-        if (!HasNavigationTo)
+        var navCtrl = AppCore.GetRequiredService<INavigationService>().GetNavigationControl();
+        if (!HasNavigationTo || navCtrl.SelectedItem?.TargetPageType != typeof(PlaylistPage))
         {
             HasNavigationTo = true;
-
-            var nav = App.GetRequiredService<INavigationService>().GetNavigationControl();
+            _lastPlaylistPageName = ViewModel.Name;
 
             var titleBar = AppCore.GetRequiredService<PlaylistTitleBar>();
             _headerController.Show(titleBar);
@@ -321,11 +322,14 @@ public partial class PlaylistPage : AdaptivePage, INavigableView<PlaylistPageVie
     {
         if (HasNavigationTo)
         {
+            var navCtrl = AppCore.GetRequiredService<INavigationService>().GetNavigationControl();
+            if (navCtrl.SelectedItem?.TargetPageType == typeof(PlaylistPage))
+            {
+                _headerController.Hide();
+                return Task.CompletedTask;
+            }
+
             HasNavigationTo = false;
-
-            var nav = App.GetRequiredService<INavigationService>().GetNavigationControl();
-
-            _headerController.Hide();
         }
 
         return Task.CompletedTask;

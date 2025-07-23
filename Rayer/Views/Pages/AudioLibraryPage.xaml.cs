@@ -88,7 +88,6 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
                 scrollViewer?.ScrollToTop();
 
                 var innerAudio = LibListView.Items.IndexOf(audio);
-
                 if (innerAudio != -1)
                 {
                     scrollViewer?.ScrollToVerticalOffset(56 * innerAudio);
