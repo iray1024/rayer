@@ -253,6 +253,10 @@ public class Playback : IDisposable
             if (Audio != audio)
             {
                 Audio = audio;
+                if (Shuffle)
+                {
+                    _shuffleLink.Current.Audio = Audio;
+                }
             }
 
             await Load();

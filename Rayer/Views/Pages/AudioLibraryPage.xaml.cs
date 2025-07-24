@@ -184,7 +184,6 @@ public partial class AudioLibraryPage : AdaptivePage, INavigableView<AudioLibrar
             if (_settingsService.Settings.PlaySingleAudioStrategy is PlaySingleAudioStrategy.AddToQueue)
             {
                 var index = _audioManager.Playback.Queue.IndexOf(item);
-
                 if (index == -1)
                 {
                     _audioManager.Playback.Queue.Add(item);
