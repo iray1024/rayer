@@ -501,13 +501,14 @@ public class Playback : IDisposable
                 currentNode.Previous = targetNode.Previous;
                 currentNode.Next = targetNode.Next;
 
-                if (reverse)
+                if (currentNode.Previous is not null)
                 {
-                    _shuffleLink.Current.Previous = currentNode;
+                    currentNode.Previous.Next = currentNode;
                 }
-                else
+
+                if (currentNode.Next is not null)
                 {
-                    _shuffleLink.Current.Next = currentNode;
+                    currentNode.Next.Previous = currentNode;
                 }
 
                 _shuffleLink.Current = currentNode;
