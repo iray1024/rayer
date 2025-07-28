@@ -53,6 +53,9 @@ public partial class AudioFrame : UserControl
     private readonly ICoverManager coverManager;
     private readonly IContextMenuFactory contextMenuFactory;
 
+    private static Border _thisBorder = default!;
+    private static MediaElement? _media;
+
     public AudioFrame()
     {
         DataContext = this;
@@ -61,6 +64,7 @@ public partial class AudioFrame : UserControl
 
         audioManager = AppCore.GetRequiredService<IAudioManager>();
         audioManager.AudioChanged += OnAudioChanged;
+        audioManager.AudioStopped += OnAudioStopped;
 
         coverManager = AppCore.GetRequiredService<ICoverManager>();
         coverManager.CoverChanged += OnCoverChanged;
@@ -73,6 +77,11 @@ public partial class AudioFrame : UserControl
     private void OnAudioChanged(object? sender, Core.Events.AudioChangedArgs e)
     {
         UpdateAudioMetadata(e.New);
+    }
+
+    private void OnAudioStopped(object? sender, EventArgs e)
+    {
+        UpdateAudioMetadata(null);
     }
 
     private void OnCoverChanged(object? sender, Audio e)
@@ -156,6 +165,7 @@ public partial class AudioFrame : UserControl
     {
         if (d is AudioFrame { Content: Border border })
         {
+            _thisBorder = border;
             var videoPath = e.NewValue as string;
 
             await Application.Current.Dispatcher.InvokeAsync(() =>
@@ -168,12 +178,20 @@ public partial class AudioFrame : UserControl
                         Source = new Uri(videoPath),
                         IsMuted = true,
                         SpeedRatio = 0.6,
-                        LoadedBehavior = MediaState.Play,
-                        UnloadedBehavior = MediaState.Stop,
+                        LoadedBehavior = MediaState.Manual,
+                        UnloadedBehavior = MediaState.Manual,
                     };
 
                     mediaElement.MediaOpened += (s, e) => mediaElement.Clip = new RectangleGeometry(new Rect(0, 0, mediaElement.NaturalVideoWidth, mediaElement.NaturalVideoHeight), 38, 38);
                     mediaElement.MediaEnded += (s, e) => mediaElement.Position = TimeSpan.Zero;
+
+                    mediaElement.Play();
+
+                    _media = mediaElement;
+                    var audioManager = AppCore.GetRequiredService<IAudioManager>();
+                    audioManager.Playback.AudioPaused += OnMediaAudioPaused;
+                    audioManager.Playback.AudioPlaying += OnMediaAudioPlaying;
+                    audioManager.Playback.AudioStopped += OnMediaAudioStopped;
 
                     // 创建 VisualBrush
                     var visualBrush = new VisualBrush
@@ -192,15 +210,42 @@ public partial class AudioFrame : UserControl
                 }
                 else
                 {
-                    // 清除背景并显示 Image 控件
-                    border.Background = null;
-                    if (border.Child is AsyncImage image)
-                    {
-                        border.ContextMenu = null;
-                        image.Visibility = Visibility.Visible;
-                    }
+                    ClearBackground();
                 }
             });
+        }
+    }
+
+    private static void OnMediaAudioPlaying(object? sender, Core.Events.AudioPlayingArgs e)
+    {
+        _media?.Play();
+    }
+
+    private static void OnMediaAudioPaused(object? sender, EventArgs e)
+    {
+        _media?.Pause();
+    }
+
+    private static void OnMediaAudioStopped(object? sender, EventArgs e)
+    {
+        ClearBackground();
+    }
+
+    private static void ClearBackground()
+    {
+        var audioManager = AppCore.GetRequiredService<IAudioManager>();
+
+        audioManager.Playback.AudioPaused -= OnMediaAudioPaused;
+        audioManager.Playback.AudioPlaying -= OnMediaAudioPlaying;
+        audioManager.Playback.AudioStopped -= OnMediaAudioStopped;
+
+        // 清除背景并显示 Image 控件
+        _thisBorder.Background = null;
+        _media = null;
+        if (_thisBorder.Child is AsyncImage image)
+        {
+            _thisBorder.ContextMenu = null;
+            image.Visibility = Visibility.Visible;
         }
     }
 }
