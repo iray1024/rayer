@@ -258,7 +258,7 @@ internal partial class Api(IHttpClientProvider httpClientProvider) : RequestBase
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public async Task<QqLyricsResponse?> GetLyricsAsync(string id)
+    public async Task<LyricResult?> GetLyricsAsync(string id)
     {
         var resp = await PostAsFormAsync("https://c.y.qq.com/qqmusic/fcgi-bin/lyric_download.fcg", new Dictionary<string, string>
             {
@@ -332,7 +332,11 @@ internal partial class Api(IHttpClientProvider httpClientProvider) : RequestBase
             }
         }
 
-        return result.Lyrics == "" && result.Trans == "" ? null : result;
+        return result.Lyrics == "" && result.Trans == "" ? null : new LyricResult
+        {
+            Lyric = result.Lyrics,
+            Trans = result.Trans
+        };
     }
 
     public async Task<string> GetSongLink(string songMid)
@@ -398,6 +402,14 @@ internal partial class Api(IHttpClientProvider httpClientProvider) : RequestBase
         return link;
     }
 
+    protected override Dictionary<string, string> GetAdditionalHeaders()
+    {
+        return new Dictionary<string, string>
+        {
+            ["Cookie"] = "NMTID=8951e800-a302-493c-97fe-52773dffec6d"
+        };
+    }
+
     private static string ResolveRespJson(string callBackSign, string val)
     {
         if (!val.StartsWith(callBackSign))
@@ -406,7 +418,7 @@ internal partial class Api(IHttpClientProvider httpClientProvider) : RequestBase
         }
 
         var jsonStr = val.Replace(callBackSign + "(", string.Empty);
-        return jsonStr.Remove(jsonStr.Length - 1);
+        return jsonStr[..^1];
     }
 
     protected virtual string GetGuid()

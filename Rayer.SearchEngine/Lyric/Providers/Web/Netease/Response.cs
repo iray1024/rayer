@@ -93,6 +93,11 @@ public class LyricResult : ILyricResult
 
     public (string, LyricRawType) GetLyricTarget()
     {
+        if (Yrc is not null)
+        {
+            return (Yrc.Lyric, LyricRawType.Yrc);
+        }
+
         return (Lrc.Lyric, LyricRawType.Lrc);
     }
 }

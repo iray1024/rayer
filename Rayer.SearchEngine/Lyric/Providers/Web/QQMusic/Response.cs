@@ -315,7 +315,7 @@ public class LyricResult : ILyricResult
 
     public (string, LyricRawType) GetLyricTarget()
     {
-        return (Lyric, LyricRawType.Lrc);
+        return (Lyric, LyricRawType.Qrc);
     }
 }
 

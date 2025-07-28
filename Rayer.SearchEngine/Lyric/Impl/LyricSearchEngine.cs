@@ -40,7 +40,7 @@ internal class LyricSearchEngine : ILyricSearchEngine
     {
         if (tag is QQMusicSearchResult qq)
         {
-            var qqResult = await Providers.Web.Providers.QQMusicApi.GetLyric(qq.Mid);
+            var qqResult = await Providers.Web.Providers.QQMusicApi.GetLyricsAsync(qq.Id.ToString());
 
             return qqResult;
         }
@@ -53,7 +53,6 @@ internal class LyricSearchEngine : ILyricSearchEngine
         else if (tag is KugouSearchResult kugou)
         {
             var kugouSearchResult = await Providers.Web.Providers.KugouApi.GetSearchLyrics(null, kugou.DurationMs, kugou.Hash);
-
             if (kugouSearchResult is not null && kugouSearchResult.Candidates is { Count: > 0 })
             {
                 var candidate = kugouSearchResult.Candidates[0];

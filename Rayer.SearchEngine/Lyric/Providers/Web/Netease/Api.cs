@@ -130,9 +130,6 @@ internal class Api : RequestBase
     /// 获得原始歌词结果
     /// </summary>
     /// <param name="songId">音乐ID</param>
-    /// <exception cref="WebException"></exception>
-    /// <returns>一个
-    /// <see cref="LyricResult"/></returns>
     public async Task<LyricResult?> GetLyric(string songId)
     {
         const string url = "https://music.163.com/weapi/song/lyric?csrf_token=";
@@ -157,9 +154,6 @@ internal class Api : RequestBase
     /// 获得新版歌词结果（含逐字）
     /// </summary>
     /// <param name="songId">音乐ID</param>
-    /// <exception cref="WebException"></exception>
-    /// <returns>一个
-    /// <see cref="LyricResult"/></returns>
     public async Task<LyricResult?> GetLyricNew(string songId)
     {
         const string url = "https://interface3.music.163.com/eapi/song/lyric/v1";
@@ -203,8 +197,6 @@ internal class Api : RequestBase
     /// 批量获得歌曲详情
     /// </summary>
     /// <param name="songIds">歌曲ID</param>
-    /// <exception cref="WebException"></exception>
-    /// <returns></returns>
     private async Task<DetailResult?> GetDetail(IEnumerable<string> songIds)
     {
         try

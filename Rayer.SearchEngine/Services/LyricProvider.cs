@@ -114,7 +114,6 @@ internal class LyricProvider : ILyricProvider
     private async Task<bool> InternalSearchAsync(ITrackMetadata metadata)
     {
         var result = await _lyricSearchEngine.SearchAsync(metadata, _settingsService.Settings.LyricSearcher);
-
         if (result is not null)
         {
             var lyricResult = await _lyricSearchEngine.GetLyricAsync(result);
