@@ -86,7 +86,7 @@ public partial class ProcessMessageWindow : Window
             return CallNextHookEx(_hookId, nCode, wParam, lParam);
         }
 
-        if (Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT)) is not KBDLLHOOKSTRUCT keyData)
+        if (Marshal.PtrToStructure<KBDLLHOOKSTRUCT>(lParam) is not KBDLLHOOKSTRUCT keyData)
         {
             return CallNextHookEx(_hookId, nCode, wParam, lParam);
         }

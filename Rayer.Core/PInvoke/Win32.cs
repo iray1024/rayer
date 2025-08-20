@@ -39,4 +39,37 @@ internal static partial class Win32
     [LibraryImport("kernel32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static partial bool SetProcessWorkingSetSize(IntPtr proc, int min, int max);
+
+
+    [LibraryImport("gdi32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool DeleteObject(IntPtr hObject);
+
+    [LibraryImport("dwmapi.dll")]
+    public static partial int DwmSetIconicThumbnail(IntPtr hwnd, IntPtr hbmp, int dwSITFlags);
+
+    [LibraryImport("dwmapi.dll")]
+    public static partial int DwmInvalidateIconicBitmaps(IntPtr hwnd);
+
+    [LibraryImport("dwmapi.dll")]
+    public static partial int DwmSetIconicLivePreviewBitmap(IntPtr hwnd, IntPtr hBitmap, IntPtr pptClient, DWM_SIT dwSITFlags);
+
+    [LibraryImport("dwmapi.dll")]
+    public static partial int DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttributes dwAttribute, IntPtr pvAttribute, int cbAttribute);
+
+    [Flags]
+    public enum DwmWindowAttributes : uint
+    {
+        None = 0,
+        DISPLAYFRAME = 1,
+        FORCE_ICONIC_REPRESENTATION = 7,
+        HAS_ICONIC_BITMAP = 10
+    }
+
+    [Flags]
+    public enum DWM_SIT : uint
+    {
+        None = 0x0,
+        DisplayFrame = 0x1
+    }
 }
