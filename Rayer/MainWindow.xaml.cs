@@ -576,6 +576,6 @@ public partial class MainWindow : IWindow
         var hash = Convert.ToBase64String(_xxh.DigestBytes());
         _xxh.Reset();
 
-        return hash;
+        return hash.TrimEnd('=').Replace('+', '_').Replace('/', '_');
     }
 }
