@@ -20,7 +20,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -41,6 +40,7 @@ public partial class MainWindow : IWindow
 
     private readonly SystemMediaTransportControlsManager _smtc = new();
     private static BitmapImage _iconicThumbnailImage = default!;
+    private static IXXH64 _xxh = null!;
 
     public MainWindow(
         MainWindowViewModel viewModel,
@@ -70,6 +70,8 @@ public partial class MainWindow : IWindow
         ApplicationThemeManager.Changed += OnThemeChanged;
 
         RenderOptions.ProcessRenderMode = RenderMode.Default;
+
+        _xxh = App.GetRequiredService<IXXH64>();
     }
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
@@ -534,7 +536,7 @@ public partial class MainWindow : IWindow
         MemoryStream? stream = null;
         try
         {
-            var audioId = CalculateMd5Hash(source);
+            var audioId = CalculateXXHash(source);
             var cacheBitmap = Path.Combine(Path.GetTempPath(), $"{(isLivePreview ? $"{audioId}_live" : audioId)}.bmp");
             if (File.Exists(cacheBitmap))
             {
@@ -564,13 +566,16 @@ public partial class MainWindow : IWindow
         }
     }
 
-    public static string CalculateMd5Hash(BitmapSource source)
+    public static string CalculateXXHash(BitmapSource source)
     {
         var stride1 = source.PixelWidth * (source.Format.BitsPerPixel / 8);
         var pixelData = new byte[stride1 * source.PixelHeight];
         source.CopyPixels(pixelData, stride1, 0);
 
-        var hashBytes = MD5.HashData(pixelData);
-        return Convert.ToHexStringLower(hashBytes);
+        _xxh.Update(new Memory<byte>(pixelData).ToArray());
+        var hash = Convert.ToBase64String(_xxh.DigestBytes());
+        _xxh.Reset();
+
+        return hash;
     }
 }
