@@ -20,6 +20,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -39,6 +40,7 @@ public partial class MainWindow : IWindow
     private bool _isPaneOpenedOrClosedFromCode;
 
     private readonly SystemMediaTransportControlsManager _smtc = new();
+    private static BitmapImage _iconicThumbnailImage = default!;
 
     public MainWindow(
         MainWindowViewModel viewModel,
@@ -121,6 +123,7 @@ public partial class MainWindow : IWindow
         audioManager.AudioStopped += (s, e) =>
         {
             _smtc.UpdatePlaybackStatus(Windows.Media.MediaPlaybackStatus.Stopped);
+            ClearIconicThumbnail();
         };
 
         audioManager.Playback.Seeked += (s, e) =>
@@ -385,14 +388,18 @@ public partial class MainWindow : IWindow
         }
     }
 
+    private static bool _iconicThumbnailInitialized = false;
     private static void SetIconicThumbnail(BitmapImage image)
     {
+        Interlocked.Exchange(ref _iconicThumbnailImage, image);
+
         var hwnd = new WindowInteropHelper(AppCore.MainWindow).Handle;
         var size = Marshal.SizeOf<int>();
         var pBool = Marshal.AllocHGlobal(size);
         try
         {
             Marshal.WriteInt32(pBool, 1);
+
             _ = Win32.DwmSetWindowAttribute(hwnd, Win32.DwmWindowAttributes.FORCE_ICONIC_REPRESENTATION, pBool, size);
             _ = Win32.DwmSetWindowAttribute(hwnd, Win32.DwmWindowAttributes.HAS_ICONIC_BITMAP, pBool, size);
         }
@@ -401,63 +408,99 @@ public partial class MainWindow : IWindow
             Marshal.FreeHGlobal(pBool);
         }
 
-        var source = HwndSource.FromHwnd(hwnd);
-        source?.AddHook(new HwndSourceHook((IntPtr _hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) =>
+        if (!_iconicThumbnailInitialized)
         {
-            if (msg == 0x0323)
-            {
-                var width = (int)((((long)lParam) >> 16) & 0xffff);
-                var height = (int)((long)lParam & 0xffff);
+            _iconicThumbnailInitialized = true;
 
-                var round = Math.Min(width, height);
-
-                IntPtr hBitmap = IntPtr.Zero;
-                try
-                {
-                    var adaptedSize = new System.Drawing.Size(round, round);
-
-                    hBitmap = CreateBitmap(image, adaptedSize);
-                    _ = Win32.DwmSetIconicThumbnail(_hwnd, hBitmap, (int)Win32.DwmWindowAttributes.DISPLAYFRAME);
-                }
-                finally
-                {
-                    Win32.DeleteObject(hBitmap);
-                }
-
-                handled = true;
-            }
-
-            if (msg == 0x0326)
-            {
-                IntPtr hBitmap = IntPtr.Zero, offsetPtr = IntPtr.Zero;
-                try
-                {
-                    var aspectRatio = 1.0f * image.PixelWidth / image.PixelHeight;
-                    var adaptedSize = AdjustBitmapSize(in aspectRatio, image.PixelWidth, image.PixelHeight);
-
-                    var offsetX = (int)((AppCore.MainWindow.Width - adaptedSize.Width) / 2);
-                    var offsetY = (int)((AppCore.MainWindow.Height - adaptedSize.Height) / 2);
-                    var offset = new System.Drawing.Point(offsetX, offsetY);
-
-                    offsetPtr = Marshal.AllocHGlobal(Marshal.SizeOf<System.Drawing.Point>());
-                    Marshal.StructureToPtr(offset, offsetPtr, false);
-
-                    hBitmap = CreateBitmap(image, adaptedSize);
-                    _ = Win32.DwmSetIconicLivePreviewBitmap(_hwnd, hBitmap, offsetPtr, Win32.DWM_SIT.None);
-                }
-                finally
-                {
-                    Win32.DeleteObject(hBitmap);
-                    Marshal.FreeHGlobal(offsetPtr);
-                }
-
-                handled = true;
-            }
-
-            return IntPtr.Zero;
-        }));
+            var source = HwndSource.FromHwnd(hwnd);
+            source?.AddHook(IconicThumbnailHook);
+        }
 
         _ = Win32.DwmInvalidateIconicBitmaps(hwnd);
+    }
+
+    private static void ClearIconicThumbnail()
+    {
+        if (AppCore.MainWindow is not null)
+        {
+            var hwnd = new WindowInteropHelper(AppCore.MainWindow).Handle;
+            var size = Marshal.SizeOf<int>();
+            var pBool = Marshal.AllocHGlobal(size);
+            try
+            {
+                Marshal.WriteInt32(pBool, 0);
+
+                _ = Win32.DwmSetWindowAttribute(hwnd, Win32.DwmWindowAttributes.FORCE_ICONIC_REPRESENTATION, pBool, size);
+                _ = Win32.DwmSetWindowAttribute(hwnd, Win32.DwmWindowAttributes.HAS_ICONIC_BITMAP, pBool, size);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(pBool);
+            }
+
+            _ = Win32.DwmInvalidateIconicBitmaps(hwnd);
+
+            HwndSource.FromHwnd(hwnd)?.RemoveHook(IconicThumbnailHook);
+            _iconicThumbnailInitialized = false;
+        }
+    }
+
+    private static IntPtr IconicThumbnailHook(nint hwnd, int msg, nint wParam, nint lParam, ref bool handled)
+    {
+        const int WM_DWMSENDICONICTHUMBNAIL = 0x0323;
+        const int WM_DWMSENDICONICLIVEPREVIEWBITMAP = 0x0326;
+
+        if (msg == WM_DWMSENDICONICTHUMBNAIL)
+        {
+            var width = (int)((((long)lParam) >> 16) & 0xffff);
+            var height = (int)((long)lParam & 0xffff);
+
+            var round = Math.Min(width, height);
+
+            IntPtr hBitmap = IntPtr.Zero;
+            try
+            {
+                var adaptedSize = new System.Drawing.Size(round, round);
+
+                hBitmap = CreateBitmap(_iconicThumbnailImage, adaptedSize);
+                _ = Win32.DwmSetIconicThumbnail(hwnd, hBitmap, 0);
+            }
+            finally
+            {
+                Win32.DeleteObject(hBitmap);
+            }
+
+            handled = true;
+        }
+
+        if (msg == WM_DWMSENDICONICLIVEPREVIEWBITMAP)
+        {
+            IntPtr hBitmap = IntPtr.Zero, offsetPtr = IntPtr.Zero;
+            try
+            {
+                var aspectRatio = 1.0f * _iconicThumbnailImage.PixelWidth / _iconicThumbnailImage.PixelHeight;
+                var adaptedSize = AdjustBitmapSize(in aspectRatio, _iconicThumbnailImage.PixelWidth, _iconicThumbnailImage.PixelHeight);
+
+                var offsetX = (int)((AppCore.MainWindow.Width - adaptedSize.Width) / 2);
+                var offsetY = (int)((AppCore.MainWindow.Height - adaptedSize.Height) / 2);
+                var offset = new System.Drawing.Point(offsetX, offsetY);
+
+                offsetPtr = Marshal.AllocHGlobal(Marshal.SizeOf<System.Drawing.Point>());
+                Marshal.StructureToPtr(offset, offsetPtr, false);
+
+                hBitmap = CreateBitmap(_iconicThumbnailImage, adaptedSize, true);
+                _ = Win32.DwmSetIconicLivePreviewBitmap(hwnd, hBitmap, offsetPtr, Win32.DWM_SIT.None);
+            }
+            finally
+            {
+                Win32.DeleteObject(hBitmap);
+                Marshal.FreeHGlobal(offsetPtr);
+            }
+
+            handled = true;
+        }
+
+        return IntPtr.Zero;
     }
 
     private static System.Drawing.Size AdjustBitmapSize(in float bitmapAspectRatio, in int bitmapWidth, in int bitmapHeight)
@@ -485,12 +528,20 @@ public partial class MainWindow : IWindow
         return new System.Drawing.Size((int)targetWidth, (int)targetHeight);
     }
 
-    private static IntPtr CreateBitmap(BitmapSource source, System.Drawing.Size adaptedSize)
+    private static IntPtr CreateBitmap(BitmapSource source, System.Drawing.Size adaptedSize, bool isLivePreview = false)
     {
         Bitmap? bitmap = null;
         MemoryStream? stream = null;
         try
         {
+            var audioId = CalculateMd5Hash(source);
+            var cacheBitmap = Path.Combine(Path.GetTempPath(), $"{(isLivePreview ? $"{audioId}_live" : audioId)}.bmp");
+            if (File.Exists(cacheBitmap))
+            {
+                bitmap = new Bitmap(cacheBitmap);
+                return bitmap.GetHbitmap();
+            }
+
             stream = new MemoryStream();
 
             BitmapEncoder enc = source.Format == PixelFormats.Bgr32 || source.Format == PixelFormats.Pbgra32
@@ -501,8 +552,9 @@ public partial class MainWindow : IWindow
             enc.Save(stream);
 
             bitmap = new Bitmap(stream);
-            var resizedBitmap = new Bitmap(bitmap, adaptedSize);
+            using var resizedBitmap = new Bitmap(bitmap, adaptedSize);
 
+            resizedBitmap.Save(cacheBitmap);
             return resizedBitmap.GetHbitmap();
         }
         finally
@@ -510,5 +562,15 @@ public partial class MainWindow : IWindow
             stream?.Dispose();
             bitmap?.Dispose();
         }
+    }
+
+    public static string CalculateMd5Hash(BitmapSource source)
+    {
+        var stride1 = source.PixelWidth * (source.Format.BitsPerPixel / 8);
+        var pixelData = new byte[stride1 * source.PixelHeight];
+        source.CopyPixels(pixelData, stride1, 0);
+
+        var hashBytes = MD5.HashData(pixelData);
+        return Convert.ToHexStringLower(hashBytes);
     }
 }
