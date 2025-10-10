@@ -188,6 +188,9 @@ public sealed class GradientTextBlock : Control
 
     private FormattedText CreateFormattedText(string text, Brush foreground, double? maxWidth = null)
     {
+        // 处理非换行空格 (Non-breaking Space)
+        text = text.Replace(' ', '\u00A0');
+
         var formattedText = new FormattedText(
             text,
             CultureInfo.CurrentCulture,
