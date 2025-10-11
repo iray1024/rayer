@@ -1,5 +1,6 @@
 ﻿using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
+using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Menu;
 using Rayer.Core.Utils;
 using Rayer.FrameworkCore;
@@ -185,7 +186,7 @@ internal class ContextMenuFactory : IContextMenuFactory
 
         var dynamicBlur = new MenuItem()
         {
-            Header = "关闭动态模糊",
+            Header = AppCore.GetRequiredService<ISettingsService>().Settings.EnableTextBlur ? "关闭动态模糊" : "打开动态模糊",
             Command = _commandBinding.SwitchDynamicBlurCommand
         };
 
