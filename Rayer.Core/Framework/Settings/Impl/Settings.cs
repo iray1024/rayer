@@ -22,6 +22,7 @@ public class Settings : ISettings
     public LyricSearcher LyricSearcher { get; set; } = LyricSearcher.Netease;
     public bool EnableTextBlur { get; set; } = true;
     public SearcherType DefaultSearcher { get; set; } = SearcherType.Netease;
+    public bool AsyncFileSystem { get; set; } = true;
     public PlaybackRecord PlaybackRecord { get; set; }
     public float Volume { get; set; } = 1.0f;
     public float Pitch { get; set; } = 1.0f;

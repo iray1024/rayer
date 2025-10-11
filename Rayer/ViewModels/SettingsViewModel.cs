@@ -134,6 +134,19 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         }
     }
 
+    private bool _asyncFileSystem;
+    public bool AsyncFileSystem
+    {
+        get => _asyncFileSystem;
+        set
+        {
+            SetProperty(ref _asyncFileSystem, value);
+            _settings.Settings.AsyncFileSystem = _asyncFileSystem;
+            OnPropertyChanged();
+            UpdateConfigFile();
+        }
+    }
+
     [ObservableProperty]
     private bool _isCloudServerAvaliable = true;
 
@@ -155,6 +168,7 @@ public sealed partial class SettingsViewModel : ObservableObject, INavigationAwa
         _pitchProvider = _settings.Settings.PitchProvider;
         _lyricSearcher = _settings.Settings.LyricSearcher;
         DefaultSearcher = _settings.Settings.DefaultSearcher;
+        AsyncFileSystem = _settings.Settings.AsyncFileSystem;
 
         AudioLibrary.CollectionChanged += OnCollectionChanged;
 

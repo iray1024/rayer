@@ -80,6 +80,9 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
                     case nameof(settings.DefaultSearcher):
                         settings.DefaultSearcher = (SearcherType)reader.GetInt32();
                         break;
+                    case nameof(settings.AsyncFileSystem):
+                        settings.AsyncFileSystem = reader.GetBoolean();
+                        break;
                     case nameof(settings.Volume):
                         settings.Volume = (float)reader.GetDouble();
                         break;
@@ -149,6 +152,7 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
         writer.WriteNumber(nameof(value.LyricSearcher), Convert.ToDecimal(value.LyricSearcher));
         writer.WriteBoolean(nameof(value.EnableTextBlur), Convert.ToBoolean(value.EnableTextBlur));
         writer.WriteNumber(nameof(value.DefaultSearcher), Convert.ToDecimal(value.DefaultSearcher));
+        writer.WriteBoolean(nameof(value.AsyncFileSystem), Convert.ToBoolean(value.AsyncFileSystem));
         writer.WriteNumber(nameof(value.Volume), Convert.ToDecimal(value.Volume));
         writer.WriteNumber(nameof(value.Pitch), Convert.ToDecimal(value.Pitch));
         writer.WriteNumber(nameof(value.Speed), Convert.ToDecimal(value.Speed));

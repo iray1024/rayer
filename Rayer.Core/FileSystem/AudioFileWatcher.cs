@@ -12,6 +12,8 @@ namespace Rayer.Core.FileSystem;
 [Inject<IAudioFileWatcher>]
 internal class AudioFileWatcher : IAudioFileWatcher
 {
+    private readonly ISettingsService _settingsService;
+
     private static readonly string[] _filters = IAudioFileWatcher.MediaFilter.Split('|');
 
     private readonly ObservableCollection<FileSystemWatcher> _watchers = [];
@@ -25,6 +27,7 @@ internal class AudioFileWatcher : IAudioFileWatcher
     {
         MediaRecognizer.Initialize();
 
+        _settingsService = settingsService;
         var libs = settingsService.Settings.AudioLibrary;
 
         _watchers = new ObservableCollection<FileSystemWatcher>(libs.Select(x => new FileSystemWatcher(x)));
@@ -42,7 +45,14 @@ internal class AudioFileWatcher : IAudioFileWatcher
             {
                 foreach (var item in e.NewItems)
                 {
-                    Attatch((FileSystemWatcher)item);
+                    if (_settingsService.Settings.AsyncFileSystem)
+                    {
+                        AttatchAsync((FileSystemWatcher)item);
+                    }
+                    else
+                    {
+                        Attach((FileSystemWatcher)item);
+                    }
                 }
             }
         }
@@ -58,27 +68,32 @@ internal class AudioFileWatcher : IAudioFileWatcher
         }
     }
 
-    private Task Attatch(FileSystemWatcher watcher)
+    private Task AttatchAsync(FileSystemWatcher watcher)
     {
         return Task.Run(() =>
         {
-            watcher.Changed += Watcher_Changed;
-            watcher.Created += Watcher_Created;
-            watcher.Deleted += Watcher_Deleted;
-            watcher.Renamed += Watcher_Renamed;
-
-            var files = Directory
-                .GetFiles(watcher.Path, "*", SearchOption.AllDirectories)
-                .Where(ValidFileType);
-
-            foreach (var item in files.Select(MediaRecognizer.Recognize))
-            {
-                Audios.Add(item);
-            }
-
-            watcher.IncludeSubdirectories = true;
-            watcher.EnableRaisingEvents = true;
+            Attach(watcher);
         });
+    }
+
+    private void Attach(FileSystemWatcher watcher)
+    {
+        watcher.Changed += Watcher_Changed;
+        watcher.Created += Watcher_Created;
+        watcher.Deleted += Watcher_Deleted;
+        watcher.Renamed += Watcher_Renamed;
+
+        var files = Directory
+            .GetFiles(watcher.Path, "*", SearchOption.AllDirectories)
+            .Where(ValidFileType);
+
+        foreach (var item in files.Select(MediaRecognizer.Recognize))
+        {
+            Audios.Add(item);
+        }
+
+        watcher.IncludeSubdirectories = true;
+        watcher.EnableRaisingEvents = true;
     }
 
     private void Detatch(FileSystemWatcher watcher)
@@ -110,13 +125,25 @@ internal class AudioFileWatcher : IAudioFileWatcher
 
     public void Watch()
     {
-        var tasks = new List<Task>();
-        foreach (var watcher in _watchers)
+        if (_settingsService.Settings.AsyncFileSystem)
         {
-            tasks.Add(Attatch(watcher));
-        }
+            var tasks = new List<Task>();
+            foreach (var watcher in _watchers)
+            {
+                tasks.Add(AttatchAsync(watcher));
+            }
 
-        _ = Task.WhenAll(tasks).ContinueWith(task => PreLoaded?.Invoke(this, EventArgs.Empty));
+            _ = Task.WhenAll(tasks).ContinueWith(task => PreLoaded?.Invoke(this, EventArgs.Empty));
+        }
+        else
+        {
+            foreach (var watcher in _watchers)
+            {
+                Attach(watcher);
+            }
+
+            PreLoaded?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public void AddWatcher(string path)

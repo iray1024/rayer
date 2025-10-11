@@ -29,6 +29,8 @@ public interface ISettings
 
     public SearcherType DefaultSearcher { get; set; }
 
+    public bool AsyncFileSystem { get; set; }
+
     public PlaybackRecord PlaybackRecord { get; set; }
 
     public float Volume { get; set; }

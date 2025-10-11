@@ -257,6 +257,31 @@
                     <ui:TextBlock
                         Grid.Row="0"
                         FontTypography="Body"
+                        Text="异步文件监控" />
+                    <ui:TextBlock
+                        Grid.Row="1"
+                        FontTypography="Caption"
+                        Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                        Text="设置是否启用异步文件监控" />
+                </Grid>
+            </ui:CardControl.Header>
+            <ui:ToggleSwitch IsChecked="{Binding ViewModel.AsyncFileSystem, Mode=TwoWay}" />
+        </ui:CardControl>
+
+        <ui:CardControl
+            Margin="0,0,0,6"
+            CornerRadius="6"
+            Icon="{ui:SymbolIcon NoteAdd24}"
+            RenderOptions.BitmapScalingMode="Fant">
+            <ui:CardControl.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ui:TextBlock
+                        Grid.Row="0"
+                        FontTypography="Body"
                         Text="播放单首歌曲" />
                     <ui:TextBlock
                         Grid.Row="1"
