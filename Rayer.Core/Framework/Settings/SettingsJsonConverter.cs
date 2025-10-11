@@ -74,6 +74,9 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
                     case nameof(settings.LyricSearcher):
                         settings.LyricSearcher = (LyricSearcher)reader.GetInt32();
                         break;
+                    case nameof(settings.EnableTextBlur):
+                        settings.EnableTextBlur = reader.GetBoolean();
+                        break;
                     case nameof(settings.DefaultSearcher):
                         settings.DefaultSearcher = (SearcherType)reader.GetInt32();
                         break;
@@ -144,6 +147,7 @@ internal class SettingsJsonConverter<T> : JsonConverter<T>
         writer.WriteNumber(nameof(value.EqualizerMode), Convert.ToDecimal(value.EqualizerMode));
         writer.WriteNumber(nameof(value.PitchProvider), Convert.ToDecimal(value.PitchProvider));
         writer.WriteNumber(nameof(value.LyricSearcher), Convert.ToDecimal(value.LyricSearcher));
+        writer.WriteBoolean(nameof(value.EnableTextBlur), Convert.ToBoolean(value.EnableTextBlur));
         writer.WriteNumber(nameof(value.DefaultSearcher), Convert.ToDecimal(value.DefaultSearcher));
         writer.WriteNumber(nameof(value.Volume), Convert.ToDecimal(value.Volume));
         writer.WriteNumber(nameof(value.Pitch), Convert.ToDecimal(value.Pitch));

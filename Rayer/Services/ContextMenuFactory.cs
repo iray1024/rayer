@@ -183,6 +183,15 @@ internal class ContextMenuFactory : IContextMenuFactory
 
         menu.Items.Add(switchLyricSearcherItem);
 
+        var dynamicBlur = new MenuItem()
+        {
+            Header = "关闭动态模糊",
+            Command = _commandBinding.SwitchDynamicBlurCommand
+        };
+
+        dynamicBlur.Click += OnDynamicBlurClick;
+        menu.Items.Add(dynamicBlur);
+
         menu.Items.Add(new Separator());
 
         var fastbackward = new MenuItem()
@@ -247,6 +256,22 @@ internal class ContextMenuFactory : IContextMenuFactory
             }
 
             menuItem.Icon = ImageIconFactory.Create("Play", 18);
+        }
+    }
+
+    private void OnDynamicBlurClick(object sender, System.Windows.RoutedEventArgs e)
+    {
+        if (sender is MenuItem menuItem)
+        {
+            if (menuItem.Header.Equals("关闭动态模糊"))
+            {
+                menuItem.Header = "打开动态模糊";
+            }
+            else
+            {
+                menuItem.Header = "关闭动态模糊";
+            }
+
         }
     }
 }

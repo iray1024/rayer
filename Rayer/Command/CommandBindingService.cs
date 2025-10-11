@@ -260,6 +260,15 @@ internal partial class CommandBindingService(
     }
 
     [RelayCommand]
+    private static void SwitchDynamicBlur()
+    {
+        var settingsService = App.GetRequiredService<ISettingsService>();
+
+        settingsService.Settings.EnableTextBlur = !settingsService.Settings.EnableTextBlur;
+        settingsService.Save();
+    }
+
+    [RelayCommand]
     private static void FastForward()
     {
         var provider = App.GetRequiredService<ILyricProvider>();

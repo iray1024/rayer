@@ -25,6 +25,8 @@ public interface ISettings
 
     public LyricSearcher LyricSearcher { get; set; }
 
+    public bool EnableTextBlur { get; set; }
+
     public SearcherType DefaultSearcher { get; set; }
 
     public PlaybackRecord PlaybackRecord { get; set; }

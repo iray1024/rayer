@@ -2,6 +2,8 @@
 using Rayer.Core.Abstractions;
 using Rayer.Core.Common;
 using Rayer.Core.Events;
+using Rayer.Core.Framework.Settings.Abstractions;
+using Rayer.Core.Framework.Settings.Impl;
 using Rayer.Core.Lyric.Abstractions;
 using Rayer.Core.Lyric.Impl;
 using Rayer.Core.Menu;
@@ -20,6 +22,7 @@ public partial class DynamicIslandViewModel : ObservableObject
 {
     private readonly ILyricProvider _lyricProvider;
     private readonly IAudioManager _audioManager;
+    private readonly ISettingsService _settingsService;
     private readonly DispatcherTimer _timer;
 
     private bool _isInitializing = false;
@@ -38,10 +41,11 @@ public partial class DynamicIslandViewModel : ObservableObject
     private List<ILineInfo> _totalLines = [];
     private int _currentLineIndex = 0;
 
-    public DynamicIslandViewModel(ILyricProvider lyricProvider, IAudioManager audioManager)
+    public DynamicIslandViewModel(ILyricProvider lyricProvider, IAudioManager audioManager, ISettingsService settingsService)
     {
         _lyricProvider = lyricProvider;
         _audioManager = audioManager;
+        _settingsService = settingsService;
 
         _lyricProvider.AudioPlaying += OnAudioPlaying;
         _lyricProvider.AudioChanged += OnAudioChanged;
@@ -213,7 +217,7 @@ public partial class DynamicIslandViewModel : ObservableObject
                 {
                     if (!_isInitializing)
                     {
-                        if (_currentLineIndex + 2 < _totalLines.Count &&
+                        if (_settingsService.Settings.EnableTextBlur && _currentLineIndex + 2 < _totalLines.Count &&
                         _totalLines[_currentLineIndex + 2].StartTime - nextLine.StartTime > 1000)
                         {
                             DynamicIsland.TextBlurStroyboard.Begin();
