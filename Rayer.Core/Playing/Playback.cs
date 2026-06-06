@@ -177,6 +177,11 @@ public class Playback : IDisposable
         Queue.Clear();
         Queue.AddRange(_audioManager.Audios);
 
+        if (Playing)
+        {
+            return;
+        }
+
         if (!string.IsNullOrEmpty(record.Id) &&
             TryGetAudio(record.Id, out var audio))
         {
