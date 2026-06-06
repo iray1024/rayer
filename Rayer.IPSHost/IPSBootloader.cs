@@ -100,6 +100,6 @@ internal partial class IPSBootloader : IIPSBootloader
         TcpPortFinder.KillPort((ushort)Port, true, true);
     }
 
-    [GeneratedRegex(@"server running")]
+    [GeneratedRegex(@"Server started")]
     private static partial Regex ServerRuningRegex();
 }
