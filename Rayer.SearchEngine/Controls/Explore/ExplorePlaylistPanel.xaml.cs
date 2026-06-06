@@ -417,7 +417,7 @@ public partial class ExplorePlaylistPanel : AdaptiveUserControl
                     ? "歌单"
                     : string.Empty;
 
-        var dialog = new MaskContentDialog(_contentDialogService.GetDialogHost())
+        var dialog = new MaskContentDialog(_contentDialogService.GetDialogHostEx())
         {
             Title = $"{type}介绍",
             IsFooterVisible = false

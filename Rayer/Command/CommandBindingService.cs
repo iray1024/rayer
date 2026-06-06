@@ -31,7 +31,7 @@ internal partial class CommandBindingService(
     private async Task AddPlaylist()
     {
         var dialogService = App.GetRequiredService<IContentDialogService>();
-        var dialog = new NewPlaylistDialog(dialogService.GetDialogHost())
+        var dialog = new NewPlaylistDialog(dialogService.GetDialogHostEx())
         {
             Title = "新建歌单",
             PrimaryButtonText = "确认",
@@ -78,7 +78,7 @@ internal partial class CommandBindingService(
         var target = nav.MenuItems.OfType<NavigationViewItem>().FirstOrDefault(x => x.TargetPageTag == tag)!;
 
         var dialogService = App.GetRequiredService<IContentDialogService>();
-        var dialog = new NewPlaylistDialog(dialogService.GetDialogHost())
+        var dialog = new NewPlaylistDialog(dialogService.GetDialogHostEx())
         {
             Title = "编辑歌单",
             PrimaryButtonText = "确认",
@@ -354,10 +354,7 @@ internal partial class CommandBindingService(
                 }
             }
 
-            if (menu.Icon is not null)
-            {
-                menu.Icon.Clip = new RectangleGeometry(new Rect(0, 0, 24, 24), 4, 4);
-            }
+            menu.Icon?.Clip = new RectangleGeometry(new Rect(0, 0, 24, 24), 4, 4);
         }
     }
 }

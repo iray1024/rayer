@@ -79,7 +79,7 @@ public partial class SettingsPage : INavigableView<SettingsViewModel>
 
         var local = Version.Parse(fileVersionInfo.FileVersion);
 
-        var dialog = new AboutContentDialog(contentDialogService.GetDialogHost())
+        var dialog = new AboutContentDialog(contentDialogService.GetDialogHostEx())
         {
             Title = "关于 Rayer",
             IsFooterVisible = false,

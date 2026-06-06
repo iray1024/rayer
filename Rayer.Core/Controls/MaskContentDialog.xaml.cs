@@ -7,7 +7,7 @@ namespace Rayer.Core.Controls;
 
 public partial class MaskContentDialog : ContentDialog
 {
-    public MaskContentDialog(ContentPresenter? contentPresenter)
+    public MaskContentDialog(ContentDialogHost? contentPresenter)
         : base(contentPresenter)
     {
         InitializeComponent();

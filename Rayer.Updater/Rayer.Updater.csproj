@@ -10,11 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>		
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />		
-    <PackageReference Include="Downloader" Version="3.3.4" />		
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.5" />		
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.5" />		
-    <PackageReference Include="WPF-UI" Version="4.0.2" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />		
+    <PackageReference Include="Downloader" Version="5.8.0" />		
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.8" />		
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.8" />		
+    <PackageReference Include="WPF-UI" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>

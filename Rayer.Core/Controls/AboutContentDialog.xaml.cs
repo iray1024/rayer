@@ -8,7 +8,7 @@ namespace Rayer.Core.Controls;
 
 public partial class AboutContentDialog : ContentDialog
 {
-    public AboutContentDialog(ContentPresenter? contentPresenter)
+    public AboutContentDialog(ContentDialogHost? contentPresenter)
         : base(contentPresenter)
     {
         InitializeComponent();

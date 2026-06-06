@@ -25,6 +25,7 @@
     SizeChanged="OnSizeChanged"
     SnapsToDevicePixels="True"
     UseLayoutRounding="True"
+    WindowBackdropType="Mica"
     WindowCornerPreference="Default"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
@@ -52,7 +53,7 @@
             HorizontalAlignment="Right"
             Panel.ZIndex="9999999" />
 
-        <ContentPresenter
+        <ui:ContentDialogHost
             x:Name="RootContentDialog"
             Grid.Row="0"
             Panel.ZIndex="9999" />
