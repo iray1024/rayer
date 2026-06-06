@@ -3,6 +3,7 @@ using Rayer.Core.Framework.Settings.Abstractions;
 using Rayer.Core.Models;
 using Rayer.Core.Utils;
 using Rayer.FrameworkCore.Injection;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
@@ -17,6 +18,10 @@ internal class AudioFileWatcher : IAudioFileWatcher
     private static readonly string[] _filters = IAudioFileWatcher.MediaFilter.Split('|');
 
     private readonly ObservableCollection<FileSystemWatcher> _watchers = [];
+
+    private readonly ConcurrentDictionary<string, byte> _knownPaths = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ConcurrentDictionary<string, byte> _scanningWatcherPaths = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ConcurrentDictionary<string, byte> _pathsCreatedDuringScan = new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
     /// 这个变量表示整个系统监控的所有Audio
@@ -83,17 +88,28 @@ internal class AudioFileWatcher : IAudioFileWatcher
         watcher.Deleted += Watcher_Deleted;
         watcher.Renamed += Watcher_Renamed;
 
-        var files = Directory
-            .GetFiles(watcher.Path, "*", SearchOption.AllDirectories)
-            .Where(ValidFileType);
-
-        foreach (var item in files.Select(MediaRecognizer.Recognize))
-        {
-            Audios.Add(item);
-        }
-
         watcher.IncludeSubdirectories = true;
         watcher.EnableRaisingEvents = true;
+
+        _scanningWatcherPaths[watcher.Path] = 0;
+
+        try
+        {
+            var files = Directory
+                .GetFiles(watcher.Path, "*", SearchOption.AllDirectories)
+                .Where(ValidFileType);
+
+            foreach (var file in files)
+            {
+                TryRecognizeAndAdd(file);
+            }
+
+            ProcessPathsCreatedDuringScan(watcher.Path);
+        }
+        finally
+        {
+            _scanningWatcherPaths.TryRemove(watcher.Path, out _);
+        }
     }
 
     private void Detatch(FileSystemWatcher watcher)
@@ -111,9 +127,12 @@ internal class AudioFileWatcher : IAudioFileWatcher
                 .GetFiles(watcher.Path, "*", SearchOption.AllDirectories)
                 .Where(ValidFileType);
 
-            foreach (var item in files.Select(MediaRecognizer.Recognize))
+            foreach (var file in files)
             {
-                var target = Audios.FirstOrDefault(x => x.Path == item.Path);
+                _knownPaths.TryRemove(file, out _);
+                _pathsCreatedDuringScan.TryRemove(file, out _);
+
+                var target = Audios.FirstOrDefault(x => x.Path.Equals(file, StringComparison.OrdinalIgnoreCase));
 
                 if (target is not null)
                 {
@@ -174,7 +193,10 @@ internal class AudioFileWatcher : IAudioFileWatcher
     {
         if (ValidFileType(e.FullPath))
         {
-            var target = Audios.FirstOrDefault(x => x.Path == e.FullPath);
+            _knownPaths.TryRemove(e.FullPath, out _);
+            _pathsCreatedDuringScan.TryRemove(e.FullPath, out _);
+
+            var target = Audios.FirstOrDefault(x => x.Path.Equals(e.FullPath, StringComparison.OrdinalIgnoreCase));
 
             if (target is not null)
             {
@@ -185,20 +207,71 @@ internal class AudioFileWatcher : IAudioFileWatcher
 
     private async void Watcher_Created(object sender, FileSystemEventArgs e)
     {
-        if (ValidFileType(e.FullPath))
+        if (!ValidFileType(e.FullPath))
         {
-            await WaitFileOperationCompletedAsync(e.FullPath);
-
-            Audios.Add(MediaRecognizer.Recognize(e.FullPath));
+            return;
         }
+
+        if (sender is FileSystemWatcher watcher && _scanningWatcherPaths.ContainsKey(watcher.Path))
+        {
+            _pathsCreatedDuringScan.TryAdd(e.FullPath, 0);
+            return;
+        }
+
+        await WaitFileOperationCompletedAsync(e.FullPath);
+
+        TryRecognizeAndAdd(e.FullPath);
     }
 
     private void Watcher_Changed(object sender, FileSystemEventArgs e)
     {
-        if (ValidFileType(e.FullPath))
+        if (ValidFileType(e.FullPath) && !_knownPaths.ContainsKey(e.FullPath))
         {
-
+            TryRecognizeAndAdd(e.FullPath);
         }
+    }
+
+    private void TryRecognizeAndAdd(string path)
+    {
+        if (_knownPaths.ContainsKey(path))
+        {
+            return;
+        }
+
+        try
+        {
+            var audio = MediaRecognizer.Recognize(path);
+
+            if (_knownPaths.TryAdd(audio.Path, 0))
+            {
+                Audios.Add(audio);
+            }
+        }
+        catch
+        {
+        }
+    }
+
+    private void ProcessPathsCreatedDuringScan(string watcherRoot)
+    {
+        var pendingPaths = _pathsCreatedDuringScan.Keys
+            .Where(path => IsUnderPath(path, watcherRoot) && !_knownPaths.ContainsKey(path))
+            .ToList();
+
+        foreach (var path in pendingPaths)
+        {
+            _pathsCreatedDuringScan.TryRemove(path, out _);
+            TryRecognizeAndAdd(path);
+        }
+    }
+
+    private static bool IsUnderPath(string filePath, string rootPath)
+    {
+        var normalizedRoot = Path.GetFullPath(rootPath)
+            .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+            + Path.DirectorySeparatorChar;
+
+        return Path.GetFullPath(filePath).StartsWith(normalizedRoot, StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool ValidFileType(string fileName)
